@@ -11,7 +11,7 @@ const esc=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'
 async function show(session){
   q('#login').hidden=!!session;
   q('#panel').hidden=!session;
-  if(session) await load();
+  if(session){ await load(); await loadStores(); }
 }
 
 async function load(){
@@ -127,3 +127,57 @@ q('#content').onclick=async e=>{
 };
 
 db.auth.getSession().then(({data})=>show(data.session));
+
+
+async function loadStores(){
+  const box=q('#stores');
+  if(!box) return;
+  box.textContent='Загрузка магазинов…';
+  const {data:stores,error}=await db.from('maximum_stores')
+    .select('id,name,category,description,working_hours,is_published,floor_id,maximum_floors!inner(floor_number,title,sort_order)')
+    .order('sort_order',{ascending:true});
+  if(error){ box.textContent='Ошибка загрузки магазинов: '+error.message; return; }
+  box.innerHTML='';
+  const floors={};
+  for(const s of stores){
+    const key=String(s.floor_id);
+    if(!floors[key]) floors[key]={floor:s.maximum_floors,stores:[]};
+    floors[key].stores.push(s);
+  }
+  for(const group of Object.values(floors).sort((a,b)=>a.floor.sort_order-b.floor.sort_order)){
+    const section=document.createElement('section');
+    section.className='floor-editor';
+    section.innerHTML='<h2>'+esc(group.floor.title)+'</h2>';
+    for(const s of group.stores){
+      const a=document.createElement('article');
+      a.className='editor store-editor';
+      a.innerHTML=
+        '<div class="row"><h3>'+esc(s.name)+'</h3>'+
+        '<label><input type="checkbox" data-store-published '+(s.is_published?'checked':'')+'> Опубликован</label></div>'+
+        '<label>Название<input data-store-name value="'+esc(s.name)+'"></label>'+
+        '<label>Категория<input data-store-category value="'+esc(s.category)+'"></label>'+
+        '<label>Описание<textarea data-store-description>'+esc(s.description)+'</textarea></label>'+
+        '<label>Режим работы<input data-store-hours value="'+esc(s.working_hours)+'" placeholder="Например: 08:00–22:00"></label>'+
+        '<button type="button" data-store-save="'+s.id+'">Сохранить магазин</button>';
+      section.appendChild(a);
+    }
+    box.appendChild(section);
+  }
+}
+
+q('#stores').onclick=async e=>{
+  const id=e.target.dataset.storeSave;
+  if(!id) return;
+  const a=e.target.closest('.store-editor');
+  q('#saveMsg').textContent='Сохраняю магазин…';
+  const {error}=await db.from('maximum_stores').update({
+    name:a.querySelector('[data-store-name]').value.trim(),
+    category:a.querySelector('[data-store-category]').value.trim(),
+    description:a.querySelector('[data-store-description]').value.trim(),
+    working_hours:a.querySelector('[data-store-hours]').value.trim(),
+    is_published:a.querySelector('[data-store-published]').checked,
+    updated_at:new Date().toISOString()
+  }).eq('id',id);
+  q('#saveMsg').textContent=error?'Ошибка: '+error.message:'Магазин сохранён';
+  if(!error) await loadStores();
+};
