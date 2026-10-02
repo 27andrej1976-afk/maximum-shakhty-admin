@@ -171,7 +171,42 @@ async function loadStores(){
   }
 }
 
+async function uploadStorePhoto(button){
+  const card=button.closest('.store-editor');
+  const file=card.querySelector('[data-store-file]').files[0];
+  if(!file){ q('#saveMsg').textContent='Сначала выберите фотографию магазина.'; return; }
+  if(file.size>5*1024*1024){ q('#saveMsg').textContent='Файл больше 5 МБ.'; return; }
+  q('#saveMsg').textContent='Загружаю фото магазина…';
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+  const path='stores/'+button.dataset.storeUpload+'/photo.'+ext;
+  const up=await db.storage.from(BUCKET).upload(path,file,{upsert:true,contentType:file.type,cacheControl:'3600'});
+  if(up.error){ q('#saveMsg').textContent='Ошибка загрузки: '+up.error.message; return; }
+  const pub=db.storage.from(BUCKET).getPublicUrl(path);
+  const url=pub.data.publicUrl+'?v='+Date.now();
+  const saved=await db.from('maximum_stores').update({image_url:url,updated_at:new Date().toISOString()}).eq('id',button.dataset.storeUpload);
+  q('#saveMsg').textContent=saved.error?'Ошибка: '+saved.error.message:'Фото магазина сохранено';
+  if(!saved.error) await loadStores();
+}
+
+async function deleteStorePhoto(button){
+  if(!confirm('Удалить фото магазина?')) return;
+  q('#saveMsg').textContent='Удаляю фото магазина…';
+  const got=await db.from('maximum_stores').select('image_url').eq('id',button.dataset.storeDelete).single();
+  if(got.error){ q('#saveMsg').textContent='Ошибка: '+got.error.message; return; }
+  if(got.data && got.data.image_url){
+    const raw=got.data.image_url.split('?')[0];
+    const key='/storage/v1/object/public/'+BUCKET+'/';
+    const path=decodeURIComponent(raw.split(key)[1]||'');
+    if(path) await db.storage.from(BUCKET).remove([path]);
+  }
+  const saved=await db.from('maximum_stores').update({image_url:null,updated_at:new Date().toISOString()}).eq('id',button.dataset.storeDelete);
+  q('#saveMsg').textContent=saved.error?'Ошибка: '+saved.error.message:'Фото магазина удалено';
+  if(!saved.error) await loadStores();
+}
+
 q('#stores').onclick=async e=>{
+  if(e.target.dataset.storeUpload){ await uploadStorePhoto(e.target); return; }
+  if(e.target.dataset.storeDelete){ await deleteStorePhoto(e.target); return; }
   const id=e.target.dataset.storeSave;
   if(!id) return;
   const a=e.target.closest('.store-editor');
