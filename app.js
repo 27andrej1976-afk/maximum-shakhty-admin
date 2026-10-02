@@ -158,6 +158,12 @@ async function loadStores(){
         '<label>Категория<input data-store-category value="'+esc(s.category)+'"></label>'+
         '<label>Описание<textarea data-store-description>'+esc(s.description)+'</textarea></label>'+
         '<label>Режим работы<input data-store-hours value="'+esc(s.working_hours)+'" placeholder="Например: 08:00–22:00"></label>'+ '<label>Официальный сайт<input data-store-website type="url" value="'+esc(s.website_url||'')+'" placeholder="https://..."></label>'+
+        '<div class="photo-box"><strong>Фото / логотип магазина</strong>'+
+        (s.image_url?'<div class="photo-preview"><img src="'+esc(s.image_url)+'" alt="Фото магазина"></div>':'<p class="no-photo">Фото пока не добавлено</p>')+
+        '<input type="file" data-store-file accept="image/jpeg,image/png,image/webp">'+
+        '<div class="photo-actions"><button type="button" data-store-upload="'+s.id+'">Добавить / заменить фото</button>'+
+        (s.image_url?'<button type="button" class="secondary" data-store-delete="'+s.id+'">Удалить фото</button>':'')+
+        '</div><small>JPEG, PNG или WebP, максимум 5 МБ.</small></div>'+
         '<button type="button" data-store-save="'+s.id+'">Сохранить магазин</button>';
       section.appendChild(a);
     }
