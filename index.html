@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Максимум — Админ-панель</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header><div><strong>МАКСИМУМ</strong><span> ШАХТЫ</span></div><small>Админ-панель · TEST</small></header>
+<main>
+<section id="login" class="card">
+<h1>Вход администратора</h1><p>Управление контентом мобильного приложения ТРЦ «Максимум».</p>
+<label>Логин<input id="username" type="text" autocomplete="username" value="Максимум"></label>
+<label>Пароль<input id="password" type="password" autocomplete="current-password"></label>
+<button id="loginBtn">Войти</button><p id="loginMsg" class="msg"></p>
+</section>
+<section id="panel" hidden>
+<div class="toolbar"><div><h1>Контент приложения</h1><p>Редактируйте разделы и нажимайте «Сохранить».</p></div><button id="logoutBtn" class="secondary">Выйти</button></div>
+<div id="content"></div><p id="saveMsg" class="msg"></p>
+</section>
+</main>
+<script src="app.js"></script>
+</body></html>
