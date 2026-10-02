@@ -134,7 +134,7 @@ async function loadStores(){
   if(!box) return;
   box.textContent='Загрузка магазинов…';
   const {data:stores,error}=await db.from('maximum_stores')
-    .select('id,name,category,description,working_hours,is_published,floor_id,maximum_floors!inner(floor_number,title,sort_order)')
+    .select('id,name,category,description,working_hours,website_url,image_url,is_published,floor_id,maximum_floors!inner(floor_number,title,sort_order)')
     .order('sort_order',{ascending:true});
   if(error){ box.textContent='Ошибка загрузки магазинов: '+error.message; return; }
   box.innerHTML='';
@@ -157,7 +157,7 @@ async function loadStores(){
         '<label>Название<input data-store-name value="'+esc(s.name)+'"></label>'+
         '<label>Категория<input data-store-category value="'+esc(s.category)+'"></label>'+
         '<label>Описание<textarea data-store-description>'+esc(s.description)+'</textarea></label>'+
-        '<label>Режим работы<input data-store-hours value="'+esc(s.working_hours)+'" placeholder="Например: 08:00–22:00"></label>'+
+        '<label>Режим работы<input data-store-hours value="'+esc(s.working_hours)+'" placeholder="Например: 08:00–22:00"></label>'+ '<label>Официальный сайт<input data-store-website type="url" value="'+esc(s.website_url||'')+'" placeholder="https://..."></label>'+
         '<button type="button" data-store-save="'+s.id+'">Сохранить магазин</button>';
       section.appendChild(a);
     }
@@ -175,6 +175,7 @@ q('#stores').onclick=async e=>{
     category:a.querySelector('[data-store-category]').value.trim(),
     description:a.querySelector('[data-store-description]').value.trim(),
     working_hours:a.querySelector('[data-store-hours]').value.trim(),
+    website_url:a.querySelector('[data-store-website]').value.trim(),
     is_published:a.querySelector('[data-store-published]').checked,
     updated_at:new Date().toISOString()
   }).eq('id',id);
