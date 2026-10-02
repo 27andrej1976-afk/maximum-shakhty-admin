@@ -1,0 +1,1 @@
+// Maximum Shakhty admin TEST
