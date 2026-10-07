@@ -23,14 +23,14 @@
 .cubeWrap{position:relative;perspective:1000px;padding:18px 0 8px;overflow:hidden;touch-action:pan-y;user-select:none}
 .cubeStage{height:360px;position:relative;transform-style:preserve-3d}
 .cubeCard{position:absolute;left:50%;top:12px;width:72%;height:330px;margin-left:-36%;border-radius:24px;background:linear-gradient(145deg,#fff,#f2f4f7);box-shadow:0 18px 45px rgba(0,0,0,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;transition:transform .38s cubic-bezier(.2,.75,.2,1),opacity .38s,elevation .38s;cursor:pointer;border:1px solid #e5e7eb;backface-visibility:hidden}
-.cubeCard .shopIco{font-size:72px;line-height:1;margin-bottom:20px}.cubeCard .shopShort{font-size:29px;font-weight:900;letter-spacing:1.2px}.cubeCard .shopName{font-size:16px;color:#4b5563;line-height:1.35;margin:10px 0 22px}
+.cubeCard .shopIco{font-size:72px;line-height:1;margin-bottom:20px}.cubeCard .shopLogo{width:min(100%,220px);height:100px;object-fit:contain;margin-bottom:16px}.cubeCard .shopShort{font-size:29px;font-weight:900;letter-spacing:1.2px}.cubeCard .shopName{font-size:16px;color:#4b5563;line-height:1.35;margin:10px 0 22px}
 .cubeCard.active{transform:translateX(0) rotateY(0deg) scale(1);opacity:1;z-index:4}
 .cubeCard.left{transform:translateX(-73%) rotateY(52deg) scale(.82);opacity:.58;z-index:2}
 .cubeCard.right{transform:translateX(73%) rotateY(-52deg) scale(.82);opacity:.58;z-index:2}
 .cubeCard.far{transform:translateX(0) rotateY(90deg) scale(.72);opacity:0;z-index:1;pointer-events:none}
 .cubeNav{display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 16px 6px}.cubeArrow{width:44px;height:44px;border-radius:50%;border:1px solid #d1d5db;background:#fff;font-size:24px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.07)}.cubeArrow:active{transform:scale(.96)}
 .cubeDots{display:flex;justify-content:center;gap:7px}.cubeDot{width:8px;height:8px;border-radius:999px;background:#c9cdd3;transition:all .2s}.cubeDot.active{width:24px;background:var(--orange)}
-.storePlaceholder{text-align:center;padding:34px 22px}.storePlaceholder .heroIco{font-size:88px}.storePlaceholder h2{margin:14px 0 6px}.storePlaceholder p{color:var(--muted)}
+.storePlaceholder{text-align:center;padding:34px 22px}.storePlaceholder .heroIco{font-size:88px}.storePlaceholder .heroLogo{width:min(100%,250px);height:120px;object-fit:contain}.storePlaceholder h2{margin:14px 0 6px}.storePlaceholder p{color:var(--muted)}
 
 .modalBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
 .modal{width:min(100%,390px);background:#fff;border-radius:20px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.26)}
@@ -92,9 +92,9 @@ function mapPage(){
 }
 
 const floor3Shops=[
- {name:'Детский развлекательный центр «Максик»',short:'МАКСИК',ico:'🧸'},
- {name:'Zolla',short:'ZOLLA',ico:'👗'},
- {name:'М.Видео',short:'М.ВИДЕО',ico:'📺'}
+ {name:'Детский развлекательный центр «Максик»',short:'МАКСИК',ico:'🧸',logo:null},
+ {name:'Zolla',short:'ZOLLA',ico:'👗',logo:'https://armada-2.ru/assets/images/slider/shops/logo/logo_zolla-02.png'},
+ {name:'М.Видео',short:'М.ВИДЕО',ico:'📺',logo:'https://www.directum.ru/images/organisation/Mvideo_Logo_2.png'}
 ];
 let floor3Index=0;
 let floor3StartX=null;
@@ -124,7 +124,8 @@ function renderFloor3(){
    if(i===floor3Index)cls='active';
    else if(i===floor3Index-1 || (floor3Index===0&&i===floor3Shops.length-1))cls='left';
    else if(i===floor3Index+1 || (floor3Index===floor3Shops.length-1&&i===0))cls='right';
-   return '<div class="cubeCard '+cls+'" onclick="floor3Store('+i+')"><div class="shopIco">'+s.ico+'</div><div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.name)+'</div><button class="button" onclick="event.stopPropagation();floor3Store('+i+')">Открыть →</button></div>';
+   const visual=s.logo?'<img class="shopLogo" src="'+esc(s.logo)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><div class="shopIco" style="display:none">'+s.ico+'</div>':'<div class="shopIco">'+s.ico+'</div>';
+   return '<div class="cubeCard '+cls+'" onclick="floor3Store('+i+')">'+visual+'<div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.name)+'</div><button class="button" onclick="event.stopPropagation();floor3Store('+i+')">Открыть →</button></div>';
  }).join('');
  dots.innerHTML=floor3Shops.map((_,i)=>'<div class="cubeDot '+(i===floor3Index?'active':'')+'"></div>').join('');
 }
@@ -133,8 +134,9 @@ function moveFloor3(dir){
 }
 function floor3Store(i){
  const s=floor3Shops[i]; if(!s)return;
+ const hero=s.logo?'<img class="heroLogo" src="'+esc(s.logo)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><div class="heroIco" style="display:none">'+s.ico+'</div>':'<div class="heroIco">'+s.ico+'</div>';
  app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="thirdFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
- '<div class="content"><div class="card storePlaceholder"><div class="heroIco">'+s.ico+'</div><h2>'+esc(s.name)+'</h2><p>3 этаж</p></div></div>';
+ '<div class="content"><div class="card storePlaceholder">'+hero+'<h2>'+esc(s.name)+'</h2><p>3 этаж</p></div></div>';
 }
 async function floor0(){
  app.innerHTML=bar('0 этаж',true)+'<div class="loading">Загружаю магазины…</div>';
