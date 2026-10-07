@@ -19,6 +19,19 @@
 .storeLogo{width:64px;height:64px;border-radius:10px;object-fit:cover;background:#eee}.storeBody{padding:20px}.storeBody h2{margin:0 0 6px}.storeBody p{line-height:1.55}.actions{display:grid;gap:10px;margin-top:24px}
 .big{font-size:1.22em}.loading{padding:50px 20px;text-align:center;color:var(--muted)}.error{padding:30px 20px;text-align:center;color:#b91c1c}
 
+.floor3Intro{text-align:center;padding:22px 18px 8px}.floor3Intro h2{margin:0 0 7px;font-size:25px}.floor3Intro p{margin:0;color:var(--muted)}
+.cubeWrap{position:relative;perspective:1000px;padding:18px 0 8px;overflow:hidden;touch-action:pan-y;user-select:none}
+.cubeStage{height:360px;position:relative;transform-style:preserve-3d}
+.cubeCard{position:absolute;left:50%;top:12px;width:72%;height:330px;margin-left:-36%;border-radius:24px;background:linear-gradient(145deg,#fff,#f2f4f7);box-shadow:0 18px 45px rgba(0,0,0,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;transition:transform .38s cubic-bezier(.2,.75,.2,1),opacity .38s,elevation .38s;cursor:pointer;border:1px solid #e5e7eb;backface-visibility:hidden}
+.cubeCard .shopIco{font-size:72px;line-height:1;margin-bottom:20px}.cubeCard .shopShort{font-size:29px;font-weight:900;letter-spacing:1.2px}.cubeCard .shopName{font-size:16px;color:#4b5563;line-height:1.35;margin:10px 0 22px}
+.cubeCard.active{transform:translateX(0) rotateY(0deg) scale(1);opacity:1;z-index:4}
+.cubeCard.left{transform:translateX(-73%) rotateY(52deg) scale(.82);opacity:.58;z-index:2}
+.cubeCard.right{transform:translateX(73%) rotateY(-52deg) scale(.82);opacity:.58;z-index:2}
+.cubeCard.far{transform:translateX(0) rotateY(90deg) scale(.72);opacity:0;z-index:1;pointer-events:none}
+.cubeNav{display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 16px 6px}.cubeArrow{width:44px;height:44px;border-radius:50%;border:1px solid #d1d5db;background:#fff;font-size:24px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.07)}.cubeArrow:active{transform:scale(.96)}
+.cubeDots{display:flex;justify-content:center;gap:7px}.cubeDot{width:8px;height:8px;border-radius:999px;background:#c9cdd3;transition:all .2s}.cubeDot.active{width:24px;background:var(--orange)}
+.storePlaceholder{text-align:center;padding:34px 22px}.storePlaceholder .heroIco{font-size:88px}.storePlaceholder h2{margin:14px 0 6px}.storePlaceholder p{color:var(--muted)}
+
 .modalBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
 .modal{width:min(100%,390px);background:#fff;border-radius:20px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.26)}
 .modal h2{margin:0 0 10px}.modal p{line-height:1.45;color:#4b5563}.modalActions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
@@ -74,8 +87,54 @@ function mapPage(){
  '<div class="card floor"><h3>0 этаж</h3><p>Пятёрочка</p><br><button class="button" onclick="floor0()">Открыть 0 этаж →</button></div>'+
  '<div class="card floor"><h3>1 этаж</h3></div>'+
  '<div class="card floor"><h3>2 этаж</h3></div>'+
- '<div class="card floor"><h3>3 этаж</h3><p>Детский центр «Попугай»</p></div>'+
+ '<div class="card tile" onclick="thirdFloor()"><div class="ico">🧊</div><div class="mid"><div class="name">3 этаж</div><div class="sub">«Максик» • Zolla • М.Видео</div></div><div class="chev">›</div></div>'+
  '<div class="card floor"><h3>4 этаж</h3><p>Кинотеатр «МОНИТОР Максимум» • 6 залов • Relax-зал</p></div></div>';
+}
+
+const floor3Shops=[
+ {name:'Детский развлекательный центр «Максик»',short:'МАКСИК',ico:'🧸'},
+ {name:'Zolla',short:'ZOLLA',ico:'👗'},
+ {name:'М.Видео',short:'М.ВИДЕО',ico:'📺'}
+];
+let floor3Index=0;
+let floor3StartX=null;
+
+function thirdFloor(){
+ floor3Index=0;
+ app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="mapPage()">‹</button><div class="pageTitle">3 этаж</div></div>'+
+ '<div class="floor3Intro"><h2>Выберите магазин</h2><p>Свайпайте карточки влево и вправо</p></div>'+
+ '<div class="cubeWrap" id="cubeWrap"><div class="cubeStage" id="cubeStage"></div></div>'+
+ '<div class="cubeNav"><button class="cubeArrow" onclick="moveFloor3(-1)">‹</button><div class="cubeDots" id="cubeDots"></div><button class="cubeArrow" onclick="moveFloor3(1)">›</button></div>';
+ renderFloor3();
+ const w=document.getElementById('cubeWrap');
+ if(w){
+   w.addEventListener('pointerdown',e=>{floor3StartX=e.clientX;w.setPointerCapture?.(e.pointerId)});
+   w.addEventListener('pointerup',e=>{
+     if(floor3StartX===null)return;
+     const dx=e.clientX-floor3StartX; floor3StartX=null;
+     if(Math.abs(dx)>35)moveFloor3(dx<0?1:-1);
+   });
+ }
+}
+function renderFloor3(){
+ const stage=document.getElementById('cubeStage'); const dots=document.getElementById('cubeDots');
+ if(!stage||!dots)return;
+ stage.innerHTML=floor3Shops.map((s,i)=>{
+   let cls='far';
+   if(i===floor3Index)cls='active';
+   else if(i===floor3Index-1 || (floor3Index===0&&i===floor3Shops.length-1))cls='left';
+   else if(i===floor3Index+1 || (floor3Index===floor3Shops.length-1&&i===0))cls='right';
+   return '<div class="cubeCard '+cls+'" onclick="floor3Store('+i+')"><div class="shopIco">'+s.ico+'</div><div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.name)+'</div><button class="button" onclick="event.stopPropagation();floor3Store('+i+')">Открыть →</button></div>';
+ }).join('');
+ dots.innerHTML=floor3Shops.map((_,i)=>'<div class="cubeDot '+(i===floor3Index?'active':'')+'"></div>').join('');
+}
+function moveFloor3(dir){
+ floor3Index=(floor3Index+dir+floor3Shops.length)%floor3Shops.length; renderFloor3();
+}
+function floor3Store(i){
+ const s=floor3Shops[i]; if(!s)return;
+ app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="thirdFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
+ '<div class="content"><div class="card storePlaceholder"><div class="heroIco">'+s.ico+'</div><h2>'+esc(s.name)+'</h2><p>3 этаж</p></div></div>';
 }
 async function floor0(){
  app.innerHTML=bar('0 этаж',true)+'<div class="loading">Загружаю магазины…</div>';
