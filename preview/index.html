@@ -68,7 +68,7 @@ async function api(path){const r=await fetch(SUPA+'/rest/v1/'+path,{headers:{api
 async function load(){
  try{const r=await fetch('../assets/maxik_logo.b64');if(r.ok)maxikLogo='data:image/jpeg;base64,'+(await r.text()).trim()}catch(_){}
  try{
-   const ps=await Promise.all([2,3,4].map(i=>fetch('../assets/museum_user_'+i+'.txt?v=museum-20261008-2355',{cache:'no-store'})));
+   const ps=await Promise.all([2,3,4].map(i=>fetch('../assets/museum_user_'+i+'.txt?v=museum-final-20261008-2358',{cache:'no-store'})));
    if(ps.every(r=>r.ok)){
      const parts=await Promise.all(ps.map(r=>r.text()));
      const b64=parts.join('').replace(/\s+/g,'');
