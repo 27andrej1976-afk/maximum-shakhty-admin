@@ -1,50 +1,68 @@
 (async function(){
-  let museumData = null;
-  try {
-    const r = await fetch('../assets/museum_card.b64?v=21b616e', {cache:'no-store'});
-    if (r.ok) museumData = 'data:image/jpeg;base64,' + (await r.text()).trim();
-  } catch (_) {}
-  if (!museumData) return;
+  const files=[
+    '../assets/museum_card_1.txt?v=final2',
+    '../assets/museum_card_2.txt?v=final2',
+    '../assets/museum_card_3.txt?v=final2',
+    '../assets/museum_card_4a.txt?v=final2',
+    '../assets/museum_card_4b.txt?v=final2',
+    '../assets/museum_card_5a.txt?v=final2',
+    '../assets/museum_card_5b.txt?v=final2',
+    '../assets/museum_card_6a.txt?v=final2',
+    '../assets/museum_card_6b.txt?v=final2'
+  ];
+  let museumData=null;
+  try{
+    const responses=await Promise.all(files.map(p=>fetch(p,{cache:'no-store'})));
+    if(responses.some(r=>!r.ok)) return;
+    const parts=await Promise.all(responses.map(r=>r.text()));
+    const b64=parts.join('').replace(/\s+/g,'');
+    if(b64.length!==43200) return;
+    museumData='data:image/jpeg;base64,'+b64;
+  }catch(_){ return; }
 
   function applyMuseumImage(){
-    document.querySelectorAll('img[alt="Музей"]').forEach(function(img){
-      img.src = museumData;
-      img.onerror = null;
+    document.querySelectorAll('img[alt="Музей"]').forEach(img=>{
+      img.src=museumData;
+      img.onerror=null;
     });
 
-    const app = document.getElementById('app');
-    if (!app) return;
-    const isMuseum = app.textContent && app.textContent.indexOf('Выездная экспозиция Шахтинского краеведческого музея') !== -1;
-    if (isMuseum && !document.getElementById('museumHeroImage')) {
-      const hero = document.createElement('div');
-      hero.id = 'museumHeroImage';
-      hero.className = 'card';
-      hero.style.cssText = 'padding:0;overflow:hidden;margin-bottom:14px';
-      const img = document.createElement('img');
-      img.src = museumData;
-      img.alt = 'Музей';
-      img.style.cssText = 'display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover';
-      hero.appendChild(img);
-      const actions = app.querySelector('.actions');
-      if (actions) app.insertBefore(hero, actions);
-      else app.appendChild(hero);
+    const app=document.getElementById('app');
+    if(!app) return;
+    const isMuseum=app.textContent && app.textContent.includes('Выездная экспозиция Шахтинского краеведческого музея');
+    const body=app.querySelector('.storeBody');
+    if(isMuseum && body && !document.getElementById('museumHeroImage')){
+      const img=document.createElement('img');
+      img.id='museumHeroImage';
+      img.alt='Музей';
+      img.src=museumData;
+      img.style.cssText='display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:18px;margin-bottom:18px';
+      body.insertBefore(img,body.firstChild);
     }
   }
 
-  if (typeof window.openSection === 'function') {
-    const originalOpenSection = window.openSection;
-    window.openSection = function(){
-      const out = originalOpenSection.apply(this, arguments);
-      setTimeout(applyMuseumImage, 0);
+  if(typeof window.home==='function'){
+    const originalHome=window.home;
+    window.home=function(){
+      const out=originalHome.apply(this,arguments);
+      setTimeout(applyMuseumImage,0);
       return out;
     };
   }
 
-  if (typeof window.museumPage === 'function') {
-    const originalMuseumPage = window.museumPage;
-    window.museumPage = function(){
-      const out = originalMuseumPage.apply(this, arguments);
-      setTimeout(applyMuseumImage, 0);
+  if(typeof window.museumPage==='function'){
+    const originalMuseumPage=window.museumPage;
+    window.museumPage=function(){
+      const out=originalMuseumPage.apply(this,arguments);
+      setTimeout(applyMuseumImage,0);
+      return out;
+    };
+  }
+
+  if(typeof window.openSection==='function'){
+    const originalOpenSection=window.openSection;
+    window.openSection=function(){
+      const out=originalOpenSection.apply(this,arguments);
+      setTimeout(applyMuseumImage,0);
       return out;
     };
   }
