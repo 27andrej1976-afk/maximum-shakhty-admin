@@ -1,9 +1,6 @@
 (function(){
-  let museumSrc=null;
-  const ready=fetch('../assets/museum_card.b64')
-    .then(r=>r.ok?r.text():'')
-    .then(t=>{ if(t) museumSrc='data:image/jpeg;base64,'+t.trim(); })
-    .catch(()=>{});
+  let museumSrc='../assets/museum_card.jpg';
+  const ready=Promise.resolve();
 
   const base=window.museumPage;
   if(typeof base!=='function') return;
