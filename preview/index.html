@@ -166,53 +166,26 @@ function storePage(i){
 
 
 const floor4Places=[
- {name:'Кинотеатр «МОНИТОР Максимум»',short:'МОНИТОР',logo:'https://static.tildacdn.com/tild3932-3536-4661-a132-393730326435/logo_monitor_2_versi.png',subtitle:'Кинотеатр • 4 этаж',url:'https://www.rustore.ru/catalog/app/ru.kinoplan.cinema.monitor'},
- {name:'Lady Stretch',short:'LADY STRETCH',logo:'https://shahty-ladystretch.ru/img/44279313.jpg',subtitle:'Студия растяжки • 4 этаж',url:'https://shahty-ladystretch.ru/'}
+ {name:'Кинотеатр «МОНИТОР Максимум»',category:'Кинотеатр • 4 этаж',logo:'https://static.tildacdn.com/tild3932-3536-4661-a132-393730326435/logo_monitor_2_versi.png'},
+ {name:'Lady Stretch',category:'Студия растяжки • 4 этаж',logo:'https://shahty-ladystretch.ru/img/44279313.jpg'}
 ];
-let floor4Index=0;
-let floor4StartX=null;
 
 function fourthFloor(){
- floor4Index=0;
- app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="mapPage()">‹</button><div class="pageTitle">4 этаж</div></div>'+
- '<div class="floor3Intro"><h2>Выберите место</h2><p>Свайпайте карточки влево и вправо</p></div>'+
- '<div class="cubeWrap" id="floor4Wrap"><div class="cubeStage" id="floor4Stage"></div></div>'+
- '<div class="cubeNav"><button class="cubeArrow" onclick="moveFloor4(-1)">‹</button><div class="cubeDots" id="floor4Dots"></div><button class="cubeArrow" onclick="moveFloor4(1)">›</button></div>';
- renderFloor4();
- const w=document.getElementById('floor4Wrap');
- if(w){
-   w.addEventListener('pointerdown',e=>{floor4StartX=e.clientX;});
-   w.addEventListener('pointerup',e=>{
-     if(floor4StartX===null)return;
-     const dx=e.clientX-floor4StartX; floor4StartX=null;
-     if(Math.abs(dx)>35)moveFloor4(dx<0?1:-1);
-   });
- }
+ app.innerHTML=bar('4 этаж',true)+'<div class="content">'+
+ floor4Places.map((s,i)=>'<div class="card tile" onclick="floor4Place('+i+')">'+
+ (s.logo?'<img class="storeLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':'<div class="ico">🏬</div>')+
+ '<div class="mid"><div class="name">'+esc(s.name)+'</div><div class="sub">'+esc(s.category)+'</div></div><div class="chev">›</div></div>').join('')+
+ '</div>';
 }
-function renderFloor4(){
- const stage=document.getElementById('floor4Stage'); const dots=document.getElementById('floor4Dots');
- if(!stage||!dots)return;
- stage.innerHTML=floor4Places.map((s,i)=>{
-   let cls='far';
-   if(i===floor4Index)cls='active';
-   else if(i===floor4Index-1 || (floor4Index===0&&i===floor4Places.length-1))cls='left';
-   else if(i===floor4Index+1 || (floor4Index===floor4Places.length-1&&i===0))cls='right';
-   const visual=s.logo?'<img class="shopLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':'';
-   return '<div class="cubeCard '+cls+'" onclick="floor4Place('+i+')">'+visual+'<div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.subtitle)+'</div><button class="button" onclick="event.stopPropagation();floor4Place('+i+')">Открыть →</button></div>';
- }).join('');
- dots.innerHTML=floor4Places.map((_,i)=>'<div class="cubeDot '+(i===floor4Index?'active':'')+'"></div>').join('');
-}
-function moveFloor4(dir){
- floor4Index=(floor4Index+dir+floor4Places.length)%floor4Places.length; renderFloor4();
-}
+
 function floor4Place(i){
  const s=floor4Places[i]; if(!s)return;
  const button=i===0
-   ? '<a class="button" href="https://www.rustore.ru/catalog/app/ru.kinoplan.cinema.monitor" target="_blank">Открыть в RuStore</a>'
-   : '<a class="button" href="https://shahty-ladystretch.ru/" target="_blank">Официальный сайт</a>';
- app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="fourthFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
- '<div class="storeBody">'+(s.logo?'<img style="width:100%;border-radius:16px;max-height:220px;object-fit:contain;background:#fff" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+
- '<h2>'+esc(s.name)+'</h2><div style="color:#6b7280">'+esc(s.subtitle||'')+'</div>'+
+  ? '<a class="button" href="https://www.rustore.ru/catalog/app/ru.kinoplan.cinema.monitor" target="_blank">Открыть в RuStore</a>'
+  : '<a class="button" href="https://shahty-ladystretch.ru/" target="_blank">Официальный сайт</a>';
+ app.innerHTML=bar(s.name,true)+'<div class="storeBody">'+
+ (s.logo?'<img style="width:100%;border-radius:16px;max-height:220px;object-fit:contain;background:#fff" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+
+ '<h2>'+esc(s.name)+'</h2><div style="color:#6b7280">'+esc(s.category||'')+'</div>'+
  '<div class="actions">'+button+'</div></div>';
 }
 
