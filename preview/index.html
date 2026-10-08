@@ -79,7 +79,7 @@ function home(){
  const h=data.home||{};
  const items=[
   ['map','🗺️','Карта ТРЦ','Этажи 0–4 и магазины'],
-  ['kids','🏛️','Музей',''],
+  ['museum','🏛️','Музей','«Город, рождённый шахтой» • 2 этаж'],
   ['loyalty','🏷️',(data.loyalty||{}).title||'Лояльность',(data.loyalty||{}).body||'']
  ];
  app.innerHTML=bar('МАКСИМУМ • ШАХТЫ')+'<div class="content"><img class="logo" src="'+logo+'">'+
@@ -89,13 +89,26 @@ function home(){
 }
 function openSection(s){
  if(s==='map')return mapPage();
+ if(s==='museum')return museumPage();
  const x=data[s]||{};app.innerHTML=bar(x.title||s,true)+'<div class="section">'+(x.image_url?'<img src="'+esc(x.image_url)+'" onerror="this.style.display=\'none\'">':'')+'<p>'+esc(x.body||'')+'</p></div>';
 }
+function museumPage(){
+ app.innerHTML=bar('Музей',true)+
+ '<div class="storeBody">'+
+ '<h2>«Город, рождённый шахтой: хроника угледобычи»</h2>'+
+ '<div style="color:#6b7280;margin-bottom:14px">Выездная экспозиция Шахтинского краеведческого музея • 2 этаж ТЦ «Максимум»</div>'+
+ '<p>Экспозиция рассказывает об истории угледобычи в Шахтах — от первых разработок до периода расцвета шахтёрской промышленности. Представлены документы, карты, награды, шахтёрские каски, коногонки, фляги, самоспасатели и другие предметы труда и быта горняков.</p>'+
+ '<p><b>Посещение:</b> по предварительной записи.</p>'+
+ '<p><b>Телефон:</b> <a href="tel:+78636225918">8 (8636) 22-59-18</a></p>'+
+ '<div class="actions"><a class="button" href="https://muzey-shakhtinsky.ru/" target="_blank">Официальный сайт музея</a></div>'+
+ '</div>';
+}
+
 function mapPage(){
  app.innerHTML=bar('Карта ТРЦ',true)+'<div class="content">'+
  '<div class="card floor"><h3>0 этаж</h3><p>Пятёрочка</p><br><button class="button" onclick="floor0()">Открыть 0 этаж →</button></div>'+
  '<div class="card floor"><h3>1 этаж</h3></div>'+
- '<div class="card floor"><h3>2 этаж</h3></div>'+
+ '<div class="card floor"><h3>2 этаж</h3><p>Экспозиция «Город, рождённый шахтой: хроника угледобычи»</p><br><button class="button" onclick="museumPage()">Открыть музей →</button></div>'+
  '<div class="card tile" onclick="thirdFloor()"><div class="ico">🧊</div><div class="mid"><div class="name">3 этаж</div><div class="sub">«Максик» • Zolla • М.Видео</div></div><div class="chev">›</div></div>'+
  '<div class="card tile" onclick="fourthFloor()"><div class="ico">🎬</div><div class="mid"><div class="name">4 этаж</div><div class="sub">«МОНИТОР Максимум» • Lady Stretch</div></div><div class="chev">›</div></div></div>';
 }
