@@ -101,52 +101,33 @@ function mapPage(){
 }
 
 const floor3Shops=[
- {name:'Детский развлекательный центр «Максик»',short:'МАКСИК',ico:'🧸',logo:maxikLogo},
- {name:'Zolla',short:'ZOLLA',ico:'👗',logo:'https://armada-2.ru/assets/images/slider/shops/logo/logo_zolla-02.png'},
- {name:'М.Видео',short:'М.ВИДЕО',ico:'📺',logo:'https://www.directum.ru/images/organisation/Mvideo_Logo_2.png'}
+ {name:'Детский развлекательный центр «Максик»',category:'Детский развлекательный центр • 3 этаж',logo:maxikLogo,type:'none',url:''},
+ {name:'Zolla',category:'Магазин одежды • 3 этаж',logo:'https://armada-2.ru/assets/images/slider/shops/logo/logo_zolla-02.png',type:'rustore',url:'https://www.rustore.ru/catalog/app/com.zolla.app'},
+ {name:'М.Видео',category:'Магазин электроники • 3 этаж',logo:'https://www.directum.ru/images/organisation/Mvideo_Logo_2.png',type:'rustore',url:'https://www.rustore.ru/catalog/app/ru.filit.mvideo.b2c'}
 ];
-let floor3Index=0;
-let floor3StartX=null;
 
 function thirdFloor(){
- floor3Index=0;
- app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="mapPage()">‹</button><div class="pageTitle">3 этаж</div></div>'+
- '<div class="floor3Intro"><h2>Выберите магазин</h2><p>Свайпайте карточки влево и вправо</p></div>'+
- '<div class="cubeWrap" id="cubeWrap"><div class="cubeStage" id="cubeStage"></div></div>'+
- '<div class="cubeNav"><button class="cubeArrow" onclick="moveFloor3(-1)">‹</button><div class="cubeDots" id="cubeDots"></div><button class="cubeArrow" onclick="moveFloor3(1)">›</button></div>';
- renderFloor3();
- const w=document.getElementById('cubeWrap');
- if(w){
-   w.addEventListener('pointerdown',e=>{floor3StartX=e.clientX;w.setPointerCapture?.(e.pointerId)});
-   w.addEventListener('pointerup',e=>{
-     if(floor3StartX===null)return;
-     const dx=e.clientX-floor3StartX; floor3StartX=null;
-     if(Math.abs(dx)>35)moveFloor3(dx<0?1:-1);
-   });
- }
+ app.innerHTML=bar('3 этаж',true)+'<div class="content">'+
+ floor3Shops.map((s,i)=>'<div class="card tile" onclick="floor3Store('+i+')">'+
+ (s.logo?'<img class="storeLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':'<div class="ico">🏬</div>')+
+ '<div class="mid"><div class="name">'+esc(s.name)+'</div><div class="sub">'+esc(s.category)+'</div></div><div class="chev">›</div></div>').join('')+
+ '</div>';
 }
-function renderFloor3(){
- const stage=document.getElementById('cubeStage'); const dots=document.getElementById('cubeDots');
- if(!stage||!dots)return;
- stage.innerHTML=floor3Shops.map((s,i)=>{
-   let cls='far';
-   if(i===floor3Index)cls='active';
-   else if(i===floor3Index-1 || (floor3Index===0&&i===floor3Shops.length-1))cls='left';
-   else if(i===floor3Index+1 || (floor3Index===floor3Shops.length-1&&i===0))cls='right';
-   const visual=s.logo?'<img class="shopLogo" src="'+esc(s.logo)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><div class="shopIco" style="display:none">'+s.ico+'</div>':'<div class="shopIco">'+s.ico+'</div>';
-   return '<div class="cubeCard '+cls+'" onclick="floor3Store('+i+')">'+visual+'<div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.name)+'</div><button class="button" onclick="event.stopPropagation();floor3Store('+i+')">Открыть →</button></div>';
- }).join('');
- dots.innerHTML=floor3Shops.map((_,i)=>'<div class="cubeDot '+(i===floor3Index?'active':'')+'"></div>').join('');
-}
-function moveFloor3(dir){
- floor3Index=(floor3Index+dir+floor3Shops.length)%floor3Shops.length; renderFloor3();
-}
+
 function floor3Store(i){
  const s=floor3Shops[i]; if(!s)return;
- const hero=s.logo?'<img class="heroLogo" src="'+esc(s.logo)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><div class="heroIco" style="display:none">'+s.ico+'</div>':'<div class="heroIco">'+s.ico+'</div>';
- app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="thirdFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
- '<div class="content"><div class="card storePlaceholder">'+hero+'<h2>'+esc(s.name)+'</h2><p>3 этаж</p></div></div>';
+ let action='';
+ if(s.type==='rustore'){
+   action='<a class="button" href="'+esc(s.url)+'" target="_blank">Открыть в RuStore</a>';
+ } else {
+   action='<button class="button outline" type="button" disabled style="opacity:.55;cursor:not-allowed">Официальная ссылка уточняется</button>';
+ }
+ app.innerHTML=bar(s.name,true)+'<div class="storeBody">'+
+ (s.logo?'<img style="width:100%;border-radius:16px;max-height:220px;object-fit:contain;background:#fff" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+
+ '<h2>'+esc(s.name)+'</h2><div style="color:#6b7280">'+esc(s.category||'')+'</div>'+
+ '<div class="actions">'+action+'</div></div>';
 }
+
 async function floor0(){
  app.innerHTML=bar('0 этаж',true)+'<div class="loading">Загружаю магазины…</div>';
  try{
