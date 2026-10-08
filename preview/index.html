@@ -85,7 +85,7 @@ function home(){
  ];
  app.innerHTML=bar('МАКСИМУМ • ШАХТЫ')+'<div class="content"><img class="logo" src="'+logo+'">'+
  '<div class="card hero"><h1>'+esc(h.title||'ТРЦ «Максимум»')+'</h1><p>'+esc(h.body||'Шахты • пер. Красный Шахтёр, 78')+'</p><p>Магазины, кино, развлечения и бонусы — в одном приложении.</p><p class="version">Тестовая версия 0.2.0</p></div>'+
- items.map(x=>'<div class="card tile" onclick="openSection(\''+x[0]+'\')"><div class="ico">'+x[1]+'</div><div class="mid"><div class="name">'+esc(x[2])+'</div><div class="sub">'+esc(x[3])+'</div></div><div class="chev">›</div></div>').join('')+'</div>';
+ items.map(x=>'<div class="card tile" onclick="openSection(\''+x[0]+'\')">'+(x[0]==='museum'&&museumImg?'<img class="storeLogo" src="'+museumImg+'" alt="Музей">':'<div class="ico">'+x[1]+'</div>')+'<div class="mid"><div class="name">'+esc(x[2])+'</div><div class="sub">'+esc(x[3])+'</div></div><div class="chev">›</div></div>').join('')+'</div>';
  if(big)app.classList.add('big');
 }
 function openSection(s){
