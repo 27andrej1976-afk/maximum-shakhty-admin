@@ -49,6 +49,14 @@ const p5Logo='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2F
 let data={}, big=false, maxikLogo=null;
 const app=document.getElementById('app');
 
+function openExternal(url){
+ try{
+   const w=window.open(url,'_blank','noopener,noreferrer');
+   if(!w) window.location.href=url;
+ }catch(_){
+   window.location.href=url;
+ }
+}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function bar(title,back=false){
  return '<div class="appbar">'+(back?'<button class="iconbtn back" onclick="home()">‹</button>':'')+
@@ -200,7 +208,7 @@ function floor4Place(i){
  const s=floor4Places[i]; if(!s)return;
  app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="fourthFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
  '<div class="content"><div class="card storePlaceholder">'+(s.logo?'<img class="heroLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+'<h2>'+esc(s.name)+'</h2><p>'+esc(s.subtitle)+'</p>'+
- '<div class="actions"><a class="button" href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+(i===0?'Открыть в RuStore →':'Открыть официальный сайт →')+'</a></div></div></div>';
+ '<div class="actions"><button class="button" type="button" onclick="openExternal(\''+esc(s.url)+'\')">'+(i===0?'Открыть в RuStore →':'Открыть официальный сайт →')+'</button></div></div></div>';
 }
 
 function authUser(){
