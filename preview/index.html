@@ -120,7 +120,7 @@ function floor3Store(i){
  if(s.type==='rustore'){
    action='<a class="button" href="'+esc(s.url)+'" target="_blank">Открыть в RuStore</a>';
  } else {
-   action='<button class="button outline" type="button" disabled style="opacity:.55;cursor:not-allowed">Официальная ссылка уточняется</button>';
+   action='';
  }
  app.innerHTML=bar(s.name,true)+'<div class="storeBody">'+
  (s.logo?'<img style="width:100%;border-radius:16px;max-height:220px;object-fit:contain;background:#fff" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+
