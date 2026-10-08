@@ -197,7 +197,8 @@ function renderFloor4(){
    if(i===floor4Index)cls='active';
    else if(i===floor4Index-1 || (floor4Index===0&&i===floor4Places.length-1))cls='left';
    else if(i===floor4Index+1 || (floor4Index===floor4Places.length-1&&i===0))cls='right';
-   const visual=s.logo?'<img class="shopLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':''; return '<div class="cubeCard '+cls+'" onclick="floor4Place('+i+')">'+visual+'<div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.subtitle)+'</div><a class="button" href="'+esc(s.url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Открыть в RuStore →</a></div>';
+   const visual=s.logo?'<img class="shopLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':'';
+   return '<div class="cubeCard '+cls+'" onclick="floor4Place('+i+')">'+visual+'<div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.subtitle)+'</div><button class="button" onclick="event.stopPropagation();floor4Place('+i+')">Открыть →</button></div>';
  }).join('');
  dots.innerHTML=floor4Places.map((_,i)=>'<div class="cubeDot '+(i===floor4Index?'active':'')+'"></div>').join('');
 }
@@ -206,9 +207,13 @@ function moveFloor4(dir){
 }
 function floor4Place(i){
  const s=floor4Places[i]; if(!s)return;
+ const button=i===0
+   ? '<a class="button" href="https://www.rustore.ru/catalog/app/ru.kinoplan.cinema.monitor" target="_blank">Открыть в RuStore</a>'
+   : '<a class="button" href="https://shahty-ladystretch.ru/" target="_blank">Официальный сайт</a>';
  app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="fourthFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
- '<div class="content"><div class="card storePlaceholder">'+(s.logo?'<img class="heroLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+'<h2>'+esc(s.name)+'</h2><p>'+esc(s.subtitle)+'</p>'+
- '<div class="actions"><button class="button" type="button" onclick="openExternal(\''+esc(s.url)+'\')">'+(i===0?'Открыть в RuStore →':'Открыть официальный сайт →')+'</button></div></div></div>';
+ '<div class="storeBody">'+(s.logo?'<img style="width:100%;border-radius:16px;max-height:220px;object-fit:contain;background:#fff" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+
+ '<h2>'+esc(s.name)+'</h2><div style="color:#6b7280">'+esc(s.subtitle||'')+'</div>'+
+ '<div class="actions">'+button+'</div></div>';
 }
 
 function authUser(){
