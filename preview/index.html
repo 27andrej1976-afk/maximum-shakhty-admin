@@ -181,7 +181,7 @@ function fourthFloor(){
  renderFloor4();
  const w=document.getElementById('floor4Wrap');
  if(w){
-   w.addEventListener('pointerdown',e=>{floor4StartX=e.clientX;w.setPointerCapture?.(e.pointerId)});
+   w.addEventListener('pointerdown',e=>{floor4StartX=e.clientX;});
    w.addEventListener('pointerup',e=>{
      if(floor4StartX===null)return;
      const dx=e.clientX-floor4StartX; floor4StartX=null;
