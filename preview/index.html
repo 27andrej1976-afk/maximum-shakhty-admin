@@ -158,7 +158,7 @@ function storePage(i){
 
 
 const floor4Places=[
- {name:'Кинотеатр «МОНИТОР Максимум»',short:'МОНИТОР',logo:'https://static.tildacdn.com/tild3932-3536-4661-a132-393730326435/logo_monitor_2_versi.png',subtitle:'Кинотеатр • 4 этаж',url:'https://kinomonitor.ru/'},
+ {name:'Кинотеатр «МОНИТОР Максимум»',short:'МОНИТОР',logo:'https://static.tildacdn.com/tild3932-3536-4661-a132-393730326435/logo_monitor_2_versi.png',subtitle:'Кинотеатр • 4 этаж',url:'https://www.rustore.ru/catalog/app/ru.kinoplan.cinema.monitor'},
  {name:'Lady Stretch',short:'LADY STRETCH',logo:'https://shahty-ladystretch.ru/img/44279313.jpg',subtitle:'Студия растяжки • 4 этаж',url:'https://shahty-ladystretch.ru/'}
 ];
 let floor4Index=0;
@@ -189,7 +189,7 @@ function renderFloor4(){
    if(i===floor4Index)cls='active';
    else if(i===floor4Index-1 || (floor4Index===0&&i===floor4Places.length-1))cls='left';
    else if(i===floor4Index+1 || (floor4Index===floor4Places.length-1&&i===0))cls='right';
-   const visual=s.logo?'<img class="shopLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':''; return '<div class="cubeCard '+cls+'" onclick="floor4Place('+i+')">'+visual+'<div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.subtitle)+'</div><a class="button" href="'+esc(s.url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Перейти на сайт →</a></div>';
+   const visual=s.logo?'<img class="shopLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':''; return '<div class="cubeCard '+cls+'" onclick="floor4Place('+i+')">'+visual+'<div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.subtitle)+'</div><a class="button" href="'+esc(s.url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Открыть в RuStore →</a></div>';
  }).join('');
  dots.innerHTML=floor4Places.map((_,i)=>'<div class="cubeDot '+(i===floor4Index?'active':'')+'"></div>').join('');
 }
@@ -200,7 +200,7 @@ function floor4Place(i){
  const s=floor4Places[i]; if(!s)return;
  app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="fourthFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
  '<div class="content"><div class="card storePlaceholder">'+(s.logo?'<img class="heroLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+'<h2>'+esc(s.name)+'</h2><p>'+esc(s.subtitle)+'</p>'+
- '<div class="actions"><a class="button" href="'+esc(s.url)+'" target="_blank" rel="noopener">Перейти на официальный сайт →</a></div></div></div>';
+ '<div class="actions"><a class="button" href="'+esc(s.url)+'" target="_blank" rel="noopener">Открыть →</a></div></div></div>';
 }
 
 function authUser(){
