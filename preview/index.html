@@ -89,7 +89,7 @@ function mapPage(){
  '<div class="card floor"><h3>1 этаж</h3></div>'+
  '<div class="card floor"><h3>2 этаж</h3></div>'+
  '<div class="card tile" onclick="thirdFloor()"><div class="ico">🧊</div><div class="mid"><div class="name">3 этаж</div><div class="sub">«Максик» • Zolla • М.Видео</div></div><div class="chev">›</div></div>'+
- '<div class="card floor"><h3>4 этаж</h3><p>Кинотеатр «МОНИТОР Максимум» • 6 залов • Relax-зал</p></div></div>';
+ '<div class="card tile" onclick="fourthFloor()"><div class="ico">🎬</div><div class="mid"><div class="name">4 этаж</div><div class="sub">«МОНИТОР Максимум» • Lady Stretch</div></div><div class="chev">›</div></div></div>';
 }
 
 const floor3Shops=[
@@ -154,6 +154,53 @@ function storePage(i){
  app.innerHTML=bar(s.name,true)+'<div class="storeBody">'+(s.name.toLowerCase().includes('пятёроч')?'<img style="width:100%;border-radius:16px" src="'+p5Logo+'">':(s.image_url?'<img style="width:100%;border-radius:16px" src="'+esc(s.image_url)+'">':''))+
  '<h2>'+esc(s.name)+'</h2><div style="color:#6b7280">'+esc(s.category||'')+'</div><p>'+esc(s.description||'')+'</p>'+(s.working_hours?'<p><b>Режим работы:</b> '+esc(s.working_hours)+'</p>':'')+
  '<div class="actions"><a class="button" href="https://www.rustore.ru/catalog/app/ru.pyaterochka.app.browser" target="_blank">Открыть Пятёрочку</a>'+(s.website_url?'<a class="button outline" href="'+esc(s.website_url)+'" target="_blank">Официальный сайт</a>':'')+'</div></div>';
+}
+
+
+const floor4Places=[
+ {name:'Кинотеатр «МОНИТОР Максимум»',short:'МОНИТОР',ico:'🎬',subtitle:'Кинотеатр • 4 этаж',url:'https://kinomonitor.ru/'},
+ {name:'Lady Stretch',short:'LADY STRETCH',ico:'🤸‍♀️',subtitle:'Студия растяжки • 4 этаж',url:'https://shahty-ladystretch.ru/'}
+];
+let floor4Index=0;
+let floor4StartX=null;
+
+function fourthFloor(){
+ floor4Index=0;
+ app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="mapPage()">‹</button><div class="pageTitle">4 этаж</div></div>'+
+ '<div class="floor3Intro"><h2>Выберите место</h2><p>Свайпайте карточки влево и вправо</p></div>'+
+ '<div class="cubeWrap" id="floor4Wrap"><div class="cubeStage" id="floor4Stage"></div></div>'+
+ '<div class="cubeNav"><button class="cubeArrow" onclick="moveFloor4(-1)">‹</button><div class="cubeDots" id="floor4Dots"></div><button class="cubeArrow" onclick="moveFloor4(1)">›</button></div>';
+ renderFloor4();
+ const w=document.getElementById('floor4Wrap');
+ if(w){
+   w.addEventListener('pointerdown',e=>{floor4StartX=e.clientX;w.setPointerCapture?.(e.pointerId)});
+   w.addEventListener('pointerup',e=>{
+     if(floor4StartX===null)return;
+     const dx=e.clientX-floor4StartX; floor4StartX=null;
+     if(Math.abs(dx)>35)moveFloor4(dx<0?1:-1);
+   });
+ }
+}
+function renderFloor4(){
+ const stage=document.getElementById('floor4Stage'); const dots=document.getElementById('floor4Dots');
+ if(!stage||!dots)return;
+ stage.innerHTML=floor4Places.map((s,i)=>{
+   let cls='far';
+   if(i===floor4Index)cls='active';
+   else if(i===floor4Index-1 || (floor4Index===0&&i===floor4Places.length-1))cls='left';
+   else if(i===floor4Index+1 || (floor4Index===floor4Places.length-1&&i===0))cls='right';
+   return '<div class="cubeCard '+cls+'" onclick="floor4Place('+i+')"><div class="shopIco">'+s.ico+'</div><div class="shopShort">'+esc(s.short)+'</div><div class="shopName">'+esc(s.subtitle)+'</div><button class="button" onclick="event.stopPropagation();floor4Place('+i+')">Открыть →</button></div>';
+ }).join('');
+ dots.innerHTML=floor4Places.map((_,i)=>'<div class="cubeDot '+(i===floor4Index?'active':'')+'"></div>').join('');
+}
+function moveFloor4(dir){
+ floor4Index=(floor4Index+dir+floor4Places.length)%floor4Places.length; renderFloor4();
+}
+function floor4Place(i){
+ const s=floor4Places[i]; if(!s)return;
+ app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="fourthFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
+ '<div class="content"><div class="card storePlaceholder"><div class="heroIco">'+s.ico+'</div><h2>'+esc(s.name)+'</h2><p>'+esc(s.subtitle)+'</p>'+
+ '<div class="actions"><a class="button" href="'+esc(s.url)+'" target="_blank">Перейти →</a></div></div></div>';
 }
 
 function authUser(){
