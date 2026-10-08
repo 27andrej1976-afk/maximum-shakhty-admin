@@ -200,7 +200,7 @@ function floor4Place(i){
  const s=floor4Places[i]; if(!s)return;
  app.innerHTML='<div class="appbar"><button class="iconbtn back" onclick="fourthFloor()">‹</button><div class="pageTitle">'+esc(s.name)+'</div></div>'+
  '<div class="content"><div class="card storePlaceholder">'+(s.logo?'<img class="heroLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+'<h2>'+esc(s.name)+'</h2><p>'+esc(s.subtitle)+'</p>'+
- '<div class="actions"><a class="button" href="'+esc(s.url)+'" target="_blank" rel="noopener">Открыть →</a></div></div></div>';
+ '<div class="actions"><a class="button" href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+(i===0?'Открыть в RuStore →':'Открыть официальный сайт →')+'</a></div></div></div>';
 }
 
 function authUser(){
