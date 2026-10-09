@@ -67,14 +67,7 @@ function toggleText(){big=!big;document.querySelector('.phone').classList.toggle
 async function api(path){const r=await fetch(SUPA+'/rest/v1/'+path,{headers:{apikey:KEY}});if(!r.ok)throw new Error(r.status);return r.json()}
 async function load(){
  try{const r=await fetch('../assets/maxik_logo.b64');if(r.ok)maxikLogo='data:image/jpeg;base64,'+(await r.text()).trim()}catch(_){}
- try{
-   const ps=await Promise.all([2,3,4].map(i=>fetch('../assets/museum_user_'+i+'.txt?v=museum-final-20261008-2358',{cache:'no-store'})));
-   if(ps.every(r=>r.ok)){
-     const parts=await Promise.all(ps.map(r=>r.text()));
-     const b64=parts.join('').replace(/\s+/g,'');
-     museumImg=(b64.length===32324)?'data:image/jpeg;base64,'+b64:null;
-   }
- }catch(_){museumImg=null}
+ museumImg='../assets/museum_card.jpg?v=museum-20261009';
  app.innerHTML=bar('МАКСИМУМ • ШАХТЫ')+'<div class="loading">Загружаю актуальные данные…</div>';
  try{
    const rows=await api('maximum_content?select=section,title,body,image_url&is_published=eq.true&order=id.asc');
