@@ -274,12 +274,17 @@ function renderDirection(){
     html+='<div class="result">'+b[1]+'</div>';
   });
   document.getElementById('directionCard').innerHTML=html;
-  document.getElementById('prevDirection').classList.toggle('disabled',directionPageIndex===0);
+  document.getElementById('prevDirection').classList.remove('disabled');
   document.getElementById('nextDirection').textContent=directionPageIndex===group.pages.length-1?'ГОТОВО ✓':'ДАЛЬШЕ →';
 }
 
 document.getElementById('prevDirection').onclick=()=>{
-  if(directionPageIndex>0){directionPageIndex--;renderDirection()}
+  if(directionPageIndex>0){
+    directionPageIndex--;
+    renderDirection();
+  }else{
+    showRoot('home');
+  }
 };
 document.getElementById('nextDirection').onclick=()=>{
   const group=directionGroups[directionGroupIndex];
