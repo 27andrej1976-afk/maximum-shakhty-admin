@@ -123,7 +123,10 @@ button{font:inherit}
     <div class="header">
       <div class="brandText"><b>НАПРАВЛЕНИЯ</b><small>Георгий Победоносец</small></div>
     </div>
-    <div class="directionTabs" id="directionTabs"></div>
+    <div class="directionTabs" id="directionTabs">
+      <button class="directionTab active" data-direction-tab="0">Всестилевое каратэ</button>
+      <button class="directionTab" data-direction-tab="1">Олимпийское тхэквондо WTF</button>
+    </div>
     <div class="progress"><span id="directionCounter"></span><div class="dots" id="directionDots"></div></div>
     <div class="eventBody"><div class="eventCard" id="directionCard"></div></div>
     <div class="controls">
@@ -248,12 +251,11 @@ let directionGroupIndex=0;
 let directionPageIndex=0;
 
 function renderDirectionTabs(){
-  document.getElementById('directionTabs').innerHTML=directionGroups.map((g,i)=>
-    '<button class="directionTab '+(i===directionGroupIndex?'active':'')+'" data-direction-tab="'+i+'">'+g.title+'</button>'
-  ).join('');
   document.querySelectorAll('[data-direction-tab]').forEach(btn=>{
+    const idx=Number(btn.dataset.directionTab);
+    btn.classList.toggle('active',idx===directionGroupIndex);
     btn.onclick=()=>{
-      directionGroupIndex=Number(btn.dataset.directionTab);
+      directionGroupIndex=idx;
       directionPageIndex=0;
       renderDirectionTabs();
       renderDirection();
