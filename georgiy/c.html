@@ -29,7 +29,7 @@ button{font:inherit}
   width:42px;height:42px;border-radius:14px;background:var(--burgundy);
   border:1px solid rgba(212,177,92,.65);display:grid;place-items:center;color:var(--gold);font-size:22px
 }
-.brandIcon.logo{width:64px;height:64px;padding:0;overflow:hidden;background:transparent;border:0;border-radius:0;flex:0 0 64px}.brandIcon.logo img{width:100%;height:100%;object-fit:contain;display:block}.screen[data-root="home"] .header{justify-content:center;padding:14px 16px 6px}.screen[data-root="home"] .brandIcon.logo{width:220px;height:96px;flex:0 0 220px}.screen[data-root="home"] .brandText{display:none}.brandText{min-width:0;flex:1}
+.brandIcon.logo{width:64px;height:64px;padding:0;overflow:hidden;background:transparent;border:0;border-radius:0;flex:0 0 64px}.brandIcon.logo img{width:100%;height:100%;object-fit:contain;display:block}.screen[data-root="home"] .header{justify-content:center;flex-direction:column;text-align:center;padding:12px 16px 8px;gap:4px}.screen[data-root="home"] .brandIcon.logo{width:248px;height:118px;flex:0 0 118px}.screen[data-root="home"] .brandText{display:block;flex:none;width:100%;text-align:center}.screen[data-root="home"] .brandText b{font-size:19px;letter-spacing:.7px;white-space:normal}.screen[data-root="home"] .brandText small{font-size:11px;letter-spacing:.25px;white-space:normal;color:#c8c9cb}.screen[data-root="home"] .scroll{display:flex;flex-direction:column}.homeMotto{margin-top:auto;padding:14px 0 4px;text-align:center}.homeMotto .chip{font-size:10px;letter-spacing:.7px;padding:7px 12px}.brandText{min-width:0;flex:1}
 .brandText b{display:block;font-size:15px;letter-spacing:.25px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brandText small{display:block;color:var(--muted);font-size:10.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .scroll{overflow:auto;padding:6px 16px 18px;flex:1;min-height:0}
@@ -101,7 +101,6 @@ button{font:inherit}
     </div>
     <div class="scroll">
       <div class="hero">
-        <span class="chip">СИЛА • ХАРАКТЕР • ПОБЕДА</span>
         <h1>Стань сильнее.<br>Стань победителем.</h1>
         <p>Спортивные секции для детей и подростков. Тренировки, соревнования и настоящий командный дух.</p>
         <button class="goldBtn">ЗАПИСАТЬСЯ НА ТРЕНИРОВКУ</button>
@@ -116,6 +115,7 @@ button{font:inherit}
       <div class="card menuCard" id="openTeam">
         <div class="iconBox">👥</div><div class="menuText"><b>Тренеры и спортсмены</b><span>Команда спортивного общества</span></div><div class="chev">›</div>
       </div>
+      <div class="homeMotto"><span class="chip">СИЛА • ХАРАКТЕР • ПОБЕДА</span></div>
     </div>
   </section>
 
