@@ -94,6 +94,16 @@ button{font:inherit}
 .directionTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px 16px 10px}
 .directionTab{min-height:58px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:9px 8px;font-weight:800;font-size:12px;line-height:1.2;cursor:pointer}
 .directionTab.active{border-color:var(--gold);background:#2a2419;color:var(--gold)}
+
+.trainerCity{margin:18px 0 9px;color:var(--gold);font-size:11px;font-weight:900;letter-spacing:.9px;text-transform:uppercase}
+.trainerCard{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:10px}
+.trainerAvatar{width:68px;height:82px;border-radius:14px;overflow:hidden;flex:0 0 68px;background:linear-gradient(145deg,#2b2d31,#17191c);border:1px solid #383b40;display:grid;place-items:center;color:var(--gold);font-weight:900;font-size:18px}
+.trainerAvatar img{width:100%;height:100%;object-fit:cover;display:block}
+.trainerInfo{min-width:0;flex:1}
+.trainerInfo b{display:block;font-size:15px;line-height:1.15;margin:1px 0 5px}
+.trainerInfo p{margin:0;color:#c8cdd1;font-size:11.7px;line-height:1.38}
+.trainerBadge{display:inline-block;margin-top:7px;padding:4px 8px;border-radius:999px;border:1px solid #443c2b;background:#262117;color:var(--gold);font-size:9px;font-weight:900;letter-spacing:.45px}
+
 </style>
 </head>
 <body>
@@ -112,7 +122,7 @@ button{font:inherit}
         <div class="iconBox">🥋</div><div class="menuText"><b>Направления</b><span>Направления и возрастные группы</span></div><div class="chev">›</div>
       </div>
       <div class="card menuCard" id="openTeam">
-        <div class="iconBox">👥</div><div class="menuText"><b>Тренеры и спортсмены</b><span>Команда спортивного общества</span></div><div class="chev">›</div>
+        <div class="iconBox">👥</div><div class="menuText"><b>Тренерский состав</b><span>Тренеры общества по городам</span></div><div class="chev">›</div>
       </div>
       <div class="homeMotto"><span class="chip">СИЛА • ХАРАКТЕР • ПОБЕДА</span></div>
     </div>
@@ -144,9 +154,81 @@ button{font:inherit}
     <div class="controls"><button class="outlineBtn" id="prevEvent">← НАЗАД</button><button class="primaryBtn" id="nextEvent">ДАЛЬШЕ →</button></div>
   </section>
 
+
   <section class="screen detail" id="team">
-    <div class="detailTop"><button class="backBtn" id="closeTeam">‹</button><b>Тренеры и спортсмены</b></div>
-    <div class="scroll" style="padding-top:16px"><div class="card"><b style="color:var(--gold);font-size:18px">Ярослав Стуров</b><p style="color:var(--muted)">Руководитель общества.</p></div><div class="card"><b style="color:var(--gold);font-size:18px">Спортивная команда</b><p style="color:var(--muted)">Тренеры, спортсмены и спортивный резерв общества.</p></div></div>
+    <div class="detailTop"><button class="backBtn" id="closeTeam">‹</button><b>Тренерский состав</b></div>
+    <div class="scroll" style="padding-top:8px">
+      <div class="trainerCity">Шахты</div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar">ЯС</div>
+        <div class="trainerInfo"><b>Стуров Ярослав</b><p>Тренер сборной России, старший тренер сборной ДНР, старший тренер ЦБИ «Георгий Победоносец». Старший тренер сборной г. Шахты.</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar"><img src="https://nsportal.ru/sites/default/files/2022/11/28/whatsapp_image_2022-11-28_at_19.58.00.jpeg" alt="Сергей Кандауров" onerror="this.parentNode.textContent='СК'"></div>
+        <div class="trainerInfo"><b>Кандауров Сергей</b><p>Тренер сборной Ростовской области, тренер сборной г. Шахты.</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar"><img src="https://static.tildacdn.com/tild6233-3235-4437-b331-363737333637/aBuejiR18ZE.jpg" alt="Милана Имамалиева" onerror="this.parentNode.textContent='МИ'"></div>
+        <div class="trainerInfo"><b>Имамалиева Милана</b><p>МСМК, член сборной России, тренер ЦБИ «Георгий Победоносец» г. Шахты.</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar">ЕО</div>
+        <div class="trainerInfo"><b>Отрошко Евгений</b><p>МСМК, член сборной России, тренер ЦБИ «Георгий Победоносец» г. Шахты.</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar">НЛ</div>
+        <div class="trainerInfo"><b>Ляшенко Наталья</b><p>Тренер сборной Ростовской области, тренер сборной г. Шахты, старший тренер СК «Золотой Дракон».</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar">СЧ</div>
+        <div class="trainerInfo"><b>Чичасов Сергей</b><p>Тренер сборной Ростовской области, тренер сборной г. Шахты, тренер БК «Легенда» г. Шахты.</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar">АЧ</div>
+        <div class="trainerInfo"><b>Чичасов Александр</b><p>Тренер сборной Ростовской области, тренер сборной г. Шахты, тренер БК «Легенда» г. Шахты.</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar">ДФ</div>
+        <div class="trainerInfo"><b>Филатов Дмитрий</b><p>Тренер сборной г. Шахты, старший тренер СК «Филин».</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCard">
+        <div class="trainerAvatar">ГС</div>
+        <div class="trainerInfo"><b>Симонян Гамлет</b><p>Тренер сборной г. Шахты, старший тренер БК «Патриот».</p><span class="trainerBadge">ШАХТЫ</span></div>
+      </div>
+
+      <div class="trainerCity">Новошахтинск</div>
+      <div class="trainerCard">
+        <div class="trainerAvatar">НУ</div>
+        <div class="trainerInfo"><b>Ушанев Николай</b><p>Тренер сборной Ростовской области, старший тренер сборной г. Новошахтинск.</p><span class="trainerBadge">НОВОШАХТИНСК</span></div>
+      </div>
+
+      <div class="trainerCity">Гуково · Красный Сулин · Новошахтинск</div>
+      <div class="trainerCard">
+        <div class="trainerAvatar">ЮП</div>
+        <div class="trainerInfo"><b>Поляков Юрий</b><p>Тренер сборной Ростовской области, старший тренер сборной г. Гуково, старший тренер г. Красный Сулин, тренер сборной г. Новошахтинск.</p><span class="trainerBadge">3 ГОРОДА</span></div>
+      </div>
+
+      <div class="trainerCity">Новочеркасск</div>
+      <div class="trainerCard">
+        <div class="trainerAvatar">ИХ</div>
+        <div class="trainerInfo"><b>Хвощевский Игорь</b><p>Тренер сборной Ростовской области, тренер сборной г. Новочеркасск, тренер СК «Вольница».</p><span class="trainerBadge">НОВОЧЕРКАССК</span></div>
+      </div>
+
+      <div class="trainerCity">Ростов-на-Дону</div>
+      <div class="trainerCard">
+        <div class="trainerAvatar">ГМ</div>
+        <div class="trainerInfo"><b>Мжавадзе Гурам</b><p>Тренер сборной г. Ростов-на-Дону, тренер ЦБИ «Георгий Победоносец».</p><span class="trainerBadge">РОСТОВ-НА-ДОНУ</span></div>
+      </div>
+    </div>
   </section>
 
   <nav class="bottomNav">
