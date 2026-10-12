@@ -90,6 +90,10 @@ button{font:inherit}
 .result{background:var(--surface2);border:1px solid #30363c;border-radius:13px;padding:12px;margin-bottom:8px;font-size:13.5px;line-height:1.42}
 .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));border-top:1px solid #252b31;background:#101316}
 .disabled{opacity:.35;pointer-events:none}
+
+.directionTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px 16px 10px}
+.directionTab{min-height:58px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:9px 8px;font-weight:800;font-size:12px;line-height:1.2;cursor:pointer}
+.directionTab.active{border-color:var(--gold);background:#2a2419;color:var(--gold)}
 </style>
 </head>
 <body>
@@ -119,6 +123,7 @@ button{font:inherit}
     <div class="header">
       <div class="brandText"><b>НАПРАВЛЕНИЯ</b><small>Георгий Победоносец</small></div>
     </div>
+    <div class="directionTabs" id="directionTabs"></div>
     <div class="progress"><span id="directionCounter"></span><div class="dots" id="directionDots"></div></div>
     <div class="eventBody"><div class="eventCard" id="directionCard"></div></div>
     <div class="controls">
@@ -174,63 +179,117 @@ const events=[
 ]}
 ];
 
-const directions=[
+const directionGroups=[
 {
-  "title":"Всестилевое каратэ",
-  "blocks":[
-    ["Федерация всестилевого каратэ России (ФВКР)","Федерация всестилевого каратэ России (ФВКР) — это общероссийская общественная организация, созданная в 2014 году для объединения представителей различных школ и направлений каратэ под эгидой единого вида спорта."]
+  title:'Всестилевое каратэ',
+  pages:[
+    {
+      title:'Всестилевое каратэ',
+      blocks:[
+        ['Федерация всестилевого каратэ России (ФВКР)','Федерация всестилевого каратэ России (ФВКР) — это общероссийская общественная организация, созданная в 2014 году для объединения представителей различных школ и направлений каратэ под эгидой единого вида спорта.']
+      ]
+    },
+    {
+      title:'Спортивные дисциплины',
+      blocks:[
+        ['','Соревнования по всестилевому каратэ разделены на три основные группы правил, что позволяет каждому спортсмену найти подходящий для себя формат:'],
+        ['','1. Ограниченный контакт (ОК): удары наносятся в обозначение (без реального контакта), оцениваются точность, скорость и контроль.'],
+        ['','2. Полный контакт (ПК): классический поединок, где разрешены акцентированные удары руками и ногами в корпус и голову.'],
+        ['','3. Полный контакт в средствах защиты (СЗ): поединки в усиленной экипировке (шлемы, жилеты, защита на голени), что позволяет проводить полноконтактные бои с максимальной безопасностью.']
+      ]
+    },
+    {
+      title:'Технический арсенал',
+      blocks:[
+        ['','Всестилевое каратэ не ограничивается рамками одного канона. Оно вобрало в себя лучшее из мировых школ: Шотокан, Вадо-рю, Годзю-рю, Киокусинкай. В поединках спортсмены могут использовать не только традиционные удары и блоки, но и элементы борьбы: броски, подсечки и действия в партере.'],
+        ['','В июне 2014 года всестилевое каратэ было официально признано Министерством спорта РФ и включено во Всероссийский реестр видов спорта (ВРВС).'],
+        ['','В феврале 2015 года ФВКР получила государственную аккредитацию.']
+      ]
+    },
+    {
+      title:'Федерация сегодня',
+      blocks:[
+        ['','Сегодня региональные отделения Федерации работают в 69 субъектах Российской Федерации.'],
+        ['','По результатам соревнований присваиваются массовые спортивные разряды, а также звания «Мастер спорта России».'],
+        ['','Федерация активно развивает международное направление, являясь ядром Международной федерации всестилевого каратэ.'],
+        ['','Федерация ежегодно проводит Чемпионат и Кубок России, первенства страны, а также около 20 всероссийских турниров. Кроме того, ФВКР активно участвует в социальных и патриотических проектах, таких как Всероссийские юношеские игры боевых искусств в Анапе и военно-патриотическая акция «Эстафета побед», посвященная Великой Отечественной войне.']
+      ]
+    }
   ]
 },
 {
-  "title":"Спортивные дисциплины",
-  "blocks":[
-    ["","Соревнования по всестилевому каратэ разделены на три основные группы правил, что позволяет каждому спортсмену найти подходящий для себя формат:"],
-    ["","1. Ограниченный контакт (ОК): удары наносятся в обозначение (без реального контакта), оцениваются точность, скорость и контроль."],
-    ["","2. Полный контакт (ПК): классический поединок, где разрешены акцентированные удары руками и ногами в корпус и голову."],
-    ["","3. Полный контакт в средствах защиты (СЗ): поединки в усиленной экипировке (шлемы, жилеты, защита на голени), что позволяет проводить полноконтактные бои с максимальной безопасностью."]
-  ]
-},
-{
-  "title":"Технический арсенал",
-  "blocks":[
-    ["","Всестилевое каратэ не ограничивается рамками одного канона. Оно вобрало в себя лучшее из мировых школ: Шотокан, Вадо-рю, Годзю-рю, Киокусинкай. В поединках спортсмены могут использовать не только традиционные удары и блоки, но и элементы борьбы: броски, подсечки и действия в партере."],
-    ["","В июне 2014 года всестилевое каратэ было официально признано Министерством спорта РФ и включено во Всероссийский реестр видов спорта (ВРВС)."],
-    ["","В феврале 2015 года ФВКР получила государственную аккредитацию."]
-  ]
-},
-{
-  "title":"Федерация сегодня",
-  "blocks":[
-    ["","Сегодня региональные отделения Федерации работают в 69 субъектах Российской Федерации."],
-    ["","По результатам соревнований присваиваются массовые спортивные разряды, а также звания «Мастер спорта России»."],
-    ["","Федерация активно развивает международное направление, являясь ядром Международной федерации всестилевого каратэ."],
-    ["","Федерация ежегодно проводит Чемпионат и Кубок России, первенства страны, а также около 20 всероссийских турниров. Кроме того, ФВКР активно участвует в социальных и патриотических проектах, таких как Всероссийские юношеские игры боевых искусств в Анапе и военно-патриотическая акция «Эстафета побед», посвященная Великой Отечественной войне."]
+  title:'Олимпийское тхэквондо WTF',
+  pages:[
+    {
+      title:'Олимпийское тхэквондо WTF',
+      blocks:[
+        ['','Тхэквондо ВТФ (Всемирная федерация тхэквондо, с 2017 года официально называется World Taekwondo) — единственный вид корейского боевого искусства, включенный в программу Олимпийских игр (дебют состоялся в Сиднее в 2000 году). Федерация тхэквондо России (ФТР) отвечает за подготовку национальной сборной, проведение всероссийских соревнований и развитие детско-юношеского спорта.']
+      ]
+    },
+    {
+      title:'Особенности поединка',
+      blocks:[
+        ['','Олимпийское тхэквондо — это динамичный и зрелищный спорт, где бойцы соревнуются в полной защитной экипировке (жилеты хогу, шлемы, защита предплечий и голеней).'],
+        ['Акцент на ноги','В отличие от многих других единоборств, до 70–80% всех технических действий в поединке составляют удары ногами. За удары в голову руками очки не начисляются, что делает стиль уникальным.']
+      ]
+    },
+    {
+      title:'Судейство и тактика',
+      blocks:[
+        ['Электронная система судейства','На официальных турнирах используется электронная система датчиков (PSS), которая автоматически фиксирует результативные удары в корпус, минимизируя человеческий фактор.'],
+        ['Тактическая работа','Спортсмены используют высокую мобильность, работу на дистанции и сложные вращательные удары в прыжке.']
+      ]
+    }
   ]
 }
 ];
-let directionIndex=0;
+
+let directionGroupIndex=0;
+let directionPageIndex=0;
+
+function renderDirectionTabs(){
+  document.getElementById('directionTabs').innerHTML=directionGroups.map((g,i)=>
+    '<button class="directionTab '+(i===directionGroupIndex?'active':'')+'" data-direction-tab="'+i+'">'+g.title+'</button>'
+  ).join('');
+  document.querySelectorAll('[data-direction-tab]').forEach(btn=>{
+    btn.onclick=()=>{
+      directionGroupIndex=Number(btn.dataset.directionTab);
+      directionPageIndex=0;
+      renderDirectionTabs();
+      renderDirection();
+    };
+  });
+}
+
 function renderDirection(){
-  const d=directions[directionIndex];
-  document.getElementById('directionCounter').textContent='СТРАНИЦА '+(directionIndex+1)+' ИЗ '+directions.length;
-  document.getElementById('directionDots').innerHTML=directions.map((_,i)=>'<span class="dot '+(i===directionIndex?'active':'')+'"></span>').join('');
+  const group=directionGroups[directionGroupIndex];
+  const d=group.pages[directionPageIndex];
+  document.getElementById('directionCounter').textContent='СТРАНИЦА '+(directionPageIndex+1)+' ИЗ '+group.pages.length;
+  document.getElementById('directionDots').innerHTML=group.pages.map((_,i)=>'<span class="dot '+(i===directionPageIndex?'active':'')+'"></span>').join('');
   let html='<h2>'+d.title+'</h2>';
   d.blocks.forEach(b=>{
     if(b[0]) html+='<div class="groupTitle">'+b[0]+'</div>';
     html+='<div class="result">'+b[1]+'</div>';
   });
   document.getElementById('directionCard').innerHTML=html;
-  document.getElementById('prevDirection').classList.toggle('disabled',directionIndex===0);
-  document.getElementById('nextDirection').textContent=directionIndex===directions.length-1?'ГОТОВО ✓':'ДАЛЬШЕ →';
+  document.getElementById('prevDirection').classList.toggle('disabled',directionPageIndex===0);
+  document.getElementById('nextDirection').textContent=directionPageIndex===group.pages.length-1?'ГОТОВО ✓':'ДАЛЬШЕ →';
 }
-document.getElementById('prevDirection').onclick=()=>{if(directionIndex>0){directionIndex--;renderDirection()}};
-document.getElementById('nextDirection').onclick=()=>{if(directionIndex<directions.length-1){directionIndex++;renderDirection()}else{showRoot('home')}};
+
+document.getElementById('prevDirection').onclick=()=>{
+  if(directionPageIndex>0){directionPageIndex--;renderDirection()}
+};
+document.getElementById('nextDirection').onclick=()=>{
+  const group=directionGroups[directionGroupIndex];
+  if(directionPageIndex<group.pages.length-1){directionPageIndex++;renderDirection()}
+};
 
 let eventIndex=0;
 function showRoot(name){
   document.querySelectorAll('.screen[data-root]').forEach(s=>s.classList.toggle('active',s.dataset.root===name));
   document.querySelectorAll('.navItem').forEach(b=>b.classList.toggle('active',b.dataset.nav===name));
 }
-document.querySelectorAll('.navItem').forEach(b=>b.onclick=()=>{showRoot(b.dataset.nav);if(b.dataset.nav==='sections'){directionIndex=0;renderDirection();}});
+document.querySelectorAll('.navItem').forEach(b=>b.onclick=()=>{showRoot(b.dataset.nav);if(b.dataset.nav==='sections'){directionGroupIndex=0;directionPageIndex=0;renderDirectionTabs();renderDirection();}});
 function renderEvent(){
   const e=events[eventIndex];
   document.getElementById('eventCounter').textContent='СОБЫТИЕ '+(eventIndex+1)+' ИЗ '+events.length;
@@ -253,6 +312,7 @@ document.getElementById('nextEvent').onclick=()=>{if(eventIndex<events.length-1)
 document.getElementById('openTeam').onclick=()=>document.getElementById('team').classList.add('active');
 document.getElementById('closeTeam').onclick=()=>document.getElementById('team').classList.remove('active');
 renderEvent();
+renderDirectionTabs();
 renderDirection();
 </script>
 </body>
