@@ -9,246 +9,51 @@
 *{box-sizing:border-box}body{margin:0;background:#eef0f3;font-family:Arial,Helvetica,sans-serif;color:var(--text)}
 .phone{width:min(100%,430px);min-height:100vh;margin:0 auto;background:var(--bg);box-shadow:0 0 40px rgba(0,0,0,.14)}
 .appbar{position:sticky;top:0;z-index:10;background:#fff;display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb}
-.appbar .title{font-weight:700;flex:1}.iconbtn{border:0;background:transparent;font-size:22px;cursor:pointer;padding:8px;border-radius:50%}.iconbtn:hover{background:#f3f4f6}
+.title,.pageTitle{font-weight:800;flex:1}.iconbtn{border:0;background:transparent;font-size:22px;cursor:pointer;padding:8px;border-radius:50%}.back{font-size:24px}
 .content{padding:16px}.logo{display:block;width:150px;height:150px;border-radius:50%;object-fit:cover;margin:4px auto 14px}
-.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);margin:0 0 12px;overflow:hidden}
-.hero{padding:18px}.hero h1{font-size:28px;margin:0 0 6px}.hero p{margin:6px 0;line-height:1.45}.version{color:var(--blue);font-weight:700}
-.tile{display:flex;align-items:center;gap:14px;padding:16px;cursor:pointer}.tile:hover{background:#fafafa}.tile .ico{font-size:26px;width:32px;text-align:center}.tile .mid{flex:1}.tile .name{font-size:17px;font-weight:700;margin-bottom:4px}.tile .sub{font-size:14px;color:var(--muted);line-height:1.35}.chev{font-size:26px;color:#9ca3af}
-.back{font-size:24px}.pageTitle{font-size:20px;font-weight:700;flex:1}.section{padding:24px;text-align:center;line-height:1.6}.section img{width:100%;border-radius:16px;margin-bottom:18px}
-.floor{padding:16px}.floor h3{margin:0 0 7px;font-size:20px}.floor p{margin:0;color:#4b5563;line-height:1.45}.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;background:var(--orange);color:#fff;font-weight:700;padding:12px 18px;cursor:pointer;text-decoration:none}.outline{background:#fff;color:var(--orange);border:1px solid var(--orange)}
-.storeLogo{width:64px;height:64px;border-radius:10px;object-fit:cover;background:#eee}.storeBody{padding:20px}.storeBody h2{margin:0 0 6px}.storeBody p{line-height:1.55}.actions{display:grid;gap:10px;margin-top:24px}
-.big{font-size:1.22em}.loading{padding:50px 20px;text-align:center;color:var(--muted)}.error{padding:30px 20px;text-align:center;color:#b91c1c}
-
-.floor3Intro{text-align:center;padding:22px 18px 8px}.floor3Intro h2{margin:0 0 7px;font-size:25px}.floor3Intro p{margin:0;color:var(--muted)}
-.cubeWrap{position:relative;perspective:1000px;padding:18px 0 8px;overflow:hidden;touch-action:pan-y;user-select:none}
-.cubeStage{height:360px;position:relative;transform-style:preserve-3d}
-.cubeCard{position:absolute;left:50%;top:12px;width:72%;height:330px;margin-left:-36%;border-radius:24px;background:linear-gradient(145deg,#fff,#f2f4f7);box-shadow:0 18px 45px rgba(0,0,0,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;transition:transform .38s cubic-bezier(.2,.75,.2,1),opacity .38s,elevation .38s;cursor:pointer;border:1px solid #e5e7eb;backface-visibility:hidden}
-.cubeCard .shopIco{font-size:72px;line-height:1;margin-bottom:20px}.cubeCard .shopLogo{width:min(100%,220px);height:100px;object-fit:contain;margin-bottom:16px}.cubeCard .shopShort{font-size:29px;font-weight:900;letter-spacing:1.2px}.cubeCard .shopName{font-size:16px;color:#4b5563;line-height:1.35;margin:10px 0 22px}
-.cubeCard.active{transform:translateX(0) rotateY(0deg) scale(1);opacity:1;z-index:4}
-.cubeCard.left{transform:translateX(-73%) rotateY(52deg) scale(.82);opacity:.58;z-index:2}
-.cubeCard.right{transform:translateX(73%) rotateY(-52deg) scale(.82);opacity:.58;z-index:2}
-.cubeCard.far{transform:translateX(0) rotateY(90deg) scale(.72);opacity:0;z-index:1;pointer-events:none}
-.cubeNav{display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 16px 6px}.cubeArrow{width:44px;height:44px;border-radius:50%;border:1px solid #d1d5db;background:#fff;font-size:24px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.07)}.cubeArrow:active{transform:scale(.96)}
-.cubeDots{display:flex;justify-content:center;gap:7px}.cubeDot{width:8px;height:8px;border-radius:999px;background:#c9cdd3;transition:all .2s}.cubeDot.active{width:24px;background:var(--orange)}
-.storePlaceholder{text-align:center;padding:34px 22px}.storePlaceholder .heroIco{font-size:88px}.storePlaceholder .heroLogo{width:min(100%,250px);height:120px;object-fit:contain}.storePlaceholder h2{margin:14px 0 6px}.storePlaceholder p{color:var(--muted)}
-
-.modalBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
-.modal{width:min(100%,390px);background:#fff;border-radius:20px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.26)}
-.modal h2{margin:0 0 10px}.modal p{line-height:1.45;color:#4b5563}.modalActions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
-.field{width:100%;padding:12px 13px;border:1px solid #d1d5db;border-radius:12px;font-size:16px;margin-top:10px}
-.authError{color:#b91c1c;margin-top:10px}.profileCard{text-align:center;padding:24px}.profileIcon{font-size:72px}.muted{color:#6b7280}
+.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);margin:0 0 12px;overflow:hidden;border:1px solid rgba(230,234,240,.7)}
+.hero{padding:18px}.hero h1{font-size:28px;margin:0 0 6px}.hero h2{font-size:22px;margin:0 0 8px}.hero p{margin:6px 0;line-height:1.45}.version{color:var(--blue);font-weight:800}
+.tile{display:flex;align-items:center;gap:14px;padding:16px;cursor:pointer}.tile:hover{background:#fafafa}.ico,.storeLogo{width:64px;height:64px;border-radius:12px;object-fit:contain;background:#fff;border:1px solid #eef1f4;padding:5px;flex:0 0 auto}
+.tile .mid{flex:1}.tile .name{font-size:17px;font-weight:800;margin-bottom:4px}.tile .sub{font-size:14px;color:var(--muted);line-height:1.35}.chev{font-size:26px;color:#9ca3af}
+.floor{padding:16px}.floor h3{margin:0 0 7px;font-size:20px}.floor p{margin:0;color:#4b5563;line-height:1.45}.badge{display:inline-flex;margin-top:12px;background:#eef7ff;color:#168acb;font-weight:800;border-radius:999px;padding:7px 11px;font-size:13px}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;background:var(--orange);color:#fff;font-weight:800;padding:12px 18px;cursor:pointer;text-decoration:none}.outline{background:#fff;color:var(--orange);border:1px solid var(--orange)}
+.storeBody{padding:20px}.storeBody h2{margin:0 0 6px}.storeBody p{line-height:1.55}.actions{display:grid;gap:10px;margin-top:20px}.brand{width:100%;max-height:220px;object-fit:contain;background:#fff;border-radius:16px;padding:18px;border:1px solid #eef1f4;margin-bottom:18px}.museum{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:18px;margin-bottom:18px}
+.notice{font-size:13px;color:#6b7280;text-align:center;margin-top:14px;line-height:1.4}.logoMain{width:150px;height:150px;border-radius:50%;margin:4px auto 14px;background:linear-gradient(135deg,#f58220,#168acb);display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:22px;text-align:center;border:6px solid #fff;box-shadow:0 8px 22px rgba(0,0,0,.12)}
 </style>
 </head>
 <body>
-<div class="phone" id="app"></div>
+<div class="phone"><div id="bar"></div><main id="app"></main></div>
 <script>
-const SUPA='https://gtxhswoogrwswlxvkvbd.supabase.co';
-const KEY='sb_publishable_hoWqZbKUcFpPPgW0QEmR6w_laR0IYns';
-const logo='data:image/jpeg;base64,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';
-const p5Logo='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20520%20180%22%3E%0A%3Crect%20width%3D%22520%22%20height%3D%22180%22%20rx%3D%2228%22%20fill%3D%22white%22%2F%3E%0A%3Ccircle%20cx%3D%2295%22%20cy%3D%2290%22%20r%3D%2262%22%20fill%3D%22%23e3262e%22%2F%3E%0A%3Cpath%20d%3D%22M117%2031c20%203%2031%2014%2035%2032-17%201-30-4-39-15-7-9-6-15%204-17z%22%20fill%3D%22%234c9f38%22%2F%3E%0A%3Ctext%20x%3D%2262%22%20y%3D%22123%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2292%22%20font-weight%3D%22800%22%20fill%3D%22white%22%3E5%3C%2Ftext%3E%0A%3Ctext%20x%3D%22175%22%20y%3D%22108%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2254%22%20font-weight%3D%22700%22%20fill%3D%22%23e3262e%22%3E%D0%9F%D1%8F%D1%82%D1%91%D1%80%D0%BE%D1%87%D0%BA%D0%B0%3C%2Ftext%3E%0A%3Ctext%20x%3D%22178%22%20y%3D%22140%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2222%22%20font-weight%3D%22600%22%20fill%3D%22%234c9f38%22%3E%D0%B2%D1%8B%D1%80%D1%83%D1%87%D0%B0%D0%B5%D1%82!%3C%2Ftext%3E%0A%3C%2Fsvg%3E';
-let data={}, big=false, maxikLogo=null, museumImg=null;
-const app=document.getElementById('app');
-
-function openExternal(url){
- try{
-   const w=window.open(url,'_blank','noopener,noreferrer');
-   if(!w) window.location.href=url;
- }catch(_){
-   window.location.href=url;
- }
-}
+const A={
+ maximumLogo:``,
+ p5:`data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MjAgMTgwJz48cmVjdCB3aWR0aD0nNTIwJyBoZWlnaHQ9JzE4MCcgcng9JzI4JyBmaWxsPSd3aGl0ZScvPjxjaXJjbGUgY3g9Jzk1JyBjeT0nOTAnIHI9JzYyJyBmaWxsPScjZTMyNjJlJy8+PHBhdGggZD0nTTExOCAzMWMyMCAzIDMxIDE0IDM1IDMyLTE3IDEtMzAtNC0zOS0xNS03LTktNi0xNSA0LTE3eicgZmlsbD0nIzRjOWYzOCcvPjx0ZXh0IHg9JzYwJyB5PScxMjMnIGZvbnQtZmFtaWx5PSdBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZicgZm9udC1zaXplPSc5MicgZm9udC13ZWlnaHQ9JzgwMCcgZmlsbD0nd2hpdGUnPjU8L3RleHQ+PHRleHQgeD0nMTc1JyB5PScxMDgnIGZvbnQtZmFtaWx5PSdBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZicgZm9udC1zaXplPSc1NCcgZm9udC13ZWlnaHQ9JzgwMCcgZmlsbD0nI2UzMjYyZSc+0J/Rj9GC0ZHRgNC+0YfQutCwPC90ZXh0Pjwvc3ZnPg==`,
+ museum:`data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA4MDAgODAwJz48cmVjdCB3aWR0aD0nODAwJyBoZWlnaHQ9JzgwMCcgZmlsbD0nIzI4MzIzYycvPjx0ZXh0IHg9JzUwJScgeT0nNDclJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nQXJpYWwnIGZvbnQtc2l6ZT0nNTYnIGZpbGw9J3doaXRlJz7QnNGD0LfQtdC5PC90ZXh0Pjx0ZXh0IHg9JzUwJScgeT0nNTglJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nQXJpYWwnIGZvbnQtc2l6ZT0nMzAnIGZpbGw9JyNmNWY1ZjUnPtCT0L7RgNC+0LQsINGA0L7QttC00ZHQvdC90YvQuSDRiNCw0YXRgtC+0Lk8L3RleHQ+PC9zdmc+`,
+ maxik:`data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MjAgMTgwJz48cmVjdCB3aWR0aD0nNTIwJyBoZWlnaHQ9JzE4MCcgcng9JzI4JyBmaWxsPSd3aGl0ZScvPjx0ZXh0IHg9JzUwJScgeT0nNTglJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYnIGZvbnQtc2l6ZT0nNzInIGZvbnQtd2VpZ2h0PSc5MDAnIGZpbGw9JyNmZmQ1MWQnIHN0cm9rZT0nIzI2Mzc4Zicgc3Ryb2tlLXdpZHRoPSc4Jz7QnNCw0LrRgdC40Lo8L3RleHQ+PHRleHQgeD0nNTAlJyB5PSc3OCUnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGZvbnQtZmFtaWx5PSdBcmlhbCxIZWx2ZXRpY2Esc2Fucy1zZXJpZicgZm9udC1zaXplPScyNScgZm9udC13ZWlnaHQ9JzcwMCcgZmlsbD0nIzI2Mzc4Zic+0JTQtdGC0YHQutC40Lkg0YDQsNC30LLQu9C10LrQsNGC0LXQu9GM0L3Ri9C5INGG0LXQvdGC0YA8L3RleHQ+PC9zdmc+`,
+ zolla:`data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MjAgMTgwJz48cmVjdCB3aWR0aD0nNTIwJyBoZWlnaHQ9JzE4MCcgcng9JzI4JyBmaWxsPSd3aGl0ZScvPjx0ZXh0IHg9JzUwJScgeT0nNjAlJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYnIGZvbnQtc2l6ZT0nNzYnIGZvbnQtd2VpZ2h0PSc5MDAnIGZpbGw9JyMxMTE4MjcnPlpPTExBPC90ZXh0Pjwvc3ZnPg==`,
+ mvideo:`data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MjAgMTgwJz48cmVjdCB3aWR0aD0nNTIwJyBoZWlnaHQ9JzE4MCcgcng9JzI4JyBmaWxsPSd3aGl0ZScvPjxjaXJjbGUgY3g9JzEwNicgY3k9JzkwJyByPSc1OCcgZmlsbD0nI2UzMDYxMycvPjx0ZXh0IHg9JzEwNicgeT0nMTEzJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYnIGZvbnQtc2l6ZT0nNzYnIGZvbnQtd2VpZ2h0PSc5MDAnIGZpbGw9J3doaXRlJz7QnDwvdGV4dD48dGV4dCB4PSczMTInIHk9JzEwOCcgdGV4dC1hbmNob3I9J21pZGRsZScgZm9udC1mYW1pbHk9J0FyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmJyBmb250LXNpemU9JzU2JyBmb250LXdlaWdodD0nOTAwJyBmaWxsPScjMTExODI3Jz7QnC7QktCY0JTQldCePC90ZXh0Pjwvc3ZnPg==`,
+ monitor:`data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MjAgMTgwJz48cmVjdCB3aWR0aD0nNTIwJyBoZWlnaHQ9JzE4MCcgcng9JzI4JyBmaWxsPSd3aGl0ZScvPjx0ZXh0IHg9JzUwJScgeT0nNjAlJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYnIGZvbnQtc2l6ZT0nNjQnIGZvbnQtd2VpZ2h0PSc5MDAnIGZpbGw9JyMxNjhhY2InPtCc0J7QndCY0KLQntCgPC90ZXh0Pjx0ZXh0IHg9JzUwJScgeT0nNzklJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYnIGZvbnQtc2l6ZT0nMjQnIGZvbnQtd2VpZ2h0PSc3MDAnIGZpbGw9JyNmNTgyMjAnPtCc0LDQutGB0LjQvNGD0Lw8L3RleHQ+PC9zdmc+`,
+ lady:`data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MjAgMTgwJz48cmVjdCB3aWR0aD0nNTIwJyBoZWlnaHQ9JzE4MCcgcng9JzI4JyBmaWxsPSd3aGl0ZScvPjx0ZXh0IHg9JzUwJScgeT0nNjAlJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWYnIGZvbnQtc2l6ZT0nNTgnIGZvbnQtd2VpZ2h0PSc5MDAnIGZpbGw9JyM5YjU5YjYnPkxhZHkgU3RyZXRjaDwvdGV4dD48L3N2Zz4`
+};
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function bar(title,back=false){
- return '<div class="appbar">'+(back?'<button class="iconbtn back" onclick="home()">‹</button>':'')+
- '<div class="'+(back?'pageTitle':'title')+'">'+esc(title)+'</div>'+
- (!back?'<button class="iconbtn" title="Профиль" onclick="openAccount()">👤</button><button class="iconbtn" title="Обновить" onclick="load()">↻</button><button class="iconbtn" title="Крупный шрифт" onclick="toggleText()">A+</button>':'')+'</div>';
-}
-function toggleText(){big=!big;document.querySelector('.phone').classList.toggle('big',big)}
-async function api(path){const r=await fetch(SUPA+'/rest/v1/'+path,{headers:{apikey:KEY}});if(!r.ok)throw new Error(r.status);return r.json()}
-async function load(){
- try{const r=await fetch('../assets/maxik_logo.b64');if(r.ok)maxikLogo='data:image/jpeg;base64,'+(await r.text()).trim()}catch(_){}
- museumImg='../assets/museum_card.jpg?v=museum-20261009';
- app.innerHTML=bar('МАКСИМУМ • ШАХТЫ')+'<div class="loading">Загружаю актуальные данные…</div>';
- try{
-   const rows=await api('maximum_content?select=section,title,body,image_url&is_published=eq.true&order=id.asc');
-   data={}; rows.forEach(x=>data[x.section]=x); home(); setTimeout(maybeOfferRegistration,80);
- }catch(e){
-   app.innerHTML=bar('МАКСИМУМ • ШАХТЫ')+'<div class="error">Не удалось загрузить актуальные данные.<br><br><button class="button" onclick="load()">Повторить</button></div>';
- }
-}
-function home(){
- const h=data.home||{};
- const items=[
-  ['map','🗺️','Карта ТРЦ','Этажи 0–4 и магазины'],
-  ['museum','🏛️','Музей','«Город, рождённый шахтой» • 2 этаж'],
-  ['loyalty','🏷️',(data.loyalty||{}).title||'Лояльность',(data.loyalty||{}).body||'']
- ];
- app.innerHTML=bar('МАКСИМУМ • ШАХТЫ')+'<div class="content"><img class="logo" src="'+logo+'">'+
- '<div class="card hero"><h1>'+esc(h.title||'ТРЦ «Максимум»')+'</h1><p>'+esc(h.body||'Шахты • пер. Красный Шахтёр, 78')+'</p><p>Магазины, кино, развлечения и бонусы — в одном приложении.</p><p class="version">Тестовая версия 0.2.0</p></div>'+
- items.map(x=>'<div class="card tile" onclick="openSection(\''+x[0]+'\')">'+(x[0]==='museum'&&museumImg?'<img class="storeLogo" src="'+museumImg+'" alt="Музей">':'<div class="ico">'+x[1]+'</div>')+'<div class="mid"><div class="name">'+esc(x[2])+'</div><div class="sub">'+esc(x[3])+'</div></div><div class="chev">›</div></div>').join('')+'</div>';
- if(big)app.classList.add('big');
-}
-function openSection(s){
- if(s==='map')return mapPage();
- if(s==='museum')return museumPage();
- const x=data[s]||{};app.innerHTML=bar(x.title||s,true)+'<div class="section">'+(x.image_url?'<img src="'+esc(x.image_url)+'" onerror="this.style.display=\'none\'">':'')+'<p>'+esc(x.body||'')+'</p></div>';
-}
-function museumPage(){
- app.innerHTML=bar('Музей',true)+
- '<div class="storeBody">'+
- (museumImg?'<img src="'+museumImg+'" alt="Музей" style="display:block;width:100%;height:auto;object-fit:contain;border-radius:18px;margin-bottom:18px">':'')+
- '<h2>«Город, рождённый шахтой: хроника угледобычи»</h2>'+
- '<div style="color:#6b7280;margin-bottom:14px">Выездная экспозиция Шахтинского краеведческого музея • 2 этаж ТЦ «Максимум»</div>'+
- '<p>Экспозиция рассказывает об истории угледобычи в Шахтах — от первых разработок до периода расцвета шахтёрской промышленности. Представлены документы, карты, награды, шахтёрские каски, коногонки, фляги, самоспасатели и другие предметы труда и быта горняков.</p>'+
- '<p><b>Посещение:</b> по предварительной записи.</p>'+
- '<p><b>Телефон:</b> <a href="tel:+78636225918">8 (8636) 22-59-18</a></p>'+
- '<div class="actions"><a class="button" href="https://muzey-shakhtinsky.ru/" target="_blank">Официальный сайт музея</a></div>'+
- '</div>';
-}
-
-function mapPage(){
- app.innerHTML=bar('Карта ТРЦ',true)+'<div class="content">'+
- '<div class="card floor"><h3>0 этаж</h3><p>Пятёрочка</p><br><button class="button" onclick="floor0()">Открыть 0 этаж →</button></div>'+
- '<div class="card floor"><h3>1 этаж</h3></div>'+
- '<div class="card floor"><h3>2 этаж</h3><p>Экспозиция «Город, рождённый шахтой: хроника угледобычи»</p><br><button class="button" onclick="museumPage()">Открыть второй этаж →</button></div>'+
- '<div class="card tile" onclick="thirdFloor()"><div class="ico">🧊</div><div class="mid"><div class="name">3 этаж</div><div class="sub">«Максик» • Zolla • М.Видео</div></div><div class="chev">›</div></div>'+
- '<div class="card tile" onclick="fourthFloor()"><div class="ico">🎬</div><div class="mid"><div class="name">4 этаж</div><div class="sub">«МОНИТОР Максимум» • Lady Stretch</div></div><div class="chev">›</div></div></div>';
-}
-
-const floor3Shops=[
- {name:'Детский развлекательный центр «Максик»',category:'Детский развлекательный центр • 3 этаж',logo:maxikLogo,type:'none',url:''},
- {name:'Zolla',category:'Магазин одежды • 3 этаж',logo:'https://armada-2.ru/assets/images/slider/shops/logo/logo_zolla-02.png',type:'rustore',url:'https://www.rustore.ru/catalog/app/com.zolla.app'},
- {name:'М.Видео',category:'Магазин электроники • 3 этаж',logo:'https://www.directum.ru/images/organisation/Mvideo_Logo_2.png',type:'rustore',url:'https://www.rustore.ru/catalog/app/ru.filit.mvideo.b2c'}
-];
-
-function thirdFloor(){
- app.innerHTML=bar('3 этаж',true)+'<div class="content">'+
- floor3Shops.map((s,i)=>'<div class="card tile" onclick="floor3Store('+i+')">'+
- (s.logo?'<img class="storeLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':'<div class="ico">🏬</div>')+
- '<div class="mid"><div class="name">'+esc(s.name)+'</div><div class="sub">'+esc(s.category)+'</div></div><div class="chev">›</div></div>').join('')+
- '</div>';
-}
-
-function floor3Store(i){
- const s=floor3Shops[i]; if(!s)return;
- let action='';
- if(s.type==='rustore'){
-   action='<a class="button" href="'+esc(s.url)+'" target="_blank">Открыть в RuStore</a>';
- } else {
-   action='<button class="button outline" type="button">Подробнее</button>';
- }
- app.innerHTML=bar(s.name,true)+'<div class="storeBody">'+
- (s.logo?'<img style="width:100%;border-radius:16px;max-height:220px;object-fit:contain;background:#fff" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+
- '<h2>'+esc(s.name)+'</h2><div style="color:#6b7280">'+esc(s.category||'')+'</div>'+
- '<div class="actions">'+action+'</div></div>';
-}
-
-async function floor0(){
- app.innerHTML=bar('0 этаж',true)+'<div class="loading">Загружаю магазины…</div>';
- try{
-  const f=await api('maximum_floors?select=id&floor_number=eq.0&is_published=eq.true');
-  if(!f.length){app.innerHTML=bar('0 этаж',true)+'<div class="loading">На этом этаже пока нет опубликованных магазинов.</div>';return}
-  const st=await api('maximum_stores?select=id,name,category,description,working_hours,website_url,image_url&floor_id=eq.'+f[0].id+'&is_published=eq.true&order=sort_order.asc');
-  app.innerHTML=bar('0 этаж',true)+'<div class="content">'+st.map((s,i)=>'<div class="card tile" onclick="storePage('+i+')">'+(s.name.toLowerCase().includes('пятёроч')?'<img class="storeLogo" src="'+p5Logo+'">':(s.image_url?'<img class="storeLogo" src="'+esc(s.image_url)+'">':'<div class="ico">🏬</div>'))+'<div class="mid"><div class="name">'+esc(s.name)+'</div><div class="sub">'+esc(s.category)+'</div></div><div class="chev">›</div></div>').join('')+'</div>';
-  window.__stores=st;
- }catch(e){app.innerHTML=bar('0 этаж',true)+'<div class="error">Не удалось загрузить магазины.</div>'}
-}
-function storePage(i){
- const s=(window.__stores||[])[i]; if(!s)return;
- app.innerHTML=bar(s.name,true)+'<div class="storeBody">'+(s.name.toLowerCase().includes('пятёроч')?'<img style="width:100%;border-radius:16px" src="'+p5Logo+'">':(s.image_url?'<img style="width:100%;border-radius:16px" src="'+esc(s.image_url)+'">':''))+
- '<h2>'+esc(s.name)+'</h2><div style="color:#6b7280">'+esc(s.category||'')+'</div><p>'+esc(s.description||'')+'</p>'+(s.working_hours?'<p><b>Режим работы:</b> '+esc(s.working_hours)+'</p>':'')+
- '<div class="actions"><a class="button" href="https://www.rustore.ru/catalog/app/ru.pyaterochka.app.browser" target="_blank">Открыть Пятёрочку</a>'+(s.website_url?'<a class="button outline" href="'+esc(s.website_url)+'" target="_blank">Официальный сайт</a>':'')+'</div></div>';
-}
-
-
-const floor4Places=[
- {name:'Кинотеатр «МОНИТОР Максимум»',category:'Кинотеатр • 4 этаж',logo:'https://static.tildacdn.com/tild3932-3536-4661-a132-393730326435/logo_monitor_2_versi.png'},
- {name:'Lady Stretch',category:'Студия растяжки • 4 этаж',logo:'https://shahty-ladystretch.ru/img/44279313.jpg'}
-];
-
-function fourthFloor(){
- app.innerHTML=bar('4 этаж',true)+'<div class="content">'+
- floor4Places.map((s,i)=>'<div class="card tile" onclick="floor4Place('+i+')">'+
- (s.logo?'<img class="storeLogo" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'" onerror="this.style.display=\'none\'">':'<div class="ico">🏬</div>')+
- '<div class="mid"><div class="name">'+esc(s.name)+'</div><div class="sub">'+esc(s.category)+'</div></div><div class="chev">›</div></div>').join('')+
- '</div>';
-}
-
-function floor4Place(i){
- const s=floor4Places[i]; if(!s)return;
- const button=i===0
-  ? '<a class="button" href="https://www.rustore.ru/catalog/app/ru.kinoplan.cinema.monitor" target="_blank">Открыть в RuStore</a>'
-  : '<a class="button" href="https://shahty-ladystretch.ru/" target="_blank">Официальный сайт</a>';
- app.innerHTML=bar(s.name,true)+'<div class="storeBody">'+
- (s.logo?'<img style="width:100%;border-radius:16px;max-height:220px;object-fit:contain;background:#fff" src="'+esc(s.logo)+'" alt="'+esc(s.name)+'">':'')+
- '<h2>'+esc(s.name)+'</h2><div style="color:#6b7280">'+esc(s.category||'')+'</div>'+
- '<div class="actions">'+button+'</div></div>';
-}
-
-function authUser(){
- try{return JSON.parse(localStorage.getItem('maximum_auth_user')||'null')}catch(_){return null}
-}
-function closeModal(){const x=document.getElementById('authModal');if(x)x.remove()}
-function modal(html){
- closeModal();
- const d=document.createElement('div');
- d.id='authModal'; d.className='modalBackdrop';
- d.innerHTML='<div class="modal">'+html+'</div>';
- document.body.appendChild(d);
-}
-function maybeOfferRegistration(){
- if(localStorage.getItem('maximum_registration_prompt_seen'))return;
- localStorage.setItem('maximum_registration_prompt_seen','1');
- modal('<h2>Добро пожаловать в «Максимум»</h2><p>Зарегистрируйтесь, чтобы пользоваться личным кабинетом и будущими бонусами приложения.</p><div class="modalActions"><button class="button outline" onclick="closeModal()">Позже</button><button class="button" onclick="showAuth(true)">Зарегистрироваться</button></div>');
-}
-function openAccount(){
- const u=authUser();
- if(!u)return showAuth(false);
- modal('<div class="profileCard"><div class="profileIcon">👤</div><h2>'+esc((u.user_metadata&&u.user_metadata.name)||'Пользователь')+'</h2><div class="muted">'+esc(u.email||'')+'</div><div class="modalActions" style="justify-content:center"><button class="button outline" onclick="closeModal()">Закрыть</button><button class="button" onclick="logoutAccount()">Выйти</button></div></div>');
-}
-function showAuth(registering){
- modal('<h2>'+(registering?'Регистрация':'Вход')+'</h2>'+
- (registering?'<input id="authName" class="field" placeholder="Имя">':'')+
- '<input id="authEmail" class="field" type="email" placeholder="E-mail">'+
- '<input id="authPass" class="field" type="password" placeholder="Пароль">'+
- (registering?'<input id="authPass2" class="field" type="password" placeholder="Повторите пароль">':'')+
- '<div id="authError" class="authError"></div>'+
- '<div class="modalActions"><button class="button outline" onclick="closeModal()">Отмена</button><button class="button" onclick="submitAuth('+registering+')">'+(registering?'Зарегистрироваться':'Войти')+'</button></div>'+
- '<div style="margin-top:12px;text-align:center"><button class="iconbtn" style="font-size:14px" onclick="showAuth('+(!registering)+')">'+(registering?'Уже есть аккаунт? Войти':'Нет аккаунта? Зарегистрироваться')+'</button></div>');
-}
-async function submitAuth(registering){
- const email=(document.getElementById('authEmail')?.value||'').trim();
- const password=document.getElementById('authPass')?.value||'';
- const name=(document.getElementById('authName')?.value||'').trim();
- const err=document.getElementById('authError');
- if(!email||!password||(registering&&!name)){err.textContent='Заполните обязательные поля.';return}
- if(password.length<6){err.textContent='Пароль должен быть не короче 6 символов.';return}
- if(registering&&password!==(document.getElementById('authPass2')?.value||'')){err.textContent='Пароли не совпадают.';return}
- err.textContent='Подождите…';
- try{
-   let r;
-   if(registering){
-     r=await fetch(SUPA+'/auth/v1/signup',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password,data:{name}})});
-   }else{
-     r=await fetch(SUPA+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
-   }
-   const j=await r.json();
-   if(!r.ok)throw new Error(j.msg||j.message||j.error_description||'Ошибка входа');
-   if(j.access_token&&j.user){
-     localStorage.setItem('maximum_auth_user',JSON.stringify(j.user));
-     localStorage.setItem('maximum_auth_token',j.access_token);
-     closeModal(); openAccount();
-   }else if(registering){
-     modal('<h2>Регистрация создана</h2><p>Проверьте почту и подтвердите e-mail, затем войдите в приложение.</p><div class="modalActions"><button class="button" onclick="showAuth(false)">Перейти ко входу</button></div>');
-   }
- }catch(e){err.textContent=e.message||'Не удалось выполнить вход.'}
-}
-function logoutAccount(){
- localStorage.removeItem('maximum_auth_user');
- localStorage.removeItem('maximum_auth_token');
- closeModal();
-}
-
-load();
+function bar(title,back=false){document.getElementById('bar').innerHTML='<div class="appbar">'+(back?'<button class="iconbtn back" onclick="home()">‹</button>':'')+'<div class="'+(back?'pageTitle':'title')+'">'+esc(title)+'</div>'+(!back?'<button class="iconbtn">👤</button><button class="iconbtn" onclick="home()">↻</button><button class="iconbtn">A+</button>':'')+'</div>';}
+function show(html){document.getElementById('app').innerHTML=html;scrollTo(0,0)}
+function openExternal(url){window.open(url,'_blank','noopener,noreferrer')}
+function home(){bar('МАКСИМУМ • ШАХТЫ');show(`<div class="content"><div class="logoMain">ТРЦ<br>Максимум</div><div class="card hero"><h1>ТРЦ «Максимум»</h1><p>Шахты, пер. Красный Шахтёр, 78</p><p>Магазины, кино, развлечения и бонусы — в одном приложении.</p><p class="version">Тестовая версия 0.2.0</p></div><div class="card tile" onclick="mapPage()"><div class="ico">🗺️</div><div class="mid"><div class="name">Карта ТРЦ</div><div class="sub">0–4 этажи и магазины</div></div><div class="chev">›</div></div><div class="card tile" onclick="museumPage()"><img class="storeLogo" src="${A.museum}"><div class="mid"><div class="name">Музей</div><div class="sub">«Город, рождённый шахтой» • 2 этаж</div></div><div class="chev">›</div></div><div class="card tile" onclick="loyaltyPage()"><div class="ico">🏷️</div><div class="mid"><div class="name">Лояльность</div><div class="sub">Чеки, баллы, скидки и подарки</div></div><div class="chev">›</div></div></div>`)}
+function mapPage(){bar('Карта ТРЦ',true);show(`<div class="content"><div class="card floor" onclick="floor0()"><h3>0 этаж</h3><p>Пятёрочка</p><span class="badge">Открыть 0 этаж</span></div><div class="card floor" onclick="floor1()"><h3>1 этаж</h3><p>Информация появится позже</p><span class="badge">Открыть 1 этаж</span></div><div class="card floor" onclick="floor2()"><h3>2 этаж</h3><p>Музейная экспозиция</p><span class="badge">Открыть 2 этаж</span></div><div class="card floor" onclick="floor3()"><h3>3 этаж</h3><p>Максик • Zolla • М.Видео</p><span class="badge">Открыть 3 этаж</span></div><div class="card floor" onclick="floor4()"><h3>4 этаж</h3><p>МОНИТОР Максимум • Lady Stretch</p><span class="badge">Открыть 4 этаж</span></div></div>`)}
+function loyaltyPage(){bar('Лояльность',true);show(`<div class="content"><div class="card hero"><h2>Лояльность</h2><p>Чеки, баллы, скидки и подарки.</p><p class="notice">Раздел подготовлен как вкладка главной страницы. Позже подключим личный кабинет и механику бонусов.</p></div></div>`)}
+function floor0(){bar('0 этаж',true);show(`<div class="content"><div class="card tile" onclick="p5Page()"><img class="storeLogo" src="${A.p5}"><div class="mid"><div class="name">Пятёрочка</div><div class="sub">Продуктовый магазин • 0 этаж</div></div><div class="chev">›</div></div></div>`)}
+function floor1(){bar('1 этаж',true);show(`<div class="content"><div class="card hero"><h2>1 этаж</h2><p class="notice">Пока пустой. Информацию добавим позже.</p></div></div>`)}
+function floor2(){bar('2 этаж',true);show(`<div class="content"><div class="card tile" onclick="museumPage()"><img class="storeLogo" src="${A.museum}"><div class="mid"><div class="name">Музей</div><div class="sub">Экспозиция • 2 этаж</div></div><div class="chev">›</div></div></div>`)}
+function floor3(){bar('3 этаж',true);show(`<div class="content"><div class="card tile" onclick="maxikPage()"><img class="storeLogo" src="${A.maxik}"><div class="mid"><div class="name">Максик</div><div class="sub">Детский развлекательный центр • 3 этаж</div></div><div class="chev">›</div></div><div class="card tile" onclick="zollaPage()"><img class="storeLogo" src="${A.zolla}"><div class="mid"><div class="name">Zolla</div><div class="sub">Магазин одежды • 3 этаж</div></div><div class="chev">›</div></div><div class="card tile" onclick="mvideoPage()"><img class="storeLogo" src="${A.mvideo}"><div class="mid"><div class="name">М.Видео</div><div class="sub">Магазин электроники • 3 этаж</div></div><div class="chev">›</div></div></div>`)}
+function floor4(){bar('4 этаж',true);show(`<div class="content"><div class="card tile" onclick="monitorPage()"><img class="storeLogo" src="${A.monitor}"><div class="mid"><div class="name">МОНИТОР Максимум</div><div class="sub">Кинотеатр • 4 этаж</div></div><div class="chev">›</div></div><div class="card tile" onclick="ladyPage()"><img class="storeLogo" src="${A.lady}"><div class="mid"><div class="name">Lady Stretch</div><div class="sub">Студия растяжки • 4 этаж</div></div><div class="chev">›</div></div></div>`)}
+function museumPage(){bar('Музей',true);show(`<div class="storeBody"><img class="museum" src="${A.museum}"><h2>«Город, рождённый шахтой: хроника угледобычи»</h2><p class="notice">Выездная экспозиция Шахтинского краеведческого музея • 2 этаж ТЦ «Максимум»</p><p>Экспозиция рассказывает об истории угледобычи в Шахтах. Представлены документы, карты, награды, шахтёрские каски, коногонки, фляги, самоспасатели и другие предметы труда и быта горняков.</p><p><b>Телефон:</b> <a href="tel:+78636225918">8 (8636) 22-59-18</a></p><div class="actions"><button class="button" onclick="openExternal('https://muzey-shakhtinsky.ru/')">Официальный сайт музея</button></div></div>`)}
+function p5Page(){bar('Пятёрочка',true);show(`<div class="storeBody"><img class="brand" src="${A.p5}"><h2>Пятёрочка</h2><p>Продуктовый магазин • 0 этаж</p><div class="actions"><button class="button" onclick="openExternal('https://www.rustore.ru/catalog/app/ru.pyaterochka.app.browser')">Открыть Пятёрочку</button><button class="button outline" onclick="openExternal('https://5ka.ru/')">Официальный сайт</button></div></div>`)}
+function maxikPage(){bar('Максик',true);show(`<div class="storeBody"><img class="brand" src="${A.maxik}"><h2>Детский развлекательный центр «Максик»</h2><p>3 этаж ТРЦ «Максимум»</p><div class="actions"><button class="button outline" onclick="floor3()">Назад на 3 этаж</button></div></div>`)}
+function zollaPage(){bar('Zolla',true);show(`<div class="storeBody"><img class="brand" src="${A.zolla}"><h2>Zolla</h2><p>Магазин одежды • 3 этаж</p><div class="actions"><button class="button" onclick="openExternal('https://www.rustore.ru/catalog/app/com.zolla.app')">Открыть в RuStore</button></div></div>`)}
+function mvideoPage(){bar('М.Видео',true);show(`<div class="storeBody"><img class="brand" src="${A.mvideo}"><h2>М.Видео</h2><p>Магазин электроники • 3 этаж</p><div class="actions"><button class="button" onclick="openExternal('https://www.rustore.ru/catalog/app/ru.filit.mvideo.b2c')">Открыть в RuStore</button></div></div>`)}
+function monitorPage(){bar('МОНИТОР',true);show(`<div class="storeBody"><img class="brand" src="${A.monitor}"><h2>Кинотеатр «МОНИТОР Максимум»</h2><p>4 этаж</p><div class="actions"><button class="button" onclick="openExternal('https://www.rustore.ru/catalog/app/ru.kinoplan.cinema.monitor')">Открыть в RuStore</button></div></div>`)}
+function ladyPage(){bar('Lady Stretch',true);show(`<div class="storeBody"><img class="brand" src="${A.lady}"><h2>Lady Stretch</h2><p>Студия растяжки • 4 этаж</p><div class="actions"><button class="button" onclick="openExternal('https://shahty-ladystretch.ru/')">Официальный сайт</button></div></div>`)}
+home();
 </script>
-</body></html>
+</body>
+</html>
