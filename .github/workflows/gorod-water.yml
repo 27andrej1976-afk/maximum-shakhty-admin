@@ -26,29 +26,27 @@ jobs:
         run: python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
       - name: Fetch public Shakhty water notices
         run: python gorod-control/scripts/collect_water.py
-      - name: Test publicly accessible official repost feeds
+      - name: Inspect water notices in RSS
         run: |
           python - <<'PY'
           from urllib.request import Request,urlopen
-          import re
-          urls=[
-           'https://newsrostov.ru/rss.xml',
-           'https://newsrostov.ru/rss',
-           'https://newsrostov.ru/feed',
-           'https://newsrostov.ru/society/2026/10/16/597700.html',
-           'https://news-don.ru/rss.xml',
-           'https://news-don.ru/society/2026/10/17/147188.html',
-           'https://max.ru/shakhtygorod',
-           'https://max.ru/guproursv'
-          ]
-          for u in urls:
-           try:
-            with urlopen(Request(u,headers={'User-Agent':'Mozilla/5.0 (compatible; CityControlTest/0.2; +https://github.com/27andrej1976-afk/maximum-shakhty-admin)'}), timeout=8) as r:
-             b=r.read(200000)
-             x=b.decode('utf-8','replace')
-             print('FEED_CHECK',u,'HTTP',r.status,'BYTES',len(b),'CTYPE',r.headers.get('Content-Type'),'water',len(re.findall('водоснабж|Шахтинск|Шахты',x,re.I)),'RSS',('<rss' in x or '<feed' in x))
-           except Exception as e:
-            print('FEED_CHECK',u,'FAILED',str(e)[:120])
+          from xml.etree import ElementTree as ET
+          import re,html
+          for u in ['https://newsrostov.ru/rss.xml','https://news-don.ru/rss.xml']:
+            try:
+              with urlopen(Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=15) as resp: body=resp.read(6_000_000)
+              root=ET.fromstring(body)
+              items=root.findall('.//item')
+              print('FEED_FORMAT',u,'total bytes',len(body),'items',len(items),'keys', sorted({x.tag for i in items[:3] for x in i}))
+              for item in items[:250]:
+                tit=item.findtext('title','') or ''
+                desc=item.findtext('description','') or ''
+                rest=' '.join(item.itertext())
+                if re.search(r'Шахт|водоснабжен|водоканал|филиал',rest,re.I):
+                  if re.search('Шахт',rest,re.I) and re.search('водоснабжен|водоканал|ГУП РО|Филиал',rest,re.I):
+                    print('FEED_NOTICE',u[:23],item.findtext('pubDate'),tit[:90],item.findtext('link'), 'len=',len(rest), 'hint=',re.sub(r'\\s+',' ',html.unescape(re.sub(r'<[^>]+>',' ',desc)))[:160])
+              print('FEED_FIRST',u,[(i.findtext('title','')[:60],i.findtext('pubDate')) for i in items[:3]])
+            except Exception as e:print('FEED_ERROR',u,str(e)[:150])
           PY
       - name: Publish JSON to GitHub Pages
         run: |
