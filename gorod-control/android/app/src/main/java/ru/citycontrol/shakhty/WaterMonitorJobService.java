@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -152,6 +153,29 @@ public final class WaterMonitorJobService extends JobService {
     try{return OffsetDateTime.parse(stamp).toInstant().toEpochMilli();}
     catch(Exception e){return 0;}
   }
+  /** Device-only test message. Never pretends to be a real incident. */
+  public static boolean showTestNotification(Context context) {
+    if(Build.VERSION.SDK_INT>=33 &&
+      context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED) return false;
+    NotificationManager manager=(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+    if(manager==null)return false;
+    NotificationChannel channel=new NotificationChannel(CHANNEL,
+       "Вода — коммунальные предупреждения",NotificationManager.IMPORTANCE_DEFAULT);
+    manager.createNotificationChannel(channel);
+    Intent intent=new Intent(context,MainActivity.class);
+    PendingIntent tap=PendingIntent.getActivity(context,100100,intent,
+        PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
+    Notification notice=new Notification.Builder(context,CHANNEL)
+       .setSmallIcon(android.R.drawable.stat_notify_error)
+       .setContentTitle("ТЕСТ: уведомления работают")
+       .setContentText("Это проверка телефона. Никаких аварий данное уведомление не подтверждает.")
+       .setAutoCancel(true)
+       .setContentIntent(tap)
+       .build();
+    manager.notify(100100,notice);
+    return true;
+  }
+
   private void issueNotification(String id,String kind,Match match,String start,String rawTitle) {
     NotificationManager manager=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
     if(manager==null)return;
