@@ -110,6 +110,13 @@ def schedule(text,published,kind):
     for m in re.finditer(pattern,text,flags=re.I):
         try:days.append(datetime(int(m[3]),MONTHS[m[2].lower()],int(m[1]),tzinfo=MSK))
         except ValueError:pass
+    short_months=r'\b([0-3]?\d)\s+('+'|'.join(MONTHS)+r')\b'
+    for m in re.finditer(short_months,text,flags=re.I):
+        for year in (local.year-1,local.year,local.year+1):
+            try:
+                d=datetime(year,MONTHS[m[2].lower()],int(m[1]),tzinfo=MSK)
+                if -timedelta(days=1) <= d-local <= timedelta(days=40):days.append(d)
+            except ValueError:pass
     if days:day=min(days,key=lambda d:abs((d-local).total_seconds()))
     elif kind=='planned':return None,None
     else:day=local
@@ -117,6 +124,14 @@ def schedule(text,published,kind):
     end_match=re.search(r'(?:ориентировочн[^\n]{0,90}?(?:завершения|окончания)|продлен[^\n]{0,25}?до|\bдо\b)\s*[^\d\n]{0,15}(\d{1,2})\s*[:.\-]\s*([0-5]\d)',text,flags=re.I)
     start=day.replace(hour=int(start_match[1]),minute=int(start_match[2])) if start_match else (day.replace(hour=0,minute=0) if kind=='planned' else local)
     end=day.replace(hour=int(end_match[1]),minute=int(end_match[2])) if end_match else None
+    if end_match:
+        explicit_end=re.search(r'\bдо\s+\d{1,2}\s*[:.\-]\s*\d{2}\s+([0-3]?\d)\s+('+'|'.join(MONTHS)+r')',text,flags=re.I)
+        if explicit_end:
+            try:
+                e_day=datetime(day.year,MONTHS[explicit_end[2].lower()],int(explicit_end[1]),tzinfo=MSK)
+                if e_day<day:e_day=e_day.replace(year=day.year+1)
+                end=e_day.replace(hour=int(end_match[1]),minute=int(end_match[2]))
+            except ValueError:pass
     if end and end<start:end+=timedelta(days=1)
     return start.isoformat(),end.isoformat() if end else None
 
@@ -164,6 +179,21 @@ def main():
                 html=resp.read(2000000).decode('utf-8','replace')
             raw=parse_html(html,channel)
             if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
             most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
             days_old=(now-most_recent).total_seconds()/86400
             if channel=='admshakhty':
