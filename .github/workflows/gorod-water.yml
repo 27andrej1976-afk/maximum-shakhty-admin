@@ -7,6 +7,7 @@ on:
     branches: [main]
     paths:
       - 'gorod-control/scripts/**'
+      - 'gorod-control/map-v07/geometry.py'
       - '.github/workflows/gorod-water.yml'
 permissions:
   contents: write
@@ -30,39 +31,67 @@ jobs:
         run: python gorod-control/scripts/collect_water.py
       - name: Collect electricity, gas source state and official MCHS warnings
         run: python gorod-control/scripts/collect_services.py
+      - name: Update public affected-street map geometry when city map is installed
+        run: |
+          if [ -f gorod-control/map-v07/geometry.py ]; then
+            python gorod-control/map-v07/geometry.py
+            node --check gorod-control/map-v07/city-map.js
+          fi
       - name: Validate mobile app JavaScript
         run: |
           python - <<'PY'
           import re,subprocess,pathlib,tempfile
           html=pathlib.Path('gorod-control/index.html').read_text(encoding='utf-8')
-          scripts=re.findall(r'<script(?:\\s+[^>]*)?>(.*?)</script>',html,re.S|re.I)
-          if len(scripts)<2:raise SystemExit('Expected inline logic and frontend scripts')
-          for i,s in enumerate(scripts):
+          scripts=re.findall(r'<script(?:\s+[^>]*)?>(.*?)</script>',html,re.S|re.I)
+          inline=[s for s in scripts if s.strip()]
+          if len(inline)<2:raise SystemExit('Expected inline logic and frontend scripts')
+          for i,s in enumerate(inline):
             with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as t:
               t.write(s);fn=t.name
             proc=subprocess.run(['node','--check',fn],capture_output=True,text=True)
             if proc.returncode:raise SystemExit('JavaScript '+str(i)+' invalid: '+proc.stderr)
-          print('JavaScript source syntax OK:',len(scripts),'scripts')
+          print('JavaScript source syntax OK:',len(inline),'scripts')
           PY
-      - name: Publish current JSON atomically
+      - name: Publish event data and street map atomically
         run: |
-          cp gorod-control/data/water.json /tmp/city-control-water.json
+          set -euo pipefail
+          mkdir -p /tmp/city-control-publish
+          cp gorod-control/data/water.json /tmp/city-control-publish/water.json
+          MAP_SHA=absent
+          if [ -f gorod-control/map-v07/geometry.py ]; then
+            MAP_SHA=$(git rev-parse HEAD:gorod-control/map-v07/geometry.py)
+            cp gorod-control/data/map-geometry.json /tmp/city-control-publish/map-geometry.json
+            cp gorod-control/data/street-geometry.json /tmp/city-control-publish/street-geometry.json
+          fi
           BUILT_PARSER_SHA=$(git rev-parse HEAD:gorod-control/scripts)
+          git restore --source=HEAD --worktree -- gorod-control/data
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for attempt in 1 2 3 4; do
             git fetch origin main
             CURRENT_PARSER_SHA=$(git rev-parse origin/main:gorod-control/scripts)
             if [ "$BUILT_PARSER_SHA" != "$CURRENT_PARSER_SHA" ]; then
-              echo 'Parser updated while checking notices; skip old results. New push will trigger refreshed collection.'
+              echo 'Parser changed while checking; skip results from old code.'
               exit 0
             fi
+            if [ "$MAP_SHA" != absent ]; then
+              CURRENT_MAP_SHA=$(git rev-parse origin/main:gorod-control/map-v07/geometry.py)
+              if [ "$MAP_SHA" != "$CURRENT_MAP_SHA" ]; then
+                echo 'Geometry code changed; the new collector run will publish updated results.'
+                exit 0
+              fi
+            fi
             git checkout -B city-control-water-publish origin/main
-            cp /tmp/city-control-water.json gorod-control/data/water.json
+            cp /tmp/city-control-publish/water.json gorod-control/data/water.json
             git add gorod-control/data/water.json
+            if [ "$MAP_SHA" != absent ]; then
+              cp /tmp/city-control-publish/map-geometry.json gorod-control/data/map-geometry.json
+              cp /tmp/city-control-publish/street-geometry.json gorod-control/data/street-geometry.json
+              git add gorod-control/data/map-geometry.json gorod-control/data/street-geometry.json
+            fi
             if git diff --cached --quiet; then echo 'No new data'; break; fi
-            git commit -m 'city-control: refresh verified water notices'
-            if git push origin HEAD:main; then echo 'Water notices published'; break; fi
+            git commit -m 'city-control: refresh published notices and affected street geometry'
+            if git push origin HEAD:main; then echo 'City notices and map published'; break; fi
             if [ "$attempt" = 4 ]; then exit 1; fi
             sleep 2
           done
