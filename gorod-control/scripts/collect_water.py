@@ -3,6 +3,7 @@
 Only municipal public messages are processed; no user coordinates or home are uploaded.
 """
 import json, re, sys
+from rss_water import collect_rss
 from datetime import datetime, timedelta, timezone
 from html.parser import HTMLParser
 from pathlib import Path
@@ -138,25 +139,27 @@ def schedule(text,published,kind):
 
 def feed(messages,now=None):
     now=now or datetime.now(timezone.utc)
-    messages=sorted(messages,key=lambda x:x['publishedAt'],reverse=True)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
     recent=[];events=[]
     for m in messages:
         kind=classify(m['text'])
         if not kind:continue
         areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
         desc=re.sub(r'\s+',' ',m['text'])[:340]
-        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'kind':kind,'affected':areas,'description':desc})
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
         if kind=='resolved' or not areas:continue
         start,end=schedule(m['text'],published,kind)
         if not start:continue
         if kind!='planned' and now-published>timedelta(hours=48):continue
         if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
-        if kind!='planned' and end and datetime.fromisoformat(end)<now:continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
         events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
-            'status':'active','category':'water','source':('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
             'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
             'description':desc,'start':start,'end':end,'point':None,'affected':areas,
-            'url':m['url'],'publishedAt':m['publishedAt'],'precision':'street'})
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
     def streets(areas):
         return {re.sub(r'^(?:ул\.?|улица|пер\.?|переулок|проспект|пр-?кт|пр\.|пр-д)\s+','',x['street'],flags=re.I).lower().replace('ё','е') for x in areas}
     closed=[m for m in recent if m['kind']=='resolved']
@@ -211,14 +214,30 @@ def main():
             print('SOURCE ERROR',channel,exc,file=sys.stderr)
             states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
                            'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
-    if all_posts:
-        result=feed(all_posts,now)
-        result['sources']=states
-    else:
-        try:result=json.loads(OUTPUT.read_text(encoding='utf-8'))
-        except Exception:result={'schema':2,'checkedAt':None,'events':[],'recent':[]}
-        result['sources']=states
-        result['fetchAttemptAt']=now.isoformat()
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('Filtered current water notices',len(result['events']))
