@@ -43,6 +43,20 @@ jobs:
               print('RSS_TAIL',repr(a[-500:]))
               break
           PY
+      - name: Validate mobile app JavaScript
+        run: |
+          python - <<'PY'
+          import re,subprocess,pathlib,tempfile
+          html=pathlib.Path('gorod-control/index.html').read_text(encoding='utf-8')
+          scripts=re.findall(r'<script(?:\\s+[^>]*)?>(.*?)</script>',html,re.S|re.I)
+          if len(scripts)<2:raise SystemExit('Expected inline logic and frontend scripts')
+          for i,s in enumerate(scripts):
+            with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as t:
+              t.write(s);fn=t.name
+            proc=subprocess.run(['node','--check',fn],capture_output=True,text=True)
+            if proc.returncode:raise SystemExit('JavaScript '+str(i)+' invalid: '+proc.stderr)
+          print('JavaScript source syntax OK:',len(scripts),'scripts')
+          PY
       - name: Publish JSON to GitHub Pages
         run: |
           git config user.name 'github-actions[bot]'
@@ -50,5 +64,10 @@ jobs:
           git add gorod-control/data/water.json
           if ! git diff --cached --quiet; then
             git commit -m 'city-control: refresh water notices'
-            git push origin HEAD:main
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then break; fi
+              if [ "$attempt" = 3 ]; then exit 1; fi
+              sleep 3
+            done
           fi
