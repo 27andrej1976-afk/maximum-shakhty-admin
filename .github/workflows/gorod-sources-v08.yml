@@ -14,7 +14,7 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 7
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,8 +30,15 @@ jobs:
         run: python gorod-control/source-lab-v08/probe.py
       - name: Replay 21 real publications and 16 lifecycle edge cases
         run: |
+          set -euo pipefail
           python gorod-control/source-lab-v08/test_verified.py 2>&1 | tee gorod-control/source-lab-v08/report/replay-tests.log
           python gorod-control/source-lab-v08/evaluate.py
+      - name: Prepare isolated browser
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+      - name: Verify candidate messages and public street geometry in mobile UI
+        run: python gorod-control/source-lab-v08/browser_check.py
       - name: Save evidence, test results and candidate sources
         if: always()
         uses: actions/upload-artifact@v4
