@@ -2,6 +2,7 @@ import unittest
 from datetime import datetime,timezone,timedelta
 from xml.sax.saxutils import escape
 from rss_water import feed_messages, html_text
+from collect_water import parse_affected, feed
 
 SAMPLE='''<p><strong>Филиал "Шахтинский" сообщает:</strong></p>
 <p>Снижение давления</p>
@@ -37,5 +38,22 @@ class RssMirrorTests(unittest.TestCase):
         self.assertEqual(feed_messages(xml_article(content='<p>Наш город проводит фестиваль в Шахтах</p><a href="https://rovodokanal.ru/emergency-alerts/1591">link</a>'),'newsrostov.ru'),[])
     def test_no_external_domains(self):
         self.assertEqual(feed_messages(xml_article(link='https://example.com/danger'),'newsrostov.ru'),[])
+
+    def test_17_october_notice_in_live_feed(self):
+        post=feed_messages(xml_article(),'newsrostov.ru')[0]
+        impact=parse_affected(post['text'])
+        self.assertEqual([i['street'] for i in impact],[
+            'ул Юный Спартак','ул Федюнина','ул Кадровая','пер Шишкина','пр-кт Красной Армии'])
+        before=feed([post],datetime(2026,10,17,12,0,tzinfo=timezone(timedelta(hours=3))))
+        self.assertEqual(len(before['events']),1)
+        event=before['events'][0]
+        self.assertEqual(event['id'],'water-oursv-1591')
+        self.assertEqual(event['start'],'2026-10-17T09:30:00+03:00')
+        self.assertEqual(event['end'],'2026-10-17T18:00:00+03:00')
+        self.assertEqual(event['status'],'active')
+        after=feed([post],datetime(2026,10,17,20,0,tzinfo=timezone(timedelta(hours=3))))
+        self.assertEqual(after['events'][0]['status'],'unconfirmed')
+        old=feed([post],datetime(2026,10,19,20,0,tzinfo=timezone(timedelta(hours=3))))
+        self.assertEqual(old['events'],[])
 
 if __name__=='__main__':unittest.main()
