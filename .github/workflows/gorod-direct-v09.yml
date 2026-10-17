@@ -1,0 +1,75 @@
+name: City Control | Direct sources and APK v0.9
+on:
+  workflow_dispatch:
+  push:
+    branches: [city-direct-v09]
+    paths:
+      - 'gorod-control/direct-v09/**'
+      - '.github/workflows/gorod-direct-v09.yml'
+permissions:
+  contents: read
+concurrency:
+  group: city-direct-v09
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install inspection browser
+        run: |
+          python -m pip install --quiet playwright cryptography
+          python -m playwright install --with-deps chromium >/dev/null
+      - name: Inspect public sources using normal browser and verified TLS
+        run: |
+          mkdir -p direct-report
+          python - <<'PY'
+          import json,re,subprocess,concurrent.futures,urllib.request,ssl
+          from pathlib import Path
+          from urllib.parse import urljoin,urlparse
+          from datetime import datetime,timezone
+          from playwright.sync_api import sync_playwright
+          out=Path('direct-report')
+          urls={'ursv':'https://rovodokanal.ru/emergency-alerts/','ursv_old':'https://guproursv.ru/','city':'https://shakhty.donland.ru/','power':'https://donenergo.ru/grafik-otklyucheniy/','max_water':'https://max.ru/id6167110467_gos','max_power':'https://max.ru/id6163089292_biz','max_city':'https://max.ru/shakhtygorod'}
+          report=[]
+          with sync_playwright() as p:
+            browser=p.chromium.launch()
+            context=browser.new_context(locale='ru-RU')
+            for name,url in urls.items():
+              page=context.new_page();requests=[]
+              page.on('response',lambda r:requests.append({'url':r.url,'status':r.status}) if urlparse(r.url).hostname in ('rovodokanal.ru','guproursv.ru','shakhty.donland.ru','donenergo.ru','max.ru') else None)
+              r={'id':name,'url':url,'at':datetime.now(timezone.utc).isoformat()}
+              try:
+                res=page.goto(url,wait_until='domcontentloaded',timeout=20000)
+                page.wait_for_timeout(2000)
+                r.update(status=res.status if res else None,title=page.title(),final=page.url)
+                raw=page.content();text=page.locator('body').inner_text()
+                (out/(name+'.html')).write_text(raw,encoding='utf-8');(out/(name+'.txt')).write_text(text,encoding='utf-8')
+                r['links']=page.locator('a[href]').evaluate_all('(nodes)=>nodes.map(n=>({text:n.textContent,url:n.href})).filter(n=>/rss|news|авар|отключ|предупр|водоснабж|emergency|graphql|api/i.test(n.text+" "+n.url)).slice(0,60)')
+                r['textPeek']=text[:1000];r['requests']=requests[-40:]
+              except Exception as e:r['error']=str(e)[:500]
+              page.close();report.append(r);print(json.dumps(r,ensure_ascii=False),flush=True)
+            browser.close()
+          cert=subprocess.run(['openssl','s_client','-connect','donenergo.ru:443','-servername','donenergo.ru','-showcerts'],input='',capture_output=True,text=True,timeout=15)
+          (out/'power-certificate.txt').write_text(cert.stdout+cert.stderr)
+          (out/'sources.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - name: Export exact candidate source tree for local validation
+        if: always()
+        run: |
+          mkdir -p direct-report/project
+          cp -R gorod-control direct-report/project/
+          find direct-report/project -name __pycache__ -type d -exec rm -rf {} +
+          find direct-report/project -name '*.apk' -delete
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: city-direct-v09-report
+          path: direct-report
+          retention-days: 7
