@@ -19,6 +19,12 @@ new vm.Script(blocks[0]).runInContext(ctx);
 const C=ctx.CityLogic;
 assert.ok(C);
 assert.equal(C.normalStreet("проспект Красной Армии"),C.normalStreet("пр-кт Красной Армии"));
+assert.equal(C.normalStreet("Советская улица"),C.normalStreet("ул. Советская"),"street name suffix from geocoder");
+assert.notEqual(C.normalStreet("ул. Шишкина"),C.normalStreet("пер. Шишкина"),"street and lane must NEVER be treated as same place");
+assert.notEqual(C.normalStreet("улица Маяковского"),C.normalStreet("проезд Маяковского"),"street and passage differ");
+assert.equal(C.normalStreet("переулок Шишкина"),C.normalStreet("пер Шишкина"),"lane aliases match");
+assert.equal(C.parseHomeAddress("ул. Советская, 25").street,"ул. советская","address type must survive storage");
+
 const home={lat:47.7086,lon:40.2146,street:"пер. Шишкина",house:"183А"};
 assert.equal(C.parseHomeAddress("г. Шахты, пер. Шишкина, 183А").house,"183а");
 const activeTime=new Date().toISOString();
@@ -35,4 +41,4 @@ const streetOnly={...address,affected:[{street:"пер Шишкина",houses:[]
 assert.equal(C.matchImpact(streetOnly,home).confidence,"medium","street without houses is preliminary");
 const stale={...near,status:"resolved"};
 assert.equal(C.matchImpact(stale,home).relevant,false,"completed event hidden");
-console.log("City frontend: "+blocks.length+" scripts parsed, 8 address/filter checks passed");
+console.log("City frontend: "+blocks.length+" scripts parsed, 13 address/filter checks passed");
