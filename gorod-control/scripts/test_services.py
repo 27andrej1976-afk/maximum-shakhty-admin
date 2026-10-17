@@ -13,6 +13,12 @@ def rss(title,body,when='Sat, 17 Oct 2026 22:00:00 +0300',link='https://newsrost
 class ServiceTests(unittest.TestCase):
     def test_power_repost(self):
         data=rss('г. Шахты, технологическое нарушение в сети 10 кВ',POWER)
+        import xml.etree.ElementTree as ET
+        from service_events import SOURCE_DONENERGO,POWER_RELEVANT,CITY,classify_power,incident_time
+        from rss_water import html_text
+        item=ET.fromstring(data).find('.//item')
+        text=(item.findtext('title') or '')+'\n'+html_text(item.findtext('{http://purl.org/rss/1.0/modules/content/}encoded') or '')
+        print('POWER_DEBUG', 'date',item.findtext('pubDate'),'text',repr(text[:450]),'city',bool(CITY.search(text[:500])),'category',bool(POWER_RELEVANT.search(text)),'source',bool(SOURCE_DONENERGO.search(text)),'class',classify_power(text),'addresses',affected_power(text),flush=True)
         parsed=power_posts(data,'newsrostov.ru',NOW)
         self.assertEqual(len(parsed),1)
         item=parsed[0]
