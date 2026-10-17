@@ -28,7 +28,11 @@ jobs:
           node gorod-control/scripts/test_frontend.mjs
       - name: Probe public feeds and capture real historical and current fixtures
         run: python gorod-control/source-lab-v08/probe.py
-      - name: Save source evidence and real-message fixtures
+      - name: Replay 21 real publications and 16 lifecycle edge cases
+        run: |
+          python gorod-control/source-lab-v08/test_verified.py 2>&1 | tee gorod-control/source-lab-v08/report/replay-tests.log
+          python gorod-control/source-lab-v08/evaluate.py
+      - name: Save evidence, test results and candidate sources
         if: always()
         uses: actions/upload-artifact@v4
         with:
