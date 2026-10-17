@@ -13,7 +13,7 @@ OUTPUT=Path(__file__).resolve().parents[1]/'data'/'water.json'
 MSK=timezone(timedelta(hours=3))
 MARK=re.compile(r'^(?:🗺\s*)?адрес(?:а|ы)?\s*[:：]?\s*$',re.I)
 STOP=re.compile(r'^(?:ℹ|🔗|🔧|⚠|📌|телефон|подвоз|подробнее|ориентировоч|работы завершен|причина)',re.I)
-STREET=re.compile(r'^(?:(?:г\.?\s*шахты|шахты)\s*,?\s*)?(?P<pre>ул\.?|улица|пер\.?|переулок|проспект|пр-кт|пр-т|пр\.|пр-д|проезд|пл\.?|площадь|мкр\.?|посёлок|поселок)\s+(?P<rest>.+)$',re.I)
+STREET=re.compile(r'^(?:(?:г\.?\s*шахты|шахты)\s*,?\s*)?(?P<pre>ул\.?|улица|пер\.?|переулок|проспект|пр-кт|пр-т|пр\.|пр-д|проезд|пл\.?|площадь|мкр\.?|посёлок|поселок|пос\.?|п\.)\s+(?P<rest>.+)$',re.I)
 HOUSE=re.compile(r'^(.*?)\s+(?:д\.?\s*)?(\d+[а-яa-z]?(?:\s*[-–]\s*\d+[а-яa-z]?)?(?:\s*,\s*\d+[а-яa-z]?)*)\s*\.?$',re.I)
 DATE=re.compile(r'\b([0-3]?\d)\s*[./]\s*([01]?\d)\s*[./]\s*(20\d{2})\b')
 MONTHS={s:i+1 for i,s in enumerate('января февраля марта апреля мая июня июля августа сентября октября ноября декабря'.split())}
@@ -67,7 +67,7 @@ def parse_html(html,channel='shakhtinskiy'):
 def parse_affected(text):
     out={};section=False
     for raw in text.splitlines():
-        line=raw.replace('\ufe0f','').strip(' \t\r▫▪•-–')
+        line=raw.replace('\ufe0f','').strip(' \t\r▫▪•-–✔✅🔹🔸')
         if MARK.fullmatch(line):section=True;continue
         if not section and re.search(r'(?:в направлении(?: следующих улиц)?|по адресам|остан(?:овлено|овка) водоснабжения|без водоснабжения оста(?:ются|лись))\s*[:：]',line,flags=re.I):
             section=True
