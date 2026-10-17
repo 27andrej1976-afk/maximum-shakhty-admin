@@ -75,7 +75,7 @@ public final class WaterMonitorJobService extends JobService {
     JSONArray sources=data.optJSONArray("sources");
     if(sources==null)return;
     boolean waterDirect=false,city=false,waterRepost=false;
-    boolean powerRostov=false,powerDon=false,mchs=false;
+    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false;
     for(int j=0;j<sources.length();j++){
       JSONObject src=sources.optJSONObject(j);
       if(src==null||!"ok".equals(src.optString("status")))continue;
@@ -85,9 +85,11 @@ public final class WaterMonitorJobService extends JobService {
       if(sourceId.startsWith("repost_"))waterRepost=true;
       if(sourceId.equals("power_repost_rostov"))powerRostov=true;
       if(sourceId.equals("power_repost_don"))powerDon=true;
+      if(sourceId.equals("power_city"))powerCity=true;
+      if(sourceId.equals("gas_city"))gasCity=true;
       if(sourceId.equals("mchs"))mchs=true;
     }
-    if(!(waterDirect||city||waterRepost||powerRostov||powerDon||mchs))return;
+    if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs))return;
     JSONArray events=data.optJSONArray("events");
     if(events==null)return;
     for(int i=0;i<events.length()&&!stopped;i++){
@@ -113,11 +115,18 @@ public final class WaterMonitorJobService extends JobService {
         match=affectedHouse(e.optJSONArray("affected"),street,house);
       }else if(category.equals("power")){
         if(!kind.equals("emergency")&&!kind.equals("planned"))continue;
-        if(!origin.equals("attributed_repost"))continue;
         String url=e.optString("url","");
-        boolean valid=(powerRostov&&url.startsWith("https://newsrostov.ru/"))
-              ||(powerDon&&url.startsWith("https://news-don.ru/"));
+        boolean valid=origin.equals("official_city_post")&&powerCity&&
+            url.startsWith("https://t.me/admshakhty/");
+        if(origin.equals("attributed_repost"))valid=
+            (powerRostov&&url.startsWith("https://newsrostov.ru/"))||
+            (powerDon&&url.startsWith("https://news-don.ru/"));
         if(!valid)continue;
+        match=affectedHouse(e.optJSONArray("affected"),street,house);
+      }else if(category.equals("gas")){
+        if(!gasCity||!origin.equals("official_city_post")||
+            !e.optString("url","").startsWith("https://t.me/admshakhty/"))continue;
+        if(!kind.equals("emergency")&&!kind.equals("planned"))continue;
         match=affectedHouse(e.optJSONArray("affected"),street,house);
       }else if(category.equals("mchs")){
         if(!mchs||!kind.equals("warning")||!e.optString("priority","").equals("high"))continue;
@@ -208,6 +217,7 @@ public final class WaterMonitorJobService extends JobService {
     PendingIntent tap=PendingIntent.getActivity(this,id.hashCode(),intent,
       PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     String title=category.equals("mchs")?"МЧС: предупреждение для Шахт":
+      category.equals("gas")?(kind.equals("planned")?"Плановые работы газовой службы":"Возможное отключение газа"):
       category.equals("power")?(kind.equals("planned")?"Плановое отключение света":"Возможное отключение электроэнергии"):
       (kind.equals("planned")?"Плановые работы водоканала":"Сообщение о водоснабжении");
     String message=match==Match.AREA?
