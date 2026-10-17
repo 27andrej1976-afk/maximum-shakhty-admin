@@ -35,6 +35,7 @@ public final class MainActivity extends Activity {
     container.addView(web,new FrameLayout.LayoutParams(-1,-1));
     setContentView(container);
     WebSettings settings = web.getSettings();
+    settings.setUserAgentString(settings.getUserAgentString() + " CityControlApp/0.2");
     settings.setJavaScriptEnabled(true);
     settings.setDomStorageEnabled(true);
     settings.setGeolocationEnabled(true);
