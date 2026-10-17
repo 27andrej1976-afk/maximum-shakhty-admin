@@ -45,4 +45,17 @@ const streetOnly={...address,affected:[{street:"пер Шишкина",houses:[]
 assert.equal(C.matchImpact(streetOnly,home).confidence,"medium","street without houses is preliminary");
 const stale={...near,status:"resolved"};
 assert.equal(C.matchImpact(stale,home).relevant,false,"completed event hidden");
-console.log("City frontend: "+blocks.length+" scripts parsed, 13 address/filter checks passed");
+const shHome={...home,label:"г. Шахты, пер. Шишкина, 183А"};
+const mchs={id:"forecast-mchs-001",category:"mchs",kind:"warning",status:"active",scope:"city",
+  start:new Date().toISOString(),end:new Date(Date.now()+86400000).toISOString(),affected:[],point:null};
+assert.equal(C.matchImpact(mchs,shHome).relevant,true,"Shakhty-wide forecast is shown to a verified Shakhty address");
+assert.equal(C.matchImpact(mchs,{...shHome,label:"г. Таганрог, ул. Морская"}).relevant,false,"do not show Shakhty scope to another city");
+assert.equal(C.matchImpact({...mchs,end:new Date(Date.now()-7200000).toISOString()},shHome).relevant,false,
+  "expired MCHS advisories do not remain visible");
+assert.match(html,/id:'power_repost_rostov'/,"electricity repost source");
+assert.match(html,/id:'power_city'/,"city power announcements");
+assert.match(html,/id:'gas_city'/,"city gas announcements");
+assert.match(html,/id:'mchs'/,"official MCHS feed");
+assert.match(html,/data-filter="warning"/,"MCHS notices can be filtered separately");
+
+console.log("City frontend: "+blocks.length+" scripts parsed, 21 address/scope/source checks passed");
