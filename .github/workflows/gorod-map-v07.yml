@@ -55,7 +55,7 @@ jobs:
           cp gorod-control/data/map-geometry.json /tmp/city-map-ready/map-geometry.json
           cp gorod-control/data/street-geometry.json /tmp/city-map-ready/street-geometry.json
           find /tmp/city-map-ready -type d -name __pycache__ -exec rm -r {} +
-          git checkout -- gorod-control/index.html .github/workflows/gorod-water.yml
+          git restore --source=HEAD --worktree -- gorod-control/index.html .github/workflows/gorod-water.yml gorod-control/map-v07
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for attempt in 1 2 3; do
