@@ -35,21 +35,41 @@ jobs:
       - name: Build Android test APK
         working-directory: gorod-control/android
         run: gradle --no-daemon --stacktrace :app:assembleDebug
-      - name: Publish downloadable APK
+      - name: Verify APK integrity and Android permissions
         run: |
-          mkdir -p gorod-control/downloads
-          cp gorod-control/android/app/build/outputs/apk/debug/app-debug.apk gorod-control/downloads/GorodPodKontrolem-Shakhty-test.apk
-          (cd gorod-control/downloads && sha256sum GorodPodKontrolem-Shakhty-test.apk > SHA256SUMS.txt)
+          APK=gorod-control/android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | tee /tmp/city-control-package.txt
+          grep -F "package: name='ru.citycontrol.shakhty'" /tmp/city-control-package.txt
+          grep -F "uses-permission: name='android.permission.ACCESS_FINE_LOCATION'" /tmp/city-control-package.txt
+          cp "$APK" /tmp/gorod-control-test.apk
+          sha256sum /tmp/gorod-control-test.apk
+      - name: Publish downloadable APK without binary merge conflicts
+        run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add gorod-control/downloads
-          if ! git diff --cached --quiet; then
-            git commit -m 'city-control: publish Android test APK'
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
-      - name: Upload APK build artifact
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            EXPECTED=$(git rev-parse HEAD:gorod-control/android)
+            CURRENT=$(git rev-parse origin/main:gorod-control/android)
+            if [ "$EXPECTED" != "$CURRENT" ]; then
+              echo "Android code has changed since this run. Skip outdated APK; the new workflow will publish the current build."
+              exit 0
+            fi
+            git checkout -B city-control-apk-publish origin/main
+            mkdir -p gorod-control/downloads
+            cp /tmp/gorod-control-test.apk gorod-control/downloads/GorodPodKontrolem-Shakhty-test.apk
+            (cd gorod-control/downloads && sha256sum GorodPodKontrolem-Shakhty-test.apk > SHA256SUMS.txt)
+            git add gorod-control/downloads
+            if git diff --cached --quiet; then echo "Already current"; break; fi
+            git commit -m 'city-control: verified Android test APK v0.3'
+            if git push origin HEAD:main; then echo "Verified APK published"; break; fi
+            if [ "$attempt" = 4 ]; then exit 1; fi
+            sleep 2
+          done
+      - name: Upload verified APK build artifact
         uses: actions/upload-artifact@v4
         with:
           name: gorod-control-shakhty-test-apk
-          path: gorod-control/downloads/GorodPodKontrolem-Shakhty-test.apk
+          path: /tmp/gorod-control-test.apk
