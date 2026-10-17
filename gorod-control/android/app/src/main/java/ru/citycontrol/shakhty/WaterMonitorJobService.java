@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 public final class WaterMonitorJobService extends JobService {
   public static final int JOB_ID=71603;
   private static final String DATA_URL="https://27andrej1976-afk.github.io/maximum-shakhty-admin/gorod-control/data/water.json";
-  private static final String CHANNEL="city_control_water";
+  private static final String CHANNEL="city_control_service_alerts";
   private volatile boolean stopped=false;
   private Thread task;
 
@@ -74,16 +74,20 @@ public final class WaterMonitorJobService extends JobService {
     if(lastScan<=0||now-lastScan>4L*3600000||lastScan-now>20L*60000)return;
     JSONArray sources=data.optJSONArray("sources");
     if(sources==null)return;
-    boolean directAvailable=false,cityAvailable=false,repostAvailable=false;
+    boolean waterDirect=false,city=false,waterRepost=false;
+    boolean powerRostov=false,powerDon=false,mchs=false;
     for(int j=0;j<sources.length();j++){
-      JSONObject source=sources.optJSONObject(j);
-      if(source==null||!"ok".equals(source.optString("status")))continue;
-      String id=source.optString("id","");
-      if(id.equals("water"))directAvailable=true;
-      if(id.equals("city"))cityAvailable=true;
-      if(id.startsWith("repost_"))repostAvailable=true;
+      JSONObject src=sources.optJSONObject(j);
+      if(src==null||!"ok".equals(src.optString("status")))continue;
+      String sourceId=src.optString("id","");
+      if(sourceId.equals("water"))waterDirect=true;
+      if(sourceId.equals("city"))city=true;
+      if(sourceId.startsWith("repost_"))waterRepost=true;
+      if(sourceId.equals("power_repost_rostov"))powerRostov=true;
+      if(sourceId.equals("power_repost_don"))powerDon=true;
+      if(sourceId.equals("mchs"))mchs=true;
     }
-    if(!(directAvailable||cityAvailable||repostAvailable))return;
+    if(!(waterDirect||city||waterRepost||powerRostov||powerDon||mchs))return;
     JSONArray events=data.optJSONArray("events");
     if(events==null)return;
     for(int i=0;i<events.length()&&!stopped;i++){
@@ -91,33 +95,54 @@ public final class WaterMonitorJobService extends JobService {
       if(e==null||!"active".equals(e.optString("status")))continue;
       String eventId=e.optString("id","");
       String kind=e.optString("kind","");
-      if(eventId.isEmpty()||!(kind.equals("planned")||kind.equals("emergency")))continue;
+      String category=e.optString("category","");
       String origin=e.optString("origin","");
       String name=e.optString("source","");
-      if(origin.equals("verified_repost")){
-        if(!repostAvailable ||
+      if(eventId.isEmpty())continue;
+      Match match=Match.NONE;
+      if(category.equals("water")){
+        if(!(kind.equals("planned")||kind.equals("emergency")))continue;
+        if(origin.equals("verified_repost")){
+          if(!waterRepost||
             !e.optString("officialUrl","").matches("^https://rovodokanal\\.ru/emergency-alerts/\\d+$"))continue;
-      } else if(name.equals("Шахтинский водоканал")){
-        if(!directAvailable)continue;
-      } else if(name.equals("Администрация города Шахты")){
-        if(!cityAvailable)continue;
-      } else continue;
+        }else if(name.equals("Шахтинский водоканал")){
+          if(!waterDirect)continue;
+        }else if(name.equals("Администрация города Шахты")){
+          if(!city)continue;
+        }else continue;
+        match=affectedHouse(e.optJSONArray("affected"),street,house);
+      }else if(category.equals("power")){
+        if(!kind.equals("emergency")&&!kind.equals("planned"))continue;
+        if(!origin.equals("attributed_repost"))continue;
+        String url=e.optString("url","");
+        boolean valid=(powerRostov&&url.startsWith("https://newsrostov.ru/"))
+              ||(powerDon&&url.startsWith("https://news-don.ru/"));
+        if(!valid)continue;
+        match=affectedHouse(e.optJSONArray("affected"),street,house);
+      }else if(category.equals("mchs")){
+        if(!mchs||!kind.equals("warning")||!e.optString("priority","").equals("high"))continue;
+        if(!e.optString("url","").startsWith("https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/"))
+          continue;
+        String scope=e.optString("scope","");
+        if(!scope.equals("city")&&!scope.equals("region"))continue;
+        // At this stage the entire application and its saved-address workflow are Shakhty-only.
+        match=Match.AREA;
+      }else continue;
 
+      if(match==Match.NONE)continue;
       long start=utcMillis(e.optString("start",""));
       long end=utcMillis(e.optString("end",""));
       if(start<=0)continue;
       if(start>now+14L*86400000)continue;
       if(end>0&&end<now)continue;
-      if(kind.equals("emergency") && start<now-48L*3600000)continue;
-      Match match=affectedHouse(e.optJSONArray("affected"),street,house);
-      if(match==Match.NONE)continue;
-      String key="water-alert:"+street+":"+house+":"+eventId+":"+e.optString("start","");
+      if(!kind.equals("planned")&&start<now-48L*3600000)continue;
+      String key="city-alert:"+street+":"+house+":"+category+":"+eventId+":"+e.optString("start","");
       if(prefs.getBoolean(key,false))continue;
-      issueNotification(eventId,kind,match,e.optString("start",""),e.optString("title",""));
+      issueNotification(eventId,kind,category,match);
       prefs.edit().putBoolean(key,true).apply();
     }
   }
-  private enum Match { NONE, STREET, EXACT }
+  private enum Match { NONE, STREET, EXACT, AREA }
   private Match affectedHouse(JSONArray areas,String homeStreet,String homeHouse){
     if(areas==null)return Match.NONE;
     Match outcome=Match.NONE;
@@ -154,7 +179,7 @@ public final class WaterMonitorJobService extends JobService {
     NotificationManager manager=(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
     if(manager==null)return false;
     NotificationChannel channel=new NotificationChannel(CHANNEL,
-       "Вода — коммунальные предупреждения",NotificationManager.IMPORTANCE_DEFAULT);
+       "Город под контролем — предупреждения",NotificationManager.IMPORTANCE_DEFAULT);
     manager.createNotificationChannel(channel);
     Intent intent=new Intent(context,MainActivity.class);
     PendingIntent tap=PendingIntent.getActivity(context,100100,intent,
@@ -170,30 +195,31 @@ public final class WaterMonitorJobService extends JobService {
     return true;
   }
 
-  private void issueNotification(String id,String kind,Match match,String start,String rawTitle) {
+  private void issueNotification(String id,String kind,String category,Match match) {
     NotificationManager manager=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
     if(manager==null)return;
     if(Build.VERSION.SDK_INT>=26){
-      NotificationChannel channel=new NotificationChannel(CHANNEL,"Вода — коммунальные предупреждения",NotificationManager.IMPORTANCE_DEFAULT);
-      channel.setDescription("Плановые отключения и аварии, затрагивающие выбранную улицу или дом");
+      NotificationChannel channel=new NotificationChannel(CHANNEL,
+        "Город под контролем — предупреждения",NotificationManager.IMPORTANCE_DEFAULT);
+      channel.setDescription("Только проверенные сообщения коммунальных служб или МЧС, относящиеся к сохранённому адресу");
       manager.createNotificationChannel(channel);
     }
     Intent intent=new Intent(this,MainActivity.class);
     PendingIntent tap=PendingIntent.getActivity(this,id.hashCode(),intent,
       PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-    String title=kind.equals("planned")?"Запланированы работы с водой":"Сообщение об ограничении воды";
-    String text=match==Match.EXACT?
-       "Ваш дом указан в опубликованном уведомлении. Откройте приложение, чтобы проверить время и источник.":
-       "Указана ваша улица. Номер дома не подтверждён: уточните подробности в объявлении.";
-    Notification n=new Notification.Builder(this,CHANNEL)
-       .setSmallIcon(android.R.drawable.stat_notify_error)
-       .setContentTitle(title)
-       .setContentText(text)
-       .setStyle(new Notification.BigTextStyle().bigText(text))
-       .setContentIntent(tap)
-       .setAutoCancel(true)
-       .setOnlyAlertOnce(true)
-       .build();
-    manager.notify(id.hashCode(),n);
+    String title=category.equals("mchs")?"МЧС: предупреждение для Шахт":
+      category.equals("power")?(kind.equals("planned")?"Плановое отключение света":"Возможное отключение электроэнергии"):
+      (kind.equals("planned")?"Плановые работы водоканала":"Сообщение о водоснабжении");
+    String message=match==Match.AREA?
+      "Проверенное предупреждение МЧС относится к территории Шахт. Откройте приложение и прочитайте первоисточник.":
+      match==Match.EXACT?
+      "Ваш дом включён в опубликованный список. Откройте приложение для проверки времени и источника.":
+      "Указана ваша улица, но номер дома не подтверждён. Уточните зону работ по первоисточнику.";
+    Notification notice=new Notification.Builder(this,CHANNEL)
+      .setSmallIcon(android.R.drawable.stat_notify_error)
+      .setContentTitle(title).setContentText(message)
+      .setStyle(new Notification.BigTextStyle().bigText(message))
+      .setContentIntent(tap).setAutoCancel(true).setOnlyAlertOnce(true).build();
+    manager.notify(id.hashCode(),notice);
   }
 }
