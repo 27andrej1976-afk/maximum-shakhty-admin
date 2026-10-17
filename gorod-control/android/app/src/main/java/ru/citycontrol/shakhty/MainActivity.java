@@ -201,8 +201,23 @@ public final class MainActivity extends Activity {
         JSONObject item=new JSONObject((String)decoded);
         String street=item.optString("street","").trim();
         String house=item.optString("house","").trim();
-        if(street.isEmpty())return;
         SharedPreferences prefs=getSharedPreferences("city-control-home",MODE_PRIVATE);
+        if(street.isEmpty()){
+          if(prefs.contains("street")||prefs.contains("house")){
+            prefs.edit().remove("street").remove("house").apply();
+          }
+          return;
+        }
+        // Older versions stored only a bare road name. Recover its type from
+        // the complete user-entered label, never guess whether it is a street or a lane.
+        if(CityAddress.street(street).startsWith("неуточн:")){
+          String label=item.optString("label","");
+          java.util.regex.Matcher m=java.util.regex.Pattern
+            .compile("^(.*?)\\s*,\\s*(?:д\\.?\\s*)?\\d+").matcher(label);
+          if(m.find()&&!CityAddress.street(m.group(1)).startsWith("неуточн:")){
+            street=m.group(1);
+          }
+        }
         if(!street.equals(prefs.getString("street",""))||!house.equals(prefs.getString("house",""))){
           prefs.edit().putString("street",street).putString("house",house).apply();
         }
