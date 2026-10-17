@@ -64,4 +64,30 @@ class ServiceTests(unittest.TestCase):
         body='Экстренное предупреждение. На всей территории Ростовской области сильный ветер ожидается на протяжении суток.'
         xml=rss('Экстренное предупреждение МЧС',body,link='https://bad.example/alert',tag='yandex:full-text')
         self.assertEqual(mchs_posts(xml,NOW),[])
+
+    def test_official_city_gas_notice(self):
+        from city_utility import parse_posts, detect
+        notice='Отключение газоснабжения\n29 октября с 09:00 до 14:00 будет произведено плановое отключение газа.\nАдреса:\nул. Советская 11\nул. Советская 13\nПодробности'
+        self.assertEqual(detect(notice),'gas')
+        posts=[{'id':'admshakhty/100','publishedAt':NOW.isoformat(),
+          'text':notice,'url':'https://t.me/admshakhty/100'}]
+        out=parse_posts(posts,NOW)
+        self.assertEqual(len(out),1)
+        self.assertEqual(out[0]['category'],'gas')
+        self.assertEqual(out[0]['kind'],'planned')
+        self.assertEqual(out[0]['affected'][0]['houses'],['11','13'])
+        self.assertEqual(out[0]['start'],'2026-10-29T09:00:00+03:00')
+        self.assertEqual(out[0]['sourceId'],'gas_city')
+    def test_official_city_power_notice(self):
+        from city_utility import parse_posts
+        msg='г. Шахты, в 21:40 произошло технологическое нарушение в сети 10 кВ, что привело к частичному отключению потребителей в границах: ул. Ленина, ул. Советская, пер. Донской.\nОриентировочное восстановление электроснабжения в течение 3 часов.'
+        out=parse_posts([{'id':'admshakhty/101','publishedAt':NOW.isoformat(),'text':msg,'url':'https://t.me/admshakhty/101'}],NOW)
+        self.assertEqual(len(out),1)
+        self.assertEqual(out[0]['category'],'power')
+        self.assertEqual(len(out[0]['affected']),3)
+    def test_city_gas_general_info_not_outage(self):
+        from city_utility import parse_posts
+        msg='В Шахтах продолжается социальная газификация и модернизация оборудования. Состоялось открытие выставки.'
+        self.assertEqual(parse_posts([{'id':'admshakhty/102','publishedAt':NOW.isoformat(),'text':msg,'url':'https://t.me/admshakhty/102'}],NOW),[])
+
 if __name__=='__main__':unittest.main()
