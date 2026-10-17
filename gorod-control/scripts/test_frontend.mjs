@@ -7,6 +7,10 @@ const html=fs.readFileSync(path.resolve("gorod-control/index.html"),"utf8");
 const blocks=[...html.matchAll(/<script(?:\s+[^>]*)?>([\s\S]*?)<\/script>/gi)]
   .map(m=>m[1]).filter(Boolean);
 assert.ok(blocks.length>=2,"expected two inline scripts");
+assert.doesNotMatch(html,/id:'water',\s*icon:/,"outdated Telegram water channel must be absent from the displayed sources");
+assert.match(html,/id:'repost_rostov'/,"current official-linked mirror must be present");
+assert.match(html,/id:'repost_don'/,"backup source must be present");
+
 assert.match(html,/CityControlNativeGPSResult/,"native Android coordinate callback must exist");
 assert.match(html,/CityControlNativeGPSError/,"native GPS failure callback must exist");
 assert.match(html,/citycontrol:\/\/get-location/,"native Android geolocation route must exist");
