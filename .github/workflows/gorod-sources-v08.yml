@@ -1,0 +1,38 @@
+name: City Control | Isolated Source Audit v0.8
+on:
+  workflow_dispatch:
+  push:
+    branches: [city-sources-v08]
+    paths:
+      - 'gorod-control/source-lab-v08/**'
+      - '.github/workflows/gorod-sources-v08.yml'
+permissions:
+  contents: read
+concurrency:
+  group: city-source-audit-v08
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check existing parser tests without modifying app
+        run: |
+          python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
+          node gorod-control/scripts/test_frontend.mjs
+      - name: Probe public feeds and capture real historical and current fixtures
+        run: python gorod-control/source-lab-v08/probe.py
+      - name: Save source evidence and real-message fixtures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: city-sources-v08-audit
+          path: gorod-control/source-lab-v08/report
+          retention-days: 7
+          if-no-files-found: error
