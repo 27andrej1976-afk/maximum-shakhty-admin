@@ -2,7 +2,7 @@ import sys,unittest
 from pathlib import Path
 from datetime import datetime,timedelta,timezone
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from collect_water import parse_html,parse_affected,classify,feed
+from collect_water import parse_html,parse_affected,classify,feed,schedule
 
 class OfficialWaterTests(unittest.TestCase):
     def test_telegram_format(self):
@@ -31,5 +31,15 @@ class OfficialWaterTests(unittest.TestCase):
     def test_unspecified_area_not_inferred(self):
         self.assertEqual(parse_affected('Ремонт по адресу: ул. Советская 233'),[])
         self.assertEqual(classify('⚠️ Плановое отключение воды'),'planned')
+
+    def test_future_planned_city_message(self):
+        published=datetime(2026,10,17,12,0,tzinfo=timezone.utc)
+        text='31 октября с 8.00 до 12.00 1 ноября будет снижено давление холодного водоснабжения в направлении:\n✔️ пос. Петровка;\n✔️ ул. Смидовича;\n✔️ пер. Шишкина;'
+        self.assertEqual(classify(text),'planned')
+        areas=parse_affected(text)
+        self.assertEqual([x['street'] for x in areas],['пос. Петровка','ул. Смидовича','пер. Шишкина'])
+        start,end=schedule(text,published,'planned')
+        self.assertEqual(start,'2026-10-31T08:00:00+03:00')
+        self.assertEqual(end,'2026-11-01T12:00:00+03:00')
 
 if __name__=='__main__':unittest.main()
