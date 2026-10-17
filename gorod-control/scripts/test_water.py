@@ -2,7 +2,7 @@ import sys,unittest
 from pathlib import Path
 from datetime import datetime,timedelta,timezone
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from collect_water import parse_html,parse_affected,classify,feed,schedule
+from collect_water import parse_html,parse_affected,classify,feed,schedule,canonical_road,restoration_covers
 
 class OfficialWaterTests(unittest.TestCase):
     def test_telegram_format(self):
@@ -41,5 +41,35 @@ class OfficialWaterTests(unittest.TestCase):
         start,end=schedule(text,published,'planned')
         self.assertEqual(start,'2026-10-31T08:00:00+03:00')
         self.assertEqual(end,'2026-11-01T12:00:00+03:00')
+
+
+    def test_road_type_and_restoration_safety(self):
+        self.assertNotEqual(canonical_road('ул. Шишкина'),canonical_road('пер. Шишкина'))
+        self.assertEqual(canonical_road('ул. Советская'),canonical_road('улица Советская'))
+        self.assertEqual(canonical_road('проспект Красной Армии'),canonical_road('пр-кт Красной Армии'))
+        self.assertFalse(restoration_covers(
+            [{'street':'ул. Советская','houses':['11','13']}],
+            [{'street':'ул. Советская','houses':['15']}]))
+        self.assertFalse(restoration_covers(
+            [{'street':'ул. Шишкина','houses':[]}],
+            [{'street':'пер. Шишкина','houses':[]}]))
+        self.assertFalse(restoration_covers(
+            [{'street':'ул. Советская','houses':[]},{'street':'пер. Донской','houses':[]}],
+            [{'street':'ул. Советская','houses':[]}]))
+        self.assertTrue(restoration_covers(
+            [{'street':'ул. Советская','houses':['11','13']}],
+            [{'street':'улица Советская','houses':['11','13','15']}]))
+
+    def test_new_water_incident_not_closed_by_neighbor_repairs(self):
+        now=datetime.now(timezone.utc)
+        def record(postid,minutes,text):
+            return {'id':f'shakhtinskiy/{postid}',
+              'publishedAt':(now-timedelta(minutes=minutes)).isoformat(),
+              'text':text,'url':f'https://t.me/shakhtinskiy/{postid}'}
+        active=record(91,40,'⚠️ Аварийное отключение воды\n🗺️ Адреса:\nул. Советская 11\nул. Советская 13')
+        unrelated=record(92,5,'⚠️ Работы завершены\nВодоснабжение восстановлено\n🗺️ Адреса:\nул. Советская 15')
+        self.assertEqual(len(feed([active,unrelated],now)['events']),1)
+        restored=record(93,2,'⚠️ Работы завершены\nВодоснабжение восстановлено\n🗺️ Адреса:\nул. Советская 11\nул. Советская 13')
+        self.assertEqual(len(feed([active,unrelated,restored],now)['events']),0)
 
 if __name__=='__main__':unittest.main()
