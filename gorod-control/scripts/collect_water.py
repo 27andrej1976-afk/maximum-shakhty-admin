@@ -69,6 +69,7 @@ def parse_affected(text):
     for raw in text.splitlines():
         line=raw.replace('\ufe0f','').strip(' \t\r▫▪•-–✔✅🔹🔸')
         if MARK.fullmatch(line):section=True;continue
+        line=line.rstrip(' ;,.')
         if not section and re.search(r'(?:в направлении(?: следующих улиц)?|по адресам|остан(?:овлено|овка) водоснабжения|без водоснабжения оста(?:ются|лись))\s*[:：]',line,flags=re.I):
             section=True
             tail=line.rsplit(':',1)[-1].strip()
@@ -97,7 +98,7 @@ def classify(text):
     t=text.lower()
     if re.search(r'работы\s+завершен|водоснабжение\s+восстановлен|восстановлени[ея]\s+(?:давления|водоснабжения)|подача воды возобновлен',t):return 'resolved'
     if re.search(r'продлен|продлева|изменени[ея] сроков',t):return 'extension'
-    if re.search(r'планов|запланирова|предстоящ|профилактическ',t):return 'planned'
+    if re.search(r'планов|запланирова|предстоящ|профилактическ|будет\s+снижен\w*\s+давлен|будет\s+(?:отключен|приостановлен)\w*\s+(?:вода|водоснабж)|водоснабж\w*\s+будет\s+приостановлен',t):return 'planned'
     if re.search(r'отключени[ея]\s+вод|снижени[ея]\s+давлен|водоснабжение\s+приостановлен|ремонтн|аварийн',t):return 'emergency'
     return None
 
