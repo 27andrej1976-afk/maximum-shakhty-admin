@@ -66,7 +66,7 @@ def affected_power(text):
 
 def classify_power(text):
     t=text.lower()
-    if re.search(r'(?:восстановлен\w*\s+электроснабжен|электроснабжен\w*\s+восстановлен|подача\s+электроэнергии\s+восстановлен)',t):return 'resolved'
+    if re.search(r'\b(?:электроснабжение\s+восстановлено|восстановлено\s+электроснабжение|подача\s+электроэнергии\s+восстановлена|восстановлена\s+подача\s+электроэнергии)\b',t):return 'resolved'
     if re.search(r'планов\w*\s+отключен|запланирован\w*\s+работ',t):return 'planned'
     if re.search(r'технологическ\w*\s+нарушен|аварийн\w*\s+отключен|отключени\w*\s+потребителей',t):return 'emergency'
     return None
