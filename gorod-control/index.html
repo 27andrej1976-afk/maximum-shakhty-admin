@@ -219,40 +219,55 @@ function renderEvents(){const all=getMatches(), visible=getVisibleEvents();$('ev
 let urgent=all.some(x=>x.event.kind==='emergency'&&x.event.status!=='unconfirmed'),scheduled=all.some(x=>x.event.kind==='planned'&&x.event.status!=='unconfirmed'),overdue=all.some(x=>x.event.status==='unconfirmed'),overview=$('overviewCard');overview.className='overview-card';if(state.demo){$('statusLabel').textContent='ДЕМОНСТРАЦИОННЫЙ РЕЖИМ';$('overviewTitle').textContent='Учебные события, не реальные аварии';$('overviewDescription').textContent='Показано, как приложение отбирает происшествия в радиусе 1 км и отключения, затрагивающие ваш адрес. Данные придуманы для проверки логики.';overview.classList.add('planned')}else if(!state.home){$('statusLabel').textContent='ТРЕБУЕТСЯ АДРЕС';$('overviewTitle').textContent='Пока нельзя определить обстановку';$('overviewDescription').textContent='Нужно задать ваш дом или разрешить геолокацию. Затем проверим официальные сообщения.'}else if(!state.backendConnected||!state.checks.some(x=>x.status==='ok')){$('statusLabel').textContent='НЕТ ПОЛНОЙ ПРОВЕРКИ';$('overviewTitle').textContent='Актуальность данных не подтверждена';$('overviewDescription').textContent=state.checks.some(s=>s.status==='stale')?'Последняя доступная публикация водоканала устарела. Приложение не может подтвердить текущую обстановку; проверяйте первоисточник.':'Проверка водоканала недоступна или давно не обновлялась. Нельзя утверждать, что всё спокойно.'}else if(urgent){$('statusLabel').textContent='ЕСТЬ СООБЩЕНИЯ ОБ АВАРИЯХ';$('overviewTitle').textContent='Обратите внимание на события рядом';$('overviewDescription').textContent='Обнаружены опубликованные происшествия. Уточняйте детали и время по первоисточнику.';overview.classList.add('alert')}else if(overdue){$('statusLabel').textContent='СРОК РАБОТ ИСТЁК';$('overviewTitle').textContent='Нет подтверждения завершения работ';$('overviewDescription').textContent='По опубликованным данным предполагаемое время завершения уже прошло. Неизвестно, восстановлено ли водоснабжение: проверьте первоисточник или диспетчера УРСВ.';overview.classList.add('planned')}else if(scheduled){$('statusLabel').textContent='ЕСТЬ ПЛАНОВЫЕ РАБОТЫ';$('overviewTitle').textContent='Запланированы работы, которые могут вас затронуть';$('overviewDescription').textContent='Посмотрите адреса и график. Время работ может измениться.';overview.classList.add('planned')}else{$('statusLabel').textContent='НЕТ АДРЕСНЫХ СОВПАДЕНИЙ';$('overviewTitle').textContent='По доступным публикациям совпадений для адреса не найдено';$('overviewDescription').textContent='Проверяются публикации администрации и перепечатки со ссылками на документы УРСВ. Это не полный мониторинг водоснабжения: часть объявлений может быть недоступна, электричество, газ и МЧС ещё не подключены.';overview.classList.add('clear')}
 $('summaryCount').textContent=state.demo? `${all.length} тестовых событий` : `${all.length} совпадений по адресу или радиусу`;$('checkStamp').textContent=state.checkedAt?`Проверено: ${fmtTime(state.checkedAt)}`:'Онлайн-проверка не выполнена';updateMap()}
 async function checkSources(){
-if(state.demo){toast('Отключите тестовый режим, чтобы проверить публикации');return}
-$('checkButton').disabled=true;$('refreshIcon').textContent='…';
-try{
-  const url='./data/water.json?_='+Date.now();
-  const r=await fetch(url,{headers:{'Accept':'application/json'},cache:'no-store',signal:AbortSignal.timeout(18000)});
-  if(!r.ok)throw new Error('Нет файла публикаций, HTTP '+r.status);
-  const data=await r.json();
-  if(data.schema!==2||!Array.isArray(data.sources))throw new Error('Некорректный формат данных');
-  state.checkedAt=data.checkedAt||null;
-  state.sourceRecent=data.recent||[];
-  state.checks=data.sources;
-  const scanAge=Date.now()-Date.parse(state.checkedAt||0);
-  const scanRecent=Number.isFinite(scanAge) && scanAge>=0 && scanAge<4*3600000;
-  const activeIds=new Set(['city','repost_rostov','repost_don']);
-  const available=state.checks.filter(source=>{
-    if(!activeIds.has(source.id)||source.status!=='ok')return false;
-    const age=Date.now()-Date.parse(source.lastPostAt||0);
-    return Number.isFinite(age)&&age>=0&&age<7*86400000;
-  });
-  state.backendConnected=scanRecent&&available.length>0;
-  state.events=state.backendConnected && Array.isArray(data.events) ? data.events.filter(e=>e.source==='Шахтинский водоканал'||e.source==='Администрация города Шахты'||(e.origin==='verified_repost'&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+/.test(e.officialUrl||''))) : [];
-  if(state.backendConnected){
-    toast('Опубликованные сведения об отключениях воды проверены. Совпадения с вашим адресом показаны ниже.');
-  }else{
-    toast('Сейчас нет свежей полной проверки коммунальных сообщений. Данные могут быть неполными.');
+  if(state.demo){toast('Отключите тестовый режим для проверки официальных публикаций');return}
+  $('checkButton').disabled=true;$('refreshIcon').textContent='…';
+  try{
+    const r=await fetch('./data/water.json?_='+Date.now(),
+      {headers:{'Accept':'application/json'},cache:'no-store',signal:AbortSignal.timeout(18000)});
+    if(!r.ok)throw Error('No published feed');
+    const data=await r.json();
+    if(data.schema!==2||!Array.isArray(data.sources)||!Array.isArray(data.events))throw Error('Invalid feed');
+    state.checkedAt=data.checkedAt||null;
+    state.sourceRecent=data.recent||[];
+    state.checks=data.sources;
+    const scanAge=Date.now()-Date.parse(state.checkedAt||0);
+    const scanRecent=Number.isFinite(scanAge)&&scanAge>=0&&scanAge<4*3600000;
+    const sourceById=Object.fromEntries(state.checks.map(s=>[s.id,s]));
+    const isCurrent=s=>!!s&&s.status==='ok'&&Number.isFinite(Date.parse(s.lastPostAt||''))&&
+      Date.now()-Date.parse(s.lastPostAt)>=0&&Date.now()-Date.parse(s.lastPostAt)<7*86400000;
+    state.backendConnected=scanRecent&&state.checks.some(isCurrent);
+    state.events=scanRecent?data.events.filter(e=>{
+      const url=String(e.url||'');
+      if(e.category==='water'){
+        if(e.origin==='verified_repost'&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(e.officialUrl||''))
+          return isCurrent(sourceById.repost_rostov)||isCurrent(sourceById.repost_don);
+        return e.source==='Администрация города Шахты'&&isCurrent(sourceById.city);
+      }
+      if(e.category==='power'){
+        if(e.origin!=='attributed_repost')return false;
+        if(url.startsWith('https://newsrostov.ru/'))return isCurrent(sourceById.power_repost_rostov);
+        if(url.startsWith('https://news-don.ru/'))return isCurrent(sourceById.power_repost_don);
+        return false;
+      }
+      if(e.category==='mchs'){
+        return isCurrent(sourceById.mchs)&&e.sourceId==='mchs'&&
+          /^https:\/\/61\.mchs\.gov\.ru\/deyatelnost\/press-centr\/operativnaya-informaciya\//.test(url)&&
+          (e.scope==='city'||e.scope==='region');
+      }
+      return false;
+    }):[];
+    toast(state.backendConnected?
+      'Проверены доступные объявления воды, электричества и МЧС. Статус служб приведён ниже.':
+      'Не удалось подтвердить свежесть сообщений всех коммунальных служб.');
+  }catch(err){
+    state.backendConnected=false;state.events=[];state.checks=[];
+    toast('Не удалось загрузить городскую сводку. Можно проверить учебные сценарии.');
+  }finally{
+    state.lastLocalCheck=Date.now();
+    $('checkButton').disabled=false;$('refreshIcon').textContent='↻';
+    renderSources();renderEvents();
   }
-}catch(err){
-  state.backendConnected=false;state.checks=[];state.events=[];
-  toast('Не удалось получить сводку водоканала. Для проверки интерфейса доступен «Тест сценариев».');
-}finally{
-  state.lastLocalCheck=Date.now();
-  $('checkButton').disabled=false;$('refreshIcon').textContent='↻';
-  renderSources();renderEvents();
-}}
+}
 function toggleDemo(){state.demo=!state.demo;$('demoButton').classList.toggle('active',state.demo);$('demoButton').textContent=state.demo?'Закрыть тест':'Тест сценариев';state.filter='all';document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));paintHome();renderEvents();toast(state.demo?'Включён учебный режим. Все показанные события вымышлены.':'Учебные события скрыты.');if(state.demo)notifyPlanned()}
 async function reverseGeocode(lat,lon){try{const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&accept-language=ru`;const r=await fetch(url,{headers:{'Accept':'application/json'},signal:AbortSignal.timeout(8500)});if(!r.ok)throw Error('Geocoder unavailable');const j=await r.json();return {street:j.address?.road||j.address?.pedestrian||j.address?.residential||'',house:j.address?.house_number||'',label:j.display_name?.split(',').slice(0,3).join(', ')||'Точка GPS, Шахты'}}catch{return {street:'',house:'',label:'GPS · ваше местоположение'}}}
 function setGeoStatus(message){
