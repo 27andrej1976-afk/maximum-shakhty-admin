@@ -14,6 +14,7 @@ from pathlib import Path
 from urllib.request import Request,urlopen
 from xml.etree import ElementTree as ET
 from service_events import mchs_posts, power_posts
+from city_utility import collect_city
 from rss_water import RSS_URLS
 
 OUTPUT=Path(__file__).resolve().parents[1]/'data'/'water.json'
@@ -112,14 +113,15 @@ def main():
     mchs,mchs_state=collect_mchs(now)
     gas_state=collect_gas(now)
     plan_state=collect_power_planned()
+    municipal,municipal_states=collect_city(now)
     # First collector restores only verified water info. Other categories are rebuilt every run.
     events=data.get('events',[])
     original_water=[x for x in events if x.get('category')=='water']
     known=data.get('serviceArchive',[])
-    fresh=power+mchs
+    fresh=power+mchs+municipal
     by_id={x['id']:x for x in fresh if x.get('id')}
     for item in known:
-        if item.get('id') in by_id or item.get('category') not in ('power','mchs'):continue
+        if item.get('id') in by_id or item.get('category') not in ('power','mchs','gas'):continue
         try:
             p=datetime.fromisoformat(item['publishedAt'])
             if not timedelta(minutes=-30)<now-p<timedelta(hours=48):continue
@@ -134,10 +136,10 @@ def main():
     data['serviceArchive']=archived
     data['events']=original_water+archived
     data['sources']=[s for s in data.get('sources',[]) if s.get('id') not in
-       ('mchs','gas','power_planned','power_repost_rostov','power_repost_don')]+power_states+[plan_state,gas_state,mchs_state]
+       ('mchs','gas','power_planned','power_repost_rostov','power_repost_don','power_city','gas_city')]+power_states+municipal_states+[plan_state,gas_state,mchs_state]
     data['checkedAt']=now.isoformat()
     data['schema']=2
     OUTPUT.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('FINAL CITY CONTROL',len(original_water),'water',len(power),'new power',len(mchs),'new MCHS',
-          'saved alerts',len(data['events']),'statuses',[(s['id'],s['status']) for s in data['sources']])
+          'municipal notices',len(municipal),'saved alerts',len(data['events']),'statuses',[(s['id'],s['status']) for s in data['sources']])
 if __name__=='__main__':main()
