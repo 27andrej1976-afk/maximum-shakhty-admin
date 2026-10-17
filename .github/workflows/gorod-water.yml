@@ -26,25 +26,29 @@ jobs:
         run: python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
       - name: Fetch public Shakhty water notices
         run: python gorod-control/scripts/collect_water.py
-      - name: Inspect water posts in current municipal channels
+      - name: Test publicly accessible official repost feeds
         run: |
           python - <<'PY'
-          import re,html
           from urllib.request import Request,urlopen
-          for ch in ['admshakhty','stopshahty']:
-            try:
-              with urlopen(Request('https://t.me/s/'+ch,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as r:
-                page=r.read(1800000).decode('utf-8','replace')
-              for block in re.split(r'<div class="tgme_widget_message_wrap',page)[1:]:
-                m=re.search(r'data-post="([^"]+)"',block)
-                t=re.search(r'<time[^>]+datetime="([^"]+)"',block)
-                b=re.search(r'<div[^>]*class="[^"]*tgme_widget_message_text[^"]*"[^>]*>(.*?)</div>',block,re.S)
-                if not (m and t and b):continue
-                raw=re.sub(r'<br\\s*/?>',' | ',b.group(1),flags=re.I)
-                line=html.unescape(re.sub('<[^>]+>',' ',raw))
-                if re.search('водоснаб|водоканал|снижено давление|УРСВ|отключени[ея] воды',line,re.I):
-                  print('NOTICE',ch,m.group(1),t.group(1),re.sub(r'\\s+',' ',line)[:280])
-            except Exception as e:print('SOURCE ERROR',ch,str(e)[:100])
+          import re
+          urls=[
+           'https://newsrostov.ru/rss.xml',
+           'https://newsrostov.ru/rss',
+           'https://newsrostov.ru/feed',
+           'https://newsrostov.ru/society/2026/10/16/597700.html',
+           'https://news-don.ru/rss.xml',
+           'https://news-don.ru/society/2026/10/17/147188.html',
+           'https://max.ru/shakhtygorod',
+           'https://max.ru/guproursv'
+          ]
+          for u in urls:
+           try:
+            with urlopen(Request(u,headers={'User-Agent':'Mozilla/5.0 (compatible; CityControlTest/0.2; +https://github.com/27andrej1976-afk/maximum-shakhty-admin)'}), timeout=8) as r:
+             b=r.read(200000)
+             x=b.decode('utf-8','replace')
+             print('FEED_CHECK',u,'HTTP',r.status,'BYTES',len(b),'CTYPE',r.headers.get('Content-Type'),'water',len(re.findall('водоснабж|Шахтинск|Шахты',x,re.I)),'RSS',('<rss' in x or '<feed' in x))
+           except Exception as e:
+            print('FEED_CHECK',u,'FAILED',str(e)[:120])
           PY
       - name: Publish JSON to GitHub Pages
         run: |
