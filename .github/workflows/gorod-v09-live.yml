@@ -1,0 +1,60 @@
+name: City Control | Direct live feed v0.9
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '3,18,33,48 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/gorod-v09-live.yml'
+permissions:
+  contents: write
+concurrency:
+  group: city-direct-live-v09
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read direct official graph and preserve individual source timestamps
+        run: |
+          python -m compileall -q gorod-control/direct-v09
+          python gorod-control/direct-v09/build_feed.py
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          d=json.loads(Path('gorod-control/direct-v09/feed.json').read_text())
+          assert d['schema']==2 and d['coverage']=='partial'
+          for e in d['events']:
+            if e.get('sourceId')=='power_direct':
+              assert e['url']=='https://donenergo.ru/grafik-otklyucheniy/61/1/'
+              assert e['origin']=='official_site'
+              assert e['publishedAt'] is None
+          print('Independent feed checked',d['checkedAt'])
+          PY
+      - name: Publish only refreshed v0.9 data, never old app or APK
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/direct-live-ready
+          for file in feed.json map-geometry.json street-geometry.json; do
+            cp "gorod-control/direct-v09/$file" "/tmp/direct-live-ready/$file"
+          done
+          git restore gorod-control/direct-v09
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git checkout -B direct-live-publish origin/main
+            cp /tmp/direct-live-ready/*.json gorod-control/direct-v09/
+            git add gorod-control/direct-v09/feed.json gorod-control/direct-v09/map-geometry.json gorod-control/direct-v09/street-geometry.json
+            if git diff --cached --quiet; then break; fi
+            git commit -m 'City Control: refresh direct official v0.9 notices and street geometry'
+            if git push origin HEAD:main; then echo 'DIRECT LIVE FEED UPDATED'; break; fi
+            if [ "$attempt" = 3 ]; then exit 1; fi
+            sleep 2
+          done
