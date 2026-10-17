@@ -264,6 +264,7 @@ def main():
     result=feed(list(unique.values()),now)
     result['sources']=states
     result['archive']=archive
+    result['serviceArchive']=old.get('serviceArchive',[]) if isinstance(old,dict) else []
     print('Archived',len(archive),'verified RSS messages',len(rss_posts))
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
