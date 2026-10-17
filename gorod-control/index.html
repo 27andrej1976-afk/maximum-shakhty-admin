@@ -58,8 +58,24 @@
   'use strict';
   const STREET_PREFIX = /^(?:г\.?\s*шахты\s*,?\s*)?(?:(?:ул(?:ица)?|пер(?:еулок)?|проспект|пр-?кт|пр-?т|пр-?д|пр(?:оезд)?-?д|пл(?:ощадь)?|бул(?:ьвар)?)\.?\s+)/i;
   const clean = (s) => String(s || '').toLowerCase().replace(/ё/g, 'е').replace(/[«»"'`]/g, '').replace(/\s+/g, ' ').trim();
+  const kindRules = [
+    ['ул', /^(?:улица|ул\.?)\s+(.+)$/i, /^(.+)\s+(?:улица|ул\.?)$/i],
+    ['пер', /^(?:переулок|пер\.?)\s+(.+)$/i, /^(.+)\s+(?:переулок|пер\.?)$/i],
+    ['просп', /^(?:проспект|пр-?кт|пр-?т|пр\.?)\s+(.+)$/i, /^(.+)\s+(?:проспект|пр-?кт|пр-?т)$/i],
+    ['проезд', /^(?:проезд|пр-д)\s+(.+)$/i, /^(.+)\s+проезд$/i],
+    ['пл', /^(?:площадь|пл\.?)\s+(.+)$/i, /^(.+)\s+площадь$/i],
+    ['бул', /^(?:бульвар|бул\.?)\s+(.+)$/i, /^(.+)\s+бульвар$/i],
+    ['пос', /^(?:поселок|посёлок|пос\.?)\s+(.+)$/i, /^(.+)\s+(?:поселок|посёлок)$/i],
+    ['мкр', /^(?:микрорайон|мкр\.?)\s+(.+)$/i, /^(.+)\s+микрорайон$/i]
+  ];
   function normalStreet(str) {
-    return clean(str).replace(STREET_PREFIX, '').replace(/\bдом\b.*$/,'').replace(/[.,]+$/, '').trim();
+    const raw=clean(str).replace(/^(?:г\.?\s*шахты)\s*,?\s*/i,'').replace(/\bдом\b.*$/,'').replace(/[.,;]+$/,'').trim();
+    if(!raw)return '';
+    for(const [kind,lead,tail] of kindRules){
+      const m=raw.match(lead)||raw.match(tail);
+      if(m)return kind+':'+m[1].replace(/[.,;]+$/,'').trim();
+    }
+    return 'неуточн:'+raw;
   }
   function normalHouse(str) {
     return clean(str).replace(/^(?:д(?:ом)?\.?\s*)/,'').replace(/\s/g, '').replace(/[^\dа-яa-z\/-]/g, '');
@@ -67,10 +83,10 @@
   function parseHomeAddress(input) {
     const text = String(input || '').trim().replace(/^россия\s*,?\s*/i, '').replace(/^(?:ростовская область\s*,?\s*)/i,'').replace(/^(?:г\.?\s*)?шахты\s*,?\s*/i,'');
     const match = text.match(/^(.*?)(?:\s*,\s*(?:д\.?\s*)?|\s+(?:д\.?\s*))([0-9]+\s*[а-яa-z]?)\s*$/i);
-    if (match) return { street: normalStreet(match[1]), house: normalHouse(match[2]) };
+    if (match) return { street: clean(match[1]), house: normalHouse(match[2]) };
     const alt = text.match(/^((?:ул\.|улица|пер\.|переулок|проспект|пр-т|пр\.|пр-д|проезд)\s+.+?)\s+([0-9]+[а-яa-z]?)$/i);
-    if (alt) return { street: normalStreet(alt[1]), house: normalHouse(alt[2]) };
-    return { street: normalStreet(text), house: '' };
+    if (alt) return { street: clean(alt[1]), house: normalHouse(alt[2]) };
+    return { street: clean(text), house: '' };
   }
   function distanceM(a, b) {
     if (!a || !b || !Number.isFinite(+a.lat) || !Number.isFinite(+a.lon) || !Number.isFinite(+b.lat) || !Number.isFinite(+b.lon)) return Infinity;
