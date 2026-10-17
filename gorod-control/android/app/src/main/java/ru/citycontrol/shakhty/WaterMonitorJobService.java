@@ -54,7 +54,7 @@ public final class WaterMonitorJobService extends JobService {
     SharedPreferences prefs=getSharedPreferences("city-control-home",MODE_PRIVATE);
     String street=canonicalStreet(prefs.getString("street",""));
     String house=canonicalHouse(prefs.getString("house",""));
-    if(street.isEmpty()||stopped)return;
+    if(street.isEmpty()||street.startsWith("неуточн:")||stopped)return;
     if(Build.VERSION.SDK_INT>=33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED) return;
 
     HttpURLConnection conn=(HttpURLConnection)new URL(DATA_URL+"?t="+(System.currentTimeMillis()/600000L)).openConnection();
@@ -74,14 +74,16 @@ public final class WaterMonitorJobService extends JobService {
     if(lastScan<=0||now-lastScan>4L*3600000||lastScan-now>20L*60000)return;
     JSONArray sources=data.optJSONArray("sources");
     if(sources==null)return;
-    boolean sourceAvailable=false;
+    boolean directAvailable=false,cityAvailable=false,repostAvailable=false;
     for(int j=0;j<sources.length();j++){
-      JSONObject s=sources.optJSONObject(j);
-      if(s==null||!"ok".equals(s.optString("status")))continue;
-      String id=s.optString("id","");
-      if(id.equals("water")||id.equals("city")||id.startsWith("repost_")) sourceAvailable=true;
+      JSONObject source=sources.optJSONObject(j);
+      if(source==null||!"ok".equals(source.optString("status")))continue;
+      String id=source.optString("id","");
+      if(id.equals("water"))directAvailable=true;
+      if(id.equals("city"))cityAvailable=true;
+      if(id.startsWith("repost_"))repostAvailable=true;
     }
-    if(!sourceAvailable)return;
+    if(!(directAvailable||cityAvailable||repostAvailable))return;
     JSONArray events=data.optJSONArray("events");
     if(events==null)return;
     for(int i=0;i<events.length()&&!stopped;i++){
@@ -91,11 +93,15 @@ public final class WaterMonitorJobService extends JobService {
       String kind=e.optString("kind","");
       if(eventId.isEmpty()||!(kind.equals("planned")||kind.equals("emergency")))continue;
       String origin=e.optString("origin","");
-      if(origin.equals("verified_repost") &&
-        !e.optString("officialUrl","").matches("^https://rovodokanal\\.ru/emergency-alerts/\\d+$"))continue;
-      if(!origin.equals("verified_repost") && !(
-           e.optString("source","").equals("Шахтинский водоканал")||
-           e.optString("source","").equals("Администрация города Шахты"))) continue;
+      String name=e.optString("source","");
+      if(origin.equals("verified_repost")){
+        if(!repostAvailable ||
+            !e.optString("officialUrl","").matches("^https://rovodokanal\\.ru/emergency-alerts/\\d+$"))continue;
+      } else if(name.equals("Шахтинский водоканал")){
+        if(!directAvailable)continue;
+      } else if(name.equals("Администрация города Шахты")){
+        if(!cityAvailable)continue;
+      } else continue;
 
       long start=utcMillis(e.optString("start",""));
       long end=utcMillis(e.optString("end",""));
@@ -105,7 +111,7 @@ public final class WaterMonitorJobService extends JobService {
       if(kind.equals("emergency") && start<now-48L*3600000)continue;
       Match match=affectedHouse(e.optJSONArray("affected"),street,house);
       if(match==Match.NONE)continue;
-      String key="water-alert:"+eventId+":"+e.optString("start","");
+      String key="water-alert:"+street+":"+house+":"+eventId+":"+e.optString("start","");
       if(prefs.getBoolean(key,false))continue;
       issueNotification(eventId,kind,match,e.optString("start",""),e.optString("title",""));
       prefs.edit().putBoolean(key,true).apply();
@@ -129,25 +135,13 @@ public final class WaterMonitorJobService extends JobService {
     return outcome;
   }
   private static boolean matchesHouse(String home,String listed){
-    String t=canonicalHouse(listed);
-    if(home.equals(t))return true;
-    Matcher range=Pattern.compile("^(\\d+)-(\\d+)$").matcher(t);
-    Matcher homeNumber=Pattern.compile("^(\\d+)").matcher(home);
-    if(!range.matches()||!homeNumber.find())return false;
-    try{
-      int a=Integer.parseInt(range.group(1)),b=Integer.parseInt(range.group(2)),n=Integer.parseInt(homeNumber.group(1));
-      return n>=Math.min(a,b)&&n<=Math.max(a,b)&&(a%2!=b%2||n%2==a%2);
-    }catch(NumberFormatException e){return false;}
+    return CityAddress.houseMatches(home,listed);
   }
   private static String canonicalHouse(String s){
-    return s.toLowerCase(Locale.ROOT).replace('ё','е')
-      .replaceFirst("^(?:д(?:ом)?\\.?\\s*)","").replaceAll("\\s+","").replaceAll("[^\\da-zа-я/\\-]","");
+    return CityAddress.house(s);
   }
   private static String canonicalStreet(String s){
-    return s.toLowerCase(Locale.ROOT).replace('ё','е').trim()
-      .replaceFirst("^(?:г\\.?\\s*шахты\\s*,?\\s*)?","")
-      .replaceFirst("^(?:ул(?:ица)?|пер(?:еулок)?|проспект|пр-?кт|пр-?т|пр-?д|проезд|пл(?:ощадь)?|мкр|пос(?:елок)?|п)\\.?\\s+","")
-      .replaceAll("\\s+"," ").replaceAll("[.,;]+$","").trim();
+    return CityAddress.street(s);
   }
   private static long utcMillis(String stamp){
     try{return OffsetDateTime.parse(stamp).toInstant().toEpochMilli();}
