@@ -20,8 +20,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Bundle verified assets and apply isolated frontend update
+      - name: Refine, bundle verified assets and apply isolated frontend update
         run: |
+          python gorod-control/map-v07/refine.py
           python gorod-control/map-v07/apply.py
           python -m compileall -q gorod-control/map-v07
           node --check gorod-control/map-v07/city-map.js
@@ -44,18 +45,15 @@ jobs:
           name: city-map-v07-browser-report
           path: city-map-test-report
           if-no-files-found: warn
-      - name: Publish validated city-map files without changing existing APK
+      - name: Publish validated city-map application files without changing APK or workflows
         run: |
           set -euo pipefail
           ORIGINAL_INDEX=$(git rev-parse HEAD:gorod-control/index.html)
-          ORIGINAL_WORKFLOW=$(git rev-parse HEAD:.github/workflows/gorod-water.yml)
           mkdir -p /tmp/city-map-ready
           cp -R gorod-control/map-v07 /tmp/city-map-ready/map-v07
           cp gorod-control/index.html /tmp/city-map-ready/index.html
           cp gorod-control/data/map-geometry.json /tmp/city-map-ready/map-geometry.json
           cp gorod-control/data/street-geometry.json /tmp/city-map-ready/street-geometry.json
-          cp .github/workflows/gorod-water.yml /tmp/city-map-ready/gorod-water.yml
-          cp .github/workflows/gorod-map-v07.yml /tmp/city-map-ready/gorod-map-v07.yml
           find /tmp/city-map-ready -type d -name __pycache__ -exec rm -r {} +
           git checkout -- gorod-control/index.html .github/workflows/gorod-water.yml
           git config user.name 'github-actions[bot]'
@@ -63,22 +61,20 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin main
             CURRENT_INDEX=$(git rev-parse origin/main:gorod-control/index.html)
-            CURRENT_WORKFLOW=$(git rev-parse origin/main:.github/workflows/gorod-water.yml)
-            if [ "$CURRENT_INDEX" != "$ORIGINAL_INDEX" ] || [ "$CURRENT_WORKFLOW" != "$ORIGINAL_WORKFLOW" ]; then
-              echo 'Concurrent application code change detected; refuse to overwrite. Refresh the feature branch before retrying.'
+            if [ "$CURRENT_INDEX" != "$ORIGINAL_INDEX" ]; then
+              echo 'Concurrent application code change detected; refuse to overwrite. Refresh feature branch first.'
               exit 1
             fi
             git checkout -B city-map-publish origin/main
             mkdir -p gorod-control/map-v07 gorod-control/data
             cp -R /tmp/city-map-ready/map-v07/. gorod-control/map-v07/
+            find gorod-control/map-v07 -type d -name __pycache__ -exec rm -r {} +
             cp /tmp/city-map-ready/index.html gorod-control/index.html
             cp /tmp/city-map-ready/map-geometry.json gorod-control/data/map-geometry.json
             cp /tmp/city-map-ready/street-geometry.json gorod-control/data/street-geometry.json
-            cp /tmp/city-map-ready/gorod-water.yml .github/workflows/gorod-water.yml
-            cp /tmp/city-map-ready/gorod-map-v07.yml .github/workflows/gorod-map-v07.yml
-            git add gorod-control/index.html gorod-control/map-v07 gorod-control/data/map-geometry.json gorod-control/data/street-geometry.json .github/workflows/gorod-water.yml .github/workflows/gorod-map-v07.yml
+            git add gorod-control/index.html gorod-control/map-v07 gorod-control/data/map-geometry.json gorod-control/data/street-geometry.json
             if git diff --cached --quiet; then echo 'Already current'; break; fi
-            git commit -m 'City Control v0.7: citywide map, incident details and Shakhty crest; browser-tested'
+            git commit -m 'City Control v0.7: citywide map, event details and Shakhty crest; browser-tested'
             if git push origin HEAD:main; then echo 'CITY MAP PUBLISHED'; break; fi
             if [ "$attempt" = 3 ]; then exit 1; fi
             sleep 3
