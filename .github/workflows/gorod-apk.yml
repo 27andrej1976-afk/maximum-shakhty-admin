@@ -32,6 +32,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+      - name: Verify strict Android address matching
+        run: |
+          mkdir -p /tmp/city-address-test
+          javac -encoding UTF-8 -d /tmp/city-address-test \
+            gorod-control/android/app/src/main/java/ru/citycontrol/shakhty/CityAddress.java \
+            gorod-control/scripts/CityAddressCheck.java
+          java -cp /tmp/city-address-test CityAddressCheck
       - name: Build Android test APK
         working-directory: gorod-control/android
         run: gradle --no-daemon --stacktrace :app:assembleDebug
@@ -63,7 +70,7 @@ jobs:
             (cd gorod-control/downloads && sha256sum GorodPodKontrolem-Shakhty-test.apk > SHA256SUMS.txt)
             git add gorod-control/downloads
             if git diff --cached --quiet; then echo "Already current"; break; fi
-            git commit -m 'city-control: verified Android test APK v0.3'
+            git commit -m 'city-control: verified Android test APK v0.5'
             if git push origin HEAD:main; then echo "Verified APK published"; break; fi
             if [ "$attempt" = 4 ]; then exit 1; fi
             sleep 2
