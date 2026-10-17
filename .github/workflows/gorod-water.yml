@@ -26,22 +26,25 @@ jobs:
         run: python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
       - name: Fetch public Shakhty water notices
         run: python gorod-control/scripts/collect_water.py
-      - name: Probe near-real-time municipal repost channels
+      - name: Inspect water posts in current municipal channels
         run: |
           python - <<'PY'
-          import re
-          from urllib.request import Request, urlopen
-          channels=['shakhtinskiy','admshakhty','stopshahty','shakhty_sos']
-          for ch in channels:
-            url='https://t.me/s/'+ch
+          import re,html
+          from urllib.request import Request,urlopen
+          for ch in ['admshakhty','stopshahty']:
             try:
-              req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
-              with urlopen(req,timeout=12) as response:
-                html=response.read(1500000).decode('utf-8','replace')
-              dates=re.findall(r'<time[^>]*datetime="([^"]+)"',html)
-              ids=re.findall(r'data-post="([^"]+)"',html)
-              print(ch,'HTTP 200','posts',len(ids),'last',max(dates) if dates else 'none','id',ids[-1] if ids else '')
-            except Exception as e:print(ch,'UNAVAILABLE',str(e)[:90])
+              with urlopen(Request('https://t.me/s/'+ch,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as r:
+                page=r.read(1800000).decode('utf-8','replace')
+              for block in re.split(r'<div class="tgme_widget_message_wrap',page)[1:]:
+                m=re.search(r'data-post="([^"]+)"',block)
+                t=re.search(r'<time[^>]+datetime="([^"]+)"',block)
+                b=re.search(r'<div[^>]*class="[^"]*tgme_widget_message_text[^"]*"[^>]*>(.*?)</div>',block,re.S)
+                if not (m and t and b):continue
+                raw=re.sub(r'<br\\s*/?>',' | ',b.group(1),flags=re.I)
+                line=html.unescape(re.sub('<[^>]+>',' ',raw))
+                if re.search('водоснаб|водоканал|снижено давление|УРСВ|отключени[ея] воды',line,re.I):
+                  print('NOTICE',ch,m.group(1),t.group(1),re.sub(r'\\s+',' ',line)[:280])
+            except Exception as e:print('SOURCE ERROR',ch,str(e)[:100])
           PY
       - name: Publish JSON to GitHub Pages
         run: |
