@@ -13,12 +13,6 @@ def rss(title,body,when='Sat, 17 Oct 2026 22:00:00 +0300',link='https://newsrost
 class ServiceTests(unittest.TestCase):
     def test_power_repost(self):
         data=rss('г. Шахты, технологическое нарушение в сети 10 кВ',POWER)
-        import xml.etree.ElementTree as ET
-        from service_events import SOURCE_DONENERGO,POWER_RELEVANT,CITY,classify_power,incident_time
-        from rss_water import html_text
-        item=ET.fromstring(data).find('.//item')
-        text=(item.findtext('title') or '')+'\n'+html_text(item.findtext('{http://purl.org/rss/1.0/modules/content/}encoded') or '')
-        print('POWER_DEBUG', 'date',item.findtext('pubDate'),'text',repr(text[:450]),'city',bool(CITY.search(text[:500])),'category',bool(POWER_RELEVANT.search(text)),'source',bool(SOURCE_DONENERGO.search(text)),'class',classify_power(text),'addresses',affected_power(text),flush=True)
         parsed=power_posts(data,'newsrostov.ru',NOW)
         self.assertEqual(len(parsed),1)
         item=parsed[0]
@@ -29,6 +23,10 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(item['affected'][2]['street'],'пер. Донской')
         self.assertEqual(item['start'],'2026-10-17T21:40:00+03:00')
         self.assertEqual(item['end'],'2026-10-18T00:40:00+03:00')
+    def test_estimated_repair_is_not_resolved(self):
+        from service_events import classify_power
+        self.assertEqual(classify_power('Ориентировочное время восстановления электроснабжения в течение 3 часов. Технологическое нарушение.'),'emergency')
+        self.assertEqual(classify_power('Электроснабжение восстановлено в 21:20.'),'resolved')
     def test_power_wrong_city_and_no_attribution(self):
         self.assertEqual(power_posts(rss('г. Азов, авария на электросетях',POWER.replace('г. Шахты','г. Азов').replace('Шахты','Азове')),'newsrostov.ru',NOW),[])
         self.assertEqual(power_posts(rss('г. Шахты, авария',POWER.replace('Источник: Канал в МАКС "АО "Донэнерго" Отключения", репост Администрация города Шахты','')),'newsrostov.ru',NOW),[])
