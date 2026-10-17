@@ -26,6 +26,8 @@ jobs:
         run: python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
       - name: Test mobile address matching and JavaScript
         run: node gorod-control/scripts/test_frontend.mjs
+      - name: Probe power, gas and emergency feeds
+        run: python gorod-control/scripts/probe_service_sources.py
       - name: Fetch public Shakhty water notices
         run: python gorod-control/scripts/collect_water.py
       - name: Validate mobile app JavaScript
