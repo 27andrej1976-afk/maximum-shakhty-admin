@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-17T19:24:45.093171+00:00",
+  "checkedAt": "2026-10-17T19:31:12.704176+00:00",
   "sources": [
     {
       "id": "city",
@@ -44,6 +44,24 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
+    },
+    {
+      "id": "power_city",
+      "status": "partial",
+      "url": "https://t.me/s/admshakhty",
+      "posts": 14,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете"
+    },
+    {
+      "id": "gas_city",
+      "status": "partial",
+      "url": "https://t.me/s/admshakhty",
+      "posts": 14,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе"
     },
     {
       "id": "power_planned",
