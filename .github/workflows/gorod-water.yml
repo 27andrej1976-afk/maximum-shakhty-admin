@@ -28,23 +28,6 @@ jobs:
         run: node gorod-control/scripts/test_frontend.mjs
       - name: Fetch public Shakhty water notices
         run: python gorod-control/scripts/collect_water.py
-      - name: Inspect full RSS description and source tags
-        run: |
-          python - <<'PY'
-          from urllib.request import Request,urlopen
-          from xml.etree import ElementTree as ET
-          u='https://newsrostov.ru/rss.xml'
-          with urlopen(Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=18) as r: root=ET.fromstring(r.read(6000000))
-          for item in root.findall('.//item'):
-            title=item.findtext('title') or ''
-            if 'Шахтинский' in title:
-              a=item.findtext('{http://purl.org/rss/1.0/modules/content/}encoded') or ''
-              b=item.findtext('description') or ''
-              print('RSS_CONTENT_SAMPLE',repr(a[:2300]))
-              print('RSS_DESC_SAMPLE',repr(b[:1000]))
-              print('RSS_TAIL',repr(a[-500:]))
-              break
-          PY
       - name: Validate mobile app JavaScript
         run: |
           python - <<'PY'
@@ -59,17 +42,25 @@ jobs:
             if proc.returncode:raise SystemExit('JavaScript '+str(i)+' invalid: '+proc.stderr)
           print('JavaScript source syntax OK:',len(scripts),'scripts')
           PY
-      - name: Publish JSON to GitHub Pages
+      - name: Publish current JSON atomically
         run: |
+          cp gorod-control/data/water.json /tmp/city-control-water.json
+          BUILT_PARSER_SHA=$(git rev-parse HEAD:gorod-control/scripts)
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add gorod-control/data/water.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'city-control: refresh water notices'
-            for attempt in 1 2 3; do
-              git pull --rebase origin main
-              if git push origin HEAD:main; then break; fi
-              if [ "$attempt" = 3 ]; then exit 1; fi
-              sleep 3
-            done
-          fi
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            CURRENT_PARSER_SHA=$(git rev-parse origin/main:gorod-control/scripts)
+            if [ "$BUILT_PARSER_SHA" != "$CURRENT_PARSER_SHA" ]; then
+              echo 'Parser updated while checking notices; skip old results. New push will trigger refreshed collection.'
+              exit 0
+            fi
+            git checkout -B city-control-water-publish origin/main
+            cp /tmp/city-control-water.json gorod-control/data/water.json
+            git add gorod-control/data/water.json
+            if git diff --cached --quiet; then echo 'No new data'; break; fi
+            git commit -m 'city-control: refresh verified water notices'
+            if git push origin HEAD:main; then echo 'Water notices published'; break; fi
+            if [ "$attempt" = 4 ]; then exit 1; fi
+            sleep 2
+          done
