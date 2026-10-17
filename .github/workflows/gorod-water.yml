@@ -24,6 +24,8 @@ jobs:
           python-version: '3.12'
       - name: Test parser including address and restoration
         run: python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
+      - name: Test mobile address matching and JavaScript
+        run: node gorod-control/scripts/test_frontend.mjs
       - name: Fetch public Shakhty water notices
         run: python gorod-control/scripts/collect_water.py
       - name: Inspect full RSS description and source tags
