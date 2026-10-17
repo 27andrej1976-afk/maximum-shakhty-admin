@@ -19,8 +19,9 @@ DATE=re.compile(r'\b([0-3]?\d)\s*[./]\s*([01]?\d)\s*[./]\s*(20\d{2})\b')
 MONTHS={s:i+1 for i,s in enumerate('января февраля марта апреля мая июня июля августа сентября октября ноября декабря'.split())}
 
 class Page(HTMLParser):
-    def __init__(self):
+    def __init__(self,channel='shakhtinskiy'):
         super().__init__(convert_charrefs=True)
+        self.channel=channel
         self.result=[];self.d=0;self.t=0;self.parts=[];self.current=None
     def handle_starttag(self,tag,attrs):
         at=dict(attrs);classes=at.get('class','').split()
@@ -45,15 +46,15 @@ class Page(HTMLParser):
             self.d-=1
             if not self.d:
                 m=self.current
-                if m['id'] and m['id'].startswith('shakhtinskiy/') and m['text'].strip() and m['time']:
+                if m['id'] and m['id'].startswith(self.channel+'/') and m['text'].strip() and m['time']:
                     self.result.append(m)
                 self.current=None
         elif tag in ('p','blockquote','li') and self.t:self.parts.append('\n')
     def handle_data(self,data):
         if self.t:self.parts.append(data)
 
-def parse_html(html):
-    parser=Page();parser.feed(html);out=[]
+def parse_html(html,channel='shakhtinskiy'):
+    parser=Page(channel);parser.feed(html);out=[]
     for p in parser.result:
         try:
             stamp=datetime.fromisoformat(p['time'].replace('Z','+00:00'))
@@ -68,6 +69,11 @@ def parse_affected(text):
     for raw in text.splitlines():
         line=raw.replace('\ufe0f','').strip(' \t\r▫▪•-–')
         if MARK.fullmatch(line):section=True;continue
+        if not section and re.search(r'(?:в направлении(?: следующих улиц)?|по адресам|остан(?:овлено|овка) водоснабжения|без водоснабжения оста(?:ются|лись))\s*[:：]',line,flags=re.I):
+            section=True
+            tail=line.rsplit(':',1)[-1].strip()
+            if not tail:continue
+            line=tail
         if not section:continue
         if STOP.match(line):break
         if not line:continue
@@ -130,8 +136,8 @@ def feed(messages,now=None):
         if kind!='planned' and now-published>timedelta(hours=48):continue
         if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
         if kind!='planned' and end and datetime.fromisoformat(end)<now:continue
-        events.append({'id':'water-'+m['id'].split('/')[-1],'kind':'planned' if kind=='planned' else 'emergency',
-            'status':'active','category':'water','source':'Шахтинский водоканал',
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'active','category':'water','source':('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
             'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
             'description':desc,'start':start,'end':end,'point':None,'affected':areas,
             'url':m['url'],'publishedAt':m['publishedAt'],'precision':'street'})
@@ -148,21 +154,43 @@ def feed(messages,now=None):
 
 def main():
     now=datetime.now(timezone.utc)
-    try:
-        req=Request(SOURCE,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
-        with urlopen(req,timeout=20) as resp:html=resp.read(2000000).decode('utf-8','replace')
-        msgs=parse_html(html)
-        if not msgs:raise RuntimeError('Telegram web page had no recognisable official messages')
-        result=feed(msgs,now)
-        print('Official Telegram posts:',len(msgs),'current:',len(result['events']))
-    except Exception as exc:
-        print('SOURCE ERROR:',exc,file=sys.stderr)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    if all_posts:
+        result=feed(all_posts,now)
+        result['sources']=states
+    else:
         try:result=json.loads(OUTPUT.read_text(encoding='utf-8'))
         except Exception:result={'schema':2,'checkedAt':None,'events':[],'recent':[]}
-        result['sources']=[{'id':'water','status':'error','posts':0,'note':str(exc)[:160],'url':SOURCE}]
+        result['sources']=states
         result['fetchAttemptAt']=now.isoformat()
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
     return 0
 
 if __name__=='__main__':sys.exit(main())
