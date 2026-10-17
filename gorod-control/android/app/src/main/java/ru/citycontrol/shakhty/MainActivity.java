@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import java.util.Locale;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -34,8 +35,10 @@ public final class MainActivity extends Activity {
   private static final String TRUSTED_PATH = "/maximum-shakhty-admin/gorod-control/";
   private static final int GEO_REQUEST = 615;
   private static final int NOTIFY_REQUEST = 616;
+  private static final int PHONE_GPS_REQUEST = 617;
   private final Handler handler=new Handler(Looper.getMainLooper());
   private WebView web;
+  private NativeLocationHelper nativeLocation;
   private GeolocationPermissions.Callback pendingGeo;
   private String pendingGeoOrigin;
   private final Runnable homeSync=new Runnable(){
@@ -50,13 +53,14 @@ public final class MainActivity extends Activity {
     getWindow().setStatusBarColor(Color.rgb(16,26,44));
     getWindow().setNavigationBarColor(Color.rgb(16,26,44));
     scheduleWaterMonitor();
+    nativeLocation=new NativeLocationHelper(this);
     FrameLayout container = new FrameLayout(this);
     web = new WebView(this);
     web.setBackgroundColor(Color.rgb(243,246,248));
     container.addView(web,new FrameLayout.LayoutParams(-1,-1));
     setContentView(container);
     WebSettings settings=web.getSettings();
-    settings.setUserAgentString(settings.getUserAgentString() + " CityControlApp/0.3");
+    settings.setUserAgentString(settings.getUserAgentString() + " CityControlApp/0.4");
     settings.setJavaScriptEnabled(true);
     settings.setDomStorageEnabled(true);
     settings.setGeolocationEnabled(true);
@@ -68,6 +72,10 @@ public final class MainActivity extends Activity {
     web.setWebViewClient(new WebViewClient(){
       @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest request){
         Uri target=request.getUrl();
+        if("citycontrol".equals(target.getScheme()) && "get-location".equals(target.getHost())){
+          if(request.isForMainFrame() && isTrustedPage(view.getUrl()))startNativeGPS();
+          return true;
+        }
         if("citycontrol".equals(target.getScheme()) && "test-notification".equals(target.getHost())){
           if(view.getUrl()!=null && view.getUrl().startsWith(URL)){
             if(!WaterMonitorJobService.showTestNotification(MainActivity.this)){
@@ -106,7 +114,12 @@ public final class MainActivity extends Activity {
     });
     web.setWebChromeClient(new WebChromeClient(){
       @Override public void onGeolocationPermissionsShowPrompt(String origin,GeolocationPermissions.Callback callback){
-        if(!origin.equals("https://"+TRUSTED_HOST)){
+        Uri originUri=Uri.parse(origin);
+        // Chromium may supply origin with a trailing slash or a default HTTPS port.
+        if(!"https".equalsIgnoreCase(originUri.getScheme())
+            || !TRUSTED_HOST.equalsIgnoreCase(originUri.getHost())
+            || (originUri.getPort()!=-1 && originUri.getPort()!=443)
+            || !isTrustedPage(web!=null?web.getUrl():null)){
           callback.invoke(origin,false,false);return;
         }
         if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED ||
@@ -120,6 +133,52 @@ public final class MainActivity extends Activity {
       }
     });
     web.loadUrl(URL);
+  }
+
+  private boolean isTrustedPage(String url) {
+    return url!=null && (url.equals(URL) || url.startsWith(URL+"index.html")
+        || url.startsWith(URL+"?") || url.startsWith(URL+"#"));
+  }
+
+  // Send only numeric coordinates to the trusted main frame; never expose GPS to another origin.
+  private void deliverNativeCoordinates(double lat,double lon,float accuracyMetres) {
+    if(!isTrustedPage(web!=null?web.getUrl():null))return;
+    if(!Double.isFinite(lat)||!Double.isFinite(lon)||!Float.isFinite(accuracyMetres))return;
+    final String payload=String.format(Locale.US,
+      "window.CityControlNativeGPSResult && window.CityControlNativeGPSResult({lat:%.7f,lon:%.7f,accuracy:%.1f});",
+      lat,lon,accuracyMetres);
+    web.evaluateJavascript(payload,null);
+  }
+
+  private void deliverNativeError(String code) {
+    if(!isTrustedPage(web!=null?web.getUrl():null))return;
+    String safe;
+    switch(code){
+      case "PERMISSION_DENIED":safe="PERMISSION_DENIED";break;
+      case "LOCATION_DISABLED":safe="LOCATION_DISABLED";break;
+      case "TIMEOUT":safe="TIMEOUT";break;
+      default:safe="UNAVAILABLE";
+    }
+    web.evaluateJavascript(
+      "window.CityControlNativeGPSError && window.CityControlNativeGPSError('"+safe+"');",null);
+  }
+
+  private void startNativeGPS() {
+    if(!isTrustedPage(web!=null?web.getUrl():null))return;
+    boolean fine=checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED;
+    boolean coarse=checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_GRANTED;
+    if(!fine && !coarse) {
+      requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION},PHONE_GPS_REQUEST);
+      return;
+    }
+    if(nativeLocation==null)nativeLocation=new NativeLocationHelper(this);
+    nativeLocation.request(new NativeLocationHelper.Callback(){
+      @Override public void onLocation(double lat,double lon,float accuracyMetres){
+        deliverNativeCoordinates(lat,lon,accuracyMetres);
+      }
+      @Override public void onError(String code){deliverNativeError(code);}
+    });
   }
 
   private void scheduleWaterMonitor() {
@@ -159,6 +218,13 @@ public final class MainActivity extends Activity {
 
   @Override public void onRequestPermissionsResult(int code,String[] permissions,int[] grants) {
     super.onRequestPermissionsResult(code,permissions,grants);
+    if(code==PHONE_GPS_REQUEST){
+      boolean granted=false;
+      for(int permission:grants)if(permission==PackageManager.PERMISSION_GRANTED)granted=true;
+      if(granted)startNativeGPS();
+      else deliverNativeError("PERMISSION_DENIED");
+      return;
+    }
     if(code==GEO_REQUEST && pendingGeo!=null){
       boolean granted=false;
       for(int permission:grants)if(permission==PackageManager.PERMISSION_GRANTED)granted=true;
@@ -181,6 +247,7 @@ public final class MainActivity extends Activity {
     else super.onBackPressed();
   }
   @Override protected void onDestroy() {
+    if(nativeLocation!=null)nativeLocation.cancel();
     handler.removeCallbacks(homeSync);
     if(web!=null){web.destroy();web=null;}
     super.onDestroy();
