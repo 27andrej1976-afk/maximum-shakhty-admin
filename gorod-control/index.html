@@ -96,7 +96,7 @@
     if (!home || !Number.isFinite(+home.lat) || !Number.isFinite(+home.lon)) return { relevant:false, reason:'Нет контрольной точки', confidence:'unknown' };
     if (event.status === 'resolved') return { relevant:false, reason:'Работы завершены', confidence:'high' };
     const today = Date.now(), end = event.end ? Date.parse(event.end) : NaN, start = event.start ? Date.parse(event.start) : NaN;
-    if (Number.isFinite(end) && end < today - 6*3600000) return { relevant:false, reason:'Событие завершилось', confidence:'high' };
+    if (Number.isFinite(end) && end < today - 24*3600000) return { relevant:false, reason:'Истёк срок актуальности сообщения, требуется новая проверка', confidence:'unknown' };
     if (event.kind === 'planned' && Number.isFinite(start) && start > today + 14*86400000) return { relevant:false, reason:'План слишком далеко', confidence:'high' };
     if (event.kind !== 'planned' && !Number.isFinite(end) && Number.isFinite(start) && start < today - 48*3600000) return { relevant:false, reason:'Устаревшее сообщение', confidence:'high' };
     const street = normalStreet(home.street);
