@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-17T23:26:40.204131+00:00",
+  "checkedAt": "2026-10-17T23:51:16.245900+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -96,7 +96,7 @@
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-17T23:26:40.204131+00:00",
+      "checkedAt": "2026-10-17T23:51:16.245900+00:00",
       "lastPostAt": null,
       "posts": 5,
       "matchingPosts": 4,
@@ -105,8 +105,8 @@
         "Заявок на 18.10.26 г нет"
       ],
       "tlsVerified": true,
-      "contentSha256": "3aab27d25cad6a9c48dce99dbe8e1a23180c49b6517afd9b0f3cebd21d8fd3f3",
-      "durationSeconds": 9.75
+      "contentSha256": "d147f216bbd89be77268e94f19b2c4cb9468d98b8c898cdf562d9f388882fbfe",
+      "durationSeconds": 1.66
     }
   ],
   "events": [
@@ -221,7 +221,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-17T23:26:40.204131+00:00",
+      "observedAt": "2026-10-17T23:51:16.245900+00:00",
       "start": "2026-10-17T08:00:00+03:00",
       "end": "2026-10-17T17:00:00+03:00",
       "startBasis": "explicit",
@@ -268,7 +268,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-17T23:26:40.204131+00:00",
+      "observedAt": "2026-10-17T23:51:16.245900+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -332,7 +332,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-17T23:26:40.204131+00:00",
+      "observedAt": "2026-10-17T23:51:16.245900+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -383,7 +383,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-17T23:26:40.204131+00:00",
+      "observedAt": "2026-10-17T23:51:16.245900+00:00",
       "start": "2026-10-19T09:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
