@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20128%20128%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2228%22%20fill%3D%22%23101a2c%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2240%22%20fill%3D%22none%22%20stroke%3D%22%235bd7b9%22%20stroke-width%3D%224%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2223%22%20fill%3D%22none%22%20stroke%3D%22%23386879%22%20stroke-width%3D%224%22/%3E%3Cpath%20d%3D%22M64%2018v24m0%2044v24M18%2064h24m44%200h24%22%20stroke%3D%22%235bd7b9%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2211%22%20fill%3D%22%235bd7b9%22/%3E%3C/svg%3E%0A" />
 
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="./map-v07/vendor/leaflet.css" /><link rel="stylesheet" href="./map-v07/city-map.css?v=0.7.0" />
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 :root{--bg:#f3f6f8;--white:#fff;--ink:#172237;--muted:#718092;--line:#e6eaf0;--navy:#101a2c;--mint:#13b896;--mintdark:#0a8c73;--amber:#ed9a36;--red:#e8646c;--shadow:0 10px 40px #121a2c0d}
@@ -22,12 +22,12 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="brand-icon">✳</span><div><b>ГОРОД <span>ПОД КОНТРОЛЕМ</span></b><small>ПИЛОТ • ШАХТЫ</small></div></div>
-    <span class="version"><span class="signal-dot"></span> ПРОТОТИП v0.6</span>
+    <div class="brand"><img class="brand-icon city-coat" src="./map-v07/shakhty-coat.png" width="44" height="58" alt="Герб города Шахты" /><div><b>ГОРОД <span>ПОД КОНТРОЛЕМ</span></b><small>ПИЛОТ • ШАХТЫ</small></div></div>
+    <span class="version"><span class="signal-dot"></span> КАРТА v0.7</span>
   </header>
   <main class="main">
     <section class="left-panel" aria-label="Локальные предупреждения">
-      <div class="intro"><div class="eyebrow">ВАШ РАЙОН · РОСТОВСКАЯ ОБЛАСТЬ</div><h1>Что происходит <em>рядом?</em></h1><p>Аварии, отключения и плановые работы — только те, что могут касаться вас.</p></div>
+      <div class="intro"><p class="city-disclaimer">Шахты · независимый городской мониторинг</p><div class="eyebrow">ВАШ РАЙОН · РОСТОВСКАЯ ОБЛАСТЬ</div><h1>Что происходит <em>рядом?</em></h1><p>У дома и по всему городу: опубликованные аварии, плановые работы и предупреждения.</p></div>
       <section class="control-card">
         <div class="control-head"><div class="row-title"><span class="mini-icon home-icon">⌂</span><div><strong>Контрольная точка</strong><small>На первом этапе — ваш дом</small></div></div><span id="pointStatus" class="mini-pill">Не задана</span></div>
         <div id="addressValue" class="address-value">Укажите адрес или определите его автоматически</div>
@@ -44,14 +44,14 @@
       <div class="notification-card"><span>♧</span><div><strong>Предупреждения заранее</strong><p>В Android APK после выбора адреса доступны фоновые проверки с уведомлениями о новых совпадениях. На сайте — только проверка при открытии. Время уведомления зависит от ограничений Android.</p></div><button id="notifyButton" class="tiny-button">Подробнее</button></div>
     </section>
     <section class="right-panel" aria-label="Карта района">
-      <div class="map-card"><div class="map-toolbar"><div><span class="map-kicker">КАРТА РАЙОНА</span><strong id="mapName">Шахты · точка не задана</strong></div><span class="scale-pill">◎ 1 км</span></div><div id="map" class="map"><div class="map-fallback">Карта загружается. Для отображения необходим интернет.</div></div><div class="map-caption"><span><span class="legend-dot emerald"></span> Контрольная точка</span><span><span class="legend-dot rose"></span> Авария</span><span><span class="legend-dot amber"></span> Плановые работы</span></div></div>
+      <div class="map-card"><div class="map-toolbar"><div><span class="map-kicker">ГОРОД И МОЙ РАЙОН</span><strong id="mapName">Шахты · точка не задана</strong></div><span class="scale-pill">◎ 1 км</span></div><div id="map" class="map"><div class="map-fallback">Карта загружается. Для отображения необходим интернет.</div></div><div class="map-caption"><span>◎ Контрольная точка</span><span>Цветные линии: улицы из публикаций</span><span>Нажмите метку — подробности и сроки</span></div></div>
       <section class="sources"><div class="sources-title"><div><div class="eyebrow">ПРОВЕРЯЕМЫЕ ПУБЛИКАЦИИ</div><h2>Источники информации</h2></div><span id="sourceStatus" class="source-tag">Нет онлайн-проверки</span></div><div id="sourcesGrid" class="sources-grid"></div><p class="sources-note">Службы размещают публикации с задержкой и не всегда указывают точные дома. «Нет сообщений» не равно «всё безопасно». При непосредственной опасности звоните 112.</p></section>
     </section>
   </main>
   <dialog id="addressDialog" class="dialog"><form method="dialog" id="addressForm"><div class="dialog-head"><div><div class="eyebrow">КОНТРОЛЬНАЯ ТОЧКА</div><h2>Где находится дом?</h2></div><button aria-label="Закрыть" class="close" value="cancel" formnovalidate>×</button></div><label class="field-label" for="addressInput">Адрес в городе Шахты</label><input id="addressInput" name="home" type="text" placeholder="ул. Советская, 25" autocomplete="street-address" required /><small class="address-explain">Укажите улицу и номер. Для поиска точки адрес отправляется сервису геокодирования OpenStreetMap. В нашем приложении он хранится только в вашем браузере.</small><div class="dialog-actions"><button class="button secondary" value="cancel" formnovalidate>Отмена</button><button class="button primary" id="saveAddressButton" value="save">Найти на карте</button></div></form></dialog>
   <div id="toast" role="status" aria-live="polite"></div>
   <footer class="site-footer">Город под контролем · Тестовая сборка, 17.10.2026. Не является официальной системой экстренного оповещения. <span>© OpenStreetMap contributors</span></footer>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="./map-v07/vendor/leaflet.js"></script><script src="./map-v07/city-map.js?v=0.7.0"></script>
   <script>
 /* Pure matching rules, also exercised by tests. No real or private addresses embedded. */
 (function (root) {
@@ -169,7 +169,7 @@ const sources = [
   {id:'mchs', icon:'⚠', name:'МЧС Ростовской области', detail:'Региональные предупреждения', url:'https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya'},
 ];
 const state = {home:null, demo:false, filter:'all', events:[], backendConnected:false, checkedAt:null, checks:[], map:null, homeMarker:null, circle:null, incidentLayers:[], notifications:false, mapLoaded:false, toastTimer:null, sourceRecent:null,lastLocalCheck:0};
-const fmtTime = d => {try{return new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(d))}catch{return 'Нет времени'}};
+const fmtTime = d => {try{return new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Moscow'}).format(new Date(d))}catch{return 'Нет времени'}};
 const isoFuture = (days,h,m=0) => {let d=new Date();d.setDate(d.getDate()+days);d.setHours(h,m,0,0);return d.toISOString()};
 const escapeHtml = text => String(text == null ? '' : text).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 const safeUrl = str => /^https:\/\//.test(String(str || '')) ? String(str) : '';
@@ -215,8 +215,8 @@ function renderSources(){
   $('sourceStatus').classList.toggle('partial',ok>0);
 }
 function paintHome(){const h=state.home;$('pointStatus').textContent=h?'Задана':state.demo?'Тестовая':'Не задана';$('pointStatus').classList.toggle('set',!!h);$('addressValue').textContent=h? h.label || 'Точка GPS, Шахты' : state.demo?'Центр Шахт — условная точка':'Укажите адрес или определите его автоматически';$('mapName').textContent=h?(h.label||'Ваша контрольная точка'):state.demo?'Шахты · учебная точка':'Шахты · точка не задана';$('addressHint').textContent=!h&&state.demo?'Это условный адрес для проверки приложения. Для настоящего мониторинга выберите свой дом.':h&&(!h.street||LGC.normalStreet(h.street).startsWith('неуточн:'))?'Тип улицы не определён. Для точных отключений введите адрес с названием улицы и номером дома.':h&&!h.house?'Для оповещений по адресным спискам желательно добавить улицу и номер дома. Координат для этого недостаточно.':'Адрес и координаты сохраняются только в этом браузере. Карта и поиск адреса используют сторонние сервисы.';}
-function makeMap(){const fallback=$('map').querySelector('.map-fallback');if(typeof window.L==='undefined'){fallback.textContent='Картографическая библиотека недоступна. Для карты нужен интернет. Фильтр по адресу и тестовые события продолжают работать.';return;}fallback.remove();state.map=window.L.map('map',{zoomControl:false}).setView([CITY.lat,CITY.lon],13);window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',maxZoom:19}).addTo(state.map);window.L.control.zoom({position:'bottomright'}).addTo(state.map);updateMap();setTimeout(()=>state.map.invalidateSize(),150)}
-function updateMap(){if(!state.map)return;const h=state.home || (state.demo ? {...CITY,street:'Тестовая',house:'12'} : null);if(state.homeMarker){state.map.removeLayer(state.homeMarker);state.map.removeLayer(state.circle);state.homeMarker=null;state.circle=null;}for(let item of state.incidentLayers)state.map.removeLayer(item);state.incidentLayers=[];if(!h){state.map.setView([CITY.lat,CITY.lon],13);return;}state.map.setView([+h.lat,+h.lon],14);state.circle=window.L.circle([+h.lat,+h.lon],{radius:1000,color:'#13b896',fillColor:'#19b59a',fillOpacity:.11,weight:2,dashArray:'6 6'}).addTo(state.map);state.homeMarker=window.L.marker([+h.lat,+h.lon],{icon:window.L.divIcon({className:'',html:'<div class="marker-pin"></div>',iconSize:[26,26],iconAnchor:[13,13]})}).addTo(state.map).bindPopup(escapeHtml(state.home?.label||'Учебная точка, центр Шахт'));const visible=getVisibleEvents();for(const {event:e} of visible){if(!e.point)continue;const cls=e.kind==='planned'?'planned':'emergency';let icon=window.L.divIcon({className:'',html:`<div class="event-pin ${cls}">${cls==='planned'?'⌛':'!'}</div>`,iconSize:[33,33],iconAnchor:[16,16]});let layer=window.L.marker([e.point.lat,e.point.lon],{icon}).addTo(state.map).bindPopup(`<strong>${escapeHtml(e.title)}</strong><p>${escapeHtml(e.description)}</p>`);state.incidentLayers.push(layer)}}
+function makeMap(){window.CityMapV07.start();}
+function updateMap(){window.CityMapV07.refresh();}
 function getMatches(){const h=state.home||(state.demo?{...CITY,street:'Тестовая',house:'12'}:null);return (state.demo?demoEvents():state.events).map(e=>({event:e,impact:LGC.matchImpact(e,h)})).filter(x=>x.impact.relevant).sort((a,b)=>{if(a.event.kind!==b.event.kind)return a.event.kind==='emergency'?-1:1;return Date.parse(a.event.start||0)-Date.parse(b.event.start||0)})}
 function getVisibleEvents(){return getMatches().filter(x=>state.filter==='all'||x.event.kind===state.filter)}
 function renderEvents(){const all=getMatches(), visible=getVisibleEvents();$('eventsCount').textContent=all.length;$('eventList').innerHTML=visible.length?visible.map(({event:e,impact:m})=>{const planned=e.kind==='planned',warning=e.kind==='warning',overdue=e.status==='unconfirmed',kind=warning?'ПРЕДУПРЕЖДЕНИЕ МЧС':overdue?'СРОК ЗАВЕРШЕНИЯ ПРОШЁЛ':planned?'ПЛАНОВЫЕ РАБОТЫ':'АВАРИЙНОЕ СОБЫТИЕ',link=safeUrl(e.url),official=safeUrl(e.officialUrl),match=m.confidence==='high'?'':' uncertain';return `<article class="event"><div class="eventTop"><span class="eventType ${warning?'warning':planned?'planned':'emergency'}">${e.demo?'ТЕСТ · ':''}${kind}</span><span class="eventTime">${e.start?escapeHtml(fmtTime(e.start)):'Время неизвестно'}</span></div><h3>${escapeHtml(e.title)}</h3><p>${escapeHtml(e.description)}${e.end?(warning?' Период действия до '+escapeHtml(fmtTime(e.end))+'.':overdue?' Ожидаемый срок окончания '+escapeHtml(fmtTime(e.end))+' прошёл; подтверждения восстановления пока нет.':' Ожидаемое окончание: '+escapeHtml(fmtTime(e.end))+'.'):''}${e.origin==='verified_repost'?' Перепечатка сообщения УРСВ со ссылкой на официальный документ.':e.origin==='attributed_repost'?' Перепечатка сообщения с указанием Донэнерго как первоисточника.':''}</p><div class="eventBottom"><span class="eventImpact${match}">${escapeHtml(m.reason)}</span>${link?`<span><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${e.origin==='verified_repost'?'Перепечатка':'Источник'} ↗</a>${official?` · <a href="${escapeHtml(official)}" target="_blank" rel="noopener noreferrer">УРСВ ↗</a>`:''}</span>`:`<span style="color:#8a96a3">${escapeHtml(e.source||'Без источника')}</span>`}</div></article>`}).join(''):`<div class="empty"><span class="empty-icon">◉</span><strong>${state.demo?'Тестовых событий этого типа рядом нет':'Подтверждённых событий для точки не найдено'}</strong><p>${state.demo?'Смените фильтр или введите контрольный адрес.':'Источники могут быть недоступны или не указывать точное расположение. Это не подтверждение безопасности.'}</p></div>`;
@@ -378,6 +378,8 @@ function initialise(){if(/CityControlApp\//.test(navigator.userAgent)){$('notify
 function refreshOnResume(){if(!document.hidden&&!state.demo&&Date.now()-state.lastLocalCheck>5*60*1000)checkSources();}
 document.addEventListener('visibilitychange',refreshOnResume);
 setInterval(refreshOnResume,5*60*1000);
+window.CityMapV07.configure({state,city:CITY,logic:LGC,getHomeMatches:()=>getMatches(),
+  getRawEvents:()=>state.demo?demoEvents():state.events,fmt:fmtTime,toast});
 window.addEventListener('DOMContentLoaded',initialise);
 })();
 
