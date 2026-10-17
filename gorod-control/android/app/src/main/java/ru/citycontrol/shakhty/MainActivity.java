@@ -2,6 +2,7 @@ package ru.citycontrol.shakhty;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -67,6 +68,20 @@ public final class MainActivity extends Activity {
     web.setWebViewClient(new WebViewClient(){
       @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest request){
         Uri target=request.getUrl();
+        if("citycontrol".equals(target.getScheme()) && "test-notification".equals(target.getHost())){
+          if(view.getUrl()!=null && view.getUrl().startsWith(URL)){
+            if(!WaterMonitorJobService.showTestNotification(MainActivity.this)){
+              new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Разрешите уведомления")
+                .setMessage("Для проверочных и настоящих уведомлений разрешите их в настройках Android.")
+                .setPositiveButton("Разрешить",(dialog,which)->{
+                  if(Build.VERSION.SDK_INT>=33)
+                    requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},NOTIFY_REQUEST);
+                }).setNegativeButton("Позже",null).show();
+            }
+          }
+          return true;
+        }
         if("https".equals(target.getScheme()) && TRUSTED_HOST.equals(target.getHost())
            && target.getPath()!=null && target.getPath().startsWith(TRUSTED_PATH)) return false;
         try{
