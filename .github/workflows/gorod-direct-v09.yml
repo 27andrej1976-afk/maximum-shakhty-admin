@@ -7,30 +7,116 @@ on:
       - 'gorod-control/direct-v09/**'
       - '.github/workflows/gorod-direct-v09.yml'
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: city-direct-v09
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
-  verify:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install inspection browser
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Prepare isolated beta package and bundled interface
         run: |
-          python -m pip install --quiet playwright cryptography
+          mkdir -p direct-report
+          python -m compileall -q gorod-control/direct-v09
+          python gorod-control/direct-v09/prepare.py
+          mkdir -p /tmp/native-notice-tests
+          javac -encoding UTF-8 -d /tmp/native-notice-tests gorod-control/direct-v09/WaterNotice.java gorod-control/direct-v09/NativeNoticeCheck.java
+          java -cp /tmp/native-notice-tests NativeNoticeCheck | tee direct-report/native-tests.txt
+      - name: Test original and revised parsers with real public fixtures
+        run: |
+          python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
+          python gorod-control/source-lab-v08/probe.py > direct-report/source-probe.log
+          python gorod-control/source-lab-v08/test_verified.py 2>&1 | tee direct-report/water-replay-tests.txt
+      - name: Read verified direct source and create independent live feed
+        run: |
+          git fetch origin main
+          git show origin/main:gorod-control/data/water.json > gorod-control/data/water.json
+          python gorod-control/direct-v09/build_feed.py | tee direct-report/feed-build.log
+          cp gorod-control/direct-v09/feed.json gorod-control/android/app/src/main/assets/web/data/feed-snapshot.json
+          cp gorod-control/direct-v09/feed.json direct-report/feed.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('gorod-control/direct-v09/feed.json').read_text())
+          s=next(x for x in d['sources'] if x['id']=='power_direct')
+          assert s['status']=='ok' and s['tlsVerified'],s
+          assert s['posts']>0,s
+          print('PRIMARY SOURCE CHECK PASSED',s['posts'],'official Shakhty rows')
+          PY
+      - name: Install mobile browser tests
+        run: |
+          python -m pip install --quiet playwright
           python -m playwright install --with-deps chromium >/dev/null
-      - name: Verify direct official source and TLS chain
-        run: python gorod-control/direct-v09/inspect_power.py
+      - name: Verify bundled UI, direct notices, sources and incident cards
+        run: python gorod-control/direct-v09/test_bundle.py
+      - name: Configure Android SDK
+        run: |
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)
+          "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0"
+      - name: Restore test signing identity
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: city-control-beta-v09-test-signing-v1
+      - name: Build installable beta APK
+        working-directory: gorod-control/android
+        run: gradle --no-daemon --stacktrace :app:assembleDebug
+      - name: Verify APK signature and package metadata
+        run: |
+          mkdir -p direct-report/downloads
+          APK=gorod-control/android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK" | tee direct-report/apk-signature.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | tee direct-report/apk-package.txt
+          grep -F "package: name='ru.citycontrol.shakhty.beta'" direct-report/apk-package.txt
+          grep -F "versionName='0.9.0-test'" direct-report/apk-package.txt
+          cp "$APK" direct-report/downloads/GorodPodKontrolem-0.9.0-test.apk
+          (cd direct-report/downloads && sha256sum GorodPodKontrolem-0.9.0-test.apk > SHA256SUMS.txt)
+      - name: Publish only separate v0.9 feed and APK; preserve old app
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/city-v09-ready
+          cp -R gorod-control/direct-v09/. /tmp/city-v09-ready/
+          cp -R direct-report/downloads /tmp/city-v09-ready/
+          find /tmp/city-v09-ready -type d -name __pycache__ -exec rm -rf {} +
+          git restore .
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git checkout -B city-v09-publish origin/main
+            mkdir -p gorod-control/direct-v09
+            cp -R /tmp/city-v09-ready/. gorod-control/direct-v09/
+            git add gorod-control/direct-v09
+            if git diff --cached --quiet; then break; fi
+            git commit -m 'City Control v0.9: direct verified power feed and isolated tested Android beta'
+            if git push origin HEAD:main; then echo 'DIRECT V09 PUBLISHED'; break; fi
+            if [ "$attempt" = 3 ]; then exit 1; fi
+            sleep 2
+          done
+      - name: Capture generated public sources for debugging
+        if: always()
+        run: |
+          mkdir -p direct-report/code
+          cp -R gorod-control/direct-v09 direct-report/code/ || true
+          cp -R gorod-control/android/app/src direct-report/code/android-src || true
+          find direct-report/code -name '*.apk' -delete
+          find direct-report/code -name '*.pyc' -delete
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: city-direct-v09-report
+          name: city-direct-v09-built
           path: direct-report
           retention-days: 7
