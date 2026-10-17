@@ -26,27 +26,22 @@ jobs:
         run: python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
       - name: Fetch public Shakhty water notices
         run: python gorod-control/scripts/collect_water.py
-      - name: Inspect water notices in RSS
+      - name: Inspect full RSS description and source tags
         run: |
           python - <<'PY'
           from urllib.request import Request,urlopen
           from xml.etree import ElementTree as ET
-          import re,html
-          for u in ['https://newsrostov.ru/rss.xml','https://news-don.ru/rss.xml']:
-            try:
-              with urlopen(Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=15) as resp: body=resp.read(6_000_000)
-              root=ET.fromstring(body)
-              items=root.findall('.//item')
-              print('FEED_FORMAT',u,'total bytes',len(body),'items',len(items),'keys', sorted({x.tag for i in items[:3] for x in i}))
-              for item in items[:250]:
-                tit=item.findtext('title','') or ''
-                desc=item.findtext('description','') or ''
-                rest=' '.join(item.itertext())
-                if re.search(r'Шахт|водоснабжен|водоканал|филиал',rest,re.I):
-                  if re.search('Шахт',rest,re.I) and re.search('водоснабжен|водоканал|ГУП РО|Филиал',rest,re.I):
-                    print('FEED_NOTICE',u[:23],item.findtext('pubDate'),tit[:90],item.findtext('link'), 'len=',len(rest), 'hint=',re.sub(r'\\s+',' ',html.unescape(re.sub(r'<[^>]+>',' ',desc)))[:160])
-              print('FEED_FIRST',u,[(i.findtext('title','')[:60],i.findtext('pubDate')) for i in items[:3]])
-            except Exception as e:print('FEED_ERROR',u,str(e)[:150])
+          u='https://newsrostov.ru/rss.xml'
+          with urlopen(Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=18) as r: root=ET.fromstring(r.read(6000000))
+          for item in root.findall('.//item'):
+            title=item.findtext('title') or ''
+            if 'Шахтинский' in title:
+              a=item.findtext('{http://purl.org/rss/1.0/modules/content/}encoded') or ''
+              b=item.findtext('description') or ''
+              print('RSS_CONTENT_SAMPLE',repr(a[:2300]))
+              print('RSS_DESC_SAMPLE',repr(b[:1000]))
+              print('RSS_TAIL',repr(a[-500:]))
+              break
           PY
       - name: Publish JSON to GitHub Pages
         run: |
