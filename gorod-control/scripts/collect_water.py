@@ -137,6 +137,896 @@ def schedule(text,published,kind):
     if end and end<start:end+=timedelta(days=1)
     return start.isoformat(),end.isoformat() if end else None
 
+def canonical_road(raw):
+    """Canonical typed location; keeps ул vs пер vs проезд distinct."""
+    s=re.sub(r'\s+',' ',str(raw or '').lower().replace('ё','е')).strip()
+    s=re.sub(r'^г\.?\s*шахты\s*,?\s*','',s)
+    types=[
+        ('ул',r'^(?:улица|ул\.?)\s+(.+)
+    now=now or datetime.now(timezone.utc)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
+    recent=[];events=[]
+    for m in messages:
+        kind=classify(m['text'])
+        if not kind:continue
+        areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
+        desc=re.sub(r'\s+',' ',m['text'])[:340]
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
+        if kind=='resolved' or not areas:continue
+        start,end=schedule(m['text'],published,kind)
+        if not start:continue
+        if kind!='planned' and now-published>timedelta(hours=48):continue
+        if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
+            'description':desc,'start':start,'end':end,'point':None,'affected':areas,
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
+    closed=[m for m in recent if m['kind']=='resolved']
+    events=[e for e in events if not any(
+        0<=(datetime.fromisoformat(c['publishedAt'])-datetime.fromisoformat(e['publishedAt'])).total_seconds()<259200
+        and restoration_covers(e['affected'],c['affected']) for c in closed)]
+    return {'schema':2,'checkedAt':now.isoformat(),'sources':[{
+        'id':'water','status':'ok','posts':len(messages),'lastPostAt':messages[0]['publishedAt'] if messages else None,
+        'url':SOURCE,'note':'Официальный публичный канал, автоматический сбор'}],
+        'events':events,'recent':recent[:12]}
+
+def main():
+    now=datetime.now(timezone.utc)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
+    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+    OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
+    return 0
+
+if __name__=='__main__':sys.exit(main())
+),
+        ('пер',r'^(?:переулок|пер\.?)\s+(.+)
+    now=now or datetime.now(timezone.utc)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
+    recent=[];events=[]
+    for m in messages:
+        kind=classify(m['text'])
+        if not kind:continue
+        areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
+        desc=re.sub(r'\s+',' ',m['text'])[:340]
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
+        if kind=='resolved' or not areas:continue
+        start,end=schedule(m['text'],published,kind)
+        if not start:continue
+        if kind!='planned' and now-published>timedelta(hours=48):continue
+        if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
+            'description':desc,'start':start,'end':end,'point':None,'affected':areas,
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
+    def streets(areas):
+        return {re.sub(r'^(?:ул\.?|улица|пер\.?|переулок|проспект|пр-?кт|пр\.|пр-д)\s+','',x['street'],flags=re.I).lower().replace('ё','е') for x in areas}
+    closed=[m for m in recent if m['kind']=='resolved']
+    events=[e for e in events if not any(
+        0<=(datetime.fromisoformat(c['publishedAt'])-datetime.fromisoformat(e['publishedAt'])).total_seconds()<259200
+        and bool(streets(e['affected'])&streets(c['affected'])) for c in closed)]
+    return {'schema':2,'checkedAt':now.isoformat(),'sources':[{
+        'id':'water','status':'ok','posts':len(messages),'lastPostAt':messages[0]['publishedAt'] if messages else None,
+        'url':SOURCE,'note':'Официальный публичный канал, автоматический сбор'}],
+        'events':events,'recent':recent[:12]}
+
+def main():
+    now=datetime.now(timezone.utc)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
+    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+    OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
+    return 0
+
+if __name__=='__main__':sys.exit(main())
+),
+        ('просп',r'^(?:проспект|пр-?кт|пр-?т|пр\.?)\s+(.+)
+    now=now or datetime.now(timezone.utc)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
+    recent=[];events=[]
+    for m in messages:
+        kind=classify(m['text'])
+        if not kind:continue
+        areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
+        desc=re.sub(r'\s+',' ',m['text'])[:340]
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
+        if kind=='resolved' or not areas:continue
+        start,end=schedule(m['text'],published,kind)
+        if not start:continue
+        if kind!='planned' and now-published>timedelta(hours=48):continue
+        if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
+            'description':desc,'start':start,'end':end,'point':None,'affected':areas,
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
+    def streets(areas):
+        return {re.sub(r'^(?:ул\.?|улица|пер\.?|переулок|проспект|пр-?кт|пр\.|пр-д)\s+','',x['street'],flags=re.I).lower().replace('ё','е') for x in areas}
+    closed=[m for m in recent if m['kind']=='resolved']
+    events=[e for e in events if not any(
+        0<=(datetime.fromisoformat(c['publishedAt'])-datetime.fromisoformat(e['publishedAt'])).total_seconds()<259200
+        and bool(streets(e['affected'])&streets(c['affected'])) for c in closed)]
+    return {'schema':2,'checkedAt':now.isoformat(),'sources':[{
+        'id':'water','status':'ok','posts':len(messages),'lastPostAt':messages[0]['publishedAt'] if messages else None,
+        'url':SOURCE,'note':'Официальный публичный канал, автоматический сбор'}],
+        'events':events,'recent':recent[:12]}
+
+def main():
+    now=datetime.now(timezone.utc)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
+    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+    OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
+    return 0
+
+if __name__=='__main__':sys.exit(main())
+),
+        ('проезд',r'^(?:проезд|пр-д)\s+(.+)
+    now=now or datetime.now(timezone.utc)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
+    recent=[];events=[]
+    for m in messages:
+        kind=classify(m['text'])
+        if not kind:continue
+        areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
+        desc=re.sub(r'\s+',' ',m['text'])[:340]
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
+        if kind=='resolved' or not areas:continue
+        start,end=schedule(m['text'],published,kind)
+        if not start:continue
+        if kind!='planned' and now-published>timedelta(hours=48):continue
+        if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
+            'description':desc,'start':start,'end':end,'point':None,'affected':areas,
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
+    def streets(areas):
+        return {re.sub(r'^(?:ул\.?|улица|пер\.?|переулок|проспект|пр-?кт|пр\.|пр-д)\s+','',x['street'],flags=re.I).lower().replace('ё','е') for x in areas}
+    closed=[m for m in recent if m['kind']=='resolved']
+    events=[e for e in events if not any(
+        0<=(datetime.fromisoformat(c['publishedAt'])-datetime.fromisoformat(e['publishedAt'])).total_seconds()<259200
+        and bool(streets(e['affected'])&streets(c['affected'])) for c in closed)]
+    return {'schema':2,'checkedAt':now.isoformat(),'sources':[{
+        'id':'water','status':'ok','posts':len(messages),'lastPostAt':messages[0]['publishedAt'] if messages else None,
+        'url':SOURCE,'note':'Официальный публичный канал, автоматический сбор'}],
+        'events':events,'recent':recent[:12]}
+
+def main():
+    now=datetime.now(timezone.utc)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
+    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+    OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
+    return 0
+
+if __name__=='__main__':sys.exit(main())
+),
+        ('пл',r'^(?:площадь|пл\.?)\s+(.+)
+    now=now or datetime.now(timezone.utc)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
+    recent=[];events=[]
+    for m in messages:
+        kind=classify(m['text'])
+        if not kind:continue
+        areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
+        desc=re.sub(r'\s+',' ',m['text'])[:340]
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
+        if kind=='resolved' or not areas:continue
+        start,end=schedule(m['text'],published,kind)
+        if not start:continue
+        if kind!='planned' and now-published>timedelta(hours=48):continue
+        if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
+            'description':desc,'start':start,'end':end,'point':None,'affected':areas,
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
+    def streets(areas):
+        return {re.sub(r'^(?:ул\.?|улица|пер\.?|переулок|проспект|пр-?кт|пр\.|пр-д)\s+','',x['street'],flags=re.I).lower().replace('ё','е') for x in areas}
+    closed=[m for m in recent if m['kind']=='resolved']
+    events=[e for e in events if not any(
+        0<=(datetime.fromisoformat(c['publishedAt'])-datetime.fromisoformat(e['publishedAt'])).total_seconds()<259200
+        and bool(streets(e['affected'])&streets(c['affected'])) for c in closed)]
+    return {'schema':2,'checkedAt':now.isoformat(),'sources':[{
+        'id':'water','status':'ok','posts':len(messages),'lastPostAt':messages[0]['publishedAt'] if messages else None,
+        'url':SOURCE,'note':'Официальный публичный канал, автоматический сбор'}],
+        'events':events,'recent':recent[:12]}
+
+def main():
+    now=datetime.now(timezone.utc)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
+    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+    OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
+    return 0
+
+if __name__=='__main__':sys.exit(main())
+),
+        ('бул',r'^(?:бульвар|бул\.?)\s+(.+)
+    now=now or datetime.now(timezone.utc)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
+    recent=[];events=[]
+    for m in messages:
+        kind=classify(m['text'])
+        if not kind:continue
+        areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
+        desc=re.sub(r'\s+',' ',m['text'])[:340]
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
+        if kind=='resolved' or not areas:continue
+        start,end=schedule(m['text'],published,kind)
+        if not start:continue
+        if kind!='planned' and now-published>timedelta(hours=48):continue
+        if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
+            'description':desc,'start':start,'end':end,'point':None,'affected':areas,
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
+    def streets(areas):
+        return {re.sub(r'^(?:ул\.?|улица|пер\.?|переулок|проспект|пр-?кт|пр\.|пр-д)\s+','',x['street'],flags=re.I).lower().replace('ё','е') for x in areas}
+    closed=[m for m in recent if m['kind']=='resolved']
+    events=[e for e in events if not any(
+        0<=(datetime.fromisoformat(c['publishedAt'])-datetime.fromisoformat(e['publishedAt'])).total_seconds()<259200
+        and bool(streets(e['affected'])&streets(c['affected'])) for c in closed)]
+    return {'schema':2,'checkedAt':now.isoformat(),'sources':[{
+        'id':'water','status':'ok','posts':len(messages),'lastPostAt':messages[0]['publishedAt'] if messages else None,
+        'url':SOURCE,'note':'Официальный публичный канал, автоматический сбор'}],
+        'events':events,'recent':recent[:12]}
+
+def main():
+    now=datetime.now(timezone.utc)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
+    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+    OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
+    return 0
+
+if __name__=='__main__':sys.exit(main())
+),
+        ('пос',r'^(?:поселок|пос\.?)\s+(.+)
+    now=now or datetime.now(timezone.utc)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
+    recent=[];events=[]
+    for m in messages:
+        kind=classify(m['text'])
+        if not kind:continue
+        areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
+        desc=re.sub(r'\s+',' ',m['text'])[:340]
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
+        if kind=='resolved' or not areas:continue
+        start,end=schedule(m['text'],published,kind)
+        if not start:continue
+        if kind!='planned' and now-published>timedelta(hours=48):continue
+        if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
+            'description':desc,'start':start,'end':end,'point':None,'affected':areas,
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
+    def streets(areas):
+        return {re.sub(r'^(?:ул\.?|улица|пер\.?|переулок|проспект|пр-?кт|пр\.|пр-д)\s+','',x['street'],flags=re.I).lower().replace('ё','е') for x in areas}
+    closed=[m for m in recent if m['kind']=='resolved']
+    events=[e for e in events if not any(
+        0<=(datetime.fromisoformat(c['publishedAt'])-datetime.fromisoformat(e['publishedAt'])).total_seconds()<259200
+        and bool(streets(e['affected'])&streets(c['affected'])) for c in closed)]
+    return {'schema':2,'checkedAt':now.isoformat(),'sources':[{
+        'id':'water','status':'ok','posts':len(messages),'lastPostAt':messages[0]['publishedAt'] if messages else None,
+        'url':SOURCE,'note':'Официальный публичный канал, автоматический сбор'}],
+        'events':events,'recent':recent[:12]}
+
+def main():
+    now=datetime.now(timezone.utc)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
+    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+    OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
+    return 0
+
+if __name__=='__main__':sys.exit(main())
+),
+        ('мкр',r'^(?:микрорайон|мкр\.?)\s+(.+)
+    now=now or datetime.now(timezone.utc)
+    messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
+    recent=[];events=[]
+    for m in messages:
+        kind=classify(m['text'])
+        if not kind:continue
+        areas=parse_affected(m['text']);published=datetime.fromisoformat(m['publishedAt'])
+        desc=re.sub(r'\s+',' ',m['text'])[:340]
+        recent.append({'id':m['id'],'publishedAt':m['publishedAt'],'url':m['url'],'officialUrl':m.get('officialUrl'),'kind':kind,'affected':areas,'description':desc,'source':m.get('source'),'origin':m.get('origin')})
+        if kind=='resolved' or not areas:continue
+        start,end=schedule(m['text'],published,kind)
+        if not start:continue
+        if kind!='planned' and now-published>timedelta(hours=48):continue
+        if kind=='planned' and not (-timedelta(days=1)<=datetime.fromisoformat(start)-now<=timedelta(days=14)):continue
+        if end and datetime.fromisoformat(end)<now-timedelta(hours=24):continue
+        past_due=bool(end and datetime.fromisoformat(end)<now)
+        if kind=='planned' and datetime.fromisoformat(start)<now-timedelta(days=2) and not past_due:continue
+        events.append({'id':'water-'+m['id'].replace('/','-'),'kind':'planned' if kind=='planned' else 'emergency',
+            'status':'unconfirmed' if past_due else 'active','category':'water','source':m.get('source') or ('Шахтинский водоканал' if m['id'].startswith('shakhtinskiy/') else 'Администрация города Шахты'),
+            'title':'Плановые работы: вода' if kind=='planned' else 'Сообщение водоканала: вода',
+            'description':desc,'start':start,'end':end,'point':None,'affected':areas,
+            'url':m['url'],'officialUrl':m.get('officialUrl'),'origin':m.get('origin','direct'),'publishedAt':m['publishedAt'],'precision':'street'})
+    def streets(areas):
+        return {re.sub(r'^(?:ул\.?|улица|пер\.?|переулок|проспект|пр-?кт|пр\.|пр-д)\s+','',x['street'],flags=re.I).lower().replace('ё','е') for x in areas}
+    closed=[m for m in recent if m['kind']=='resolved']
+    events=[e for e in events if not any(
+        0<=(datetime.fromisoformat(c['publishedAt'])-datetime.fromisoformat(e['publishedAt'])).total_seconds()<259200
+        and bool(streets(e['affected'])&streets(c['affected'])) for c in closed)]
+    return {'schema':2,'checkedAt':now.isoformat(),'sources':[{
+        'id':'water','status':'ok','posts':len(messages),'lastPostAt':messages[0]['publishedAt'] if messages else None,
+        'url':SOURCE,'note':'Официальный публичный канал, автоматический сбор'}],
+        'events':events,'recent':recent[:12]}
+
+def main():
+    now=datetime.now(timezone.utc)
+    all_posts=[]
+    states=[]
+    for channel in ('shakhtinskiy','admshakhty'):
+        url='https://t.me/s/'+channel
+        try:
+            req=Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+            with urlopen(req,timeout=20) as resp:
+                html=resp.read(2000000).decode('utf-8','replace')
+            raw=parse_html(html,channel)
+            if not raw:raise RuntimeError('No recognisable public messages')
+            if channel=='admshakhty':
+                seen={m['id'] for m in raw}
+                for page_no in range(3):
+                    numbers=[int(m['id'].split('/')[-1]) for m in raw if m['id'].split('/')[-1].isdigit()]
+                    if not numbers:break
+                    page_url=url+'?before='+str(min(numbers))
+                    try:
+                        with urlopen(Request(page_url,headers={'User-Agent':'Mozilla/5.0'}),timeout=12) as more_resp:
+                            older=parse_html(more_resp.read(2000000).decode('utf-8','replace'),channel)
+                    except Exception as page_error:
+                        print('History unavailable:',page_no,str(page_error)[:70]);break
+                    extra=[m for m in older if m['id'] not in seen]
+                    if not extra:break
+                    raw.extend(extra);seen.update(m['id'] for m in extra)
+                    if min(datetime.fromisoformat(m['publishedAt']) for m in extra)<now-timedelta(days=20):break
+            most_recent=max(datetime.fromisoformat(x['publishedAt']) for x in raw)
+            days_old=(now-most_recent).total_seconds()/86400
+            if channel=='admshakhty':
+                relevant=[m for m in raw if re.search(r'водоснаб|водоканал|УРСВ|снижено давление|отключени[ея] воды',m['text'],re.I)]
+            else:relevant=raw
+            all_posts.extend(relevant)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                'status':'ok' if -1<=days_old<7 else 'stale',
+                'posts':len(raw),'matchingPosts':len(relevant),
+                'lastPostAt':most_recent.isoformat(),'url':url,
+                'note':('Публичные публикации водоканала' if channel=='shakhtinskiy' else 'Публичные публикации администрации Шахт')})
+            print(channel,'read',len(raw),'last',most_recent.isoformat(),'water',len(relevant))
+        except Exception as exc:
+            print('SOURCE ERROR',channel,exc,file=sys.stderr)
+            states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
+                           'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
+    rss_posts,rss_status=collect_rss(now)
+    states.extend(rss_status)
+    all_posts.extend(rss_posts)
+    try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
+    except Exception:old={}
+    for message in old.get('archive',[]):
+        try:
+            published=datetime.fromisoformat(message['publishedAt'])
+            if -timedelta(days=1)<now-published<timedelta(days=16):
+                all_posts.append(message)
+        except (KeyError,TypeError,ValueError):pass
+    unique={}
+    for m in all_posts:
+        if m.get('id') and m.get('text'):
+            candidate=unique.get(m['id'])
+            if not candidate or len(m['text'])>len(candidate['text']):
+                unique[m['id']]=m
+    archive=sorted(
+        (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
+        key=lambda x:x['publishedAt'],reverse=True)[:120]
+    result=feed(list(unique.values()),now)
+    result['sources']=states
+    result['archive']=archive
+    print('Archived',len(archive),'verified RSS messages',len(rss_posts))
+    OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+    OUTPUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('Filtered current water notices',len(result['events']))
+    return 0
+
+if __name__=='__main__':sys.exit(main())
+)
+    ]
+    for kind,pat in types:
+        m=re.match(pat,s)
+        if m:return kind+':'+m[1].rstrip('.,; ').strip()
+    return 'неуточн:'+s.rstrip('.,; ')
+
+def restoration_covers(event_areas,finished_areas):
+    """Close only when the restoration covers the complete stated impact zone.
+
+    A different house on the same street must never close an unrelated event.
+    A partial recovery must never close an entire multi-street incident.
+    """
+    if not event_areas or not finished_areas:return False
+    restored={canonical_road(x.get('street')):set(x.get('houses') or []) for x in finished_areas}
+    for area in event_areas:
+        key=canonical_road(area.get('street'))
+        if key not in restored:return False
+        initial=set(area.get('houses') or [])
+        completed=restored[key]
+        if initial and completed and not initial.issubset(completed):return False
+        if not initial and completed:return False
+    return True
+
 def feed(messages,now=None):
     now=now or datetime.now(timezone.utc)
     messages=sorted(messages,key=lambda x:datetime.fromisoformat(x['publishedAt']),reverse=True)
