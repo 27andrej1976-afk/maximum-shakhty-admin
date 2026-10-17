@@ -2,7 +2,7 @@ name: City Control | Shakhty Water Notices
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17,47 * * * *'
+    - cron: '7,22,37,52 * * * *'
   push:
     branches: [main]
     paths:
