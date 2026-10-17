@@ -23,7 +23,7 @@
 <body>
   <header class="topbar">
     <div class="brand"><span class="brand-icon">✳</span><div><b>ГОРОД <span>ПОД КОНТРОЛЕМ</span></b><small>ПИЛОТ • ШАХТЫ</small></div></div>
-    <span class="version"><span class="signal-dot"></span> ПРОТОТИП v0.3</span>
+    <span class="version"><span class="signal-dot"></span> ПРОТОТИП v0.4</span>
   </header>
   <main class="main">
     <section class="left-panel" aria-label="Локальные предупреждения">
@@ -32,6 +32,7 @@
         <div class="control-head"><div class="row-title"><span class="mini-icon home-icon">⌂</span><div><strong>Контрольная точка</strong><small>На первом этапе — ваш дом</small></div></div><span id="pointStatus" class="mini-pill">Не задана</span></div>
         <div id="addressValue" class="address-value">Укажите адрес или определите его автоматически</div>
         <div class="action-row"><button id="geoButton" class="button primary"><span>◎</span> Определить по GPS</button><button id="addressButton" class="button secondary"><span>⌁</span> Ввести адрес</button></div>
+        <p class="quiet" id="geoStatus" role="status" aria-live="polite">На Android координаты определяются средствами телефона. Для проверки отключений важно указать точный номер дома.</p>
         <div class="radius"><span><span class="dot mint"></span> Радиус контроля</span><strong>1 000 метров</strong></div>
         <p class="quiet" id="addressHint">Адрес сохраняется только в этом браузере. Для точного совпадения отключений нужен номер дома.</p>
       </section>
@@ -209,7 +210,97 @@ try{
 }}
 function toggleDemo(){state.demo=!state.demo;$('demoButton').classList.toggle('active',state.demo);$('demoButton').textContent=state.demo?'Закрыть тест':'Тест сценариев';state.filter='all';document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));paintHome();renderEvents();toast(state.demo?'Включён учебный режим. Все показанные события вымышлены.':'Учебные события скрыты.');if(state.demo)notifyPlanned()}
 async function reverseGeocode(lat,lon){try{const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&accept-language=ru`;const r=await fetch(url,{headers:{'Accept':'application/json'},signal:AbortSignal.timeout(8500)});if(!r.ok)throw Error('Geocoder unavailable');const j=await r.json();return {street:j.address?.road||j.address?.pedestrian||j.address?.residential||'',house:j.address?.house_number||'',label:j.display_name?.split(',').slice(0,3).join(', ')||'Точка GPS, Шахты'}}catch{return {street:'',house:'',label:'GPS · ваше местоположение'}}}
-function geoLocate(){if(!navigator.geolocation){toast('В этом браузере геолокация недоступна. Укажите адрес вручную.');return}$('geoButton').disabled=true;toast('Определяем точку. Браузер может запросить разрешение.');navigator.geolocation.getCurrentPosition(async pos=>{const {latitude:lat,longitude:lon}=pos.coords;$('geoButton').disabled=false;const geo=await reverseGeocode(lat,lon);saveHome({lat,lon,street:geo.street,house:geo.house,label:geo.label,method:'gps'});toast('Контрольная точка сохранена на устройстве.');if(!state.demo)checkSources() },e=>{$('geoButton').disabled=false;toast(e.code===1?'Геолокация запрещена. Можно ввести адрес вручную.':'Не удалось определить местоположение. Можно ввести адрес вручную.')},{enableHighAccuracy:true,timeout:12000,maximumAge:60000})}
+function setGeoStatus(message){
+  const status=$('geoStatus');
+  if(status)status.textContent=message;
+}
+function finishGeo(errorMessage){
+  $('geoButton').disabled=false;
+  state.geoPending=false;
+  if(errorMessage){
+    setGeoStatus(errorMessage);
+    toast(errorMessage);
+  }
+}
+async function applyGPSLocation(lat,lon,accuracy){
+  const latitude=Number(lat),longitude=Number(lon);
+  if(!Number.isFinite(latitude)||!Number.isFinite(longitude)||latitude<47||latitude>49||longitude<39||longitude>42){
+    finishGeo('Координаты не относятся к району Шахт. Для контроля дома в Шахтах введите адрес вручную.');
+    return;
+  }
+  setGeoStatus('Координаты получены. Определяем улицу и номер дома…');
+  const geo=await reverseGeocode(latitude,longitude);
+  saveHome({lat:latitude,lon:longitude,street:geo.street,house:geo.house,label:geo.label,
+    accuracy: Number.isFinite(Number(accuracy))?Number(accuracy):null,method:'gps'});
+  $('geoButton').disabled=false;
+  state.geoPending=false;
+  if(!geo.street||!geo.house){
+    const message='GPS определил точку, но номер дома не подтверждён. Нажмите «Ввести адрес» и укажите улицу с номером: иначе адресные отключения могут не находиться.';
+    setGeoStatus(message);
+    toast('Координаты получены. Уточните адрес дома для точных предупреждений.');
+  }else if(Number(accuracy)>750){
+    setGeoStatus('Координаты получены с низкой точностью (около '+Math.round(Number(accuracy))+' м). Для проверки дома уточните адрес вручную.');
+    toast('GPS работает, но точность низкая.');
+  }else{
+    setGeoStatus('Местоположение определено. Проверьте адрес дома на карте.');
+    toast('Геолокация определена. Адрес сохранён на устройстве.');
+  }
+  if(!state.demo)checkSources();
+}
+window.CityControlNativeGPSResult = payload => {
+  if(!state.geoPending)return;
+  const data=payload||{};
+  applyGPSLocation(data.lat,data.lon,data.accuracy).catch(()=>{
+    finishGeo('GPS определил координаты, но не удалось сохранить точку. Укажите адрес вручную.');
+  });
+};
+window.CityControlNativeGPSError = code => {
+  if(!state.geoPending)return;
+  const messages={
+    PERMISSION_DENIED:'Доступ к геолокации запрещён. Откройте настройки Android → Приложения → Город под контролем → Разрешения → Местоположение и разрешите доступ.',
+    LOCATION_DISABLED:'На телефоне выключено определение местоположения. Включите «Геолокация» в быстрых настройках Android и повторите.',
+    TIMEOUT:'Телефон не смог определить координаты за 28 секунд. Попробуйте у окна или на улице, проверьте GPS. Можно указать адрес вручную.',
+    UNAVAILABLE:'Не удалось получить координаты от служб телефона. Проверьте настройку «Геолокация» или введите адрес вручную.'
+  };
+  finishGeo(messages[code]||messages.UNAVAILABLE);
+};
+function geoLocate(){
+  if(state.geoPending)return;
+  state.geoPending=true;
+  const attempt=(state.gpsRequestId||0)+1;
+  state.gpsRequestId=attempt;
+  $('geoButton').disabled=true;
+  setGeoStatus('Определяем местоположение. Разрешите доступ к геолокации, когда Android попросит.');
+  if(/CityControlApp\//.test(navigator.userAgent)){
+    // Android native location: independent of WebView's browser geolocation implementation.
+    try{window.location.href='citycontrol://get-location'}
+    catch(_){window.CityControlNativeGPSError('UNAVAILABLE')}
+    setTimeout(()=>{
+      if(state.geoPending&&state.gpsRequestId===attempt)
+        window.CityControlNativeGPSError('TIMEOUT');
+    },38000);
+    return;
+  }
+  if(!navigator.geolocation){
+    finishGeo('Браузер не поддерживает геолокацию. Введите адрес вручную.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos=>applyGPSLocation(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy).catch(
+      ()=>finishGeo('Не удалось сохранить точку, укажите адрес вручную.')),
+    error=>{
+      if(error.code===1){
+        finishGeo('Браузеру запрещено определять местоположение. Разрешите геолокацию для этого сайта или укажите адрес вручную.');
+      }else if(error.code===3){
+        navigator.geolocation.getCurrentPosition(
+          pos=>applyGPSLocation(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy).catch(
+            ()=>finishGeo('Не удалось сохранить точку, укажите адрес вручную.')),
+          ()=>finishGeo('Не удалось получить координаты. Проверьте GPS или введите адрес вручную.'),
+          {enableHighAccuracy:false,timeout:18000,maximumAge:180000});
+      }else finishGeo('Не удалось определить местоположение. Проверьте GPS или введите адрес вручную.');
+    },
+    {enableHighAccuracy:true,timeout:18000,maximumAge:120000});
+}
 async function locateAddress(value){$('saveAddressButton').disabled=true;$('saveAddressButton').textContent='Ищем…';try{const query=value.toLowerCase().includes('шахт')?value:`Россия, Ростовская область, Шахты, ${value}`;const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ru&addressdetails=1&accept-language=ru&q='+encodeURIComponent(query);const response=await fetch(url,{headers:{'Accept':'application/json'},signal:AbortSignal.timeout(11000)});if(!response.ok)throw new Error('Геокодер не отвечает');const result=await response.json();if(!result[0])throw new Error('Адрес не найден. Проверьте улицу и номер дома.');const loc=result[0],parsed=LGC.parseHomeAddress(value);const street=parsed.street||loc.address?.road||'',house=parsed.house||loc.address?.house_number||'';saveHome({lat:+loc.lat,lon:+loc.lon,street,house,label:`${value.trim()}, Шахты`,method:'address'});$('addressDialog').close();toast('Дом сохранён на устройстве.');if(!state.demo)checkSources()}catch(e){toast(e.message||'Не удалось найти адрес')}finally{$('saveAddressButton').disabled=false;$('saveAddressButton').textContent='Найти на карте'}}
 async function enableNotify(){if(!('Notification' in window)){toast('Этот браузер не поддерживает системные уведомления.');return}try{const status=await Notification.requestPermission();state.notifications=status==='granted';$('notifyButton').textContent=state.notifications?'Разрешены':'Включить';toast(state.notifications?'Разрешение получено. Пока тестовый режим работает только при открытом приложении.':'Разрешение не предоставлено.');if(state.notifications)notifyPlanned()}catch{toast('Для уведомлений понадобится безопасный HTTPS-адрес сайта.')}}
 function notifyPlanned(){if(!state.notifications||!('Notification' in window)||Notification.permission!=='granted')return;let e=getMatches().find(x=>x.event.kind==='planned')?.event;if(!e)return;let key='alerted-'+e.id+'-'+new Date().toLocaleDateString('ru');if(sessionStorage.getItem(key))return;try{new Notification((e.demo?'ТЕСТ: ':'')+'Плановые работы рядом с домом',{body:e.title+' · '+fmtTime(e.start)});sessionStorage.setItem(key,'1')}catch{}}
