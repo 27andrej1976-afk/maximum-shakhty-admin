@@ -7,6 +7,12 @@ const html=fs.readFileSync(path.resolve("gorod-control/index.html"),"utf8");
 const blocks=[...html.matchAll(/<script(?:\s+[^>]*)?>([\s\S]*?)<\/script>/gi)]
   .map(m=>m[1]).filter(Boolean);
 assert.ok(blocks.length>=2,"expected two inline scripts");
+assert.match(html,/CityControlNativeGPSResult/,"native Android coordinate callback must exist");
+assert.match(html,/CityControlNativeGPSError/,"native GPS failure callback must exist");
+assert.match(html,/citycontrol:\/\/get-location/,"native Android geolocation route must exist");
+assert.match(html,/id="geoStatus"/,"GPS status must be visible");
+assert.match(html,/Номер дома не подтверждён|номер дома не подтверждён/,"missing house must be disclosed");
+
 for(const [i,script] of blocks.entries())new vm.Script(script,{filename:"inline-"+i+".js"});
 const ctx=vm.createContext({console,Date,Math});
 new vm.Script(blocks[0]).runInContext(ctx);
