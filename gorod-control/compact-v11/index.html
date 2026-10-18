@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<base href="../">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1323" />
+  <meta name="description" content="Город под контролем — районная карта коммунальных событий и запланированных отключений. Прототип для Шахт." />
+  <title>Город под контролем — компактная тестовая версия</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20128%20128%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2228%22%20fill%3D%22%23101a2c%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2240%22%20fill%3D%22none%22%20stroke%3D%22%235bd7b9%22%20stroke-width%3D%224%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2223%22%20fill%3D%22none%22%20stroke%3D%22%23386879%22%20stroke-width%3D%224%22/%3E%3Cpath%20d%3D%22M64%2018v24m0%2044v24M18%2064h24m44%200h24%22%20stroke%3D%22%235bd7b9%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2211%22%20fill%3D%22%235bd7b9%22/%3E%3C/svg%3E%0A" />
+
+  <link rel="preconnect" href="https://tile.openstreetmap.org" />
+  <link rel="stylesheet" href="./map-v07/vendor/leaflet.css" />
+  <link rel="stylesheet" href="./light-v10/vendor/maplibre-gl.css" /><link rel="stylesheet" href="./map-v07/city-map.css?v=1.0.2-clean" />
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{--bg:#f3f6f8;--white:#fff;--ink:#172237;--muted:#718092;--line:#e6eaf0;--navy:#101a2c;--mint:#13b896;--mintdark:#0a8c73;--amber:#ed9a36;--red:#e8646c;--shadow:0 10px 40px #121a2c0d}
+*{box-sizing:border-box}body{margin:0;font-family:Manrope,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.55}.topbar{height:82px;background:var(--navy);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 max(32px,calc((100vw - 1500px)/2));border-bottom:1px solid #243248}.brand{display:flex;align-items:center;gap:14px;font-size:16px;letter-spacing:.11em;line-height:1.2}.brand b{font-weight:800}.brand b span{color:#6ad5bc}.brand small{display:block;font-weight:700;font-size:9px;letter-spacing:.24em;color:#9eafc1;margin-top:6px}.brand-icon{font-size:26px;display:grid;place-items:center;width:42px;height:42px;border:1px solid #4bb7a3;border-radius:15px;color:#62d8be;background:#1d3540}.version{color:#a8bad0;background:#1a2940;border:1px solid #2a3a52;border-radius:30px;padding:10px 14px;font-weight:800;font-size:10px;letter-spacing:.09em;display:flex;gap:9px;align-items:center}.signal-dot{height:7px;width:7px;border-radius:50%;background:#e6aa68}.main{max-width:1500px;display:grid;grid-template-columns:minmax(345px,440px) minmax(0,1fr);gap:23px;margin:0 auto;padding:30px 32px 38px}.left-panel,.right-panel{min-width:0}.eyebrow{font-size:10px;letter-spacing:.15em;font-weight:800;color:#12a289}.intro{margin-bottom:23px}.intro h1{font-size:31px;line-height:1.26;margin:11px 0;color:#162339;letter-spacing:-1.1px;font-weight:800}.intro h1 em{font-style:normal;color:#0c9d85}.intro p{color:var(--muted);line-height:1.75;font-size:12px;max-width:350px;margin:10px 0}.control-card,.overview-card,.map-card,.sources{background:white;border:1px solid var(--line);border-radius:21px;box-shadow:var(--shadow)}.control-card{padding:21px;margin-bottom:14px}.control-head,.row-title,.action-row,.radius,.overview-top,.overview-foot,.toolbar,.events-heading,.sources-title,.map-toolbar,.map-caption,.notification-card,.dialog-head,.dialog-actions{display:flex;align-items:center;justify-content:space-between}.row-title{gap:11px;justify-content:flex-start}.row-title strong{font-size:12px}.row-title small{display:block;font-size:10px;color:var(--muted);margin-top:4px}.mini-icon{height:36px;width:36px;display:grid;place-items:center;border-radius:11px;font-size:23px;background:#e9f8f4;color:var(--mintdark)}.mini-pill{background:#f5f7f9;border:1px solid var(--line);border-radius:20px;padding:6px 9px;font-size:9px;font-weight:800;color:#778294}.mini-pill.set{background:#e6f7f0;color:#0b9775;border-color:#c6eadc}.address-value{min-height:30px;margin:20px 0 16px;color:var(--ink);font-size:12px;font-weight:800;line-height:1.5}.action-row{justify-content:flex-start;gap:9px}.button{border:1px solid var(--line);padding:12px 14px;border-radius:11px;font-size:10px;font-weight:800;transition:.18s background,.18s border-color,.18s transform;white-space:nowrap}.button:active{transform:translateY(1px)}.button.primary{background:#1bab8c;border:1px solid #1bab8c;color:white}.button.primary:hover{background:#0d9479}.button.secondary{background:#f7f9fb;color:#25354c}.button.secondary:hover{border-color:#a4bdba}.action-row button{flex:1}.action-row button span{font-size:14px;margin-right:3px}.radius{font-size:10px;margin-top:19px;padding-top:14px;border-top:1px solid var(--line);color:#87909e}.radius strong{color:var(--ink);font-size:10px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}.dot.mint{background:var(--mint)}.quiet{margin:12px 0 0;color:#8994a0;font-size:9px;line-height:1.65}.overview-card{padding:20px 21px;margin-bottom:12px;background:linear-gradient(125deg,#172c44,#17243a);color:#fff;border-color:#21334b}.overview-top{justify-content:flex-start;gap:9px;color:#ffce96}.radar-icon{height:29px;width:29px;display:grid;place-items:center;border-radius:50%;background:#f9d7a124;font-size:22px;color:#ffc586}.status-text{font-size:10px;font-weight:800;letter-spacing:.03em}.overview-card h2{font-size:16px;line-height:1.45;margin:16px 0 7px;font-weight:800}.overview-card p{font-size:10px;line-height:1.8;color:#b6c7d7;margin:0 0 20px}.overview-foot{padding-top:13px;border-top:1px solid #3a4d63;color:#9eafbd;font-size:9px;gap:15px;flex-wrap:wrap}.overview-card.alert{background:linear-gradient(125deg,#5d2d3a,#272b41)}.overview-card.planned{background:linear-gradient(125deg,#5a432b,#233344)}.overview-card.clear{background:linear-gradient(125deg,#105949,#183747)}.toolbar{gap:9px}.toolbar .button{flex:1}.button.refresh{background:#fff;color:var(--ink);border-color:var(--line)}.button.refresh span{font-size:16px;margin-right:6px;color:#0d9b80}.button.demo{border:1px dashed #aecac5;color:#0e8e79;background:#eaf5f2}.button.demo.active{background:#0d9b80;color:white;border-color:#0d9b80}.events-heading{justify-content:flex-start;gap:10px;margin-top:28px}.events-heading h2{font-size:16px;margin:0}.count{font-size:10px;background:#dbe6ed;padding:4px 9px;border-radius:9px;color:#4c6072;font-weight:800}.filters{display:flex;gap:8px;margin:15px 0 12px}.filter{border:1px solid #e3e9ee;color:#7b8796;background:#fff;padding:9px 16px;border-radius:9px;font-weight:800;font-size:10px}.filters{overflow-x:auto;flex-wrap:nowrap}.filter{flex-shrink:0}.eventType.warning{background:#e9f0fd;color:#486ca6}.filter.active{background:#e4f5f0;color:#078c71;border-color:#cbeade}.event-list{display:grid;gap:10px}.empty{border:1px dashed #cad6dd;border-radius:17px;padding:24px 20px;text-align:center;background:#f9fbfc}.empty-icon{display:block;font-size:27px;color:#9fb1ba;margin-bottom:9px}.empty strong{font-size:12px}.empty p{color:#8996a4;font-size:10px;line-height:1.7;margin:8px auto 0;max-width:270px}.event{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 3px 16px #293b4806}.eventTop{display:flex;align-items:center;justify-content:space-between;gap:8px}.eventType{font-size:9px;font-weight:800;border-radius:8px;padding:6px 8px}.eventType.emergency{background:#fff0ef;color:#bf4955}.eventType.planned{background:#fff4e5;color:#b47428}.eventType.demo{background:#f1f2fd;color:#6566bd}.eventTime{font-size:9px;color:#8a96a3}.event h3{margin:10px 0 7px;font-size:12px;line-height:1.5}.event p{color:#708093;font-size:10px;line-height:1.7;margin:0 0 12px}.eventBottom{border-top:1px solid #edf1f3;padding-top:9px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:9px}.eventImpact{font-weight:800;color:#0c8972}.eventImpact.uncertain{color:#ba7f38}.event a{color:#0c8972;text-decoration:none;font-weight:800}.notification-card{align-items:flex-start;gap:9px;margin-top:18px;border-radius:14px;padding:13px 12px;background:#eaf3f5}.notification-card>span{font-size:21px;color:#0a9784}.notification-card div{flex:1}.notification-card strong{font-size:10px}.notification-card p{font-size:9px;color:#667b8c;line-height:1.65;margin:5px 0}.tiny-button{padding:7px 10px;background:#fff;border:1px solid #cddae0;border-radius:9px;font-size:9px;font-weight:800;color:#087e6b}.map-card{padding:16px}.map-toolbar{padding:5px 8px 16px}.map-toolbar strong{display:block;font-size:14px;margin-top:7px}.map-kicker{font-size:9px;letter-spacing:.12em;color:#8290a1;font-weight:800}.scale-pill{background:#e9f7f2;color:#09876f;font-size:11px;font-weight:800;padding:10px 13px;border-radius:11px}.map{height:495px;border-radius:14px;overflow:hidden;background:#d9e6e0;position:relative}.map-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(25deg,#dee9dd,#cedfeb);text-align:center;padding:20px;color:#627a82;font-size:13px}.map .leaflet-control-attribution{font-size:8px!important}.map-caption{justify-content:flex-start;gap:20px;padding:15px 8px 2px;color:#7b8795;font-size:9px;font-weight:700;flex-wrap:wrap}.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.emerald{background:var(--mint)}.rose{background:var(--red)}.amber{background:var(--amber)}.sources{padding:21px;margin-top:19px}.sources-title{gap:8px;margin-bottom:18px}.sources-title h2{font-size:16px;margin:7px 0 0}.source-tag{font-size:9px;font-weight:800;background:#fff2e3;color:#b67a2d;padding:9px 10px;border-radius:9px;white-space:nowrap}.source-tag.partial{background:#edf8f4;color:#0d8e77}.sources-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.source{border:1px solid #e9eef2;border-radius:13px;padding:13px 12px;display:flex;align-items:center;gap:10px;min-width:0;text-decoration:none;color:inherit;transition:.2s}.source:hover{border-color:#9fd8ca;background:#fbfffe}.source-icon{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#ecf1f5;display:grid;place-items:center;font-size:16px}.source-main{min-width:0;flex:1}.source-main strong{display:block;font-size:10px;line-height:1.4}.source-main small{display:block;font-size:9px;color:#8996a2;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.source .arrow{color:#a8b4bf;font-size:16px}.sources-note{font-size:9px;color:#84909d;line-height:1.7;margin:16px 0 0}.site-footer{max-width:1500px;margin:0 auto;padding:0 32px 26px;font-size:9px;color:#8b9aa6;line-height:1.8}.site-footer span{display:inline-block;margin-left:8px}.dialog{border:1px solid #dce8e5;border-radius:21px;padding:23px;width:min(420px,calc(100% - 28px));box-shadow:0 20px 100px #0a26334f}.dialog::backdrop{background:#081726a6}.dialog-head h2{font-size:20px;margin:6px 0 25px}.close{border:0;background:#f1f4f6;color:#5e6976;border-radius:10px;font-size:22px;width:36px;height:36px}.field-label{display:block;font-size:11px;font-weight:800;margin-bottom:9px}.dialog input{width:100%;border:1px solid #cdd6dc;padding:15px;font-size:13px;border-radius:11px;outline:none}.dialog input:focus{border-color:#15a78b}.address-explain{display:block;color:#7b8993;font-size:10px;line-height:1.7;margin:12px 0 22px}.dialog-actions{justify-content:flex-end;gap:10px}.dialog-actions .button{font-size:11px}.leaflet-container{font-family:Manrope,Arial,sans-serif!important}.leaflet-popup-content{font-size:12px}.marker-pin{width:26px;height:26px;background:#17b898;border:4px solid white;outline:2px solid #0aa586;border-radius:50%;box-shadow:0 2px 12px #172c3c5c}.event-pin{font-size:19px;line-height:29px;text-align:center;height:33px;width:33px;border-radius:12px;border:2px solid white;box-shadow:0 3px 15px #192c3d3d;color:white}.event-pin.emergency{background:#dc5a6d}.event-pin.planned{background:#d78b3b}#toast{position:fixed;z-index:10000;bottom:28px;left:50%;transform:translateX(-50%) translateY(110px);transition:.25s;max-width:min(520px,calc(100vw - 34px));padding:13px 19px;border-radius:13px;background:#192e40;color:white;font-size:12px;box-shadow:0 8px 35px #12273b45;pointer-events:none;opacity:0}#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+@media(max-width:1050px){.main{grid-template-columns:minmax(305px,410px) 1fr;padding:22px;gap:16px}.topbar{padding:0 22px}.map{height:480px}.sources-grid{grid-template-columns:1fr}.source-tag{white-space:normal}}
+@media(max-width:760px){.topbar{height:68px;padding:0 16px}.brand-icon{height:36px;width:36px;font-size:22px}.brand{font-size:11px;gap:10px}.brand small{font-size:8px}.version{font-size:8px;padding:8px}.main{display:flex;flex-direction:column;padding:23px 14px 24px;gap:15px}.intro h1{font-size:29px}.intro p{font-size:11px}.left-panel,.right-panel{display:contents}.intro{order:0;margin-bottom:0}.control-card{order:1;margin-bottom:0}.overview-card{order:2;margin-bottom:0}.map-card{order:3;padding:12px}.toolbar{order:4}.events-heading{order:5;margin-top:5px}.filters{order:6;margin:-3px 0 0}.event-list{order:7}.notification-card{order:8;margin-top:0}.sources{order:9;margin-top:4px}.map{height:335px}.map-caption{gap:10px;font-size:8px}.control-card{padding:18px}.action-row .button{font-size:9px;padding:11px 8px}.sources{padding:17px}.sources-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.site-footer{padding:0 16px 25px}}
+@media(max-width:410px){.sources-grid{grid-template-columns:1fr}.map-caption{gap:7px}.brand{font-size:10px}.map{height:315px}}
+
+</style>
+<style id="compactV11Style">
+/* Mobile-first compact alternative. Existing domain and native functions stay untouched. */
+html{scroll-behavior:smooth}
+body:has(.compact-main){background:#ecf1f7}
+.main.compact-main{width:min(100%,700px)!important;max-width:700px!important;display:flex!important;flex-direction:column!important;gap:11px!important;padding:12px 13px 96px!important;margin:0 auto!important}
+.compact-main>*{min-width:0}
+.compact-main .compact-headline{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 3px}
+.compact-main .compact-headline>span{color:#73869c;font-size:11px;font-weight:750}
+.compact-main .compact-headline h1{font-size:16px;margin:0;line-height:1.35;letter-spacing:-.5px;white-space:nowrap}
+.compact-main .compact-headline h1 em{color:#108e7b}
+.compact-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.compact-metric{background:#fff;border:1px solid #e4e9f1;border-radius:14px;padding:10px 9px;min-height:70px}
+.compact-metric b{display:block;font-size:23px;line-height:1.15;font-weight:850}
+.compact-metric small{display:block;color:#718399;font-size:10px;margin-top:4px;line-height:1.35}
+.compact-blue b{color:#336eae}.compact-green b{color:#138c72}.compact-amber b{color:#bc7b23}
+.compact-main .control-card{padding:12px 14px!important;margin:0!important;border-radius:15px}
+.compact-main .control-card .control-head{margin-bottom:5px}
+.compact-main .control-card .row-title small{display:none}
+.compact-main .control-card .mini-icon{height:30px;width:30px;font-size:19px}
+.compact-main .control-card .address-value{margin:8px 0 9px;min-height:0;font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.compact-main .control-card .action-row .button{padding:9px 7px;font-size:10px}
+.compact-main .control-card #geoStatus{margin:7px 0 0;font-size:9px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.compact-main .overview-card{padding:12px 14px!important;border-radius:15px;margin:0!important}
+.compact-main .overview-card .radar-icon{height:24px;width:24px;font-size:18px}
+.compact-main .overview-card .status-text{font-size:9px}
+.compact-main .overview-card h2{font-size:14px;line-height:1.35;margin:7px 0 5px}
+.compact-main .overview-card p{font-size:10px;line-height:1.45;margin-bottom:9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.compact-main .overview-foot{padding-top:8px;gap:7px;font-size:9px}
+.compact-main .toolbar{display:flex;gap:8px;margin:0}
+.compact-main .toolbar .button{min-width:0;padding:11px;font-size:11px}
+.compact-main .toolbar .button.demo{display:none}
+.compact-main .map-card{order:unset!important;padding:11px!important;border-radius:16px}
+.compact-main .map-toolbar{padding:5px 5px 10px;gap:12px}
+.compact-main .map-toolbar strong{font-size:12px}
+.compact-main .map-kicker{font-size:9px}
+.compact-main .scale-pill{font-size:10px;padding:7px 9px}
+.compact-main .cm-map-source-credit{margin-top:3px;font-size:9px}
+.compact-main .cm-mode-bar,.compact-main .cm-modes{margin:5px 0 7px;gap:5px}
+.compact-main .cm-modes button{font-size:11px;padding:9px 11px}
+.compact-main .cm-provider{font-size:9px;min-width:70px;flex:1}
+.compact-main .cm-hint{font-size:9px;line-height:1.35;margin:4px 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.compact-main .cm-filters{display:flex;gap:5px;flex-wrap:nowrap;overflow-x:auto;padding:4px 0 7px;margin:0!important;scrollbar-width:thin}
+.compact-main .cm-filters button{flex:0 0 auto;border-radius:24px;font-size:10px!important;padding:8px 10px!important}
+.compact-main #map{height:min(55vh,355px)!important;min-height:265px;border-radius:12px}
+.compact-main .map-caption{padding:7px 3px 0;font-size:8px;gap:7px;line-height:1.35}
+.compact-main .notification-card{margin:0!important;padding:10px 12px;border:1px solid #d8e9e9;background:#eef8f6;border-radius:14px;align-items:center}
+.compact-main .notification-card>span{font-size:18px}
+.compact-main .notification-card strong{font-size:12px}
+.compact-main .notification-card p{font-size:9px;line-height:1.3;margin:2px 0 0;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.compact-main .notification-card .tiny-button{padding:8px;font-size:10px}
+.compact-fold{background:#fff;border:1px solid #e4eaf2;border-radius:14px;overflow:hidden;scroll-margin-top:10px}
+.compact-fold>summary{min-height:46px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:800;color:#29445c;padding:12px 14px;cursor:pointer;list-style:none}
+.compact-fold>summary::-webkit-details-marker{display:none}
+.compact-fold .compact-caret{font-size:15px;font-weight:500;transition:transform .16s}
+.compact-fold[open] .compact-caret{transform:rotate(180deg)}
+.compact-fold[open]>summary{border-bottom:1px solid #e8edf2}
+.compact-fold>#cityMapScope,.compact-fold>#cityMapCounts,.compact-fold>#cityMapEvents,.compact-fold>#cityMapQuality{margin-left:13px;margin-right:13px}
+.compact-fold #cityMapScope{font-size:14px;margin-top:13px}
+.compact-fold #cityMapCounts,.compact-fold #cityMapQuality{font-size:10px;line-height:1.45}
+.compact-fold #cityMapEvents{padding-bottom:12px}
+.compact-fold .events-heading{margin:12px 13px 5px}
+.compact-fold .filters{margin:6px 13px!important;gap:6px}
+.compact-fold .filter{padding:8px 10px}
+.compact-fold #eventList{padding:5px 13px 13px}
+.compact-fold .event{padding:10px;border-radius:11px}
+.compact-fold .event h3{font-size:11px;margin:5px 0}
+.compact-fold .event p{font-size:9px;margin:0 0 6px}
+.compact-fold .eventBottom{font-size:9px;align-items:flex-start}
+.compact-fold .sources{margin:0!important;padding:12px!important;box-shadow:none;border:0;border-radius:0}
+.compact-fold .sources-title{margin:0 0 10px}
+.compact-fold .sources-title h2{font-size:13px}
+.compact-fold .sources-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.compact-fold .source{padding:9px;gap:6px}
+.compact-fold .source-icon{width:28px;height:28px;font-size:14px}
+.compact-fold .source-main strong{font-size:9px}
+.compact-fold .source-main small{font-size:8px;white-space:normal}
+.compact-fold .radius{padding:11px 14px;margin:0;font-size:10px}
+.compact-fold #addressHint{padding:0 14px;margin:9px 0;color:#8491a0;font-size:10px}
+.compact-demo-wrapper{padding:5px 14px 13px}
+.compact-demo-wrapper p{font-size:10px;line-height:1.55;color:#8293a5}
+.compact-demo-wrapper .button.demo{display:block!important;width:100%}
+.compact-nav{position:fixed;z-index:750;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-around;gap:3px;padding:8px 7px calc(8px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid #e0e7ee;box-shadow:0 -5px 21px #1a355114}
+.compact-nav button{flex:1;display:grid;place-items:center;gap:1px;border:0;background:transparent;color:#798ca1;padding:4px 2px;min-height:47px}
+.compact-nav button>span{font-size:20px;line-height:1.2}
+.compact-nav button small{font-size:10px;font-weight:700}
+.compact-nav button.selected{color:#126f8d}
+body:has(.compact-main) .topbar{height:62px;padding:7px max(14px,calc((100vw - 650px)/2))}
+body:has(.compact-main) .topbar .brand{font-size:10px;gap:9px}
+body:has(.compact-main) .brand small{font-size:7px}
+body:has(.compact-main) .brand-icon.city-coat{width:34px;height:44px}
+body:has(.compact-main) .version{font-size:8px;padding:6px 9px;max-width:132px;text-align:center}
+body:has(.compact-main) .site-footer{max-width:700px;padding-bottom:75px;font-size:9px}
+@media(min-width:680px){.compact-nav{left:50%;right:auto;transform:translateX(-50%);width:700px;border-left:1px solid #e0e7ee;border-right:1px solid #e0e7ee;border-radius:14px 14px 0 0}.main.compact-main{padding:18px 22px 105px!important}.compact-main #map{height:420px!important}}
+@media(max-width:365px){.compact-main .compact-headline h1{font-size:14px}.compact-main .compact-headline>span{font-size:10px}.compact-main .cm-provider{display:none}.compact-fold .sources-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img class="brand-icon city-coat" src="./map-v07/shakhty-coat.png" width="44" height="58" alt="Герб города Шахты" /><div><b>ГОРОД <span>ПОД КОНТРОЛЕМ</span></b><small>ПИЛОТ • ШАХТЫ</small></div></div>
+    <span class="version"><span class="signal-dot"></span> КОМПАКТ · ТЕСТ</span>
+  </header>
+  <main class="main">
+    <section class="left-panel" aria-label="Локальные предупреждения">
+      <div class="intro"><p class="city-disclaimer">Шахты · независимый городской мониторинг</p><div class="eyebrow">ВАШ РАЙОН · РОСТОВСКАЯ ОБЛАСТЬ</div><h1>Что происходит <em>рядом?</em></h1><p>У дома и по всему городу: опубликованные аварии, плановые работы и предупреждения.</p></div>
+      <section class="control-card">
+        <div class="control-head"><div class="row-title"><span class="mini-icon home-icon">⌂</span><div><strong>Контрольная точка</strong><small>На первом этапе — ваш дом</small></div></div><span id="pointStatus" class="mini-pill">Не задана</span></div>
+        <div id="addressValue" class="address-value">Укажите адрес или определите его автоматически</div>
+        <div class="action-row"><button id="geoButton" class="button primary"><span>◎</span> Определить по GPS</button><button id="addressButton" class="button secondary"><span>⌁</span> Ввести адрес</button></div>
+        <p class="quiet" id="geoStatus" role="status" aria-live="polite">На Android координаты определяются средствами телефона. Для проверки отключений важно указать точный номер дома.</p>
+        <div class="radius"><span><span class="dot mint"></span> Радиус контроля</span><strong>1 000 метров</strong></div>
+        <p class="quiet" id="addressHint">Адрес сохраняется только в этом браузере. Для точного совпадения отключений нужен номер дома.</p>
+      </section>
+      <section class="overview-card" id="overviewCard"><div class="overview-top"><span class="radar-icon">◎</span><span id="statusLabel" class="status-text">Ожидание данных</span></div><h2 id="overviewTitle">Пока нельзя определить обстановку</h2><p id="overviewDescription">Укажите контрольную точку. Подключение к источникам официальных сообщений пока проверяется.</p><div class="overview-foot"><span id="summaryCount">0 подтверждённых сообщений</span><span id="checkStamp">Проверка не проводилась</span></div></section>
+      <div class="toolbar"><button id="checkButton" class="button refresh"><span id="refreshIcon">↻</span> Проверить сообщения</button><button id="demoButton" class="button demo">Тест сценариев</button></div>
+      <div class="events-heading"><h2>Предупреждения</h2><span id="eventsCount" class="count">0</span></div>
+      <div class="filters" role="group" aria-label="Тип событий"><button class="filter active" data-filter="all">Все</button><button class="filter" data-filter="emergency">Аварии</button><button class="filter" data-filter="planned">Плановые</button><button class="filter" data-filter="warning">МЧС</button></div>
+      <div id="eventList" class="event-list"><div class="empty"><span class="empty-icon">◉</span><strong>Сообщений пока нет</strong><p>После настройки адреса покажем события из подключённых источников. Отсутствие сообщений не гарантирует отсутствие происшествий.</p></div></div>
+      <div class="notification-card"><span>♧</span><div><strong>Предупреждения заранее</strong><p>В Android APK после выбора адреса доступны фоновые проверки с уведомлениями о новых совпадениях. На сайте — только проверка при открытии. Время уведомления зависит от ограничений Android.</p></div><button id="notifyButton" class="tiny-button">Подробнее</button></div>
+    </section>
+    <section class="right-panel" aria-label="Карта района">
+      <div class="map-card"><div class="map-toolbar"><div><span class="map-kicker">ГОРОД И МОЙ РАЙОН</span><strong id="mapName">Шахты · точка не задана</strong></div><span class="scale-pill">◎ 1 км</span></div><div id="map" class="map"><div class="map-fallback">Карта загружается. Для отображения необходим интернет.</div></div><div class="map-caption"><span>◎ Контрольная точка</span><span>Цветные линии: улицы из публикаций</span><span>Нажмите метку — подробности и сроки</span></div></div>
+      <section class="sources"><div class="sources-title"><div><div class="eyebrow">ПРОВЕРЯЕМЫЕ ПУБЛИКАЦИИ</div><h2>Источники информации</h2></div><span id="sourceStatus" class="source-tag">Нет онлайн-проверки</span></div><div id="sourcesGrid" class="sources-grid"></div><p class="sources-note">Службы размещают публикации с задержкой и не всегда указывают точные дома. «Нет сообщений» не равно «всё безопасно». При непосредственной опасности звоните 112.</p></section>
+    </section>
+  </main>
+  <dialog id="addressDialog" class="dialog"><form method="dialog" id="addressForm"><div class="dialog-head"><div><div class="eyebrow">КОНТРОЛЬНАЯ ТОЧКА</div><h2>Где находится дом?</h2></div><button aria-label="Закрыть" class="close" value="cancel" formnovalidate>×</button></div><label class="field-label" for="addressInput">Адрес в городе Шахты</label><input id="addressInput" name="home" type="text" placeholder="ул. Советская, 25" autocomplete="street-address" required /><small class="address-explain">Укажите улицу и номер. Для поиска точки адрес отправляется сервису геокодирования OpenStreetMap. В нашем приложении он хранится только в вашем браузере.</small><div class="dialog-actions"><button class="button secondary" value="cancel" formnovalidate>Отмена</button><button class="button primary" id="saveAddressButton" value="save">Найти на карте</button></div></form></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <footer class="site-footer">Город под контролем · Тестовая сборка, 17.10.2026. Не является официальной системой экстренного оповещения. <span>© OpenStreetMap contributors</span></footer>
+  <script src="./map-v07/vendor/leaflet.js"></script>
+<script src="./light-v10/vendor/maplibre-gl.js"></script>
+<script src="./light-v10/vendor/leaflet-maplibre-gl.js"></script><script src="./map-v07/city-map.js?v=1.0.2-clean"></script>
+  <script>
+/* Pure matching rules, also exercised by tests. No real or private addresses embedded. */
+(function (root) {
+  'use strict';
+  const STREET_PREFIX = /^(?:г\.?\s*шахты\s*,?\s*)?(?:(?:ул(?:ица)?|пер(?:еулок)?|проспект|пр-?кт|пр-?т|пр-?д|пр(?:оезд)?-?д|пл(?:ощадь)?|бул(?:ьвар)?)\.?\s+)/i;
+  const clean = (s) => String(s || '').toLowerCase().replace(/ё/g, 'е').replace(/[«»"'`]/g, '').replace(/\s+/g, ' ').trim();
+  const kindRules = [
+    ['ул', /^(?:улица|ул\.?)\s+(.+)$/i, /^(.+)\s+(?:улица|ул\.?)$/i],
+    ['пер', /^(?:переулок|пер\.?)\s+(.+)$/i, /^(.+)\s+(?:переулок|пер\.?)$/i],
+    ['просп', /^(?:проспект|пр-?кт|пр-?т|пр\.?)\s+(.+)$/i, /^(.+)\s+(?:проспект|пр-?кт|пр-?т)$/i],
+    ['проезд', /^(?:проезд|пр-д)\s+(.+)$/i, /^(.+)\s+проезд$/i],
+    ['пл', /^(?:площадь|пл\.?)\s+(.+)$/i, /^(.+)\s+площадь$/i],
+    ['бул', /^(?:бульвар|бул\.?)\s+(.+)$/i, /^(.+)\s+бульвар$/i],
+    ['пос', /^(?:поселок|посёлок|пос\.?)\s+(.+)$/i, /^(.+)\s+(?:поселок|посёлок)$/i],
+    ['мкр', /^(?:микрорайон|мкр\.?)\s+(.+)$/i, /^(.+)\s+микрорайон$/i]
+  ];
+  function normalStreet(str) {
+    const raw=clean(str).replace(/^(?:г\.?\s*шахты)\s*,?\s*/i,'').replace(/\bдом\b.*$/,'').replace(/[.,;]+$/,'').trim();
+    if(!raw)return '';
+    for(const [kind,lead,tail] of kindRules){
+      const m=raw.match(lead)||raw.match(tail);
+      if(m)return kind+':'+m[1].replace(/[.,;]+$/,'').trim();
+    }
+    return 'неуточн:'+raw;
+  }
+  function normalHouse(str) {
+    return clean(str).replace(/^(?:д(?:ом)?\.?\s*)/,'').replace(/\s/g, '').replace(/[^\dа-яa-z\/-]/g, '');
+  }
+  function parseHomeAddress(input) {
+    const text = String(input || '').trim().replace(/^россия\s*,?\s*/i, '').replace(/^(?:ростовская область\s*,?\s*)/i,'').replace(/^(?:г\.?\s*)?шахты\s*,?\s*/i,'');
+    const match = text.match(/^(.*?)(?:\s*,\s*(?:д\.?\s*)?|\s+(?:д\.?\s*))([0-9]+\s*[а-яa-z]?)\s*$/i);
+    if (match) return { street: clean(match[1]), house: normalHouse(match[2]) };
+    const alt = text.match(/^((?:ул\.|улица|пер\.|переулок|проспект|пр-т|пр\.|пр-д|проезд)\s+.+?)\s+([0-9]+[а-яa-z]?)$/i);
+    if (alt) return { street: clean(alt[1]), house: normalHouse(alt[2]) };
+    return { street: clean(text), house: '' };
+  }
+  function distanceM(a, b) {
+    if (!a || !b || !Number.isFinite(+a.lat) || !Number.isFinite(+a.lon) || !Number.isFinite(+b.lat) || !Number.isFinite(+b.lon)) return Infinity;
+    const R = 6371000, rad = x => x * Math.PI / 180;
+    const dLat = rad(+b.lat - +a.lat), dLon = rad(+b.lon - +a.lon);
+    const x = Math.sin(dLat / 2)**2 + Math.cos(rad(+a.lat)) * Math.cos(rad(+b.lat)) * Math.sin(dLon / 2)**2;
+    return 2 * R * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
+  }
+  function houseInRanges(house, ranges) {
+    if (!house) return false;
+    const hn = Number(String(house).match(/^\d+/)?.[0]);
+    if (!Number.isFinite(hn)) return false;
+    return (ranges || []).some(v => {
+      const t = normalHouse(v);
+      if (t === house) return true;
+      const m = t.match(/^(\d+)-(\d+)$/);
+      if (!m) return false;
+      const lo = +m[1], hi = +m[2], min = Math.min(lo, hi), max = Math.max(lo, hi);
+      if (hn < min || hn > max) return false;
+      return (lo % 2 === hi % 2) ? (hn % 2 === lo % 2) : true;
+    });
+  }
+  function matchImpact(event, home, radiusM=1000) {
+    if (!home || !Number.isFinite(+home.lat) || !Number.isFinite(+home.lon)) return { relevant:false, reason:'Нет контрольной точки', confidence:'unknown' };
+    if (event.status === 'resolved') return { relevant:false, reason:'Работы завершены', confidence:'high' };
+    if (event.category === 'mchs' && (event.scope === 'city' || event.scope === 'region')) {
+      const expiry=Date.parse(event.end||'');
+      if(Number.isFinite(expiry)&&expiry<Date.now()-3600000)return {relevant:false,reason:'Период предупреждения завершён',confidence:'high'};
+      const saved=clean(home?.label||'');
+      if (!home || !Number.isFinite(+home.lat) || !Number.isFinite(+home.lon) || !saved.includes('шахты'))
+        return {relevant:false,reason:'Предупреждение относится к Шахтам, но адрес не подтверждён',confidence:'unknown'};
+      if(distanceM(home,{lat:47.7086,lon:40.2146})>25000)
+        return {relevant:false,reason:'Адрес вне тестовой географии Шахт',confidence:'high'};
+      return {relevant:true,reason:event.scope==='city'?'Предупреждение для города Шахты':'Предупреждение для всей Ростовской области',
+        confidence:'high',match:'area',distance:NaN};
+    }
+    const today = Date.now(), end = event.end ? Date.parse(event.end) : NaN, start = event.start ? Date.parse(event.start) : NaN;
+    if (Number.isFinite(end) && end < today - 24*3600000) return { relevant:false, reason:'Истёк срок актуальности сообщения, требуется новая проверка', confidence:'unknown' };
+    if (event.kind === 'planned' && Number.isFinite(start) && start > today + 14*86400000) return { relevant:false, reason:'План слишком далеко', confidence:'high' };
+    if (event.kind !== 'planned' && !Number.isFinite(end) && Number.isFinite(start) && start < today - 48*3600000) return { relevant:false, reason:'Устаревшее сообщение', confidence:'high' };
+    const street = normalStreet(home.street);
+    let streetMatch = false, exactMatch = false, possibleMatch = false;
+    for (const area of (event.affected || [])) {
+      const candidate = normalStreet(area.street);
+      if (!street || !candidate || street !== candidate) continue;
+      streetMatch = true;
+      const homes = Array.isArray(area.houses) ? area.houses : [];
+      if (homes.length) {
+        if (houseInRanges(normalHouse(home.house), homes)) exactMatch = true;
+      } else possibleMatch = true;
+    }
+    const dist = distanceM(event.point, home);
+    if (exactMatch) return { relevant:true, reason:'Ваш дом указан в зоне отключения', confidence:'high', match:'address', distance:dist };
+    if (possibleMatch) return { relevant:true, reason:'Указана ваша улица — дом нужно уточнить', confidence:'medium', match:'street', distance:dist };
+    if (event.kind === 'planned' && streetMatch && (event.affected || []).length) return { relevant:false, reason:'Ваш номер дома не входит в опубликованный список', confidence:'high', distance:dist };
+    if (Number.isFinite(dist) && dist <= radiusM) return { relevant:true, reason:`Место работ приблизительно в ${Math.round(dist)} м`, confidence:'medium', match:'radius', distance:dist };
+    return { relevant:false, reason:streetMatch ? 'Дом не входит в указанные номера' : 'За пределами зоны', confidence:'high', distance:dist };
+  }
+  root.CityLogic = { normalStreet, normalHouse, parseHomeAddress, distanceM, houseInRanges, matchImpact };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const LGC = window.CityLogic;
+const CITY = {lat:47.7086,lon:40.2146}; // public approximate city centre, not a private address
+const KEY = 'gorod_control_home_v1';
+const sources = [
+  {id:'repost_rostov',icon:'📰',name:'УРСВ · сообщения о воде',detail:'Проверяемые перепечатки официальных уведомлений',url:'https://newsrostov.ru/'},
+  {id:'repost_don',icon:'🗞',name:'УРСВ · резервная лента',detail:'Перепечатки со ссылкой на первоисточник',url:'https://news-don.ru/'},
+  {id:'power_repost_rostov', icon:'⚡', name:'Донэнерго · аварии', detail:'Перепечатки с указанием Донэнерго как источника', url:'https://newsrostov.ru/rss.xml'},
+  {id:'power_repost_don', icon:'🔌', name:'Донэнерго · резерв', detail:'Дополнительная лента перепечаток', url:'https://news-don.ru/rss.xml'},
+  {id:'power_city', icon:'🏙', name:'Свет · администрация Шахт', detail:'Аварийные и плановые объявления города',url:'https://t.me/s/admshakhty'},
+  {id:'power_planned', icon:'🛠', name:'Донэнерго · плановые отключения', detail:'Официальный график отключений', url:'https://donenergo.ru/grafik-otklyucheniy/61/1/'},
+  {id:'city', icon:'🏛', name:'Администрация Шахт', detail:'Объявления о работах', url:'https://t.me/s/admshakhty'},
+  {id:'gas', icon:'♨', name:'Газораспределение · проверка источника', detail:'Адресные отключения пока не подтверждены', url:'https://www.rostovoblgaz.ru/press-center/news/'},
+  {id:'gas_city', icon:'🏛', name:'Газ · администрация Шахт', detail:'Адресные сообщения о работах газовой службы',url:'https://t.me/s/admshakhty'},
+  {id:'mchs', icon:'⚠', name:'МЧС Ростовской области', detail:'Региональные предупреждения', url:'https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya'},
+];
+const state = {home:null, demo:false, filter:'all', events:[], backendConnected:false, checkedAt:null, checks:[], map:null, homeMarker:null, circle:null, incidentLayers:[], notifications:false, mapLoaded:false, toastTimer:null, sourceRecent:null,lastLocalCheck:0};
+const fmtTime = d => {try{return new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Moscow'}).format(new Date(d))}catch{return 'Нет времени'}};
+const isoFuture = (days,h,m=0) => {let d=new Date();d.setDate(d.getDate()+days);d.setHours(h,m,0,0);return d.toISOString()};
+const escapeHtml = text => String(text == null ? '' : text).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
+const safeUrl = str => /^https:\/\//.test(String(str || '')) ? String(str) : '';
+function toast(text){ const t=$('toast');t.textContent=text;t.classList.add('show');clearTimeout(state.toastTimer);state.toastTimer=setTimeout(()=>t.classList.remove('show'),4500) }
+function loadHome(){
+  try{
+    let val=JSON.parse(localStorage.getItem(KEY));
+    if(!val||!Number.isFinite(+val.lat)||!Number.isFinite(+val.lon)||+val.lat<=47||+val.lat>=49||+val.lon<=39||+val.lon>=42)return;
+    if(!val.street || LGC.normalStreet(val.street).startsWith('неуточн:')){
+      const label=String(val.label||'').replace(/,\s*Шахты\s*$/i,'');
+      const parsed=LGC.parseHomeAddress(label);
+      if(parsed.street && !LGC.normalStreet(parsed.street).startsWith('неуточн:')){
+        val.street=parsed.street;
+        if(!val.house && parsed.house)val.house=parsed.house;
+        localStorage.setItem(KEY,JSON.stringify(val));
+      }
+    }
+    state.home=val;
+  }catch{}
+}
+function saveHome(value){state.home=value;try{localStorage.setItem(KEY,JSON.stringify(value))}catch{};paintHome();updateMap();renderEvents();}
+function demoEvents(){const h=state.home||{...CITY,street:'Тестовая',house:'12'};const st=h.street||'Тестовая', hn=h.house||'12';return [
+ {id:'example-pwr',source:'Учебный пример',kind:'planned',status:'active',category:'power',title:'Плановое отключение электричества',description:'Учебное объявление: ремонт подстанции затронет ваш дом, хотя сама подстанция находится дальше одного километра.',start:isoFuture(1,9),end:isoFuture(1,14),affected:[{street:st,houses:[hn]}],point:{lat:+h.lat+.037,lon:+h.lon+.018},demo:true},
+ {id:'example-wtr',source:'Учебный пример',kind:'emergency',status:'active',category:'water',title:'Аварийный ремонт водопровода неподалёку',description:'Учебное событие в 300 метрах от точки. Координаты рассчитаны только для проверки карты и радиуса.',start:isoFuture(0,8),end:isoFuture(0,23),affected:[],point:{lat:+h.lat+.0027,lon:+h.lon},demo:true},
+ {id:'example-gas',source:'Учебный пример',kind:'planned',status:'active',category:'gas',title:'Проверка газовых сетей на вашей улице',description:'Учебное событие: указана улица, но номер дома неизвестен. Совпадение считается предварительным.',start:isoFuture(2,10),end:isoFuture(2,16),affected:[{street:st,houses:[]}],point:null,demo:true},
+ {id:'example-far',source:'Учебный пример',kind:'emergency',status:'active',category:'water',title:'Далёкая авария — должна быть скрыта',description:'Это событие в нескольких километрах без влияния на ваш дом; приложение его отфильтрует.',start:isoFuture(0,8),end:isoFuture(0,22),affected:[{street:'Другая',houses:['1-50']}],point:{lat:+h.lat+.06,lon:+h.lon},demo:true}
+]}
+function renderSources(){
+  const states=Object.fromEntries(state.checks.map(s=>[s.id,s]));
+  $('sourcesGrid').innerHTML=sources.map(s=>{
+    const st=states[s.id];
+    let status=st?.status==='ok' ? ('Источник прочитан'+(st.posts!=null?' · '+st.posts+' сообщений':'')):
+      st?.status==='stale'?'Нет новых публикаций · источник устарел':
+      st?.status==='partial'?'Неполная проверка':
+      st?.status==='error'?'Нет автоматического доступа':'Подключение не завершено';
+    if(st?.status==='partial'||st?.status==='error')status+=' · '+(st.note||'Адресные сведения недоступны');
+    return '<a class="source" href="'+s.url+'" target="_blank" rel="noopener noreferrer" title="'+escapeHtml(st?.note||s.detail)+'">'+
+      '<span class="source-icon">'+s.icon+'</span><span class="source-main"><strong>'+escapeHtml(s.name)+
+      '</strong><small>'+escapeHtml(status)+'</small></span><span class="arrow">↗</span></a>';
+  }).join('');
+  const ok=sources.filter(s=>states[s.id]?.status==='ok').length;
+  $('sourceStatus').textContent=state.checks.length?'Проверено '+ok+' из '+sources.length:'Нет онлайн-проверки';
+  $('sourceStatus').classList.toggle('partial',ok>0);
+}
+function paintHome(){const h=state.home;$('pointStatus').textContent=h?'Задана':state.demo?'Тестовая':'Не задана';$('pointStatus').classList.toggle('set',!!h);$('addressValue').textContent=h? h.label || 'Точка GPS, Шахты' : state.demo?'Центр Шахт — условная точка':'Укажите адрес или определите его автоматически';$('mapName').textContent=h?(h.label||'Ваша контрольная точка'):state.demo?'Шахты · учебная точка':'Шахты · точка не задана';$('addressHint').textContent=!h&&state.demo?'Это условный адрес для проверки приложения. Для настоящего мониторинга выберите свой дом.':h&&(!h.street||LGC.normalStreet(h.street).startsWith('неуточн:'))?'Тип улицы не определён. Для точных отключений введите адрес с названием улицы и номером дома.':h&&!h.house?'Для оповещений по адресным спискам желательно добавить улицу и номер дома. Координат для этого недостаточно.':'Адрес и координаты сохраняются только в этом браузере. Карта и поиск адреса используют сторонние сервисы.';}
+function makeMap(){window.CityMapV07.start();}
+function updateMap(){window.CityMapV07.refresh();}
+function getMatches(){const h=state.home||(state.demo?{...CITY,street:'Тестовая',house:'12'}:null);return (state.demo?demoEvents():state.events).map(e=>({event:e,impact:LGC.matchImpact(e,h)})).filter(x=>x.impact.relevant).sort((a,b)=>{if(a.event.kind!==b.event.kind)return a.event.kind==='emergency'?-1:1;return Date.parse(a.event.start||0)-Date.parse(b.event.start||0)})}
+function getVisibleEvents(){return getMatches().filter(x=>state.filter==='all'||x.event.kind===state.filter)}
+function renderEvents(){const all=getMatches(), visible=getVisibleEvents();$('eventsCount').textContent=all.length;$('eventList').innerHTML=visible.length?visible.map(({event:e,impact:m})=>{const planned=e.kind==='planned',warning=e.kind==='warning',overdue=e.status==='unconfirmed',kind=warning?'ПРЕДУПРЕЖДЕНИЕ МЧС':overdue?'СРОК ЗАВЕРШЕНИЯ ПРОШЁЛ':planned?'ПЛАНОВЫЕ РАБОТЫ':'АВАРИЙНОЕ СОБЫТИЕ',link=safeUrl(e.url),official=safeUrl(e.officialUrl),match=m.confidence==='high'?'':' uncertain';return `<article class="event"><div class="eventTop"><span class="eventType ${warning?'warning':planned?'planned':'emergency'}">${e.demo?'ТЕСТ · ':''}${kind}</span><span class="eventTime">${e.start?escapeHtml(fmtTime(e.start)):'Время неизвестно'}</span></div><h3>${escapeHtml(e.title)}</h3><p>${escapeHtml(e.description)}${e.end?(warning?' Период действия до '+escapeHtml(fmtTime(e.end))+'.':overdue?' Ожидаемый срок окончания '+escapeHtml(fmtTime(e.end))+' прошёл; подтверждения восстановления пока нет.':' Ожидаемое окончание: '+escapeHtml(fmtTime(e.end))+'.'):''}${e.origin==='verified_repost'?' Перепечатка сообщения УРСВ со ссылкой на официальный документ.':e.origin==='attributed_repost'?' Перепечатка сообщения с указанием Донэнерго как первоисточника.':''}</p><div class="eventBottom"><span class="eventImpact${match}">${escapeHtml(m.reason)}</span>${link?`<span><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${e.origin==='verified_repost'?'Перепечатка':'Источник'} ↗</a>${official?` · <a href="${escapeHtml(official)}" target="_blank" rel="noopener noreferrer">УРСВ ↗</a>`:''}</span>`:`<span style="color:#8a96a3">${escapeHtml(e.source||'Без источника')}</span>`}</div></article>`}).join(''):`<div class="empty"><span class="empty-icon">◉</span><strong>${state.demo?'Тестовых событий этого типа рядом нет':'Подтверждённых событий для точки не найдено'}</strong><p>${state.demo?'Смените фильтр или введите контрольный адрес.':'Источники могут быть недоступны или не указывать точное расположение. Это не подтверждение безопасности.'}</p></div>`;
+let urgent=all.some(x=>x.event.status==='active'&&(x.event.kind==='emergency'||x.event.kind==='warning'&&x.event.priority==='high')),scheduled=all.some(x=>x.event.kind==='planned'&&x.event.status==='active'),overdue=all.some(x=>x.event.status==='unconfirmed'),forecast=all.some(x=>x.event.kind==='warning'),overview=$('overviewCard');overview.className='overview-card';if(state.demo){$('statusLabel').textContent='ДЕМОНСТРАЦИОННЫЙ РЕЖИМ';$('overviewTitle').textContent='Учебные события, не реальные аварии';$('overviewDescription').textContent='Показано, как приложение отбирает происшествия в радиусе 1 км и отключения, затрагивающие ваш адрес. Данные придуманы для проверки логики.';overview.classList.add('planned')}else if(!state.home){$('statusLabel').textContent='ТРЕБУЕТСЯ АДРЕС';$('overviewTitle').textContent='Пока нельзя определить обстановку';$('overviewDescription').textContent='Нужно задать ваш дом или разрешить геолокацию. Затем проверим официальные сообщения.'}else if(!state.backendConnected||!state.checks.some(x=>x.status==='ok')){$('statusLabel').textContent='НЕТ ПОЛНОЙ ПРОВЕРКИ';$('overviewTitle').textContent='Актуальность данных не подтверждена';$('overviewDescription').textContent=state.checks.some(s=>s.status==='stale')?'Последняя доступная публикация водоканала устарела. Приложение не может подтвердить текущую обстановку; проверяйте первоисточник.':'Проверка водоканала недоступна или давно не обновлялась. Нельзя утверждать, что всё спокойно.'}else if(urgent){$('statusLabel').textContent='ЕСТЬ СООБЩЕНИЯ ОБ АВАРИЯХ';$('overviewTitle').textContent='Обратите внимание на события рядом';$('overviewDescription').textContent='Обнаружены опубликованные происшествия. Уточняйте детали и время по первоисточнику.';overview.classList.add('alert')}else if(overdue){$('statusLabel').textContent='СРОК РАБОТ ИСТЁК';$('overviewTitle').textContent='Нет подтверждения завершения работ';$('overviewDescription').textContent='По опубликованным данным предполагаемое время завершения уже прошло. Неизвестно, восстановлено ли водоснабжение: проверьте первоисточник или диспетчера УРСВ.';overview.classList.add('planned')}else if(forecast){$('statusLabel').textContent='ИНФОРМАЦИЯ МЧС';$('overviewTitle').textContent='Есть актуальный прогноз для Шахт';$('overviewDescription').textContent='Прогноз относится к городу или области и не означает, что рядом произошла авария.';overview.classList.add('planned')}else if(scheduled){$('statusLabel').textContent='ЕСТЬ ПЛАНОВЫЕ РАБОТЫ';$('overviewTitle').textContent='Запланированы работы, которые могут вас затронуть';$('overviewDescription').textContent='Посмотрите адреса и график. Время работ может измениться.';overview.classList.add('planned')}else{$('statusLabel').textContent='НЕТ АДРЕСНЫХ СОВПАДЕНИЙ';$('overviewTitle').textContent='По доступным публикациям совпадений для адреса не найдено';$('overviewDescription').textContent='Проверяются публикации администрации и перепечатки со ссылками на документы УРСВ. Это не полный мониторинг водоснабжения: часть объявлений может быть недоступна, по электричеству и газу доступно не всё; МЧС проверяется по официальной ленте.';overview.classList.add('clear')}
+$('summaryCount').textContent=state.demo? `${all.length} тестовых событий` : `${all.length} совпадений по адресу или радиусу`;$('checkStamp').textContent=state.checkedAt?`Проверено: ${fmtTime(state.checkedAt)}`:'Онлайн-проверка не выполнена';updateMap()}
+async function checkSources(){
+  if(state.demo){toast('Отключите тестовый режим для проверки официальных публикаций');return}
+  $('checkButton').disabled=true;$('refreshIcon').textContent='…';
+  try{
+    const r=await fetch('./data/water.json?_='+Date.now(),
+      {headers:{'Accept':'application/json'},cache:'no-store',signal:AbortSignal.timeout(18000)});
+    if(!r.ok)throw Error('No published feed');
+    const data=await r.json();
+    if(data.schema!==2||!Array.isArray(data.sources)||!Array.isArray(data.events))throw Error('Invalid feed');
+    state.checkedAt=data.checkedAt||null;
+    state.sourceRecent=data.recent||[];
+    state.checks=data.sources;
+    const scanAge=Date.now()-Date.parse(state.checkedAt||0);
+    const scanRecent=Number.isFinite(scanAge)&&scanAge>=0&&scanAge<4*3600000;
+    const sourceById=Object.fromEntries(state.checks.map(s=>[s.id,s]));
+    const isCurrent=s=>!!s&&s.status==='ok'&&Number.isFinite(Date.parse(s.lastPostAt||''))&&
+      Date.now()-Date.parse(s.lastPostAt)>=0&&Date.now()-Date.parse(s.lastPostAt)<7*86400000;
+    state.backendConnected=scanRecent&&state.checks.some(isCurrent);
+    state.events=scanRecent?data.events.filter(e=>{
+      const url=String(e.url||'');
+      if(e.category==='water'){
+        if(e.origin==='verified_repost'&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(e.officialUrl||''))
+          return isCurrent(sourceById.repost_rostov)||isCurrent(sourceById.repost_don);
+        return e.source==='Администрация города Шахты'&&isCurrent(sourceById.city);
+      }
+      if(e.category==='power'){
+        if(e.origin==='official_city_post'&&e.sourceId==='power_city')
+          return isCurrent(sourceById.power_city)&&url.startsWith('https://t.me/admshakhty/');
+        if(e.origin!=='attributed_repost')return false;
+        if(url.startsWith('https://newsrostov.ru/'))return isCurrent(sourceById.power_repost_rostov);
+        if(url.startsWith('https://news-don.ru/'))return isCurrent(sourceById.power_repost_don);
+        return false;
+      }
+      if(e.category==='gas'){
+        return e.sourceId==='gas_city'&&e.origin==='official_city_post'&&
+          url.startsWith('https://t.me/admshakhty/')&&isCurrent(sourceById.gas_city);
+      }
+      if(e.category==='mchs'){
+        return isCurrent(sourceById.mchs)&&e.sourceId==='mchs'&&
+          /^https:\/\/61\.mchs\.gov\.ru\/deyatelnost\/press-centr\/operativnaya-informaciya\//.test(url)&&
+          (e.scope==='city'||e.scope==='region');
+      }
+      return false;
+    }):[];
+    toast(state.backendConnected?
+      'Проверены доступные объявления воды, электричества и МЧС. Статус служб приведён ниже.':
+      'Не удалось подтвердить свежесть сообщений всех коммунальных служб.');
+  }catch(err){
+    state.backendConnected=false;state.events=[];state.checks=[];
+    toast('Не удалось загрузить городскую сводку. Можно проверить учебные сценарии.');
+  }finally{
+    state.lastLocalCheck=Date.now();
+    $('checkButton').disabled=false;$('refreshIcon').textContent='↻';
+    renderSources();renderEvents();
+  }
+}
+function toggleDemo(){state.demo=!state.demo;$('demoButton').classList.toggle('active',state.demo);$('demoButton').textContent=state.demo?'Закрыть тест':'Тест сценариев';state.filter='all';document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));paintHome();renderEvents();toast(state.demo?'Включён учебный режим. Все показанные события вымышлены.':'Учебные события скрыты.');if(state.demo)notifyPlanned()}
+async function reverseGeocode(lat,lon){try{const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&accept-language=ru`;const r=await fetch(url,{headers:{'Accept':'application/json'},signal:AbortSignal.timeout(8500)});if(!r.ok)throw Error('Geocoder unavailable');const j=await r.json();return {street:j.address?.road||j.address?.pedestrian||j.address?.residential||'',house:j.address?.house_number||'',label:j.display_name?.split(',').slice(0,3).join(', ')||'Точка GPS, Шахты'}}catch{return {street:'',house:'',label:'GPS · ваше местоположение'}}}
+function setGeoStatus(message){
+  const status=$('geoStatus');
+  if(status)status.textContent=message;
+}
+function finishGeo(errorMessage){
+  $('geoButton').disabled=false;
+  state.geoPending=false;
+  if(errorMessage){
+    setGeoStatus(errorMessage);
+    toast(errorMessage);
+  }
+}
+async function applyGPSLocation(lat,lon,accuracy){
+  const latitude=Number(lat),longitude=Number(lon);
+  if(!Number.isFinite(latitude)||!Number.isFinite(longitude)||latitude<47||latitude>49||longitude<39||longitude>42){
+    finishGeo('Координаты не относятся к району Шахт. Для контроля дома в Шахтах введите адрес вручную.');
+    return;
+  }
+  setGeoStatus('Координаты получены. Определяем улицу и номер дома…');
+  const geo=await reverseGeocode(latitude,longitude);
+  saveHome({lat:latitude,lon:longitude,street:geo.street,house:geo.house,label:geo.label,
+    accuracy: Number.isFinite(Number(accuracy))?Number(accuracy):null,method:'gps'});
+  $('geoButton').disabled=false;
+  state.geoPending=false;
+  if(!geo.street||!geo.house){
+    const message='GPS определил точку, но номер дома не подтверждён. Нажмите «Ввести адрес» и укажите улицу с номером: иначе адресные отключения могут не находиться.';
+    setGeoStatus(message);
+    toast('Координаты получены. Уточните адрес дома для точных предупреждений.');
+  }else if(Number(accuracy)>750){
+    setGeoStatus('Координаты получены с низкой точностью (около '+Math.round(Number(accuracy))+' м). Для проверки дома уточните адрес вручную.');
+    toast('GPS работает, но точность низкая.');
+  }else{
+    setGeoStatus('Местоположение определено. Проверьте адрес дома на карте.');
+    toast('Геолокация определена. Адрес сохранён на устройстве.');
+  }
+  if(!state.demo)checkSources();
+}
+window.CityControlNativeGPSResult = payload => {
+  if(!state.geoPending)return;
+  const data=payload||{};
+  applyGPSLocation(data.lat,data.lon,data.accuracy).catch(()=>{
+    finishGeo('GPS определил координаты, но не удалось сохранить точку. Укажите адрес вручную.');
+  });
+};
+window.CityControlNativeGPSError = code => {
+  if(!state.geoPending)return;
+  const messages={
+    PERMISSION_DENIED:'Доступ к геолокации запрещён. Откройте настройки Android → Приложения → Город под контролем → Разрешения → Местоположение и разрешите доступ.',
+    LOCATION_DISABLED:'На телефоне выключено определение местоположения. Включите «Геолокация» в быстрых настройках Android и повторите.',
+    TIMEOUT:'Телефон не смог определить координаты за 28 секунд. Попробуйте у окна или на улице, проверьте GPS. Можно указать адрес вручную.',
+    UNAVAILABLE:'Не удалось получить координаты от служб телефона. Проверьте настройку «Геолокация» или введите адрес вручную.'
+  };
+  finishGeo(messages[code]||messages.UNAVAILABLE);
+};
+function geoLocate(){
+  if(state.geoPending)return;
+  state.geoPending=true;
+  const attempt=(state.gpsRequestId||0)+1;
+  state.gpsRequestId=attempt;
+  $('geoButton').disabled=true;
+  setGeoStatus('Определяем местоположение. Разрешите доступ к геолокации, когда Android попросит.');
+  if(/CityControlApp\//.test(navigator.userAgent)){
+    // Android native location: independent of WebView's browser geolocation implementation.
+    try{window.location.href='citycontrol://get-location'}
+    catch(_){window.CityControlNativeGPSError('UNAVAILABLE')}
+    setTimeout(()=>{
+      if(state.geoPending&&state.gpsRequestId===attempt)
+        window.CityControlNativeGPSError('TIMEOUT');
+    },38000);
+    return;
+  }
+  if(!navigator.geolocation){
+    finishGeo('Браузер не поддерживает геолокацию. Введите адрес вручную.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos=>applyGPSLocation(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy).catch(
+      ()=>finishGeo('Не удалось сохранить точку, укажите адрес вручную.')),
+    error=>{
+      if(error.code===1){
+        finishGeo('Браузеру запрещено определять местоположение. Разрешите геолокацию для этого сайта или укажите адрес вручную.');
+      }else if(error.code===3){
+        navigator.geolocation.getCurrentPosition(
+          pos=>applyGPSLocation(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy).catch(
+            ()=>finishGeo('Не удалось сохранить точку, укажите адрес вручную.')),
+          ()=>finishGeo('Не удалось получить координаты. Проверьте GPS или введите адрес вручную.'),
+          {enableHighAccuracy:false,timeout:18000,maximumAge:180000});
+      }else finishGeo('Не удалось определить местоположение. Проверьте GPS или введите адрес вручную.');
+    },
+    {enableHighAccuracy:true,timeout:18000,maximumAge:120000});
+}
+async function locateAddress(value){$('saveAddressButton').disabled=true;$('saveAddressButton').textContent='Ищем…';try{const query=value.toLowerCase().includes('шахт')?value:`Россия, Ростовская область, Шахты, ${value}`;const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ru&addressdetails=1&accept-language=ru&q='+encodeURIComponent(query);const response=await fetch(url,{headers:{'Accept':'application/json'},signal:AbortSignal.timeout(11000)});if(!response.ok)throw new Error('Геокодер не отвечает');const result=await response.json();if(!result[0])throw new Error('Адрес не найден. Проверьте улицу и номер дома.');const loc=result[0],parsed=LGC.parseHomeAddress(value);const street=parsed.street||loc.address?.road||'',house=parsed.house||loc.address?.house_number||'';saveHome({lat:+loc.lat,lon:+loc.lon,street,house,label:`${value.trim()}, Шахты`,method:'address'});$('addressDialog').close();toast('Дом сохранён на устройстве.');if(!state.demo)checkSources()}catch(e){toast(e.message||'Не удалось найти адрес')}finally{$('saveAddressButton').disabled=false;$('saveAddressButton').textContent='Найти на карте'}}
+async function enableNotify(){if(!('Notification' in window)){toast('Этот браузер не поддерживает системные уведомления.');return}try{const status=await Notification.requestPermission();state.notifications=status==='granted';$('notifyButton').textContent=state.notifications?'Разрешены':'Включить';toast(state.notifications?'Разрешение получено. Пока тестовый режим работает только при открытом приложении.':'Разрешение не предоставлено.');if(state.notifications)notifyPlanned()}catch{toast('Для уведомлений понадобится безопасный HTTPS-адрес сайта.')}}
+function notifyPlanned(){if(!state.notifications||!('Notification' in window)||Notification.permission!=='granted')return;let e=getMatches().find(x=>x.event.kind==='planned')?.event;if(!e)return;let key='alerted-'+e.id+'-'+new Date().toLocaleDateString('ru');if(sessionStorage.getItem(key))return;try{new Notification((e.demo?'ТЕСТ: ':'')+'Плановые работы рядом с домом',{body:e.title+' · '+fmtTime(e.start)});sessionStorage.setItem(key,'1')}catch{}}
+function initialise(){if(/CityControlApp\//.test(navigator.userAgent)){$('notifyButton').textContent='Тест уведомления';}if(/CityControlApp\//.test(navigator.userAgent)){document.addEventListener('click',e=>{let a=e.target.closest('a[target="_blank"]');if(a)a.target='_self';},true);}loadHome();paintHome();renderSources();makeMap();renderEvents();$('geoButton').addEventListener('click',geoLocate);$('addressButton').addEventListener('click',()=>{$('addressInput').value=state.home?.method==='address'?(state.home.label||'').replace(/, Шахты$/,''):'';$('addressDialog').showModal();});$('addressForm').addEventListener('submit',e=>{e.preventDefault();if(e.submitter?.value==='cancel'){$('addressDialog').close();return};let v=$('addressInput').value.trim();if(v.length<5){toast('Введите улицу и номер дома');return};locateAddress(v)});$('checkButton').addEventListener('click',checkSources);$('demoButton').addEventListener('click',toggleDemo);$('notifyButton').addEventListener('click',()=>{if(/CityControlApp\//.test(navigator.userAgent)){location.href='citycontrol://test-notification';return;}toast('Для фоновых уведомлений установите Android APK. В браузере работает ручная проверка и обновление при открытии.');});document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{state.filter=b.dataset.filter;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x===b));renderEvents()}));if(location.protocol.startsWith('http'))checkSources();}
+function refreshOnResume(){if(!document.hidden&&!state.demo&&Date.now()-state.lastLocalCheck>5*60*1000)checkSources();}
+document.addEventListener('visibilitychange',refreshOnResume);
+setInterval(refreshOnResume,5*60*1000);
+window.CityMapV07.configure({state,city:CITY,logic:LGC,getHomeMatches:()=>getMatches(),
+  getRawEvents:()=>state.demo?demoEvents():state.events,fmt:fmtTime,toast});
+window.addEventListener('DOMContentLoaded',initialise);
+})();
+
+</script>
+<script id="compactV11Logic">
+/* Compact city-first presentation only: does not alter sources, GPS, events, map, notifications. */
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+function text(t,s){const e=document.createElement(t);e.textContent=s;return e;}
+function wrapper(cls){const e=document.createElement('div');e.className=cls;return e;}
+function details(id,title,group){
+ const d=document.createElement('details');d.id=id;d.className='compact-fold';
+ const s=document.createElement('summary');const titleSpan=text('span',title);
+ const right=text('span','▾');right.className='compact-caret';
+ s.append(titleSpan,right);d.append(s);group.append(d);return d;
+}
+function move(node,parent){if(node&&parent)parent.append(node);}
+function showSection(d,target){
+ if(d)d.open=true;
+ if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function init(){
+ if(!window.CityMapV07||$('compactNav'))return;
+ const app=document.querySelector('main.main');
+ const left=app?.querySelector('.left-panel'),right=app?.querySelector('.right-panel');
+ if(!app||!left||!right)return;
+ const intro=left.querySelector('.intro'),address=left.querySelector('.control-card'),overview=$('overviewCard');
+ const toolbar=left.querySelector('.toolbar'),heading=left.querySelector('.events-heading');
+ const filters=left.querySelector('.filters'),eventList=$('eventList'),notice=left.querySelector('.notification-card');
+ const mapCard=right.querySelector('.map-card'),source=right.querySelector('.sources');
+ if(!intro||!address||!overview||!toolbar||!heading||!filters||!eventList||!notice||!mapCard||!source)return;
+
+ app.classList.add('compact-main');
+ // Move EXISTING elements; do not duplicate event controls or data. Existing ID references remain stable.
+ const introTitle=intro.querySelector('h1');
+ const headline=wrapper('compact-headline');
+ headline.append(text('span','Шахты · события рядом с вами'));
+ if(introTitle)headline.append(introTitle);
+ const metrics=wrapper('compact-metrics');
+ function metric(id,initial,label,cls){
+   const card=wrapper('compact-metric '+cls);
+   const number=text('b',initial);number.id=id;
+   card.append(number,text('small',label));metrics.append(card);
+ }
+ metric('compactAllCount','—','Событий в городе','compact-blue');
+ metric('compactMapCount','—','На карте','compact-green');
+ metric('compactLocalCount','—','У моего дома','compact-amber');
+
+ app.append(headline,metrics,address,overview,toolbar,mapCard,notice);
+ const local=details('compactLocalFold','Предупреждения по моему адресу',app);
+ move(heading,local);move(filters,local);move(eventList,local);
+ const services=details('compactSourcesFold','Проверенные публикации и источники',app);
+ move(source,services);
+ const settings=details('compactSettingsFold','Дополнительные настройки',app);
+ const radius=address.querySelector('.radius');
+ const hint=$('addressHint'),demo=$('demoButton');
+ if(radius)settings.append(radius);
+ if(hint)settings.append(hint);
+ if(demo){const demoBox=wrapper('compact-demo-wrapper');demoBox.append(text('p','Учебные события используются только для проверки интерфейса. Они не являются реальными авариями.'));demoBox.append(demo);settings.append(demoBox);}
+ const foot=document.querySelector('.site-footer');
+ if(foot)foot.classList.add('compact-legal');
+
+ // Keep existing mode switch and map event filters operable. Hide verbose lists, not their data.
+ const map=$('map'),mapFilter=mapCard.querySelector('.cm-filters');
+ if(map&&mapFilter)map.parentNode.insertBefore(mapFilter,map);
+ const scope=$('cityMapScope'),counts=$('cityMapCounts'),deck=$('cityMapEvents'),quality=$('cityMapQuality');
+ if(scope&&counts&&deck&&quality){
+   const fold=details('compactCityFold','Все городские события · подробный список',mapCard);
+   fold.append(scope,counts,deck,quality);
+ }
+ const caption=mapCard.querySelector('.map-caption');
+ if(caption)caption.classList.add('compact-map-caption');
+ const modeBar=mapCard.querySelector('.cm-modes');
+ if(modeBar)modeBar.classList.add('compact-mode-bar');
+
+ // Navbar: actual destinations, no nonfunctional decorative controls.
+ const nav=document.createElement('nav');nav.id='compactNav';nav.className='compact-nav';
+ nav.setAttribute('aria-label','Навигация');
+ function navItem(icon,label,fn){
+   const b=document.createElement('button');b.type='button';
+   b.append(text('span',icon),text('small',label));
+   b.addEventListener('click',()=>{
+     for(const x of nav.querySelectorAll('button'))x.classList.toggle('selected',x===b);
+     fn();
+   });
+   nav.append(b);return b;
+ }
+ const homeItem=navItem('⌂','Главная',()=>window.scrollTo({top:0,behavior:'smooth'}));
+ homeItem.classList.add('selected');
+ navItem('▣','Карта',()=>mapCard.scrollIntoView({behavior:'smooth',block:'start'}));
+ navItem('♧','Оповещения',()=>showSection(local,local));
+ navItem('☷','Ещё',()=>showSection(services,services));
+ document.body.append(nav);
+
+ // Fresh event counts read from the real existing map state, not samples.
+ const update=()=>{
+   try{
+     const state=window.CityMapV07.inspect();
+     $('compactAllCount').textContent=String(state.allIds.length);
+     const detail=$('cityMapCounts')?.textContent||'';
+     const pins=detail.match(/(\d+)\s+с привязкой/);
+     $('compactMapCount').textContent=pins?pins[1]:String(state.mapped);
+     $('compactLocalCount').textContent=$('eventsCount')?.textContent||'0';
+     const localSummary=local.querySelector('summary>span');
+     if(localSummary)localSummary.textContent='Предупреждения по моему адресу · '+($('eventsCount')?.textContent||'0');
+   }catch(_){}
+ };
+ const obs=new MutationObserver(update);
+ for(const node of [$('eventsCount'),$('cityMapCounts'),$('cityMapScope')])if(node)obs.observe(node,{childList:true,subtree:true,characterData:true});
+ update();
+ // Scroll changes must not change saved home or active notice category.
+ window.setTimeout(()=>window.CityMapV07.getMap()?.invalidateSize?.(),140);
+ window.setTimeout(()=>window.CityMapV07.getMap()?.invalidateSize?.(),1100);
+ left.remove();right.remove();
+}
+window.addEventListener('DOMContentLoaded',init);
+})();
+</script>
+</body>
+</html>
