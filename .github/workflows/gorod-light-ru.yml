@@ -1,0 +1,77 @@
+name: City Control | Russian map labels
+on:
+  workflow_dispatch:
+  push:
+    branches: [city-map-light-v10]
+    paths:
+      - 'gorod-control/light-v10/ru_labels.py'
+      - 'gorod-control/light-v10/test_ru.py'
+      - '.github/workflows/gorod-light-ru.yml'
+permissions:
+  contents: write
+concurrency:
+  group: city-map-russian-labels
+  cancel-in-progress: false
+jobs:
+  localize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve separate verified locale patch and smoke test
+        run: |
+          git fetch --no-tags --depth=1 origin city-map-light-v10
+          mkdir -p gorod-control/light-v10
+          git show FETCH_HEAD:gorod-control/light-v10/ru_labels.py > gorod-control/light-v10/ru_labels.py
+          git show FETCH_HEAD:gorod-control/light-v10/test_ru.py > gorod-control/light-v10/test_ru.py
+      - name: Prefer Russian names without losing building numbers
+        run: |
+          python gorod-control/light-v10/ru_labels.py
+          node --check gorod-control/map-v07/city-map.js
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('gorod-control/index.html')
+          s=p.read_text()
+          old='./map-v07/city-map.js?v=1.0.0-light'
+          assert old in s
+          p.write_text(s.replace(old,'./map-v07/city-map.js?v=1.0.1-light',1))
+          PY
+      - name: Install browser
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+      - name: Verify real Cyrillic vector text on map
+        run: python gorod-control/light-v10/test_ru.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: light-city-map-russian-labels-preview
+          path: light-map-ru-test-report/
+          if-no-files-found: warn
+      - name: Publish only verified localized map JS and cache-busted index
+        run: |
+          set -euo pipefail
+          BASE_JS=$(git rev-parse HEAD:gorod-control/map-v07/city-map.js)
+          BASE_HTML=$(git rev-parse HEAD:gorod-control/index.html)
+          cp gorod-control/map-v07/city-map.js /tmp/bright-city-ru.js
+          cp gorod-control/index.html /tmp/bright-city-ru.html
+          git restore gorod-control/index.html gorod-control/map-v07/city-map.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for i in 1 2 3; do
+            git fetch origin main
+            [ "$(git rev-parse origin/main:gorod-control/map-v07/city-map.js)" = "$BASE_JS" ] || { echo 'Map changed concurrently'; exit 1; }
+            [ "$(git rev-parse origin/main:gorod-control/index.html)" = "$BASE_HTML" ] || { echo 'HTML changed concurrently'; exit 1; }
+            git checkout -f -B publish-ru-map origin/main
+            cp /tmp/bright-city-ru.js gorod-control/map-v07/city-map.js
+            cp /tmp/bright-city-ru.html gorod-control/index.html
+            git add gorod-control/map-v07/city-map.js gorod-control/index.html
+            git commit -m 'City Control: show Russian names on Bright city map'
+            if git push origin HEAD:main; then echo 'RU MAP PUBLISHED'; break; fi
+            if [ "$i" = 3 ]; then exit 1; fi
+          done
