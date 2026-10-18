@@ -411,6 +411,37 @@ function setupPrivacyControls(){
     toast('Адрес и координаты удалены с устройства.');
   });
   addressButton.closest('.action-row')?.insertAdjacentElement('afterend',button);
+  // Offline address option: user manually positions the already displayed map
+  // before opening the address dialog; no address query is sent to Nominatim.
+  const actions=$('addressDialog')?.querySelector('.dialog-actions');
+  if(actions&&!document.getElementById('saveAddressLocallyButton')){
+    const local=document.createElement('button');
+    local.type='button';local.id='saveAddressLocallyButton';
+    local.className='button secondary';
+    local.textContent='Сохранить по центру карты · без передачи адреса';
+    local.style.cssText='white-space:normal';
+    local.addEventListener('click',()=>{
+      const raw=$('addressInput').value.trim();
+      const parsed=LGC.parseHomeAddress(raw);
+      const map=window.CityMapV07?.getMap?.();
+      const center=map?.getCenter?.();
+      if(!parsed.street||!parsed.house){toast('Для адресных предупреждений укажите улицу и номер дома.');return;}
+      if(!center||!Number.isFinite(+center.lat)||!Number.isFinite(+center.lng)){
+        toast('Карта пока не готова, дождитесь загрузки.');return;
+      }
+      if(center.lat<47||center.lat>49||center.lng<39||center.lng>42){
+        toast('Выберите точку внутри района Шахт.');return;
+      }
+      const accepted=window.confirm('Сохранить введённый адрес с текущим центром карты? Проверьте положение дома: точка выбирается вручную, без автоматической проверки адреса. Запрос Nominatim отправлен не будет.');
+      if(!accepted)return;
+      saveHome({lat:+center.lat,lon:+center.lng,street:parsed.street,house:parsed.house,
+        label:raw+', Шахты',method:'manual-map'});
+      $('addressDialog').close();
+      toast('Адрес сохранён локально. Проверьте положение метки дома.');
+      if(!state.demo)checkSources();
+    });
+    actions.insertBefore(local,actions.firstChild);
+  }
 }
 function initialise(){if(/CityControlApp\//.test(navigator.userAgent)){$('notifyButton').textContent='Тест уведомления';}if(/CityControlApp\//.test(navigator.userAgent)){document.addEventListener('click',e=>{let a=e.target.closest('a[target="_blank"]');if(a)a.target='_self';},true);}loadHome();setupPrivacyControls();paintHome();renderSources();makeMap();renderEvents();$('geoButton').addEventListener('click',geoLocate);$('addressButton').addEventListener('click',()=>{$('addressInput').value=state.home?.method==='address'?(state.home.label||'').replace(/, Шахты$/,''):'';$('addressDialog').showModal();});$('addressForm').addEventListener('submit',e=>{e.preventDefault();if(e.submitter?.value==='cancel'){$('addressDialog').close();return};let v=$('addressInput').value.trim();if(v.length<5){toast('Введите улицу и номер дома');return};locateAddress(v)});$('checkButton').addEventListener('click',checkSources);$('demoButton').addEventListener('click',toggleDemo);$('notifyButton').addEventListener('click',()=>{if(/CityControlApp\//.test(navigator.userAgent)){location.href='citycontrol://test-notification';return;}toast('Для фоновых уведомлений установите Android APK. В браузере работает ручная проверка и обновление при открытии.');});document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{state.filter=b.dataset.filter;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x===b));renderEvents()}));if(location.protocol.startsWith('http'))checkSources();}
 function refreshOnResume(){if(!document.hidden&&!state.demo&&Date.now()-state.lastLocalCheck>5*60*1000)checkSources();}
