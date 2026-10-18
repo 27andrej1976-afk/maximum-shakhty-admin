@@ -56,7 +56,7 @@ with sync_playwright() as p:
     page.wait_for_function("window.CityYandexV1 && CityYandexV1.inspect().active",timeout=13000)
     page.wait_for_selector('#cityAllButton')
     assert page.locator('.ym-city-status').inner_text().startswith('Яндекс Карты активны')
-    assert page.evaluate("typeof CityMapV07.getMap().setView")==='function'
+    assert page.evaluate("typeof CityMapV07.getMap().setView")=='function'
     assert page.evaluate("CityMapV07.getMap().inner.children.length")>=3
     page.locator('#cityAllButton').click()
     assert page.evaluate("CityMapV07.inspect().mode")=='city'
