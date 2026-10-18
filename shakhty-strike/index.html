@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><title>Shakhty Strike</title>
+<style>body{margin:0;background:#111;color:#eee;font-family:sans-serif;text-align:center}canvas{background:#222;cursor:crosshair;margin-top:8px}</style></head>
+<body><canvas id="c" width="960" height="640"></canvas>
+<div>WASD — движение, мышь — прицел, ЛКМ — огонь, R — перезарядка. Вы + 3 союзных бота против волн умных врагов.</div>
+<script>
+const T=32,W=30,H=20,cv=document.getElementById('c'),g=cv.getContext('2d');
+// Карта «Шахтёрский город»: # стена, . пол
+const MAP=[
+"##############################",
+"#............#...............#",
+"#............#...............#",
+"#...##...........####....##..#",
+"#...##...........#........##.#",
+"#................#............#",
+"#######..###..........###..###",
+"#............#...............#",
+"#............#....##.........#",
+"#....####........#..#....##..#",
+"#....#............#.......##.#",
+"#....#....##..................#",
+"#.........##.....####..#######",
+"#..###...........#...........#",
+"#..#.........#...#...........#",
+"#..#.........#........###....#",
+"#............#...............#",
+"#...####.........##..........#",
+"#................##..........#",
+"##############################"].map(r=>[...r]);
+const wall=(x,y)=>x<0||y<0||x>=W||y>=H||MAP[y][x]=='#';
+const keys={},mouse={x:480,y:320,down:false};
+onkeydown=e=>keys[e.code]=1;onkeyup=e=>keys[e.code]=0;
+cv.onmousemove=e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top};
+cv.onmousedown=()=>mouse.down=true;onmouseup=()=>mouse.down=false;
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function hitsWall(x,y,r){for(let dx=-1;dx<=1;dx+=2)for(let dy=-1;dy<=1;dy+=2)if(wall(Math.floor((x+dx*r)/T),Math.floor((y+dy*r)/T)))return true;return false}
+function los(a,b){const n=Math.ceil(dist(a,b)/8);for(let i=1;i<n;i++){const t=i/n;if(wall(Math.floor((a.x+(b.x-a.x)*t)/T),Math.floor((a.y+(b.y-a.y)*t)/T)))return false}return true}
+function freeCell(){for(;;){const x=1+Math.random()*(W-2)|0,y=1+Math.random()*(H-2)|0;if(!wall(x,y))return{x:x*T+16,y:y*T+16}}}
+// A* по сетке
+function path(a,b){const sx=a.x/T|0,sy=a.y/T|0,tx=b.x/T|0,ty=b.y/T|0,key=(x,y)=>y*W+x;
+ const open=[{x:sx,y:sy,g:0,f:0}],came={},gs={[key(sx,sy)]:0},closed=new Set;
+ while(open.length){open.sort((p,q)=>p.f-q.f);const c=open.shift();
+  if(c.x==tx&&c.y==ty){const p=[];let k=key(c.x,c.y);while(k in came){p.unshift({x:(k%W)*T+16,y:(k/W|0)*T+16});k=came[k]}return p}
+  closed.add(key(c.x,c.y));
+  for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=c.x+dx,ny=c.y+dy;if(wall(nx,ny)||closed.has(key(nx,ny)))continue;
+   const ng=c.g+1,k=key(nx,ny);if(k in gs&&gs[k]<=ng)continue;gs[k]=ng;came[k]=key(c.x,c.y);
+   open.push({x:nx,y:ny,g:ng,f:ng+Math.abs(nx-tx)+Math.abs(ny-ty)})}}
+ return[]}
+const WEAPON={rate:0.1,mag:30,reload:1.6,dmg:18,spread:0.02,kick:0.035,recover:0.12};
+let player,allies,enemies,bullets,wave,score,msg=0,over=false;
+function mk(team,pos,extra){return Object.assign({team,x:pos.x,y:pos.y,r:11,hp:100,ang:0,cd:0,ammo:30,rel:0,path:[],pt:0,mem:null,state:'patrol',stT:0,strafe:1,spread:0,vx:0,vy:0},extra)}
+function start(){player=mk('a',{x:96,y:96},{human:1});
+ allies=[1,2,3].map(i=>mk('a',{x:96+i*30,y:140},{ai:1,skill:.7}));wave=0;score=0;bullets=[];enemies=[];over=false;nextWave()}
+function nextWave(){wave++;const n=4+wave*2;
+ for(let i=0;i<n;i++){let p;do p=freeCell();while(dist(p,player)<350);
+  enemies.push(mk('e',p,{ai:1,skill:Math.min(1,.4+wave*.06),hp:60+wave*6,rng:180+Math.random()*160}))}
+ if(wave>1)for(const u of[player,...allies])if(u.hp>0)u.hp=Math.min(100,u.hp+40);
+ msg=2.5}
+function shoot(u){if(u.cd>0||u.rel>0)return;
+ if(u.ammo<=0){u.rel=WEAPON.reload;return}
+ const sp=WEAPON.spread+u.spread,err=u.human?0:(1-u.skill)*.12;
+ const a=u.ang+(Math.random()-.5)*(sp+err)*2;
+ bullets.push({x:u.x,y:u.y,vx:Math.cos(a)*700,vy:Math.sin(a)*700,team:u.team,life:1});
+ u.cd=WEAPON.rate*(u.human?1:1.5);u.ammo--;
+ if(u.human)u.spread=Math.min(.22,u.spread+WEAPON.kick)}
+function move(u,dx,dy,dt,sp){const l=Math.hypot(dx,dy)||1;dx=dx/l*sp*dt;dy=dy/l*sp*dt;
+ if(!hitsWall(u.x+dx,u.y,u.r))u.x+=dx;if(!hitsWall(u.x,u.y+dy,u.r))u.y+=dy}
+function goTo(u,p,dt,sp){if(!u.path.length||u.pt<=0||dist(u.path[u.path.length-1],p)>40){u.path=path(u,p);u.pt=.6}
+ u.pt-=dt;while(u.path.length&&dist(u,u.path[0])<8)u.path.shift();
+ if(u.path.length)move(u,u.path[0].x-u.x,u.path[0].y-u.y,dt,sp)}
+function nearestCover(u,from){let best=null,bd=1e9;
+ for(let i=0;i<40;i++){const p=freeCell();if(dist(p,u)>260||los(p,from))continue;const d=dist(p,u);if(d<bd){bd=d;best=p}}return best}
+function think(u,foes,dt){
+ u.stT-=dt;let tgt=null,bd=1e9;
+ for(const f of foes){const d=dist(u,f);if(d<bd&&d<520&&los(u,f)){bd=d;tgt=f}}
+ if(tgt)u.mem={x:tgt.x,y:tgt.y,t:4};else if(u.mem){u.mem.t-=dt;if(u.mem.t<=0)u.mem=null}
+ const sp=(u.team=='e'?105:115)*(.8+.2*u.skill);
+ if(u.hp<30&&tgt&&u.state!='cover'){u.state='cover';u.stT=3;u.coverPos=nearestCover(u,tgt)}
+ if(tgt){
+  const lead=bd/700*.5*u.skill;u.ang=Math.atan2(tgt.y+tgt.vy*lead-u.y,tgt.x+tgt.vx*lead-u.x);
+  if(u.state=='cover'&&u.coverPos&&u.stT>0){goTo(u,u.coverPos,dt,sp);if(Math.random()<.4)shoot(u)}
+  else{if(u.state=='cover')u.state='attack';
+   if(u.stT<=0){u.stT=1+Math.random()*1.5;u.strafe=Math.random()<.5?-1:1;u.state=Math.random()<.3?'flank':'attack'}
+   const pref=u.rng||220;
+   if(u.state=='flank'){const n=u.ang+Math.PI/2*u.strafe;goTo(u,{x:tgt.x+Math.cos(n)*120,y:tgt.y+Math.sin(n)*120},dt,sp)}
+   else if(bd>pref)move(u,Math.cos(u.ang),Math.sin(u.ang),dt,sp);
+   else if(bd<pref*.5)move(u,-Math.cos(u.ang),-Math.sin(u.ang),dt,sp);
+   else move(u,-Math.sin(u.ang)*u.strafe,Math.cos(u.ang)*u.strafe,dt,sp);
+   if(u.react===undefined)u.react=.3*(1.2-u.skill);
+   u.react-=dt;if(u.react<=0)shoot(u)}
+ }else{u.react=undefined;
+  if(u.mem){goTo(u,u.mem,dt,sp);u.ang=Math.atan2(u.mem.y-u.y,u.mem.x-u.x)}
+  else{if(!u.goal||dist(u,u.goal)<20){const ref=foes[0];u.goal=(u.team=='e'&&ref&&Math.random()<.6)?{x:ref.x,y:ref.y}:freeCell()}
+   goTo(u,u.goal,dt,sp*.8);if(u.path[0])u.ang=Math.atan2(u.path[0].y-u.y,u.path[0].x-u.x)}}
+ if(u.ammo<=0&&u.rel<=0)u.rel=WEAPON.reload}
+function update(dt){
+ if(over){if(keys.Enter)start();return}
+ const p=player;p.cd-=dt;
+ let dx=(keys.KeyD?1:0)-(keys.KeyA?1:0),dy=(keys.KeyS?1:0)-(keys.KeyW?1:0);
+ if(p.hp>0){const ox=p.x,oy=p.y;if(dx||dy)move(p,dx,dy,dt,150);p.vx=(p.x-ox)/dt;p.vy=(p.y-oy)/dt;
+  p.ang=Math.atan2(mouse.y-p.y,mouse.x-p.x);
+  if(keys.KeyR&&p.rel<=0&&p.ammo<WEAPON.mag)p.rel=WEAPON.reload;
+  if(mouse.down)shoot(p);p.spread=Math.max(0,p.spread-WEAPON.recover*dt*(mouse.down?1.5:4))}
+ for(const u of[player,...allies,...enemies]){if(u!==player)u.cd-=dt;
+  if(u.rel>0){u.rel-=dt;if(u.rel<=0)u.ammo=WEAPON.mag}}
+ const alive=a=>a.filter(u=>u.hp>0);
+ for(const[grp,foes]of[[allies,enemies],[enemies,[player,...allies]]])for(const u of grp)if(u.hp>0){
+  const ox=u.x,oy=u.y;think(u,alive(foes),dt);u.vx=(u.x-ox)/dt;u.vy=(u.y-oy)/dt}
+ for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;
+  if(wall(Math.floor(b.x/T),Math.floor(b.y/T)))b.life=0;
+  for(const u of[player,...allies,...enemies])if(b.life>0&&u.hp>0&&u.team!=b.team&&Math.hypot(u.x-b.x,u.y-b.y)<u.r){
+   u.hp-=WEAPON.dmg;b.life=0;if(u.hp<=0&&u.team=='e')score+=100}}
+ bullets=bullets.filter(b=>b.life>0);enemies=enemies.filter(e=>e.hp>0);
+ if(!enemies.length)nextWave();
+ if(p.hp<=0&&!allies.some(a=>a.hp>0))over=true;
+ if(msg>0)msg-=dt}
+function circle(u,col){g.fillStyle=col;g.beginPath();g.arc(u.x,u.y,u.r,0,7);g.fill();
+ g.strokeStyle='#000';g.lineWidth=4;g.beginPath();g.moveTo(u.x,u.y);g.lineTo(u.x+Math.cos(u.ang)*18,u.y+Math.sin(u.ang)*18);g.stroke();
+ g.fillStyle='#0008';g.fillRect(u.x-12,u.y-20,24,3);g.fillStyle='#4f4';g.fillRect(u.x-12,u.y-20,24*Math.max(0,Math.min(1,u.hp/100)),3)}
+function draw(){g.clearRect(0,0,960,640);
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){g.fillStyle=wall(x,y)?'#555':((x+y)%2?'#2a2d2a':'#2d302d');g.fillRect(x*T,y*T,T,T)}
+ g.fillStyle='#ff0';for(const b of bullets)g.fillRect(b.x-2,b.y-2,4,4);
+ for(const e of enemies)circle(e,'#d33');for(const a of allies)if(a.hp>0)circle(a,'#39f');
+ if(player.hp>0){circle(player,'#3d6');g.strokeStyle='#fff';g.beginPath();g.arc(mouse.x,mouse.y,player.spread*300+4,0,7);g.stroke()}
+ g.fillStyle='#fff';g.font='16px sans-serif';g.textAlign='left';
+ g.fillText(`Волна ${wave}  Очки ${score}  HP ${Math.max(0,player.hp)}  Патроны ${player.rel>0?'перезарядка':player.ammo+'/'+WEAPON.mag}  Врагов ${enemies.length}`,10,18);
+ g.textAlign='center';g.font='32px sans-serif';
+ if(msg>0)g.fillText('Волна '+wave,480,300);
+ if(over)g.fillText('Отряд уничтожен. Очки: '+score+'. Enter — заново',480,320)}
+let last=performance.now();start();
+(function loop(t){const dt=Math.min(.05,(t-last)/1000)||.016;last=t;update(dt);draw();requestAnimationFrame(loop)})(last);
+</script></body></html>
