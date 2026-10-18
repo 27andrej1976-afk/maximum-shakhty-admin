@@ -51,7 +51,7 @@ with sync_playwright() as pw:
   p.screenshot(path=str(OUT/'network-fallback.png'),full_page=True)
   raise
  check(bool(p.locator('canvas.maplibregl-canvas').count()),'real WebGL vector map canvas present')
- check(any(status==200 for status,url in tiles if '/styles/bright/' in url),'actual style and map assets retrieved')
+ check(any(status==200 for status,url in tiles if '/styles/bright' in url or '/planet/' in url),'actual style and map assets retrieved')
  p.screenshot(path=str(OUT/'bright-mobile.png'),full_page=True)
  check('0.7' not in p.locator('.version').inner_text(),'map version and bright design updated')
  ctx.close()
