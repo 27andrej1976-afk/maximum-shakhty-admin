@@ -507,7 +507,7 @@ function init(){
  const app=document.querySelector('main.main');
  const left=app?.querySelector('.left-panel'),right=app?.querySelector('.right-panel');
  if(!app||!left||!right)return;
- const intro=left.querySelector('.intro'),address=left.querySelector('.control-card'),overview=$('overviewCard');
+ const intro=left.querySelector('.intro'),address=left.querySelector('.control-card:has(#geoButton)'),direct=left.querySelector('#directCard'),overview=$('overviewCard');
  const toolbar=left.querySelector('.toolbar'),heading=left.querySelector('.events-heading');
  const filters=left.querySelector('.filters'),eventList=$('eventList'),notice=left.querySelector('.notification-card');
  const mapCard=right.querySelector('.map-card'),source=right.querySelector('.sources');
@@ -533,6 +533,7 @@ function init(){
  const local=details('compactLocalFold','Предупреждения по моему адресу',app);
  move(heading,local);move(filters,local);move(eventList,local);
  const services=details('compactSourcesFold','Проверенные публикации и источники',app);
+ if(direct)move(direct,services);
  move(source,services);
  const settings=details('compactSettingsFold','Дополнительные настройки',app);
  const radius=address.querySelector('.radius');
