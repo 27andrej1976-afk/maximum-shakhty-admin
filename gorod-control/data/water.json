@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-18T15:57:41.636528+00:00",
+  "checkedAt": "2026-10-18T16:28:12.732710+00:00",
   "sources": [
     {
       "id": "city",
@@ -13,9 +13,9 @@
     },
     {
       "id": "repost_rostov",
-      "status": "ok",
-      "posts": 1,
-      "lastPostAt": "2026-10-17T10:00:48+03:00",
+      "status": "partial",
+      "posts": 0,
+      "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ"
     },
@@ -153,8 +153,8 @@
   "recent": [
     {
       "id": "oursv/1591",
-      "publishedAt": "2026-10-17T10:00:48+03:00",
-      "url": "https://newsrostov.ru/society/2026/10/17/597903.html",
+      "publishedAt": "2026-10-17T10:00:35+03:00",
+      "url": "https://news-don.ru/society/2026/10/17/147188.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1591",
       "kind": "emergency",
       "affected": [
@@ -187,13 +187,13 @@
   "archive": [
     {
       "id": "oursv/1591",
-      "publishedAt": "2026-10-17T10:00:48+03:00",
+      "publishedAt": "2026-10-17T10:00:35+03:00",
       "text": "Филиал \"Шахтинский\" сообщает:\nСнижение давления\nПричина\nВ связи с проведением аварийно- ремонтных работ на трубопроводе по адресу: пер. Шишкина д. 183А с 09-30 час. 17.10.2026\nАдреса:\nг Шахты, ул Юный Спартак\nг Шахты, ул Федюнина\nг Шахты, ул Кадровая\nг Шахты, пер Шишкина\nг Шахты, пр-кт Красной Армии\nПодробности\nОриентировочное время завершения работ 18-00 час. 17.10.2026. Подвоз воды будет осуществляться по заявкам абонентов. Телефон диспетчерской службы ГУП РО УРСВ 88632855777(многоканальный) .\nПодробнее: https://rovodokanal.ru/emergency-alerts/1591",
-      "url": "https://newsrostov.ru/society/2026/10/17/597903.html",
+      "url": "https://news-don.ru/society/2026/10/17/147188.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1591",
       "origin": "verified_repost",
       "source": "ГУП РО УРСВ — перепечатка",
-      "mirror": "newsrostov.ru"
+      "mirror": "news-don.ru"
     },
     {
       "id": "admshakhty/30940",
