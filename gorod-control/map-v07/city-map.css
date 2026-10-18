@@ -25,3 +25,9 @@
 .cm-modes button:focus-visible,.cm-filters button:focus-visible,.cm-close:focus-visible,.cm-detail-button:focus-visible,.cm-locate:focus-visible{outline:3px solid #76b3e9;outline-offset:3px}
 @media(max-width:760px){.topbar{min-height:80px;height:auto;padding-top:10px;padding-bottom:10px}.brand-icon.city-coat{width:38px;height:51px}.brand{font-size:10px;gap:9px}.version{font-size:8px;max-width:94px;text-align:center}.intro{margin-bottom:0}.intro h1{font-size:28px}.map{height:390px}.cm-modes{margin:0 0 8px}.cm-hint{margin:8px 4px 12px}.cm-modes button{font-size:11px}.cm-card{padding:14px}.cm-card h3{font-size:14px}.cm-scope{font-size:17px}.cm-details{display:block}.cm-details dt{margin-top:12px}.cm-details dt:first-child{margin-top:0}.cm-details dd{margin-top:3px}.cm-detail-header{padding:17px}.cm-detail-header h2{font-size:18px}.cm-detail-body{padding:16px 18px 23px}.cm-detail-description{font-size:13px}.cm-card-actions button{flex:1}.cm-detail{border-radius:19px}.cm-filters{gap:6px}.cm-filters button{padding:8px 11px;font-size:11px}.map-toolbar strong{max-width:245px;overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Bright urban atlas: keep warm, softly saturated fallback tiles and readable markers. */
+.leaflet-tile-pane img.leaflet-tile{filter:brightness(1.065) saturate(.80) contrast(.97)}
+.cm-provider{font-size:9px;color:#657b8d;font-weight:700;white-space:nowrap;margin-left:auto}
+.leaflet-control-attribution{background:#ffffffed!important;color:#495866!important}
+.leaflet-control-attribution a{color:#346889!important}

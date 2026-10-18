@@ -197,6 +197,43 @@ function refresh(){
   }
   renderDeck();paintMarkers();
 }
+let activeBase='fallback',vectorBase=null;
+function setupBrightBasemap(leafletMap){
+  const credits='<a href="https://openfreemap.org/">OpenFreeMap</a> · © <a href="https://openmaptiles.org/">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+  const osm=root.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',maxZoom:19
+  }).addTo(leafletMap);
+  activeBase='fallback';
+  const badge=$('mapStyleInfo');
+  const note=message=>{if(badge)badge.textContent=message;};
+  note('Светлая карта загружается…');
+  if(!root.maplibregl||!root.L.maplibreGL){
+    note('Открыта резервная карта');return;
+  }
+  let modern,gl,finished=false,failures=0;
+  const giveUp=()=>{
+    if(finished)return;
+    finished=true;activeBase='fallback';vectorBase=null;
+    if(modern&&leafletMap.hasLayer(modern))leafletMap.removeLayer(modern);
+    note('Резервная карта');
+  };
+  try{
+    modern=root.L.maplibreGL({style:'https://tiles.openfreemap.org/styles/bright'});
+    modern.addTo(leafletMap);
+    gl=modern.getMaplibreMap();
+    if(!gl||typeof gl.on!=='function'){giveUp();return;}
+    gl.on('idle',()=>{
+      if(finished)return;
+      if(!gl.isStyleLoaded||!gl.isStyleLoaded())return;
+      if(leafletMap.hasLayer(osm))leafletMap.removeLayer(osm);
+      leafletMap.attributionControl.addAttribution(credits);
+      finished=true;activeBase='bright';vectorBase=modern;note('Светлая карта · OpenFreeMap');
+    });
+    gl.on('error',()=>{failures++;if(failures>=5)giveUp();});
+    setTimeout(()=>{if(!finished)giveUp();},16000);
+  }catch(error){giveUp();}
+}
+
 function configure(options){api=options;}
 function start(){
   if(mounted)return;mounted=true;
@@ -206,6 +243,7 @@ function start(){
   const near=el('button','selected','⌂ Рядом со мной');near.id='cityNearButton';near.type='button';near.addEventListener('click',()=>setMode('near'));
   const city=el('button','','▦ Весь город');city.id='cityAllButton';city.type='button';city.addEventListener('click',()=>setMode('city'));
   modes.append(near,city);toolbar.after(modes);
+  const provider=el('span','cm-provider','Светлая карта загружается…');provider.id='mapStyleInfo';modes.append(provider);
   const hint=el('p','cm-hint');hint.id='cityMapHint';modes.after(hint);
   const scope=el('h3','cm-scope');scope.id='cityMapScope';
   const counts=el('p','cm-counts');counts.id='cityMapCounts';
@@ -225,7 +263,7 @@ function start(){
   if(root.L){
     $('map').replaceChildren();const h=api.state.home||api.city;
     map=root.L.map('map',{zoomControl:false}).setView([h.lat,h.lon],api.state.home?14:12);api.state.map=map;
-    root.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',maxZoom:19}).addTo(map);
+    setupBrightBasemap(map);
     root.L.control.zoom({position:'bottomright'}).addTo(map);layer=root.L.layerGroup().addTo(map);homeLayer=root.L.layerGroup().addTo(map);
     map.on('zoomend',()=>{
       if(fitting)return;
@@ -237,6 +275,6 @@ function start(){
 
 }
 root.CityMapV07={configure,start,refresh,setMode,openDetails,core:{isCurrent,validPoint},
-  inspect:()=>({mode,automatic,category,ids:visible().map(e=>e.id),allIds:allEvents().map(e=>e.id),zoom:map?.getZoom(),mapped:visible().filter(e=>rows(e).length).length}),
+  inspect:()=>({mode,automatic,category,ids:visible().map(e=>e.id),allIds:allEvents().map(e=>e.id),zoom:map?.getZoom(),basemap:activeBase,mapped:visible().filter(e=>rows(e).length).length}),
   getMap:()=>map};
 })(window);

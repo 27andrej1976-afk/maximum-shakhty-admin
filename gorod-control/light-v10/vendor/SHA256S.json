@@ -1,0 +1,27 @@
+{
+  "maplibre-gl.js": {
+    "url": "https://cdn.jsdelivr.net/npm/maplibre-gl@5.13.0/dist/maplibre-gl.js",
+    "length": 1015688,
+    "sha256": "8eb4bc2a47ea76873517c9d3cd1c4c9f4172be2fa4c5aabaec038e5b92f4192f"
+  },
+  "maplibre-gl.css": {
+    "url": "https://cdn.jsdelivr.net/npm/maplibre-gl@5.13.0/dist/maplibre-gl.css",
+    "length": 69449,
+    "sha256": "1dae8925ee5906e442f0fd7028dded2884381b9acd7a780e5270025e09fc7c5e"
+  },
+  "leaflet-maplibre-gl.js": {
+    "url": "https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js",
+    "length": 10451,
+    "sha256": "59ecd8d2b32779d24f1bd26b87c8890f27e4a6e7858d993bd17e4d878e6d2677"
+  },
+  "maplibre-LICENSE.txt": {
+    "url": "https://cdn.jsdelivr.net/npm/maplibre-gl@5.13.0/LICENSE.txt",
+    "length": 5984,
+    "sha256": "ee5fc05a0677eaf69601d2c7db0d9ecd6cc27c3abc1d0733bc9ed34707cf8ef2"
+  },
+  "leaflet-maplibre-LICENSE.txt": {
+    "url": "https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/LICENSE",
+    "length": 767,
+    "sha256": "eaa721ba158cbeff47ad53b1035dfc26ff744df66662c93ff715c9885197ebf3"
+  }
+}

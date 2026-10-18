@@ -9,7 +9,8 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20128%20128%22%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20rx%3D%2228%22%20fill%3D%22%23101a2c%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2240%22%20fill%3D%22none%22%20stroke%3D%22%235bd7b9%22%20stroke-width%3D%224%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2223%22%20fill%3D%22none%22%20stroke%3D%22%23386879%22%20stroke-width%3D%224%22/%3E%3Cpath%20d%3D%22M64%2018v24m0%2044v24M18%2064h24m44%200h24%22%20stroke%3D%22%235bd7b9%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2211%22%20fill%3D%22%235bd7b9%22/%3E%3C/svg%3E%0A" />
 
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
-  <link rel="stylesheet" href="./map-v07/vendor/leaflet.css" /><link rel="stylesheet" href="./map-v07/city-map.css?v=0.7.0" />
+  <link rel="stylesheet" href="./map-v07/vendor/leaflet.css" />
+  <link rel="stylesheet" href="./light-v10/vendor/maplibre-gl.css" /><link rel="stylesheet" href="./map-v07/city-map.css?v=1.0.0-light" />
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 :root{--bg:#f3f6f8;--white:#fff;--ink:#172237;--muted:#718092;--line:#e6eaf0;--navy:#101a2c;--mint:#13b896;--mintdark:#0a8c73;--amber:#ed9a36;--red:#e8646c;--shadow:0 10px 40px #121a2c0d}
@@ -23,7 +24,7 @@
 <body>
   <header class="topbar">
     <div class="brand"><img class="brand-icon city-coat" src="./map-v07/shakhty-coat.png" width="44" height="58" alt="Герб города Шахты" /><div><b>ГОРОД <span>ПОД КОНТРОЛЕМ</span></b><small>ПИЛОТ • ШАХТЫ</small></div></div>
-    <span class="version"><span class="signal-dot"></span> КАРТА v0.7</span>
+    <span class="version"><span class="signal-dot"></span> КАРТА · СВЕТЛАЯ</span>
   </header>
   <main class="main">
     <section class="left-panel" aria-label="Локальные предупреждения">
@@ -51,7 +52,9 @@
   <dialog id="addressDialog" class="dialog"><form method="dialog" id="addressForm"><div class="dialog-head"><div><div class="eyebrow">КОНТРОЛЬНАЯ ТОЧКА</div><h2>Где находится дом?</h2></div><button aria-label="Закрыть" class="close" value="cancel" formnovalidate>×</button></div><label class="field-label" for="addressInput">Адрес в городе Шахты</label><input id="addressInput" name="home" type="text" placeholder="ул. Советская, 25" autocomplete="street-address" required /><small class="address-explain">Укажите улицу и номер. Для поиска точки адрес отправляется сервису геокодирования OpenStreetMap. В нашем приложении он хранится только в вашем браузере.</small><div class="dialog-actions"><button class="button secondary" value="cancel" formnovalidate>Отмена</button><button class="button primary" id="saveAddressButton" value="save">Найти на карте</button></div></form></dialog>
   <div id="toast" role="status" aria-live="polite"></div>
   <footer class="site-footer">Город под контролем · Тестовая сборка, 17.10.2026. Не является официальной системой экстренного оповещения. <span>© OpenStreetMap contributors</span></footer>
-  <script src="./map-v07/vendor/leaflet.js"></script><script src="./map-v07/city-map.js?v=0.7.0"></script>
+  <script src="./map-v07/vendor/leaflet.js"></script>
+<script src="./light-v10/vendor/maplibre-gl.js"></script>
+<script src="./light-v10/vendor/leaflet-maplibre-gl.js"></script><script src="./map-v07/city-map.js?v=1.0.0-light"></script>
   <script>
 /* Pure matching rules, also exercised by tests. No real or private addresses embedded. */
 (function (root) {
