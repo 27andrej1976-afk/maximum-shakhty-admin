@@ -1,0 +1,24 @@
+name: City map | isolated pan regression
+on:
+  workflow_dispatch:
+  push:
+    branches: [city-map-pan-sync-20261018]
+    paths:
+      - 'gorod-control/light-v10/vendor/leaflet-maplibre-gl.js'
+      - 'gorod-control/map-v07/test_pan_sync.mjs'
+      - '.github/workflows/gorod-map-pan-test.yml'
+permissions:
+  contents: read
+jobs:
+  javascript-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JavaScript syntax
+        run: |
+          node --check gorod-control/light-v10/vendor/leaflet-maplibre-gl.js
+          node --check gorod-control/map-v07/city-map.js
+          node --check gorod-control/map-v07/test_pan_sync.mjs
+      - name: Verify vector basemap synchronization and both interface imports
+        run: node gorod-control/map-v07/test_pan_sync.mjs
