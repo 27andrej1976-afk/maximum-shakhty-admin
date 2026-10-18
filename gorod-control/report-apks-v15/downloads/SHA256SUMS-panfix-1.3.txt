@@ -1,0 +1,2 @@
+24d4a5924d2737575dd2850e0be1ccd6857a29c8e7d275ec05847310948f416f  GorodPodKontrolem-Classic-Reports-1.3-PanFix.apk
+5ea5d4041749774f4664521ef0443ec88f954e3a180d8b44b8aa0a5f60ae6567  GorodPodKontrolem-Compact-Reports-1.3-PanFix.apk
