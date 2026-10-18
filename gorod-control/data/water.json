@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-18T02:49:10.093697+00:00",
+  "checkedAt": "2026-10-18T03:11:45.255886+00:00",
   "sources": [
     {
       "id": "city",
@@ -84,7 +84,7 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 1,
-      "lastPostAt": "2026-10-17T20:00:00+03:00",
+      "lastPostAt": "2026-10-18T06:00:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам"
     }
   ],
