@@ -301,8 +301,9 @@ async function applyGPSLocation(lat,lon,accuracy){
     finishGeo('Координаты не относятся к району Шахт. Для контроля дома в Шахтах введите адрес вручную.');
     return;
   }
-  setGeoStatus('Координаты получены. Определяем улицу и номер дома…');
-  const geo=await reverseGeocode(latitude,longitude);
+  setGeoStatus('Координаты получены. Поиск улицы через интернет необязателен.');
+  const lookup=window.confirm('Найти улицу и номер дома через сторонний сервис Nominatim? Для этого ему будут переданы ваши GPS-координаты. Нажмите «Отмена», чтобы сохранить только координаты на устройстве.');
+  const geo=lookup ? await reverseGeocode(latitude,longitude) : {street:'',house:'',label:'GPS · точка в Шахтах'};
   saveHome({lat:latitude,lon:longitude,street:geo.street,house:geo.house,label:geo.label,
     accuracy: Number.isFinite(Number(accuracy))?Number(accuracy):null,method:'gps'});
   $('geoButton').disabled=false;
@@ -374,7 +375,15 @@ function geoLocate(){
     },
     {enableHighAccuracy:true,timeout:18000,maximumAge:120000});
 }
-async function locateAddress(value){$('saveAddressButton').disabled=true;$('saveAddressButton').textContent='Ищем…';try{const query=value.toLowerCase().includes('шахт')?value:`Россия, Ростовская область, Шахты, ${value}`;const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ru&addressdetails=1&accept-language=ru&q='+encodeURIComponent(query);const response=await fetch(url,{headers:{'Accept':'application/json'},signal:AbortSignal.timeout(11000)});if(!response.ok)throw new Error('Геокодер не отвечает');const result=await response.json();if(!result[0])throw new Error('Адрес не найден. Проверьте улицу и номер дома.');const loc=result[0],parsed=LGC.parseHomeAddress(value);const street=parsed.street||loc.address?.road||'',house=parsed.house||loc.address?.house_number||'';saveHome({lat:+loc.lat,lon:+loc.lon,street,house,label:`${value.trim()}, Шахты`,method:'address'});$('addressDialog').close();toast('Дом сохранён на устройстве.');if(!state.demo)checkSources()}catch(e){toast(e.message||'Не удалось найти адрес')}finally{$('saveAddressButton').disabled=false;$('saveAddressButton').textContent='Найти на карте'}}
+async function locateAddress(value){
+  const parsedLocal=LGC.parseHomeAddress(value);
+  if(!parsedLocal.street||!parsedLocal.house){
+    toast('Укажите улицу и номер дома.');
+    return;
+  }
+  const consent=window.confirm('Для поиска адреса на карте сервису Nominatim будет передана введённая улица и номер дома. Продолжить? Отмена — ничего не отправлять.');
+  if(!consent){toast('Поиск отменён. Адрес не отправлялся.');return;}
+  $('saveAddressButton').disabled=true;$('saveAddressButton').textContent='Ищем…';try{const query=value.toLowerCase().includes('шахт')?value:`Россия, Ростовская область, Шахты, ${value}`;const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ru&addressdetails=1&accept-language=ru&q='+encodeURIComponent(query);const response=await fetch(url,{headers:{'Accept':'application/json'},signal:AbortSignal.timeout(11000)});if(!response.ok)throw new Error('Геокодер не отвечает');const result=await response.json();if(!result[0])throw new Error('Адрес не найден. Проверьте улицу и номер дома.');const loc=result[0],parsed=LGC.parseHomeAddress(value);const street=parsed.street||loc.address?.road||'',house=parsed.house||loc.address?.house_number||'';saveHome({lat:+loc.lat,lon:+loc.lon,street,house,label:`${value.trim()}, Шахты`,method:'address'});$('addressDialog').close();toast('Дом сохранён на устройстве.');if(!state.demo)checkSources()}catch(e){toast(e.message||'Не удалось найти адрес')}finally{$('saveAddressButton').disabled=false;$('saveAddressButton').textContent='Найти на карте'}}
 async function enableNotify(){if(!('Notification' in window)){toast('Этот браузер не поддерживает системные уведомления.');return}try{const status=await Notification.requestPermission();state.notifications=status==='granted';$('notifyButton').textContent=state.notifications?'Разрешены':'Включить';toast(state.notifications?'Разрешение получено. Пока тестовый режим работает только при открытом приложении.':'Разрешение не предоставлено.');if(state.notifications)notifyPlanned()}catch{toast('Для уведомлений понадобится безопасный HTTPS-адрес сайта.')}}
 function notifyPlanned(){if(!state.notifications||!('Notification' in window)||Notification.permission!=='granted')return;let e=getMatches().find(x=>x.event.kind==='planned')?.event;if(!e)return;let key='alerted-'+e.id+'-'+new Date().toLocaleDateString('ru');if(sessionStorage.getItem(key))return;try{new Notification((e.demo?'ТЕСТ: ':'')+'Плановые работы рядом с домом',{body:e.title+' · '+fmtTime(e.start)});sessionStorage.setItem(key,'1')}catch{}}
 function setupPrivacyControls(){
