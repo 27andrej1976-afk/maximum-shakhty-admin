@@ -11,7 +11,7 @@ demo_event={
  "id":"ci-fixture-light-water","category":"water","kind":"planned","status":"active","sourceId":"repost_rostov",
  "source":"Управление развития систем водоснабжения","origin":"verified_repost","title":"Проверка карты: вода",
  "description":"Только автоматическая тестовая фикстура.","start":stamp(2),"end":stamp(5),"publishedAt":stamp(-1),
- "url":"https://rovodokanal.ru/emergency-alerts/1591","point":{"lat":47.7088,"lon":40.2149},
+ "url":"https://newsrostov.ru/society/2026/10/18/test-only.html","officialUrl":"https://rovodokanal.ru/emergency-alerts/1591","point":{"lat":47.7088,"lon":40.2149},
  "affected":[{"street":"ул Советская","houses":["11"]}]
 }
 feed={"schema":2,"checkedAt":stamp(0),"sources":[{"id":"repost_rostov","status":"ok","lastPostAt":stamp(-1),"posts":1,"url":"https://newsrostov.ru/rss.xml"}],"events":[demo_event]}
