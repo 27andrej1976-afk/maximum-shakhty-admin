@@ -35,8 +35,14 @@ function install(){
  section.append(picture,info,a);
  toolbar.insertAdjacentElement('afterend',section);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);
-else install();
+// Compact reorganizes the DOM on startup; attach again if it moved the toolbar.
+function ready(){
+ install();
+ setTimeout(install,120);
+ setTimeout(install,750);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);
+else ready();
 })();
 """.replace("__APP_URL__",APP_URL)
 def install(path):
