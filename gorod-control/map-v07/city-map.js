@@ -198,6 +198,24 @@ function refresh(){
   renderDeck();paintMarkers();
 }
 let activeBase='fallback',vectorBase=null;
+function useRussianMapLabels(gl){
+  if(!gl||!gl.getStyle||!gl.setLayoutProperty)return 0;
+  let localized=0;
+  for(const layer of gl.getStyle().layers||[]){
+    if(layer.type!=='symbol'||layer.layout?.['text-field']==null)continue;
+    if(/housenumber|house_number|shield|route|highway_ref|junction/i.test(layer.id))continue;
+    const text=JSON.stringify(layer.layout['text-field']);
+    if(!/name(?::|_|"|')/i.test(text))continue;
+    try{
+      gl.setLayoutProperty(layer.id,'text-field',[
+        'coalesce',['get','name:ru'],['get','name_ru'],['get','name']
+      ]);
+      localized++;
+    }catch(_ignored){}
+  }
+  return localized;
+}
+
 function setupBrightBasemap(leafletMap){
   const credits='<a href="https://openfreemap.org/">OpenFreeMap</a> · © <a href="https://openmaptiles.org/">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
   const osm=root.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
@@ -222,6 +240,9 @@ function setupBrightBasemap(leafletMap){
     modern.addTo(leafletMap);
     gl=modern.getMaplibreMap();
     if(!gl||typeof gl.on!=='function'){giveUp();return;}
+    const russian=()=>{try{useRussianMapLabels(gl);}catch(_ignored){}};
+    gl.on('style.load',russian);
+    if(gl.isStyleLoaded?.())russian();
     gl.on('idle',()=>{
       if(finished)return;
       if(!gl.isStyleLoaded||!gl.isStyleLoaded())return;
@@ -276,5 +297,5 @@ function start(){
 }
 root.CityMapV07={configure,start,refresh,setMode,openDetails,core:{isCurrent,validPoint},
   inspect:()=>({mode,automatic,category,ids:visible().map(e=>e.id),allIds:allEvents().map(e=>e.id),zoom:map?.getZoom(),basemap:activeBase,mapped:visible().filter(e=>rows(e).length).length}),
-  getMap:()=>map};
+  getMap:()=>map,getVectorMap:()=>vectorBase?.getMaplibreMap()};
 })(window);
