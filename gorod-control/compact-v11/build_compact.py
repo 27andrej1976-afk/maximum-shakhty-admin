@@ -19,7 +19,7 @@ def build(source,dest,preview=False):
     if preview:
         original=original.replace('<head>','<head>\n<base href="../">',1)
     assert original.count('id="compactV11Style"')==1 and original.count('id="compactV11Logic"')==1
-    assert 'data/water.json' in original and 'CityControlNativeGPSResult' in original
+    assert ('data/water.json' in original or 'CityControlNativeFeed' in original) and 'CityControlNativeGPSResult' in original
     dest.parent.mkdir(parents=True,exist_ok=True)
     dest.write_text(original,encoding='utf-8')
     print('COMPACT READY',dest,'preview='+str(preview),'bytes='+str(len(original)),flush=True)
