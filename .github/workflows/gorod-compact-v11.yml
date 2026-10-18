@@ -1,0 +1,206 @@
+name: City Control | Compact parallel APK v1.1
+on:
+  workflow_dispatch:
+  push:
+    branches: [city-compact-apk-v11]
+    paths:
+      - 'gorod-control/compact-v11/**'
+      - '.github/workflows/gorod-compact-v11.yml'
+permissions:
+  contents: write
+concurrency:
+  group: city-control-compact-v11-release
+  cancel-in-progress: false
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore isolated compact source without changing original HTML
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin city-compact-apk-v11
+          mkdir -p gorod-control/compact-v11
+          for name in compact.js compact.css build_compact.py test_browser.py; do
+            git show "FETCH_HEAD:gorod-control/compact-v11/$name" > "gorod-control/compact-v11/$name"
+          done
+          node --check gorod-control/compact-v11/compact.js
+          python -m py_compile gorod-control/compact-v11/build_compact.py gorod-control/compact-v11/test_browser.py
+          python gorod-control/compact-v11/build_compact.py gorod-control/index.html gorod-control/compact-v11/index.html --preview
+          python - <<'PY'
+          from pathlib import Path
+          new=Path('gorod-control/compact-v11/index.html').read_text()
+          old=Path('gorod-control/index.html').read_text()
+          assert 'compactV11Logic' in new and 'compactV11Logic' not in old
+          assert '<base href="../">' in new
+          assert 'CityMapV07' in new and 'CityControlNativeGPSResult' in new
+          print('Original UI unchanged; compact version isolated')
+          PY
+      - name: Run existing parsing and address checks
+        run: |
+          python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
+          node gorod-control/scripts/test_frontend.mjs
+      - name: Install browser and test compact UI on mobile and tablet
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+          python gorod-control/compact-v11/test_browser.py
+      - name: Upload compact preview screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: city-compact-v11-browser-report
+          path: compact-browser-report/
+          if-no-files-found: warn
+      - name: Publish ONLY isolated HTML preview, not the live original UI
+        run: |
+          set -euo pipefail
+          cp gorod-control/compact-v11/index.html /tmp/city-compact-preview.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git checkout -f -B compact-preview-publish origin/main
+            mkdir -p gorod-control/compact-v11
+            cp /tmp/city-compact-preview.html gorod-control/compact-v11/index.html
+            git add gorod-control/compact-v11/index.html
+            if git diff --cached --quiet; then break; fi
+            git commit -m 'City Control: publish isolated compact browser preview'
+            if git push origin HEAD:main; then echo 'COMPACT PREVIEW PUBLISHED'; break; fi
+            if [ "$attempt" = 4 ]; then exit 1; fi
+            sleep 3
+          done
+  android:
+    needs: browser
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Install Android SDK
+        run: |
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)
+          "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0"
+      - name: Restore validated native parser and compact sources
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin city-sources-v08
+          mkdir -p gorod-control/source-lab-v08
+          git show FETCH_HEAD:gorod-control/source-lab-v08/water_verified.py > gorod-control/source-lab-v08/water_verified.py
+          test "$(git hash-object gorod-control/source-lab-v08/water_verified.py)" = a62034202ed9c17c0d7fff05dca533146389b735
+          git fetch --no-tags --depth=1 origin city-compact-apk-v11
+          mkdir -p gorod-control/compact-v11
+          for name in compact.js compact.css build_compact.py android_sanity.py; do
+            git show "FETCH_HEAD:gorod-control/compact-v11/$name" > "gorod-control/compact-v11/$name"
+          done
+          node --check gorod-control/compact-v11/compact.js
+          python -m py_compile gorod-control/compact-v11/android_sanity.py
+      - name: Prepare native application with SAME live sources, GPS and Shakhty coat
+        run: |
+          set -euo pipefail
+          python gorod-control/direct-v09/prepare.py
+          python -m pip install --quiet pillow
+          python gorod-control/direct-v09/build_coat_icon.py
+          python - <<'PY'
+          import re,shutil
+          from pathlib import Path
+          app=Path('gorod-control/android/app')
+          assets=app/'src/main/assets/web'
+          shutil.copytree('gorod-control/light-v10/vendor',assets/'light-v10/vendor',dirs_exist_ok=True)
+          index=assets/'index.html'
+          original=index.read_text()
+          assert 'window.CityControlNativeFeed' in original
+          assert 'window.CityControlNativeGPSResult' in original
+          import subprocess
+          subprocess.run(['python','gorod-control/compact-v11/build_compact.py',str(index),str(index)],check=True)
+          compact=index.read_text()
+          assert 'compactV11Logic' in compact
+          assert 'window.CityControlNativeFeed' in compact
+          assert 'map-v07/city-map.js' in compact
+          gradle=app/'build.gradle'
+          src=gradle.read_text()
+          assert "applicationId 'ru.citycontrol.shakhty.beta'" in src
+          src=src.replace("applicationId 'ru.citycontrol.shakhty.beta'","applicationId 'ru.citycontrol.shakhty.compact'")
+          src=re.sub(r'versionCode \d+','versionCode 14',src)
+          src=re.sub(r"versionName '[^']+'","versionName '1.1.0-compact'",src)
+          gradle.write_text(src)
+          manifest=app/'src/main/AndroidManifest.xml'
+          manifest.write_text(manifest.read_text().replace('android:label="Город · тест 0.9"','android:label="Город · компакт"'))
+          native=app/'src/main/java/ru/citycontrol/shakhty/MainActivity.java'
+          text=native.read_text()
+          needle='relative.equals("index.html")||relative.startsWith("map-v07/")'
+          assert needle in text
+          native.write_text(text.replace(needle,needle+'||relative.startsWith("light-v10/vendor/")'))
+          print('Compact UI only. Original v1.0.2 APK and working city website untouched.')
+          PY
+      - name: Build Android compact APK
+        working-directory: gorod-control/android
+        run: gradle --no-daemon :app:assembleDebug
+      - name: Validate Android signature, coat icon and parallel package
+        run: |
+          set -euo pipefail
+          APK=gorod-control/android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep "package: name='ru.citycontrol.shakhty.compact'"
+          unzip -l "$APK" | grep 'res/drawable-nodpi-v4/coat_launcher.png'
+          unzip -l "$APK" | grep 'assets/web/light-v10/vendor/maplibre-gl.js'
+          mkdir -p /tmp/city-compact-apk
+          cp "$APK" /tmp/city-compact-apk/GorodPodKontrolem-Shakhty-Compact-1.1.apk
+          sha256sum /tmp/city-compact-apk/*.apk
+      - name: Enable Android emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install and test compact application on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          script: |
+            python -m pip install --quiet websocket-client
+            python gorod-control/compact-v11/android_sanity.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: city-compact-v11-android-report
+          path: compact-android-test-report/
+          if-no-files-found: warn
+      - name: Publish ONLY standalone compact APK
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git checkout -f -B compact-apk-publish origin/main
+            mkdir -p gorod-control/compact-v11/downloads
+            cp /tmp/city-compact-apk/*.apk gorod-control/compact-v11/downloads/
+            git add gorod-control/compact-v11/downloads/GorodPodKontrolem-Shakhty-Compact-1.1.apk
+            if git diff --cached --quiet; then break; fi
+            git commit -m 'City Control: publish separate tested compact Android APK v1.1'
+            if git push origin HEAD:main; then echo 'COMPACT APK PUBLISHED'; break; fi
+            if [ "$attempt" = 4 ]; then exit 1; fi
+            sleep 3
+          done
