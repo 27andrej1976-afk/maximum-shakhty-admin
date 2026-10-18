@@ -33,4 +33,11 @@ const map=readFileSync(root+'map-v07/city-map.js','utf8');
 assert.ok(map.includes('https://tiles.openfreemap.org/styles/bright'));
 assert.ok(map.includes('https://tile.openstreetmap.org/{z}/{x}/{y}.png'));
 
+const collector=readFileSync(root+'scripts/collect_services.py','utf8');
+assert.ok(collector.includes("source('city_max','unavailable'"));
+assert.ok(collector.includes('https://max.ru/shakhtygorod'));
+for(const file of ['index.html','compact-v11/index.html']){
+ const html=readFileSync(root+file,'utf8');
+ assert.ok(html.includes("id:'city_max'"));
+}
 console.log('PASS privacy branch static checks: both interfaces and Android home deletion; no remote Google Fonts');
