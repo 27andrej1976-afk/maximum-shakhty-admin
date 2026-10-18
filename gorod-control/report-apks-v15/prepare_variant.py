@@ -17,13 +17,13 @@ if variant=='compact':
  subprocess.run(['python','gorod-control/compact-v11/build_compact.py',str(assets/'index.html'),str(assets/'index.html')],check=True)
 subprocess.run(['python','gorod-control/report-apks-v15/install_reports.py',str(assets/'index.html')],check=True)
 dest='ru.citycontrol.shakhty.'+('normalreport' if variant=='normal' else 'compactreport')
-name='1.2.0-report-normal' if variant=='normal' else '1.2.0-report-compact'
+name='1.3.0-panfix-normal' if variant=='normal' else '1.3.0-panfix-compact'
 label='Город · классика+' if variant=='normal' else 'Город · компакт+'
 grad=app/'build.gradle'
 g=grad.read_text()
 assert "applicationId 'ru.citycontrol.shakhty.beta'" in g
 g=g.replace("applicationId 'ru.citycontrol.shakhty.beta'",f"applicationId '{dest}'")
-g=re.sub(r'versionCode \d+','versionCode 15' if variant=='normal' else 'versionCode 16',g)
+g=re.sub(r'versionCode \d+','versionCode 17' if variant=='normal' else 'versionCode 18',g)
 g=re.sub(r"versionName '[^']+'",f"versionName '{name}'",g)
 grad.write_text(g)
 manifest=app/'src/main/AndroidManifest.xml'
@@ -34,4 +34,6 @@ html=(assets/'index.html').read_text()
 assert 'civicReportButtonLogic' in html and 'CityControlNativeFeed' in html
 assert 'CityControlNativeGPSResult' in html
 assert 'removeCountryFlagSymbols' in (assets/'map-v07/city-map.js').read_text()
+bridge=(assets/'light-v10/vendor/leaflet-maplibre-gl.js').read_text()
+assert "gl.transform.apply(tr)" in bridge and "gl.resize()" in bridge, 'MapLibre pan & Compact resize fixes missing'
 print('READY',variant,'PACKAGE',dest,'no upstream UI modified; original native sources preserved')
