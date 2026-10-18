@@ -1,0 +1,70 @@
+name: City Control | Coat of arms APK v0.9.1
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/gorod-v091-icon-apk.yml'
+      - 'gorod-control/direct-v09/build_coat_icon.py'
+permissions:
+  contents: write
+concurrency:
+  group: city-v091-apk
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Install Android SDK platform
+        run: |
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)
+          "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0"
+      - name: Prepare tested 0.9 Android application
+        run: python gorod-control/direct-v09/prepare.py
+      - name: Create round launcher icon with actual city coat
+        run: |
+          python -m pip install --quiet pillow
+          python gorod-control/direct-v09/build_coat_icon.py
+      - name: Build and validate APK
+        working-directory: gorod-control/android
+        run: gradle --no-daemon :app:assembleDebug
+      - name: Verify Android launcher icon and signature
+        run: |
+          APK=gorod-control/android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep "package: name='ru.citycontrol.shakhty.beta'"
+          unzip -l "$APK" | grep 'res/drawable-nodpi-v4/coat_launcher.png'
+          mkdir -p /tmp/city-v091
+          cp "$APK" /tmp/city-v091/GorodPodKontrolem-Shakhty-0.9.1-coat.apk
+          sha256sum /tmp/city-v091/*.apk
+      - name: Publish versioned APK
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git checkout -B publish-v091 origin/main
+            mkdir -p gorod-control/direct-v09/downloads
+            cp /tmp/city-v091/*.apk gorod-control/direct-v09/downloads/
+            git add gorod-control/direct-v09/downloads/GorodPodKontrolem-Shakhty-0.9.1-coat.apk
+            if git diff --cached --quiet; then break; fi
+            git commit -m 'City Control: publish Shakhty coat launcher APK v0.9.1'
+            if git push origin HEAD:main; then break; fi
+            if [ "$attempt" = 3 ]; then exit 1; fi
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: city-control-v091-coat-apk
+          path: /tmp/city-v091/*.apk
