@@ -48,9 +48,9 @@ def evaluate(expr):
         frame=json.loads(ws.recv())
         if frame.get('id')==rid:
             if frame.get('error'):raise RuntimeError(str(frame['error']))
-            obj=frame.get('result',{}).get('result',{})
-            if obj.get('exceptionDetails'):raise RuntimeError(str(obj['exceptionDetails']))
-            return obj.get('result',{}).get('value')
+            payload=frame.get('result',{})
+            if payload.get('exceptionDetails'):raise RuntimeError(str(payload['exceptionDetails']))
+            return payload.get('result',{}).get('value')
     raise RuntimeError('Webview evaluation timed out')
 for _ in range(45):
     if evaluate("!!(window.CityMapV07&&document.querySelector('#cityAllButton'))"):break
