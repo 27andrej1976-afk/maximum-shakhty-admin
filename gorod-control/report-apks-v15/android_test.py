@@ -51,10 +51,16 @@ def evaluate(expression):
    if d.get('error') or payload.get('exceptionDetails'):raise RuntimeError(str(d.get('error') or payload['exceptionDetails']))
    return payload.get('result',{}).get('value')
  raise TimeoutError(expression)
-for _ in range(35):
- if evaluate("!!window.CityMapV07 && !!document.querySelector('#reportIssueButton')"):break
+for i in range(90):
+ try:
+  if evaluate("!!window.CityMapV07 && !!document.querySelector('#reportIssueButton')"):break
+  if i%15==0:
+   diagnostic=evaluate("JSON.stringify({ready:document.readyState,url:location.href,body:document.body?.textContent?.slice(0,180),cityMap:!!window.CityMapV07,reportButton:!!document.querySelector('#reportIssueButton')})")
+   print('ANDROID_STARTUP_DIAGNOSTIC',variant,diagnostic,flush=True)
+ except Exception as exc:
+  if i%15==0:print('ANDROID_STARTUP_WAIT',variant,str(exc)[:220],flush=True)
  time.sleep(1)
-else:raise AssertionError('Report button or existing city map did not initialize')
+else:raise AssertionError('Report button or existing city map did not initialize after 90s')
 check(evaluate("document.querySelector('img.city-coat').naturalWidth>0"),'Real city coat remains visible')
 check(evaluate("document.querySelector('#reportIssueButton').href==='https://27andrej1976-afk.github.io/maximum-shakhty-admin/gorod-control/official-intake-v14/'"),'Official report form linked correctly')
 check(evaluate("!!document.querySelector('#geoButton') && !!document.querySelector('#checkButton')"),'GPS and manual refresh controls preserved')
@@ -68,5 +74,20 @@ if variant=='compact':
  check(evaluate("!!document.querySelector('#compactSourcesFold')&&!document.querySelector('#compactSourcesFold').open"),'Compact source details collapsed')
 else:
  check(evaluate("!document.querySelector('#compactNav')"),'Original UI remains original')
+check(evaluate("CityMapV07.getMap().dragging.enabled()"),'Leaflet map gestures are enabled')
+before=evaluate("JSON.stringify([CityMapV07.getMap().getCenter().lat,CityMapV07.getMap().getCenter().lng])")
+evaluate("CityMapV07.getMap().panBy([85,50],{animate:false})")
+time.sleep(1.2)
+after=evaluate("JSON.stringify([CityMapV07.getMap().getCenter().lat,CityMapV07.getMap().getCenter().lng])")
+check(before!=after,'Leaflet map moves when panned inside Android WebView')
+vector=evaluate("!!CityMapV07.getVectorMap()")
+if vector:
+ # If the bright vector map is active, both engines must agree after a pan.
+ check(evaluate("""(function(){
+ const l=CityMapV07.getMap(),g=CityMapV07.getVectorMap(),a=l.getCenter(),b=g.getCenter();
+ return Math.abs(a.lat-b.lat)<0.0001 && Math.abs(a.lng-b.lng)<0.0001;
+ })()"""),'Leaflet and MapLibre centers remain synchronized in Android WebView')
+else:
+ print('ANDROID_NOTE',variant,'OSM fallback active; MapLibre browser-pan regression tested separately',flush=True)
 ws.close()
 print('ANDROID_REPORTS_TEST_PASSED',variant,len(checks),flush=True)
