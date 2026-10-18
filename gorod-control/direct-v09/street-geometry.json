@@ -3555,10 +3555,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:строителей": {
-      "timestamp": 1792279609.960331,
+      "timestamp": 1792367524.189235,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:лазурная": {
@@ -3809,10 +3809,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:вишневый": {
-      "timestamp": 1792281077.919713,
+      "timestamp": 1792367524.189235,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:менжинского": {
