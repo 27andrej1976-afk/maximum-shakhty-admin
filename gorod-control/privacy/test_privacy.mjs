@@ -8,6 +8,8 @@ for(const file of ['index.html','compact-v11/index.html']){
  assert.ok(s.includes("citycontrol://delete-home"),file+': native address deletion');
  assert.ok(!s.includes('fonts.googleapis.com'),file+': no external Google Font');
  assert.ok(s.includes('saveAddressLocallyButton'),file+': offline local address path');
+ assert.ok(s.includes('function refreshOnResume(){if(!document.hidden&&!state.demo&&!$(\'checkButton\').disabled)checkSources();}'),file+': refresh on each foreground return');
+ assert.ok(s.includes('Проверка: загружаем свежую городскую сводку'),file+': visible loading state');
  assert.ok(s.includes("method:'manual-map'"),file+': map-center user-selected coordinates');
  assert.ok(s.includes("const lookup=window.confirm("),file+': opt-in GPS reverse geocoding');
  assert.ok(s.includes("const consent=window.confirm("),file+': opt-in precise address geocoding');
