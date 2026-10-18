@@ -137,6 +137,11 @@ def main():
     data['events']=original_water+archived
     data['sources']=[s for s in data.get('sources',[]) if s.get('id') not in
        ('mchs','gas','power_planned','power_repost_rostov','power_repost_don','power_city','gas_city')]+power_states+municipal_states+[plan_state,gas_state,mchs_state]
+    # MAX official public channel: available as a link, but not yet as an API feed.
+    # GET /messages requires the bot to be channel administrator; do not fabricate posts.
+    data['sources']=[x for x in data['sources'] if x.get('id')!='city_max']
+    data['sources'].append(source('city_max','unavailable','https://max.ru/shakhtygorod',
+        posts=0,note='Официальный публичный канал найден; автоматический API-доступ требует назначения бота администратором. Сообщения MAX в сводку не загружались.'))
     data['checkedAt']=now.isoformat()
     data['schema']=2
     OUTPUT.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
