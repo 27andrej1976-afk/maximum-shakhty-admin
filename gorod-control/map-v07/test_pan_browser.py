@@ -11,7 +11,7 @@ from playwright.sync_api import sync_playwright
 import json
 
 REPO = Path(__file__).resolve().parents[2]
-ROOT = REPO.parent
+ROOT = REPO
 class QuietHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
