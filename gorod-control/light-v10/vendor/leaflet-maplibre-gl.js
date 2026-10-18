@@ -173,9 +173,16 @@
 
             L.DomUtil.setPosition(container, this._roundPoint(topLeft));
 
-            // The MapLibre v5 transform must be applied and its move events fired.
-            // Calling its old private _update/_resize path here leaves vector tiles
-            // stationary during a Leaflet pan (maplibre-gl-leaflet issue #64).
+            // React to real viewport size changes (Compact moves/resizes the map
+            // after initialization). Resize only if necessary, never on every pan.
+            // The public resize() updates MapLibre's projection/canvas dimensions.
+            if (gl.transform.width !== size.x || gl.transform.height !== size.y) {
+                container.style.width = size.x + 'px';
+                container.style.height = size.y + 'px';
+                if (typeof gl.resize === 'function') gl.resize();
+            }
+            // MapLibre v5 requires an applied transform + move event to render pans.
+            // Its old private _update/_resize path causes a frozen background (#64).
             this._transformGL(gl);
         },
 
