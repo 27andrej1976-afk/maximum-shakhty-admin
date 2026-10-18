@@ -31,3 +31,12 @@
 .cm-provider{font-size:9px;color:#657b8d;font-weight:700;white-space:nowrap;margin-left:auto}
 .leaflet-control-attribution{background:#ffffffed!important;color:#495866!important}
 .leaflet-control-attribution a{color:#346889!important}
+
+/* Attribution is shown above the map, rather than inside its bottom-right corner.
+   Do not remove the mandatory OpenStreetMap / OpenMapTiles credit. */
+.cm-map-source-credit{display:flex;align-items:center;flex-wrap:wrap;gap:5px 11px;margin-top:7px;line-height:1.45;font-size:10px;font-weight:650}
+.cm-map-source-credit a{color:#65788b;text-decoration:none;border-bottom:1px dotted #9caeba}
+.cm-map-source-credit a:hover,.cm-map-source-credit a:focus-visible{color:#0b8574;border-color:currentColor}
+.cm-map-source-credit a[hidden]{display:none!important}
+#map .leaflet-control-attribution,#map .maplibregl-ctrl-attrib{display:none!important}
+@media(max-width:760px){.cm-map-source-credit{font-size:9.5px;line-height:1.5;gap:4px 9px}}

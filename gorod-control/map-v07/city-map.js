@@ -216,12 +216,29 @@ function useRussianMapLabels(gl){
   return localized;
 }
 
+function removeCountryFlagSymbols(gl) {
+  if (!gl?.getStyle||!gl?.setLayoutProperty)return 0;
+  let hidden=0;
+  for(const layer of gl.getStyle().layers||[]){
+    if(layer.type!=='symbol')continue;
+    const icon=layer.layout?.['icon-image'];
+    if(!/(?:^|[_\s-])(?:flags?|national[-_]flag)(?:$|[_\s-])/i.test(layer.id)&&
+       !(icon!=null&&/flags?|national[-_]flag/i.test(JSON.stringify(icon))))continue;
+    try{gl.setLayoutProperty(layer.id,'visibility','none');hidden++;}catch(_ignored){}
+  }
+  return hidden;
+}
+function setMapCreditType(kind){
+  const tileCredit=$('mapCreditTiles');
+  if(tileCredit)tileCredit.hidden=kind!=='bright';
+}
 function setupBrightBasemap(leafletMap){
-  const credits='<a href="https://openfreemap.org/">OpenFreeMap</a> · © <a href="https://openmaptiles.org/">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+  // Required copyright credits are displayed above the map; no provider footer within the map.
   const osm=root.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',maxZoom:19
+    maxZoom:19
   }).addTo(leafletMap);
   activeBase='fallback';
+  setMapCreditType('fallback');
   const badge=$('mapStyleInfo');
   const note=message=>{if(badge)badge.textContent=message;};
   note('Светлая карта загружается…');
@@ -231,7 +248,7 @@ function setupBrightBasemap(leafletMap){
   let modern,gl,finished=false,failures=0;
   const giveUp=()=>{
     if(finished)return;
-    finished=true;activeBase='fallback';vectorBase=null;
+    finished=true;activeBase='fallback';vectorBase=null;setMapCreditType('fallback');
     if(modern&&leafletMap.hasLayer(modern))leafletMap.removeLayer(modern);
     note('Резервная карта');
   };
@@ -240,15 +257,14 @@ function setupBrightBasemap(leafletMap){
     modern.addTo(leafletMap);
     gl=modern.getMaplibreMap();
     if(!gl||typeof gl.on!=='function'){giveUp();return;}
-    const russian=()=>{try{useRussianMapLabels(gl);}catch(_ignored){}};
+    const russian=()=>{try{useRussianMapLabels(gl);removeCountryFlagSymbols(gl);}catch(_ignored){}};
     gl.on('style.load',russian);
     if(gl.isStyleLoaded?.())russian();
     gl.on('idle',()=>{
       if(finished)return;
       if(!gl.isStyleLoaded||!gl.isStyleLoaded())return;
       if(leafletMap.hasLayer(osm))leafletMap.removeLayer(osm);
-      leafletMap.attributionControl.addAttribution(credits);
-      finished=true;activeBase='bright';vectorBase=modern;note('Светлая карта · OpenFreeMap');
+      finished=true;activeBase='bright';vectorBase=modern;setMapCreditType('bright');note('Светлая карта · OpenFreeMap');
     });
     gl.on('error',()=>{failures++;if(failures>=5)giveUp();});
     setTimeout(()=>{if(!finished)giveUp();},16000);
@@ -260,6 +276,17 @@ function start(){
   if(mounted)return;mounted=true;
   const cardNode=document.querySelector('.map-card'),toolbar=document.querySelector('.map-toolbar');
   if(!cardNode||!toolbar)return;
+  // Source credit remains visible beside the map and links to original licenses.
+  // Only the default Leaflet/footer wording is removed, not the copyright notice.
+  const credit=el('div','cm-map-source-credit');credit.id='mapCredit';
+  const osm=el('a','','© OpenStreetMap');
+  osm.href='https://www.openstreetmap.org/copyright';
+  osm.rel='noopener noreferrer';osm.target='_blank';
+  const tiles=el('a','','© OpenMapTiles');
+  tiles.id='mapCreditTiles';tiles.hidden=true;
+  tiles.href='https://openmaptiles.org/';tiles.rel='noopener noreferrer';tiles.target='_blank';
+  credit.append(osm,tiles);
+  toolbar.firstElementChild.append(credit);
   const modes=el('div','cm-modes');
   const near=el('button','selected','⌂ Рядом со мной');near.id='cityNearButton';near.type='button';near.addEventListener('click',()=>setMode('near'));
   const city=el('button','','▦ Весь город');city.id='cityAllButton';city.type='button';city.addEventListener('click',()=>setMode('city'));
@@ -283,7 +310,7 @@ function start(){
   detail.addEventListener('click',ev=>{if(ev.target===detail){const r=detail.getBoundingClientRect();if(ev.clientX<r.left||ev.clientX>r.right||ev.clientY<r.top||ev.clientY>r.bottom)closeDetails();}});
   if(root.L){
     $('map').replaceChildren();const h=api.state.home||api.city;
-    map=root.L.map('map',{zoomControl:false}).setView([h.lat,h.lon],api.state.home?14:12);api.state.map=map;
+    map=root.L.map('map',{zoomControl:false,attributionControl:false}).setView([h.lat,h.lon],api.state.home?14:12);api.state.map=map;
     setupBrightBasemap(map);
     root.L.control.zoom({position:'bottomright'}).addTo(map);layer=root.L.layerGroup().addTo(map);homeLayer=root.L.layerGroup().addTo(map);
     map.on('zoomend',()=>{
@@ -297,5 +324,5 @@ function start(){
 }
 root.CityMapV07={configure,start,refresh,setMode,openDetails,core:{isCurrent,validPoint},
   inspect:()=>({mode,automatic,category,ids:visible().map(e=>e.id),allIds:allEvents().map(e=>e.id),zoom:map?.getZoom(),basemap:activeBase,mapped:visible().filter(e=>rows(e).length).length}),
-  getMap:()=>map,getVectorMap:()=>vectorBase?.getMaplibreMap()};
+  getMap:()=>map,getVectorMap:()=>vectorBase?.getMaplibreMap(),hideCountryFlags:removeCountryFlagSymbols};
 })(window);
