@@ -31,6 +31,16 @@ jobs:
         run: |
           SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)
           "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0"
+      - name: Restore pinned validated v0.8 parser
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin city-sources-v08
+          mkdir -p gorod-control/source-lab-v08
+          git show FETCH_HEAD:gorod-control/source-lab-v08/water_verified.py > gorod-control/source-lab-v08/water_verified.py
+          EXPECTED=a62034202ed9c17c0d7fff05dca533146389b735
+          ACTUAL=$(git hash-object gorod-control/source-lab-v08/water_verified.py)
+          test "$ACTUAL" = "$EXPECTED"
+          echo "Verified v0.8 parser restored: $ACTUAL"
       - name: Prepare tested 0.9 Android application
         run: python gorod-control/direct-v09/prepare.py
       - name: Create round launcher icon with actual city coat
