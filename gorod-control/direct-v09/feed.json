@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-18T20:29:59.374415+00:00",
+  "checkedAt": "2026-10-18T20:57:35.842049+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -96,7 +96,7 @@
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-18T20:29:59.374415+00:00",
+      "checkedAt": "2026-10-18T20:57:35.842049+00:00",
       "lastPostAt": null,
       "posts": 5,
       "matchingPosts": 3,
@@ -105,8 +105,8 @@
         "Заявок на 18.10.26 г нет"
       ],
       "tlsVerified": true,
-      "contentSha256": "5319207ab643bb7838b23ac2d06b5cc19b36c1332d37be0d5c06eaff83563df0",
-      "durationSeconds": 1.88
+      "contentSha256": "fbebf278225e4698b36d772dbbbb90b0290447610e7d24d9c587c95fe34b47c6",
+      "durationSeconds": 8.33
     }
   ],
   "events": [
@@ -163,7 +163,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-18T20:29:59.374415+00:00",
+      "observedAt": "2026-10-18T20:57:35.842049+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -227,7 +227,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-18T20:29:59.374415+00:00",
+      "observedAt": "2026-10-18T20:57:35.842049+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -278,7 +278,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-18T20:29:59.374415+00:00",
+      "observedAt": "2026-10-18T20:57:35.842049+00:00",
       "start": "2026-10-19T09:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
