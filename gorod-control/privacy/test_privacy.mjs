@@ -18,4 +18,17 @@ assert.ok(java.includes('"delete-home".equals(target.getHost())'));
 assert.ok(java.includes('request.isForMainFrame() && isTrustedPage(view.getUrl())'));
 assert.ok(java.includes('.remove("street").remove("house").apply()'));
 assert.ok(java.includes('No saved home: never keep a stale copy'));
+
+const manifest=readFileSync(root+'android/app/src/main/AndroidManifest.xml','utf8');
+assert.match(manifest,/android:allowBackup="false"/);
+assert.ok(!manifest.includes('android.permission.READ_CONTACTS'));
+assert.ok(!manifest.includes('android.permission.READ_EXTERNAL_STORAGE'));
+const worker=readFileSync(root+'android/app/src/main/java/ru/citycontrol/shakhty/WaterMonitorJobService.java','utf8');
+assert.ok(worker.includes('gorod-control/data/water.json'));
+assert.ok(worker.includes('getSharedPreferences("city-control-home",MODE_PRIVATE)'));
+assert.ok(!worker.includes('nominatim.openstreetmap.org'));
+const map=readFileSync(root+'map-v07/city-map.js','utf8');
+assert.ok(map.includes('https://tiles.openfreemap.org/styles/bright'));
+assert.ok(map.includes('https://tile.openstreetmap.org/{z}/{x}/{y}.png'));
+
 console.log('PASS privacy branch static checks: both interfaces and Android home deletion; no remote Google Fonts');
