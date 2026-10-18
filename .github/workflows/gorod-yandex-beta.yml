@@ -33,7 +33,7 @@ jobs:
           s=Path('gorod-control/yandex-v1/index.html').read_text()
           assert 'CityYandexV1.startWithFallback' in s
           assert 'https://api-maps.yandex.ru/v3/?apikey=' in Path('gorod-control/yandex-v1/yandex-bridge.js').read_text()
-          assert 'f2c07c7f-' not in s
+          assert 'YOUR_API_KEY' not in s
           print('Yandex beta contains only a runtime key entry, never a user key')
           PY
       - name: Install headless browser
