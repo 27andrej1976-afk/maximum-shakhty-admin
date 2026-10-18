@@ -487,6 +487,11 @@ function setupPrivacyControls(){
     if(!state.home)return toast('Сохранённого адреса нет.');
     if(!window.confirm('Удалить адрес и координаты с этого устройства?'))return;
     try{localStorage.removeItem(KEY)}catch{}
+    // The native Android notifier stores an independent street/house copy.
+    // Clear it immediately as well so deleted homes cannot trigger alerts.
+    if(/CityControlApp\//.test(navigator.userAgent)){
+      window.location.href='citycontrol://delete-home';
+    }
     state.home=null;
     paintHome();
     updateMap();
