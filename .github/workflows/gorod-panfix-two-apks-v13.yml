@@ -1,0 +1,147 @@
+name: City Control | PanFix v1.3 Classic and Compact APKs
+on:
+  workflow_dispatch:
+  push:
+    branches: [city-report-apk-panfix-v13]
+    paths:
+      - 'gorod-control/report-apks-v15/**'
+      - 'gorod-control/light-v10/vendor/leaflet-maplibre-gl.js'
+      - '.github/workflows/gorod-panfix-two-apks-v13.yml'
+permissions:
+  contents: write
+concurrency:
+  group: two-independent-report-apks-panfix-v13
+  cancel-in-progress: false
+jobs:
+  build_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [normal, compact]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CITY_VARIANT: ${{ matrix.variant }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Install SDK
+        run: |
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)
+          "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0"
+      - name: Recover pinned native parser, report patch, and existing compact UI
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin city-sources-v08
+          mkdir -p gorod-control/source-lab-v08
+          git show FETCH_HEAD:gorod-control/source-lab-v08/water_verified.py > gorod-control/source-lab-v08/water_verified.py
+          test "$(git hash-object gorod-control/source-lab-v08/water_verified.py)" = a62034202ed9c17c0d7fff05dca533146389b735
+          python -m py_compile gorod-control/report-apks-v15/*.py
+          node --check gorod-control/light-v10/vendor/leaflet-maplibre-gl.js
+          test "$(grep -c 'gl.transform.apply(tr)' gorod-control/light-v10/vendor/leaflet-maplibre-gl.js)" -ge 1
+          if [ "$CITY_VARIANT" = "compact" ]; then
+            git fetch --no-tags --depth=1 origin city-compact-apk-v11
+            mkdir -p gorod-control/compact-v11
+            for name in compact.js compact.css build_compact.py; do
+              git show "FETCH_HEAD:gorod-control/compact-v11/$name" > "gorod-control/compact-v11/$name"
+            done
+            node --check gorod-control/compact-v11/compact.js
+          fi
+      - name: Prepare app with corrected map, native GPS, existing feeds and report route
+        run: |
+          python gorod-control/direct-v09/prepare.py
+          python -m pip install --quiet pillow
+          python gorod-control/direct-v09/build_coat_icon.py
+          python gorod-control/report-apks-v15/prepare_variant.py
+      - name: Build variant
+        working-directory: gorod-control/android
+        run: gradle --no-daemon :app:assembleDebug
+      - name: Verify signature, city coat, vector map and unique package ID
+        run: |
+          set -euo pipefail
+          APK=gorod-control/android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep "package: name='ru.citycontrol.shakhty.$CITY_VARIANT""report'"
+          unzip -l "$APK" | grep 'res/drawable-nodpi-v4/coat_launcher.png'
+          unzip -l "$APK" | grep 'assets/web/light-v10/vendor/maplibre-gl.js'
+          mkdir -p /tmp/city-report-apk
+          if [ "$CITY_VARIANT" = "normal" ]; then
+            cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Classic-Reports-1.3-PanFix.apk
+          else
+            cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Reports-1.3-PanFix.apk
+          fi
+          sha256sum /tmp/city-report-apk/*.apk
+      - name: Enable virtualization
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Verify installation, map, GPS controls, complaint button on Android
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          script: |
+            python -m pip install --quiet websocket-client
+            python gorod-control/report-apks-v15/android_test.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-apk-${{ matrix.variant }}-android-results
+          path: two-apks-android-report/
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: panfix-v13-apk-${{ matrix.variant }}
+          path: /tmp/city-report-apk/*.apk
+          retention-days: 30
+
+  publish:
+    needs: build_test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: panfix-v13-apk-*
+          merge-multiple: true
+          path: /tmp/city-panfix-publish
+      - name: Publish both verified APKs without replacing previous installs or web sources
+        run: |
+          set -euo pipefail
+          DIR=/tmp/city-panfix-publish
+          test -s "$DIR/GorodPodKontrolem-Classic-Reports-1.3-PanFix.apk"
+          test -s "$DIR/GorodPodKontrolem-Compact-Reports-1.3-PanFix.apk"
+          sha256sum "$DIR"/*.apk
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git checkout -f -B city-panfix-apk-publish origin/main
+            mkdir -p gorod-control/report-apks-v15/downloads
+            cp "$DIR"/*.apk gorod-control/report-apks-v15/downloads/
+            (cd gorod-control/report-apks-v15/downloads && sha256sum *1.3-PanFix.apk > SHA256SUMS-panfix-1.3.txt)
+            git add gorod-control/report-apks-v15/downloads/
+            if git diff --cached --quiet; then echo 'Both APKs already current'; break; fi
+            git commit -m 'City Control: publish tested Classic and Compact panfixed APKs v1.3'
+            if git push origin HEAD:main; then echo 'PANFIX APKs PUBLISHED'; break; fi
+            if [ "$attempt" = 5 ]; then exit 1; fi
+            sleep 3
+          done
