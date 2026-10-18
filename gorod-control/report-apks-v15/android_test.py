@@ -76,7 +76,7 @@ else:
  check(evaluate("!document.querySelector('#compactNav')"),'Original UI remains original')
 check(evaluate("CityMapV07.getMap().dragging.enabled()"),'Leaflet map gestures are enabled')
 before=evaluate("JSON.stringify([CityMapV07.getMap().getCenter().lat,CityMapV07.getMap().getCenter().lng])")
-evaluate("CityMapV07.getMap().panBy([85,50],{animate:false})")
+evaluate("CityMapV07.getMap().panBy([85,50],{animate:false});true")
 time.sleep(1.2)
 after=evaluate("JSON.stringify([CityMapV07.getMap().getCenter().lat,CityMapV07.getMap().getCenter().lng])")
 check(before!=after,'Leaflet map moves when panned inside Android WebView')
