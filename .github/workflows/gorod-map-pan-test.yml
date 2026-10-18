@@ -6,6 +6,7 @@ on:
     paths:
       - 'gorod-control/light-v10/vendor/leaflet-maplibre-gl.js'
       - 'gorod-control/map-v07/test_pan_sync.mjs'
+      - 'gorod-control/map-v07/test_pan_browser.py'
       - '.github/workflows/gorod-map-pan-test.yml'
 permissions:
   contents: read
@@ -22,3 +23,24 @@ jobs:
           node --check gorod-control/map-v07/test_pan_sync.mjs
       - name: Verify vector basemap synchronization and both interface imports
         run: node gorod-control/map-v07/test_pan_sync.mjs
+
+  browser-pan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated browser test tools
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+      - name: Drag both map variants and compare vector/marker pixels
+        run: python gorod-control/map-v07/test_pan_browser.py
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: city-map-drag-debug
+          path: map-pan-failure*.png
+          if-no-files-found: ignore
