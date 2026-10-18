@@ -325,6 +325,8 @@ $('summaryCount').textContent=state.demo? `${all.length} тестовых соб
 async function checkSources(){
   if(state.demo){toast('Отключите тестовый режим для проверки официальных публикаций');return}
   $('checkButton').disabled=true;$('refreshIcon').textContent='…';
+  $('checkStamp').textContent='Проверка: загружаем свежую городскую сводку…';
+  $('sourceStatus').textContent='Проверяем опубликованные источники…';
   try{
     const r=await fetch('./data/water.json?_='+Date.now(),
       {headers:{'Accept':'application/json'},cache:'no-store',signal:AbortSignal.timeout(18000)});
@@ -334,6 +336,7 @@ async function checkSources(){
     state.checkedAt=data.checkedAt||null;
     state.sourceRecent=data.recent||[];
     state.checks=data.sources;
+    $('checkStamp').textContent='Проверка: сопоставляем сообщения с адресом…';
     const scanAge=Date.now()-Date.parse(state.checkedAt||0);
     const scanRecent=Number.isFinite(scanAge)&&scanAge>=0&&scanAge<4*3600000;
     const sourceById=Object.fromEntries(state.checks.map(s=>[s.id,s]));
