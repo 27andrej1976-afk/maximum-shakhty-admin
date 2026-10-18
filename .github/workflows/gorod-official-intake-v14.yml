@@ -1,0 +1,61 @@
+name: City Control | Official portal intake pilot v1.4
+on:
+  workflow_dispatch:
+  push:
+    branches: [city-official-intake-v14]
+    paths:
+      - 'gorod-control/official-intake-v14/**'
+      - '.github/workflows/gorod-official-intake-v14.yml'
+permissions:
+  contents: write
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify direct official submission link and no automatic unofficial dispatch
+        run: |
+          node --check gorod-control/official-intake-v14/router.js
+          python -m py_compile gorod-control/official-intake-v14/test_browser.py
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('gorod-control/official-intake-v14/router.js').read_text()
+          assert 'https://www.gosuslugi.ru/10091/1' in s
+          assert 'fetch(' not in s and 'XMLHttpRequest' not in s
+          assert 'НЕ ДОСТАВЛЕНО' in s
+          print('Official portal link in pilot; no false automatic delivery')
+          PY
+      - name: Install Chromium
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+      - name: Check all issue categories and report status
+        run: python gorod-control/official-intake-v14/test_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: city-official-intake-v14-tests
+          path: civic-routing-test-report/
+          if-no-files-found: warn
+      - name: Publish isolated pilot only
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/city-intake
+          cp gorod-control/official-intake-v14/index.html gorod-control/official-intake-v14/router.js /tmp/city-intake/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for i in 1 2 3; do
+            git fetch origin main
+            git checkout -f -B official-intake-publish origin/main
+            mkdir -p gorod-control/official-intake-v14
+            cp /tmp/city-intake/* gorod-control/official-intake-v14/
+            git add gorod-control/official-intake-v14/index.html gorod-control/official-intake-v14/router.js
+            if git diff --cached --quiet; then break; fi
+            git commit -m 'City Control: direct-link official government intake beta'
+            if git push origin HEAD:main; then echo 'OFFICIAL INTAKE PILOT PUBLISHED'; break; fi
+            if [ "$i" = 3 ]; then exit 1; fi
+          done
