@@ -95,6 +95,12 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+      - name: Restore Android smoke test from isolated development branch
+        run: |
+          git fetch --no-tags --depth=1 origin city-map-light-v10
+          mkdir -p gorod-control/light-v10
+          git show FETCH_HEAD:gorod-control/light-v10/android_sanity.py > gorod-control/light-v10/android_sanity.py
+          python -m py_compile gorod-control/light-v10/android_sanity.py
       - name: Install APK and verify map and city mode on Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
