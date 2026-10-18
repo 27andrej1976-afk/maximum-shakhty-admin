@@ -1,0 +1,91 @@
+name: City Control | Keyless bright city basemap v1.0
+on:
+  workflow_dispatch:
+  push:
+    branches: [city-map-light-v10]
+    paths:
+      - 'gorod-control/light-v10/**'
+      - '.github/workflows/gorod-light-v10.yml'
+permissions:
+  contents: write
+concurrency:
+  group: city-keyless-light-v10
+  cancel-in-progress: false
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download pinned open-source map engine and Leaflet adapter
+        run: |
+          python gorod-control/light-v10/build_vendor.py
+          cp -R gorod-control/light-v10/vendor gorod-control/light-v10/vendor-verified
+      - name: Apply light map to isolated checkout
+        run: |
+          python gorod-control/light-v10/apply.py
+          node --check gorod-control/map-v07/city-map.js
+          node --check gorod-control/light-v10/vendor/leaflet-maplibre-gl.js
+          node --check gorod-control/light-v10/vendor/maplibre-gl.js
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('gorod-control/index.html').read_text()
+          assert "https://api-maps.yandex.ru/" not in html
+          assert "city-map.js?v=1.0.0-light" in html
+          assert "light-v10/vendor/maplibre-gl.js" in html
+          print('No Yandex key or Yandex SDK required in the base map')
+          PY
+      - name: Run existing back-end and frontend address regression checks
+        run: |
+          python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
+          node gorod-control/scripts/test_frontend.mjs
+      - name: Install browser test runner
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+      - name: Test actual vector basemap, incidents, city mode and OSM fallback
+        run: python gorod-control/light-v10/test_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: city-control-light-map-browser-report
+          path: light-map-test-report/
+          if-no-files-found: warn
+      - name: Publish only map view and bundled map library after checks
+        run: |
+          set -euo pipefail
+          BASE_INDEX=$(git rev-parse HEAD:gorod-control/index.html)
+          BASE_MAP=$(git rev-parse HEAD:gorod-control/map-v07/city-map.js)
+          BASE_CSS=$(git rev-parse HEAD:gorod-control/map-v07/city-map.css)
+          mkdir -p /tmp/city-light-ready
+          cp gorod-control/index.html /tmp/city-light-ready/index.html
+          cp gorod-control/map-v07/city-map.js /tmp/city-light-ready/city-map.js
+          cp gorod-control/map-v07/city-map.css /tmp/city-light-ready/city-map.css
+          cp -R gorod-control/light-v10/vendor /tmp/city-light-ready/vendor
+          git restore --worktree gorod-control/index.html gorod-control/map-v07/city-map.js gorod-control/map-v07/city-map.css
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            if [ "$(git rev-parse origin/main:gorod-control/index.html)" != "$BASE_INDEX" ] ||
+               [ "$(git rev-parse origin/main:gorod-control/map-v07/city-map.js)" != "$BASE_MAP" ] ||
+               [ "$(git rev-parse origin/main:gorod-control/map-v07/city-map.css)" != "$BASE_CSS" ]; then
+              echo 'Existing map changed concurrently. Refuse to overwrite.'
+              exit 1
+            fi
+            git checkout -f -B publish-light-v10 origin/main
+            mkdir -p gorod-control/light-v10/vendor
+            cp /tmp/city-light-ready/index.html gorod-control/index.html
+            cp /tmp/city-light-ready/city-map.js gorod-control/map-v07/city-map.js
+            cp /tmp/city-light-ready/city-map.css gorod-control/map-v07/city-map.css
+            cp -R /tmp/city-light-ready/vendor/. gorod-control/light-v10/vendor/
+            git add gorod-control/index.html gorod-control/map-v07/city-map.js gorod-control/map-v07/city-map.css gorod-control/light-v10/vendor
+            if git diff --cached --quiet; then echo 'Bright map already published'; break; fi
+            git commit -m 'City Control v1.0: keyless bright OpenFreeMap basemap and OSM fallback'
+            if git push origin HEAD:main; then echo 'BRIGHT CITY MAP PUBLISHED'; break; fi
+            if [ "$attempt" = 4 ]; then exit 1; fi
+            sleep 2
+          done
