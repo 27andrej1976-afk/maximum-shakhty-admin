@@ -6,7 +6,6 @@ on:
     paths:
       - 'gorod-control/report-apks-v15/**'
       - 'gorod-control/light-v10/vendor/leaflet-maplibre-gl.js'
-      - '.github/workflows/gorod-panfix-two-apks-v13.yml'
 permissions:
   contents: write
 concurrency:
@@ -98,17 +97,25 @@ jobs:
             python -m pip install --quiet websocket-client
             python gorod-control/report-apks-v15/android_test.py
       - uses: actions/upload-artifact@v4
+        id: optional_archive_1
+        continue-on-error: true
         if: always()
         with:
+          retention-days: 7
           name: report-apk-${{ matrix.variant }}-android-results
           path: two-apks-android-report/
           if-no-files-found: warn
+      - name: Report unavailable optional archive 1
+        if: ${{ always() && steps.optional_archive_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: success()
         with:
+          retention-days: 14
           name: panfix-v13-apk-${{ matrix.variant }}
           path: /tmp/city-report-apk/*.apk
-          retention-days: 30
 
   publish:
     needs: build_test
