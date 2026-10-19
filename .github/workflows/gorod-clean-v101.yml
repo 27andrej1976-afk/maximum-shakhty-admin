@@ -5,7 +5,6 @@ on:
     branches: [city-map-no-flags-v101]
     paths:
       - 'gorod-control/clean-v101/**'
-      - '.github/workflows/gorod-clean-v101.yml'
 permissions:
   contents: write
 concurrency:
@@ -47,10 +46,18 @@ jobs:
       - name: Save screenshots and evidence
         if: always()
         uses: actions/upload-artifact@v4
+        id: optional_archive_1
+        continue-on-error: true
         with:
+          retention-days: 7
           name: clean-map-v101-browser-report
           path: clean-map-test-report/
           if-no-files-found: warn
+      - name: Report unavailable optional archive 1
+        if: ${{ always() && steps.optional_archive_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
       - name: Publish ONLY map UI with validated copyright above map
         run: |
           set -euo pipefail
@@ -184,11 +191,19 @@ jobs:
             python -m pip install --quiet websocket-client
             python gorod-control/clean-v101/android_sanity.py
       - uses: actions/upload-artifact@v4
+        id: optional_archive_2
+        continue-on-error: true
         if: always()
         with:
+          retention-days: 7
           name: city-clean-v101-android-report
           path: clean-android-test-report/
           if-no-files-found: warn
+      - name: Report unavailable optional archive 2
+        if: ${{ always() && steps.optional_archive_2.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
       - name: Publish new tested separate APK
         run: |
           set -euo pipefail
