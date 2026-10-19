@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-19T08:02:12.320233+00:00",
+  "checkedAt": "2026-10-19T08:42:52.042243+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,7 +12,7 @@
       "lastPostAt": "2026-10-17T13:45:11+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "repost_rostov",
@@ -21,7 +21,7 @@
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "repost_don",
@@ -30,7 +30,7 @@
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "power_repost_rostov",
@@ -40,7 +40,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "power_repost_don",
@@ -50,7 +50,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "power_city",
@@ -60,7 +60,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "gas_city",
@@ -70,7 +70,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "gas",
@@ -79,7 +79,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "mchs",
@@ -89,24 +89,22 @@
       "matchingPosts": 1,
       "lastPostAt": "2026-10-19T06:00:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-10-19T07:34:19.581906+00:00"
+      "checkedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-19T08:02:12.320233+00:00",
+      "checkedAt": "2026-10-19T08:42:52.042243+00:00",
       "lastPostAt": null,
       "posts": 5,
-      "matchingPosts": 3,
+      "matchingPosts": 5,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
-      "noPlannedWorkNotices": [
-        "Заявок на 18.10.26 г нет"
-      ],
+      "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "cf7c7a485b2d5b7832f18a3fa016283f087911aaf44208de9f0e191c0146d6f0",
-      "durationSeconds": 1.69
+      "contentSha256": "9441a3a48b8192ff0a77cb79f2fc68d7fc8a235bff8b82d815905e8fbb6ab198",
+      "durationSeconds": 1.49
     }
   ],
   "events": [
@@ -129,7 +127,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-10-19T07:34:19.581906+00:00"
+      "observedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "mchs-58d67274dc8bca3e2c",
@@ -150,7 +148,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-10-19T07:34:19.581906+00:00"
+      "observedAt": "2026-10-19T08:17:09.180722+00:00"
     },
     {
       "id": "power-direct-4867da448a3317e987",
@@ -163,7 +161,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-19T08:02:12.320233+00:00",
+      "observedAt": "2026-10-19T08:42:52.042243+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -227,7 +225,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-19T08:02:12.320233+00:00",
+      "observedAt": "2026-10-19T08:42:52.042243+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -278,7 +276,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-19T08:02:12.320233+00:00",
+      "observedAt": "2026-10-19T08:42:52.042243+00:00",
       "start": "2026-10-19T09:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -517,6 +515,117 @@
           "street": "ул. Ползунова",
           "houses": [
             "2-24"
+          ]
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street"
+    },
+    {
+      "id": "power-direct-41e24fe83c42f9e3ad",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-10-19T08:42:52.042243+00:00",
+      "start": "2026-10-20T13:00:00+03:00",
+      "end": "2026-10-20T17:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Техническое обслуживание ТП-292",
+      "fullText": "г. Шахты\nпер. Продольный 2-2 Б;\nул. Северная 5-27, 2-20;\nул. Даниловского 39-67, 18-40\n20.10.26 13=00 — 20.10.26 17=00\nТехническое обслуживание ТП-292\n",
+      "affected": [
+        {
+          "street": "пер. Продольный 2-2 Б",
+          "houses": []
+        },
+        {
+          "street": "ул. Северная",
+          "houses": [
+            "5-27",
+            "2-20"
+          ]
+        },
+        {
+          "street": "ул. Даниловского",
+          "houses": [
+            "39-67",
+            "18-40"
+          ]
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street"
+    },
+    {
+      "id": "power-direct-a10cc7da394f5dcfb5",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-10-19T08:42:52.042243+00:00",
+      "start": "2026-10-20T09:00:00+03:00",
+      "end": "2026-10-20T14:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Техническое обслуживание ТП-11",
+      "fullText": "г. Шахты\nул. Ленина 221-256, 258-282;\nул. Советская 281-291, 226-270;\nпер. 2 Милиционный 25-35, 34-62;\nул. Селянская 2;\nпер. 1 Милиционный 61-69, 36-42;\nул. Пролетарская 231-251, 258-284\n20.10.26 09=00 — 20.10.26 14=00\nТехническое обслуживание ТП-11\n",
+      "affected": [
+        {
+          "street": "ул. Ленина",
+          "houses": [
+            "221-256",
+            "258-282"
+          ]
+        },
+        {
+          "street": "ул. Советская",
+          "houses": [
+            "281-291",
+            "226-270"
+          ]
+        },
+        {
+          "street": "пер. 2 Милиционный",
+          "houses": [
+            "25-35",
+            "34-62"
+          ]
+        },
+        {
+          "street": "ул. Селянская",
+          "houses": [
+            "2"
+          ]
+        },
+        {
+          "street": "пер. 1 Милиционный",
+          "houses": [
+            "61-69",
+            "36-42"
+          ]
+        },
+        {
+          "street": "ул. Пролетарская",
+          "houses": [
+            "231-251",
+            "258-284"
           ]
         }
       ],
