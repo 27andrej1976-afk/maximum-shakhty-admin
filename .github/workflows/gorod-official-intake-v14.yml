@@ -5,7 +5,6 @@ on:
     branches: [city-official-intake-v14]
     paths:
       - 'gorod-control/official-intake-v14/**'
-      - '.github/workflows/gorod-official-intake-v14.yml'
 permissions:
   contents: write
 jobs:
@@ -36,11 +35,19 @@ jobs:
       - name: Check all issue categories and report status
         run: python gorod-control/official-intake-v14/test_browser.py
       - uses: actions/upload-artifact@v4
+        id: optional_archive_1
+        continue-on-error: true
         if: always()
         with:
+          retention-days: 7
           name: city-official-intake-v14-tests
           path: civic-routing-test-report/
           if-no-files-found: warn
+      - name: Report unavailable optional archive 1
+        if: ${{ always() && steps.optional_archive_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
       - name: Publish isolated pilot only
         run: |
           set -euo pipefail
