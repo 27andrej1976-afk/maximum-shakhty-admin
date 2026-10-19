@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-19T21:49:33.540690+00:00",
+  "checkedAt": "2026-10-19T22:14:17.895791+00:00",
   "sources": [
     {
       "id": "city",
@@ -38,12 +38,10 @@
     },
     {
       "id": "power_repost_don",
-      "status": "partial",
+      "status": "error",
       "url": "https://news-don.ru/rss.xml",
-      "posts": 200,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
+      "posts": 0,
+      "note": "Нет доступа к RSS: <urlopen error timed out>"
     },
     {
       "id": "power_city",
