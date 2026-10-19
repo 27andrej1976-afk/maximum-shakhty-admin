@@ -1,0 +1,18 @@
+--- a/.github/workflows/gorod-compact-v11.yml
++++ b/.github/workflows/gorod-compact-v11.yml
+@@ -55,6 +55,7 @@
+         if: always()
+         uses: actions/upload-artifact@v4
+         with:
++          retention-days: 7
+           name: city-compact-v11-browser-report
+           path: compact-browser-report/
+           if-no-files-found: warn
+@@ -184,6 +185,7 @@
+       - uses: actions/upload-artifact@v4
+         if: always()
+         with:
++          retention-days: 7
+           name: city-compact-v11-android-report
+           path: compact-android-test-report/
+           if-no-files-found: warn

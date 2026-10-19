@@ -1,0 +1,10 @@
+--- a/.github/workflows/gorod-map-pan-test.yml
++++ b/.github/workflows/gorod-map-pan-test.yml
+@@ -41,6 +41,7 @@
+       - uses: actions/upload-artifact@v4
+         if: failure()
+         with:
++          retention-days: 7
+           name: city-map-drag-debug
+           path: map-pan-failure*.png
+           if-no-files-found: ignore

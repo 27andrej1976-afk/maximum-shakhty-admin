@@ -1,0 +1,10 @@
+--- a/.github/workflows/gorod-official-intake-v14.yml
++++ b/.github/workflows/gorod-official-intake-v14.yml
+@@ -38,6 +38,7 @@
+       - uses: actions/upload-artifact@v4
+         if: always()
+         with:
++          retention-days: 7
+           name: city-official-intake-v14-tests
+           path: civic-routing-test-report/
+           if-no-files-found: warn

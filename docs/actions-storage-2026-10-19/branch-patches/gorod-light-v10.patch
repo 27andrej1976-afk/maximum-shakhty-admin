@@ -1,0 +1,10 @@
+--- a/.github/workflows/gorod-light-v10.yml
++++ b/.github/workflows/gorod-light-v10.yml
+@@ -51,6 +51,7 @@
+       - uses: actions/upload-artifact@v4
+         if: always()
+         with:
++          retention-days: 7
+           name: city-control-light-map-browser-report
+           path: light-map-test-report/
+           if-no-files-found: warn

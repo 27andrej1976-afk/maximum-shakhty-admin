@@ -1,0 +1,10 @@
+--- a/.github/workflows/gorod-reports-v12.yml
++++ b/.github/workflows/gorod-reports-v12.yml
+@@ -43,6 +43,7 @@
+         run: python gorod-control/reports-pilot-v12/test_browser.py
+       - uses: actions/upload-artifact@v4
+         with:
++          retention-days: 7
+           name: civic-routing-pilot-v12-results
+           path: civic-routing-test-report/
+       - name: Publish only standalone pilot, never modify original app or APK

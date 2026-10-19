@@ -1,0 +1,10 @@
+--- a/.github/workflows/gorod-two-report-apks-v15.yml
++++ b/.github/workflows/gorod-two-report-apks-v15.yml
+@@ -104,6 +104,7 @@
+       - uses: actions/upload-artifact@v4
+         if: always()
+         with:
++          retention-days: 7
+           name: report-apk-${{ matrix.variant }}-android-results
+           path: two-apks-android-report/
+           if-no-files-found: warn

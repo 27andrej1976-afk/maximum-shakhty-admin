@@ -1,0 +1,10 @@
+--- a/.github/workflows/gorod-map-v07.yml
++++ b/.github/workflows/gorod-map-v07.yml
+@@ -42,6 +42,7 @@
+         if: always()
+         uses: actions/upload-artifact@v4
+         with:
++          retention-days: 7
+           name: city-map-v07-browser-report
+           path: city-map-test-report
+           if-no-files-found: warn

@@ -1,0 +1,18 @@
+--- a/.github/workflows/gorod-clean-v101.yml
++++ b/.github/workflows/gorod-clean-v101.yml
+@@ -48,6 +48,7 @@
+         if: always()
+         uses: actions/upload-artifact@v4
+         with:
++          retention-days: 7
+           name: clean-map-v101-browser-report
+           path: clean-map-test-report/
+           if-no-files-found: warn
+@@ -186,6 +187,7 @@
+       - uses: actions/upload-artifact@v4
+         if: always()
+         with:
++          retention-days: 7
+           name: city-clean-v101-android-report
+           path: clean-android-test-report/
+           if-no-files-found: warn
