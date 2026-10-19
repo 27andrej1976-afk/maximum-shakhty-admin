@@ -2910,10 +2910,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:янтарный": {
-      "timestamp": 1792364084.910386,
+      "timestamp": 1792450916.208419,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:громова": {
