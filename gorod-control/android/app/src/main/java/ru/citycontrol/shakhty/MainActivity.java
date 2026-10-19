@@ -76,6 +76,13 @@ public final class MainActivity extends Activity {
           if(request.isForMainFrame() && isTrustedPage(view.getUrl()))startNativeGPS();
           return true;
         }
+        if("citycontrol".equals(target.getScheme()) && "delete-home".equals(target.getHost())){
+          if(request.isForMainFrame() && isTrustedPage(view.getUrl())){
+            getSharedPreferences("city-control-home",MODE_PRIVATE).edit()
+              .remove("street").remove("house").apply();
+          }
+          return true;
+        }
         if("citycontrol".equals(target.getScheme()) && "test-notification".equals(target.getHost())){
           if(view.getUrl()!=null && view.getUrl().startsWith(URL)){
             if(!WaterMonitorJobService.showTestNotification(MainActivity.this)){
@@ -197,7 +204,12 @@ public final class MainActivity extends Activity {
     web.evaluateJavascript("window.localStorage.getItem('gorod_control_home_v1')",value->{
       try{
         Object decoded=new JSONTokener(value).nextValue();
-        if(!(decoded instanceof String))return;
+        if(!(decoded instanceof String)){
+          // No saved home: never keep a stale copy for the background notifier.
+          getSharedPreferences("city-control-home",MODE_PRIVATE).edit()
+            .remove("street").remove("house").apply();
+          return;
+        }
         JSONObject item=new JSONObject((String)decoded);
         String street=item.optString("street","").trim();
         String house=item.optString("house","").trim();

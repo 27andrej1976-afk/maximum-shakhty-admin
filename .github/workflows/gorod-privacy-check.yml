@@ -1,0 +1,20 @@
+name: City privacy | isolated static verification
+on:
+  workflow_dispatch:
+  push:
+    branches: [privacy-hardening-2026-10-18]
+    paths:
+      - 'gorod-control/index.html'
+      - 'gorod-control/compact-v11/index.html'
+      - 'gorod-control/android/app/src/main/java/ru/citycontrol/shakhty/MainActivity.java'
+      - 'gorod-control/privacy/test_privacy.mjs'
+      - '.github/workflows/gorod-privacy-check.yml'
+permissions:
+  contents: read
+jobs:
+  privacy-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: node gorod-control/privacy/test_privacy.mjs
