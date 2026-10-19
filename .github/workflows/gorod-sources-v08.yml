@@ -5,7 +5,6 @@ on:
     branches: [city-sources-v08]
     paths:
       - 'gorod-control/source-lab-v08/**'
-      - '.github/workflows/gorod-sources-v08.yml'
 permissions:
   contents: read
 concurrency:
@@ -42,8 +41,15 @@ jobs:
       - name: Save evidence, test results and candidate sources
         if: always()
         uses: actions/upload-artifact@v4
+        id: optional_archive_1
+        continue-on-error: true
         with:
+          retention-days: 7
           name: city-sources-v08-audit
           path: gorod-control/source-lab-v08/report
-          retention-days: 7
           if-no-files-found: error
+      - name: Report unavailable optional archive 1
+        if: ${{ always() && steps.optional_archive_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
