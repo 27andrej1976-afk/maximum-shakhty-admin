@@ -6,7 +6,6 @@ on:
     paths:
       - 'gorod-control/light-v10/ru_labels.py'
       - 'gorod-control/light-v10/test_ru.py'
-      - '.github/workflows/gorod-light-ru.yml'
 permissions:
   contents: write
 concurrency:
@@ -48,11 +47,19 @@ jobs:
       - name: Verify real Cyrillic vector text on map
         run: python gorod-control/light-v10/test_ru.py
       - uses: actions/upload-artifact@v4
+        id: optional_archive_1
+        continue-on-error: true
         if: always()
         with:
+          retention-days: 7
           name: light-city-map-russian-labels-preview
           path: light-map-ru-test-report/
           if-no-files-found: warn
+      - name: Report unavailable optional archive 1
+        if: ${{ always() && steps.optional_archive_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
       - name: Publish only verified localized map JS and cache-busted index
         run: |
           set -euo pipefail

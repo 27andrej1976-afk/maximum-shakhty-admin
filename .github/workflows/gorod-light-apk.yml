@@ -4,7 +4,6 @@ on:
   push:
     branches: [city-map-light-v10]
     paths:
-      - '.github/workflows/gorod-light-apk.yml'
       - 'gorod-control/light-v10/android_sanity.py'
 permissions:
   contents: write
@@ -114,11 +113,19 @@ jobs:
             python -m pip install --quiet websocket-client
             python gorod-control/light-v10/android_sanity.py
       - uses: actions/upload-artifact@v4
+        id: optional_archive_1
+        continue-on-error: true
         if: always()
         with:
+          retention-days: 7
           name: city-light-v10-android-test-report
           path: light-android-test-report/
           if-no-files-found: warn
+      - name: Report unavailable optional archive 1
+        if: ${{ always() && steps.optional_archive_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
       - name: Publish only successfully installed independent light APK
         run: |
           set -euo pipefail

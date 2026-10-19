@@ -5,7 +5,6 @@ on:
     branches: [city-map-light-v10]
     paths:
       - 'gorod-control/light-v10/**'
-      - '.github/workflows/gorod-light-v10.yml'
 permissions:
   contents: write
 concurrency:
@@ -49,11 +48,19 @@ jobs:
       - name: Test actual vector basemap, incidents, city mode and OSM fallback
         run: python gorod-control/light-v10/test_browser.py
       - uses: actions/upload-artifact@v4
+        id: optional_archive_1
+        continue-on-error: true
         if: always()
         with:
+          retention-days: 7
           name: city-control-light-map-browser-report
           path: light-map-test-report/
           if-no-files-found: warn
+      - name: Report unavailable optional archive 1
+        if: ${{ always() && steps.optional_archive_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
       - name: Publish only map view and bundled map library after checks
         run: |
           set -euo pipefail
