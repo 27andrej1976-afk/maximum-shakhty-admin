@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - 'gorod-control/android/**'
-      - '.github/workflows/gorod-apk.yml'
 permissions:
   contents: write
 concurrency:
@@ -77,6 +76,15 @@ jobs:
           done
       - name: Upload verified APK build artifact
         uses: actions/upload-artifact@v4
+        id: optional_artifact_1
+        continue-on-error: true
         with:
+          retention-days: 14
           name: gorod-control-shakhty-test-apk
           path: /tmp/gorod-control-test.apk
+      - name: Report unavailable optional artifact 1
+        if: ${{ always() && steps.optional_artifact_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional Actions archive was not saved. Check the artifact upload log; APK publication and validation steps remain authoritative."
+          echo "Optional Actions archive was not saved. Check upload logs. Installable APKs remain at their existing repository download paths; validation failures are not ignored." >> "$GITHUB_STEP_SUMMARY"
+

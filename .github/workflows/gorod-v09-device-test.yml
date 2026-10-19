@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/gorod-v09-device-test.yml'
       - 'gorod-control/direct-v09/emulator_check.py'
 permissions:
   contents: read
@@ -41,8 +40,16 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: python gorod-control/direct-v09/emulator_check.py
       - uses: actions/upload-artifact@v4
+        id: optional_artifact_1
+        continue-on-error: true
         if: always()
         with:
+          retention-days: 7
           name: city-v09-android-device-report
           path: android-device-report
-          retention-days: 7
+      - name: Report unavailable optional artifact 1
+        if: ${{ always() && steps.optional_artifact_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional Actions archive was not saved. Check the artifact upload log; APK publication and validation steps remain authoritative."
+          echo "Optional Actions archive was not saved. Check upload logs. Installable APKs remain at their existing repository download paths; validation failures are not ignored." >> "$GITHUB_STEP_SUMMARY"
+

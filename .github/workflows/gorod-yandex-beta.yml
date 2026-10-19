@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/gorod-yandex-beta.yml'
       - 'gorod-control/yandex-v1/yandex-bridge.js'
       - 'gorod-control/yandex-v1/yandex.css'
       - 'gorod-control/yandex-v1/build_preview.py'
@@ -43,10 +42,19 @@ jobs:
       - name: Test mobile UI both in fallback and mocked Yandex API
         run: python gorod-control/yandex-v1/test_browser.py
       - uses: actions/upload-artifact@v4
+        id: optional_artifact_1
+        continue-on-error: true
         with:
+          retention-days: 7
           name: city-yandex-beta-browser-report
           path: gorod-control/yandex-v1/test-report/
           if-no-files-found: error
+      - name: Report unavailable optional artifact 1
+        if: ${{ always() && steps.optional_artifact_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional Actions archive was not saved. Check the artifact upload log; APK publication and validation steps remain authoritative."
+          echo "Optional Actions archive was not saved. Check upload logs. Installable APKs remain at their existing repository download paths; validation failures are not ignored." >> "$GITHUB_STEP_SUMMARY"
+
       - name: Publish only beta preview, never the live application
         run: |
           set -euo pipefail
@@ -152,7 +160,16 @@ jobs:
             sleep 3
           done
       - uses: actions/upload-artifact@v4
+        id: optional_artifact_2
+        continue-on-error: true
         with:
+          retention-days: 14
           name: city-yandex-beta-installable-apk
           path: /tmp/yandex-beta-apk/*.apk
           if-no-files-found: error
+      - name: Report unavailable optional artifact 2
+        if: ${{ always() && steps.optional_artifact_2.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional Actions archive was not saved. Check the artifact upload log; APK publication and validation steps remain authoritative."
+          echo "Optional Actions archive was not saved. Check upload logs. Installable APKs remain at their existing repository download paths; validation failures are not ignored." >> "$GITHUB_STEP_SUMMARY"
+
