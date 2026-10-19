@@ -5,7 +5,6 @@ on:
     branches: [city-reports-pilot-v12]
     paths:
       - 'gorod-control/reports-pilot-v12/**'
-      - '.github/workflows/gorod-reports-v12.yml'
 permissions:
   contents: write
 concurrency:
@@ -42,9 +41,17 @@ jobs:
       - name: Test correct routing, false receipt prevention, phone links and mobile UI
         run: python gorod-control/reports-pilot-v12/test_browser.py
       - uses: actions/upload-artifact@v4
+        id: optional_archive_1
+        continue-on-error: true
         with:
+          retention-days: 7
           name: civic-routing-pilot-v12-results
           path: civic-routing-test-report/
+      - name: Report unavailable optional archive 1
+        if: ${{ always() && steps.optional_archive_1.outcome == 'failure' }}
+        run: |
+          echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
+          echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
       - name: Publish only standalone pilot, never modify original app or APK
         run: |
           set -euo pipefail
