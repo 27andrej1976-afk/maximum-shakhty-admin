@@ -173,24 +173,17 @@
 
             L.DomUtil.setPosition(container, this._roundPoint(topLeft));
 
-            this._transformGL(gl);
-
+            // React to real viewport size changes (Compact moves/resizes the map
+            // after initialization). Resize only if necessary, never on every pan.
+            // The public resize() updates MapLibre's projection/canvas dimensions.
             if (gl.transform.width !== size.x || gl.transform.height !== size.y) {
-                container.style.width  = size.x + 'px';
+                container.style.width = size.x + 'px';
                 container.style.height = size.y + 'px';
-                if (gl._resize !== null && gl._resize !== undefined){
-                    gl._resize();
-                } else {
-                    gl.resize();
-                }
-            } else {
-                // older versions of mapbox-gl surfaced update publicly
-                if (gl._update !== null && gl._update !== undefined){
-                    gl._update();
-                } else {
-                    gl.update();
-                }
+                if (typeof gl.resize === 'function') gl.resize();
             }
+            // MapLibre v5 requires an applied transform + move event to render pans.
+            // Its old private _update/_resize path causes a frozen background (#64).
+            this._transformGL(gl);
         },
 
         _transformGL: function (gl) {
@@ -199,9 +192,18 @@
             // gl.setView([center.lat, center.lng], this._map.getZoom() - 1, 0);
             // calling setView directly causes sync issues because it uses requestAnimFrame
 
-            var tr = gl.transform;
-            tr.center = maplibregl.LngLat.convert([center.lng, center.lat]);
-            tr.zoom = this._map.getZoom() - 1;
+            var tr = gl._getTransformForUpdate ? gl._getTransformForUpdate() : gl.transform;
+            if (typeof tr.setCenter === 'function' && typeof tr.setZoom === 'function') {
+                // MapLibre GL JS v5: direct writes to center/zoom no longer redraw.
+                tr.setCenter(maplibregl.LngLat.convert([center.lng, center.lat]));
+                tr.setZoom(this._map.getZoom() - 1);
+                gl.transform.apply(tr);
+            } else {
+                // Compatibility with the earlier MapLibre transform.
+                tr.center = maplibregl.LngLat.convert([center.lng, center.lat]);
+                tr.zoom = this._map.getZoom() - 1;
+            }
+            if (typeof gl._fireMoveEvents === 'function') gl._fireMoveEvents();
         },
 
         // update the map constantly during a pinch zoom
