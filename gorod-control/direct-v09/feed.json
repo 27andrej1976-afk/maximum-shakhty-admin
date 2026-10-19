@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-19T19:20:28.178617+00:00",
+  "checkedAt": "2026-10-19T20:05:03.084317+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,7 +12,7 @@
       "lastPostAt": "2026-10-17T13:45:11+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "repost_rostov",
@@ -21,7 +21,7 @@
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "repost_don",
@@ -30,7 +30,7 @@
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "power_repost_rostov",
@@ -40,7 +40,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "power_repost_don",
@@ -50,7 +50,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "power_city",
@@ -60,7 +60,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "gas_city",
@@ -70,7 +70,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "gas",
@@ -79,7 +79,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "mchs",
@@ -89,22 +89,22 @@
       "matchingPosts": 1,
       "lastPostAt": "2026-10-19T20:00:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-10-19T19:02:12.940126+00:00"
+      "checkedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-19T19:20:28.178617+00:00",
+      "checkedAt": "2026-10-19T20:05:03.084317+00:00",
       "lastPostAt": null,
       "posts": 5,
       "matchingPosts": 5,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "468930dc0d1fdc1d27ee931141c7dfc95e258bd2014c3f4302195a2338e85e25",
-      "durationSeconds": 1.76
+      "contentSha256": "c063b10285b38c6ad7a9adee14804ce9d422cf85c72a3d6b0ed41fbf6419ab29",
+      "durationSeconds": 4.33
     }
   ],
   "events": [
@@ -127,7 +127,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-10-19T19:02:12.940126+00:00"
+      "observedAt": "2026-10-19T19:33:48.438838+00:00"
     },
     {
       "id": "power-direct-4867da448a3317e987",
@@ -140,7 +140,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-19T19:20:28.178617+00:00",
+      "observedAt": "2026-10-19T20:05:03.084317+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -204,7 +204,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-19T19:20:28.178617+00:00",
+      "observedAt": "2026-10-19T20:05:03.084317+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -255,7 +255,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-19T19:20:28.178617+00:00",
+      "observedAt": "2026-10-19T20:05:03.084317+00:00",
       "start": "2026-10-19T09:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -513,7 +513,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-19T19:20:28.178617+00:00",
+      "observedAt": "2026-10-19T20:05:03.084317+00:00",
       "start": "2026-10-20T13:00:00+03:00",
       "end": "2026-10-20T17:00:00+03:00",
       "startBasis": "explicit",
@@ -557,7 +557,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-19T19:20:28.178617+00:00",
+      "observedAt": "2026-10-19T20:05:03.084317+00:00",
       "start": "2026-10-20T09:00:00+03:00",
       "end": "2026-10-20T14:00:00+03:00",
       "startBasis": "explicit",
