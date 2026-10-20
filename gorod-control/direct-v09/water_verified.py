@@ -59,11 +59,11 @@ def extract_areas(text):
             if not line:continue
         elif re.search(r'водоснабжение\s+поселков\s*:',line,re.I):
             settlements=True;continue
-        elif re.search(r'(?:в направлении|по следующим улицам|по адресам)\s*:',line,re.I):
-            active=True;line=line.split(':',1)[1].strip()
+        elif re.search(r'(?:в направлении(?: улиц)?|в следующих направлениях|по следующим улицам|по адресам)\s*:',line,re.I):
+            active=True;line=re.split(r'(?:в направлении(?: улиц)?|в следующих направлениях|по следующим улицам|по адресам)\s*:',line,maxsplit=1,flags=re.I)[1].strip()
             if not line:continue
         if not active and not settlements:continue
-        if re.match(r'^(?:ℹ|🔗|🔧|Подробност|Подробнее|Ориентировоч|По завершени|Просим|Подвоз|Телефон|Источник|Причина)',line,re.I):break
+        if re.match(r'^(?:ℹ|🔗|🔧|Подробност|Подробнее|Ориентировоч|По завершени|Просим|Подвоз|Организован|Телефон|Источник|Причина)',line,re.I):break
         if not line:continue
         line=re.sub(r'^(?:г\.?\s*Шахты|Шахты)\s*,?\s*','',line,flags=re.I)
         implied=None
@@ -152,6 +152,7 @@ def work_site(text):
     m=re.search(r'по\s+адресу\s*:?\s*([^\n]+)',text,re.I)
     if not m:return None
     chunk=re.split(r'\s+с\s+'+TIME+r'|\s+завершен|\s+работы\s+продлен',m[1],maxsplit=1,flags=re.I)[0]
+    chunk=re.split(r'\s+(?:снижено|снижена|нестабильное|проводятся)\b',chunk,maxsplit=1,flags=re.I)[0]
     chunk=re.sub(r'\s*,\s*',' ',chunk).strip(' .')
     parsed=road(chunk)
     if parsed:return road_key(parsed['street'])+'|'+','.join(parsed['houses'])
@@ -176,9 +177,10 @@ def normalize(post):
       'endBasis':'estimated' if end else 'unknown','resolvedAt':resolved,'workSite':work_site(text),
       'url':p['url'],'officialUrl':official,'source':p.get('source','Шахтинский водоканал'),
       'origin':p.get('origin','official_archive'),'text':text,'textSha256':sha256(text.encode()).hexdigest(),**area}
-    for key in ('observedAt','editedAt'):
+    for key in ('observedAt','editedAt','sourceId','mirror'):
         if p.get(key):out[key]=p[key]
     out['reviewRequired']=bool(area['zones'] or area['unmappedAreaText'] or not area['affected'])
+    out['requiresReview']=out['reviewRequired']
     return out
 
 def coverage_key(areas):
@@ -234,6 +236,20 @@ def build_feed(posts,now):
             else:
                 possible=[e['id'] for e in candidates if covers(e['affected'],n['affected'])]
                 unlinked.append({'noticeId':n['id'],'reason':'Завершение требует сверки места ремонта/охвата','possibleIncidentIds':possible})
+            continue
+        signature=lambda x:(x['kind'],x['start'],x['end'],x['workSite'],coverage_key(x['affected']))
+        matches=[e for e in incidents if e['status']!='resolved' and e['startBasis']=='explicit'
+                 and n['startBasis']=='explicit' and n['end'] and n['workSite']
+                 and not n['workSite'].startswith('неуточн:') and not n['reviewRequired']
+                 and not e['reviewRequired'] and signature(e)==signature(n)]
+        if len(matches)==1:
+            e=matches[0];duplicates+=1
+            e['evidence']=list(dict.fromkeys(e['evidence']+[n['url']]))
+            e['updates'].append(n['id'])
+            rank={'verified_repost':3,'municipal_repost':2,'media_report':1}
+            if rank.get(n['origin'],4)>rank.get(e['origin'],4):
+                for field in ('url','officialUrl','source','sourceId','origin','text','textSha256','publishedAt'):
+                    if field in n:e[field]=n[field]
             continue
         e=deepcopy(n);e['noticeId']=n['id'];e['id']='water-'+n['id'].replace('/','-')
         e.update(category='water',status='active',revision=1,evidence=[n['url']]+n.get('additionalSources',[]),updates=[n['id']])

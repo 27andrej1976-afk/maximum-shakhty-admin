@@ -47,6 +47,8 @@ function timing(e){
   return (Date.parse(e.end)<Date.now()?'Ожидалось завершение: ':'Ожидаемое завершение: ')+format(e.end);
 }
 function sourceText(e){
+  if(e.origin==='municipal_repost')return 'Администрация Шахт · перепечатка';
+  if(e.origin==='media_report')return 'КВУ · публикация СМИ, без прямого подтверждения УРСВ';
   if(e.origin==='verified_repost')return (e.source||'УРСВ')+' · перепечатка со ссылкой на документ';
   if(e.origin==='attributed_repost')return (e.source||'Коммунальная служба')+' · перепечатка, не прямая лента';
   return e.source||'Источник не указан';

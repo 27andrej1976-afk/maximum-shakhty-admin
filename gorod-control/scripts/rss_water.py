@@ -10,6 +10,7 @@ from email.utils import parsedate_to_datetime
 from html import unescape
 from html.parser import HTMLParser
 import re
+from hashlib import sha256
 import xml.etree.ElementTree as ET
 from urllib.request import Request, urlopen
 
@@ -22,7 +23,8 @@ OFFICIAL = re.compile(r'https?://(?:www\.)?rovodokanal\.ru/emergency-alerts/(\d+
 RELEVANT = re.compile(r'снижени[ея]\s+давлен|снижен[оа]?\s+давлен|отключен\w*\s+вод|'
                       r'водоснабж\w*\s+(?:восстановл|приостановл|прекращ)|'
                       r'планов\w*\s+работ|аварийн\w*[- ]\s*ремонт', re.I)
-SHACHTY = re.compile(r'шахт|шахт(инский|инского)', re.I)
+SHACHTY = re.compile(r'\b(?:Шахты|Шахтах|Шахтинский|Шахтинского)\b', re.I)
+CREATOR = '{http://purl.org/dc/elements/1.1/}creator'
 
 class HtmlPlaintext(HTMLParser):
     def __init__(self):
@@ -49,7 +51,9 @@ def html_text(raw):
 
 def feed_messages(xml_bytes, domain):
     """Parse first 200 feed items, only official URSV articles with traceable IDs."""
+    if domain not in ('newsrostov.ru','news-don.ru'):return []
     root=ET.fromstring(xml_bytes)
+    if root.tag != 'rss' or root.find('channel') is None:raise ValueError('Expected RSS channel')
     result=[]
     for i in root.findall('.//item'):
         title=i.findtext('title') or ''
@@ -59,7 +63,8 @@ def feed_messages(xml_bytes, domain):
         if not (html and title and link.startswith('https://'+domain+'/')):
             continue
         official=OFFICIAL.search(html)
-        if not official:
+        municipal=(i.findtext(CREATOR) or '').strip()=='Администрация города Шахты'
+        if not official and not municipal:
             continue
         text=html_text(html)
         if not SHACHTY.search(title+' '+text[:150]):
@@ -71,10 +76,12 @@ def feed_messages(xml_bytes, domain):
             if when.tzinfo is None:when=when.replace(tzinfo=timezone(timedelta(hours=3)))
         except (ValueError,TypeError):
             continue
-        official_url='https://rovodokanal.ru/emergency-alerts/'+official.group(1)
-        result.append({'id':'oursv/'+official.group(1),'publishedAt':when.isoformat(),
+        official_url='https://rovodokanal.ru/emergency-alerts/'+official.group(1) if official else None
+        result.append({'id':'oursv/'+official.group(1) if official else 'city-repost/'+sha256(link.encode()).hexdigest()[:20],'publishedAt':when.isoformat(),
                        'text':text,'url':link,'officialUrl':official_url,
-                       'origin':'verified_repost','source':'ГУП РО УРСВ — перепечатка',
+                       'origin':'verified_repost' if official else 'municipal_repost',
+                       'source':'ГУП РО УРСВ — перепечатка' if official else 'Администрация города Шахты — перепечатка',
+                       'sourceId':'repost_rostov' if domain=='newsrostov.ru' else 'repost_don',
                        'mirror':domain})
     return result
 
@@ -94,9 +101,9 @@ def collect_rss(now=None):
                 notices.setdefault(p['id'],p)
             latest=max((p['publishedAt'] for p in posts),default=None)
             status.append({'id':('repost_rostov' if 'newsrostov.' in domain else 'repost_don'),
-                           'status':'ok' if valid else 'partial',
-                           'posts':len(posts),'lastPostAt':latest,'url':url,
-                           'note':'Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ'})
+                           'status':'ok','readStatus':'ok','coverage':'partial',
+                           'posts':len(ET.fromstring(raw).findall('.//item')),'matchingPosts':len(valid),'checkedAt':now.isoformat(),'lastPostAt':latest,'url':url,
+                           'note':'Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт'})
             print('RSS MIRROR',domain,'official refs',len(posts),'recent',len(valid))
         except Exception as exc:
             status.append({'id':('repost_rostov' if 'newsrostov.' in domain else 'repost_don'),

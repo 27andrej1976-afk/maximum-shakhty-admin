@@ -47,7 +47,7 @@ def collect_power(now):
             results.extend(parsed)
             most_recent=max((datetime.fromisoformat(e['publishedAt']) for e in parsed),default=None)
             states.append(source(id,'ok' if most_recent and now-most_recent<timedelta(days=3) else 'partial',url,
-                posts=len(items),matchingPosts=len(parsed),
+                readStatus="ok",coverage="partial",posts=len(items),matchingPosts=len(parsed),
                 lastPostAt=most_recent.isoformat() if most_recent else None,
                 note='Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений'))
             print('POWER',id,'RSS items',len(items),'Shakhty verified notices',len(parsed))
@@ -91,7 +91,7 @@ def collect_gas(now):
         # Never turn corporate news or vague place mentions into gas disruption alerts.
         available=bool(re.search(r'Газпром|газораспределени',page,re.I))
         if not available:raise RuntimeError('Official press-page signature absent')
-        return source('gas','partial',GAS,posts=0,lastPostAt=None,
+        return source('gas','partial',GAS,readStatus='ok',posts=0,lastPostAt=None,
            note='Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет')
     except Exception as exc:
         return source('gas','error',GAS,posts=0,note='Нет проверяемой ленты газа: '+str(exc)[:120])

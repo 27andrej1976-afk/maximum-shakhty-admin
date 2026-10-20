@@ -160,8 +160,11 @@ const LGC = window.CityLogic;
 const CITY = {lat:47.7086,lon:40.2146}; // public approximate city centre, not a private address
 const KEY = 'gorod_control_home_v1';
 const sources = [
+  {id:'max_city',icon:'🏛',name:'MAX · администрация Шахт',detail:'Прямое чтение официального канала через API',url:'https://max.ru/shakhtygorod'},
+  {id:'max_power',icon:'⚡',name:'MAX · Донэнерго',detail:'Официальные сообщения об аварийных отключениях',url:'https://max.ru/id6163089292_biz'},
+  {id:'water_kvu',icon:'💧',name:'КВУ · отключения воды',detail:'Резервная лента СМИ с адресами и сроками',url:'https://kvu.su/utilities/rss.xml'},
   {id:'repost_rostov',icon:'📰',name:'УРСВ · сообщения о воде',detail:'Проверяемые перепечатки официальных уведомлений',url:'https://newsrostov.ru/'},
-  {id:'repost_don',icon:'🗞',name:'УРСВ · резервная лента',detail:'Перепечатки со ссылкой на первоисточник',url:'https://news-don.ru/'},
+  {id:'repost_don',icon:'🗞',name:'Вода · УРСВ и администрация',detail:'Перепечатки с документом УРСВ или авторством администрации',url:'https://news-don.ru/'},
   {id:'power_repost_rostov', icon:'⚡', name:'Донэнерго · аварии', detail:'Перепечатки с указанием Донэнерго как источника', url:'https://newsrostov.ru/rss.xml'},
   {id:'power_repost_don', icon:'🔌', name:'Донэнерго · резерв', detail:'Дополнительная лента перепечаток', url:'https://news-don.ru/rss.xml'},
   {id:'power_city', icon:'🏙', name:'Свет · администрация Шахт', detail:'Аварийные и плановые объявления города',url:'https://t.me/s/admshakhty'},
@@ -200,29 +203,50 @@ function demoEvents(){const h=state.home||{...CITY,street:'Тестовая',hou
  {id:'example-gas',source:'Учебный пример',kind:'planned',status:'active',category:'gas',title:'Проверка газовых сетей на вашей улице',description:'Учебное событие: указана улица, но номер дома неизвестен. Совпадение считается предварительным.',start:isoFuture(2,10),end:isoFuture(2,16),affected:[{street:st,houses:[]}],point:null,demo:true},
  {id:'example-far',source:'Учебный пример',kind:'emergency',status:'active',category:'water',title:'Далёкая авария — должна быть скрыта',description:'Это событие в нескольких километрах без влияния на ваш дом; приложение его отфильтрует.',start:isoFuture(0,8),end:isoFuture(0,22),affected:[{street:'Другая',houses:['1-50']}],point:{lat:+h.lat+.06,lon:+h.lon},demo:true}
 ]}
+function waterSourceAccepted(e,by,fresh){
+  const url=String(e.url||'');
+  const mirror=url.startsWith('https://news-don.ru/')?'repost_don':url.startsWith('https://newsrostov.ru/')?'repost_rostov':null;
+  if(e.origin==='media_report')return e.sourceId==='water_kvu'&&url.startsWith('https://kvu.su/utilities/')&&fresh(by.water_kvu);
+  if(e.origin==='municipal_repost')return !!mirror&&e.sourceId===mirror&&fresh(by[mirror]);
+  if(e.origin==='verified_repost')return !!mirror&&(!e.sourceId||e.sourceId===mirror)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(e.officialUrl||'')&&fresh(by[mirror]);
+  return e.source==='Администрация города Шахты'&&url.startsWith('https://t.me/admshakhty/')&&fresh(by.city);
+}
+function sourceSummary(list,states,now=Date.now()){
+  let read=0,errors=0,unconfigured=0;
+  for(const item of list){
+    const s=states[item.id];
+    const age=now-Date.parse(s?.checkedAt||state.checkedAt||'');
+    const fresh=Number.isFinite(age)&&age>=-120000&&age<4*3600000;
+    if(s?.status==='not_configured'||!s){unconfigured++;continue;}
+    if(s.status==='error'){errors++;continue;}
+    if(fresh&&(s.status==='ok'||s.readStatus==='ok'))read++;
+  }
+  return {read,errors,unconfigured,unique:new Set(list.map(s=>states[s.id]?.url||s.url)).size};
+}
 function renderSources(){
   const states=Object.fromEntries(state.checks.map(s=>[s.id,s]));
   $('sourcesGrid').innerHTML=sources.map(s=>{
     const st=states[s.id];
     let status=st?.status==='ok' ? ('Источник прочитан'+(st.posts!=null?' · '+st.posts+' сообщений':'')):
       st?.status==='stale'?'Нет новых публикаций · источник устарел':
-      st?.status==='partial'?'Неполная проверка':
-      st?.status==='error'?'Нет автоматического доступа':'Подключение не завершено';
-    if(st?.status==='partial'||st?.status==='error')status+=' · '+(st.note||'Адресные сведения недоступны');
+      st?.status==='partial'?(st.readStatus==='ok'?'Лента прочитана · охват неполный':'Неполная проверка'):
+      st?.status==='error'?'Нет автоматического доступа':st?.status==='not_configured'?'Требуется настройка доступа':'Подключение не завершено';
+    if(['partial','error','not_configured'].includes(st?.status))status+=' · '+(st.note||'Адресные сведения недоступны');
     return '<a class="source" href="'+s.url+'" target="_blank" rel="noopener noreferrer" title="'+escapeHtml(st?.note||s.detail)+'">'+
       '<span class="source-icon">'+s.icon+'</span><span class="source-main"><strong>'+escapeHtml(s.name)+
       '</strong><small>'+escapeHtml(status)+'</small></span><span class="arrow">↗</span></a>';
   }).join('');
-  const ok=sources.filter(s=>states[s.id]?.status==='ok').length;
-  $('sourceStatus').textContent=state.checks.length?'Проверено '+ok+' из '+sources.length:'Нет онлайн-проверки';
-  $('sourceStatus').classList.toggle('partial',ok>0);
+  const summary=sourceSummary(sources,states);
+  $('sourceStatus').textContent=state.checks.length?'Прочитано '+summary.read+' из '+sources.length:'Нет онлайн-проверки';
+  $('sourceStatus').title='Ошибок: '+summary.errors+'. Требуют настройки: '+summary.unconfigured+'. Строки включают повторные ленты для разных категорий. Уникальных адресов: '+summary.unique+'. Прочитано не означает полный охват отключений.';
+  $('sourceStatus').classList.toggle('partial',summary.read>0);
 }
 function paintHome(){const h=state.home;$('pointStatus').textContent=h?'Задана':state.demo?'Тестовая':'Не задана';$('pointStatus').classList.toggle('set',!!h);$('addressValue').textContent=h? h.label || 'Точка GPS, Шахты' : state.demo?'Центр Шахт — условная точка':'Укажите адрес или определите его автоматически';$('mapName').textContent=h?(h.label||'Ваша контрольная точка'):state.demo?'Шахты · учебная точка':'Шахты · точка не задана';$('addressHint').textContent=!h&&state.demo?'Это условный адрес для проверки приложения. Для настоящего мониторинга выберите свой дом.':h&&(!h.street||LGC.normalStreet(h.street).startsWith('неуточн:'))?'Тип улицы не определён. Для точных отключений введите адрес с названием улицы и номером дома.':h&&!h.house?'Для оповещений по адресным спискам желательно добавить улицу и номер дома. Координат для этого недостаточно.':'Адрес и координаты сохраняются только в этом браузере. Карта и поиск адреса используют сторонние сервисы.';}
 function makeMap(){window.CityMapV07.start();}
 function updateMap(){window.CityMapV07.refresh();}
 function getMatches(){const h=state.home||(state.demo?{...CITY,street:'Тестовая',house:'12'}:null);return (state.demo?demoEvents():state.events).map(e=>({event:e,impact:LGC.matchImpact(e,h)})).filter(x=>x.impact.relevant).sort((a,b)=>{if(a.event.kind!==b.event.kind)return a.event.kind==='emergency'?-1:1;return Date.parse(a.event.start||0)-Date.parse(b.event.start||0)})}
 function getVisibleEvents(){return getMatches().filter(x=>state.filter==='all'||x.event.kind===state.filter)}
-function renderEvents(){const all=getMatches(), visible=getVisibleEvents();$('eventsCount').textContent=all.length;$('eventList').innerHTML=visible.length?visible.map(({event:e,impact:m})=>{const planned=e.kind==='planned',warning=e.kind==='warning',overdue=e.status==='unconfirmed',kind=warning?'ПРЕДУПРЕЖДЕНИЕ МЧС':overdue?'СРОК ЗАВЕРШЕНИЯ ПРОШЁЛ':planned?'ПЛАНОВЫЕ РАБОТЫ':'АВАРИЙНОЕ СОБЫТИЕ',link=safeUrl(e.url),official=safeUrl(e.officialUrl),match=m.confidence==='high'?'':' uncertain';return `<article class="event"><div class="eventTop"><span class="eventType ${warning?'warning':planned?'planned':'emergency'}">${e.demo?'ТЕСТ · ':''}${kind}</span><span class="eventTime">${e.start?escapeHtml(fmtTime(e.start)):'Время неизвестно'}</span></div><h3>${escapeHtml(e.title)}</h3><p>${escapeHtml(e.description)}${e.end?(warning?' Период действия до '+escapeHtml(fmtTime(e.end))+'.':overdue?' Ожидаемый срок окончания '+escapeHtml(fmtTime(e.end))+' прошёл; подтверждения восстановления пока нет.':' Ожидаемое окончание: '+escapeHtml(fmtTime(e.end))+'.'):''}${e.origin==='verified_repost'?' Перепечатка сообщения УРСВ со ссылкой на официальный документ.':e.origin==='attributed_repost'?' Перепечатка сообщения с указанием Донэнерго как первоисточника.':''}</p><div class="eventBottom"><span class="eventImpact${match}">${escapeHtml(m.reason)}</span>${link?`<span><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${e.origin==='verified_repost'?'Перепечатка':'Источник'} ↗</a>${official?` · <a href="${escapeHtml(official)}" target="_blank" rel="noopener noreferrer">УРСВ ↗</a>`:''}</span>`:`<span style="color:#8a96a3">${escapeHtml(e.source||'Без источника')}</span>`}</div></article>`}).join(''):`<div class="empty"><span class="empty-icon">◉</span><strong>${state.demo?'Тестовых событий этого типа рядом нет':'Подтверждённых событий для точки не найдено'}</strong><p>${state.demo?'Смените фильтр или введите контрольный адрес.':'Источники могут быть недоступны или не указывать точное расположение. Это не подтверждение безопасности.'}</p></div>`;
+function renderEvents(){const all=getMatches(), visible=getVisibleEvents();$('eventsCount').textContent=all.length;$('eventList').innerHTML=visible.length?visible.map(({event:e,impact:m})=>{const planned=e.kind==='planned',warning=e.kind==='warning',overdue=e.status==='unconfirmed',kind=warning?'ПРЕДУПРЕЖДЕНИЕ МЧС':overdue?'СРОК ЗАВЕРШЕНИЯ ПРОШЁЛ':planned?'ПЛАНОВЫЕ РАБОТЫ':'АВАРИЙНОЕ СОБЫТИЕ',link=safeUrl(e.url),official=safeUrl(e.officialUrl),match=m.confidence==='high'?'':' uncertain';return `<article class="event"><div class="eventTop"><span class="eventType ${warning?'warning':planned?'planned':'emergency'}">${e.demo?'ТЕСТ · ':''}${kind}</span><span class="eventTime">${e.start?escapeHtml(fmtTime(e.start)):'Время неизвестно'}</span></div><h3>${escapeHtml(e.title)}</h3><p>${escapeHtml(e.description)}${e.end?(warning?' Период действия до '+escapeHtml(fmtTime(e.end))+'.':overdue?' Ожидаемый срок окончания '+escapeHtml(fmtTime(e.end))+' прошёл; подтверждения восстановления пока нет.':' Ожидаемое окончание: '+escapeHtml(fmtTime(e.end))+'.'):''}${e.origin==='verified_repost'?' Перепечатка сообщения УРСВ со ссылкой на официальный документ.':e.origin==='municipal_repost'?' Перепечатка сообщения администрации Шахт.':e.origin==='media_report'?' Публикация СМИ «КВУ»; прямое подтверждение водоканала не получено.':e.origin==='attributed_repost'?' Перепечатка сообщения с указанием Донэнерго как первоисточника.':''}</p><div class="eventBottom"><span class="eventImpact${match}">${escapeHtml(m.reason)}</span>${link?`<span><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${e.origin==='verified_repost'?'Перепечатка':'Источник'} ↗</a>${official?` · <a href="${escapeHtml(official)}" target="_blank" rel="noopener noreferrer">УРСВ ↗</a>`:''}</span>`:`<span style="color:#8a96a3">${escapeHtml(e.source||'Без источника')}</span>`}</div></article>`}).join(''):`<div class="empty"><span class="empty-icon">◉</span><strong>${state.demo?'Тестовых событий этого типа рядом нет':'Подтверждённых событий для точки не найдено'}</strong><p>${state.demo?'Смените фильтр или введите контрольный адрес.':'Источники могут быть недоступны или не указывать точное расположение. Это не подтверждение безопасности.'}</p></div>`;
 let urgent=all.some(x=>x.event.status==='active'&&(x.event.kind==='emergency'||x.event.kind==='warning'&&x.event.priority==='high')),scheduled=all.some(x=>x.event.kind==='planned'&&x.event.status==='active'),overdue=all.some(x=>x.event.status==='unconfirmed'),forecast=all.some(x=>x.event.kind==='warning'),overview=$('overviewCard');overview.className='overview-card';if(state.demo){$('statusLabel').textContent='ДЕМОНСТРАЦИОННЫЙ РЕЖИМ';$('overviewTitle').textContent='Учебные события, не реальные аварии';$('overviewDescription').textContent='Показано, как приложение отбирает происшествия в радиусе 1 км и отключения, затрагивающие ваш адрес. Данные придуманы для проверки логики.';overview.classList.add('planned')}else if(!state.home){$('statusLabel').textContent='ТРЕБУЕТСЯ АДРЕС';$('overviewTitle').textContent='Пока нельзя определить обстановку';$('overviewDescription').textContent='Нужно задать ваш дом или разрешить геолокацию. Затем проверим официальные сообщения.'}else if(!state.backendConnected||!state.checks.some(x=>x.status==='ok')){$('statusLabel').textContent='НЕТ ПОЛНОЙ ПРОВЕРКИ';$('overviewTitle').textContent='Актуальность данных не подтверждена';$('overviewDescription').textContent=state.checks.some(s=>s.status==='stale')?'Последняя доступная публикация водоканала устарела. Приложение не может подтвердить текущую обстановку; проверяйте первоисточник.':'Проверка водоканала недоступна или давно не обновлялась. Нельзя утверждать, что всё спокойно.'}else if(urgent){$('statusLabel').textContent='ЕСТЬ СООБЩЕНИЯ ОБ АВАРИЯХ';$('overviewTitle').textContent='Обратите внимание на события рядом';$('overviewDescription').textContent='Обнаружены опубликованные происшествия. Уточняйте детали и время по первоисточнику.';overview.classList.add('alert')}else if(overdue){$('statusLabel').textContent='СРОК РАБОТ ИСТЁК';$('overviewTitle').textContent='Нет подтверждения завершения работ';$('overviewDescription').textContent='По опубликованным данным предполагаемое время завершения уже прошло. Неизвестно, восстановлено ли водоснабжение: проверьте первоисточник или диспетчера УРСВ.';overview.classList.add('planned')}else if(forecast){$('statusLabel').textContent='ИНФОРМАЦИЯ МЧС';$('overviewTitle').textContent='Есть актуальный прогноз для Шахт';$('overviewDescription').textContent='Прогноз относится к городу или области и не означает, что рядом произошла авария.';overview.classList.add('planned')}else if(scheduled){$('statusLabel').textContent='ЕСТЬ ПЛАНОВЫЕ РАБОТЫ';$('overviewTitle').textContent='Запланированы работы, которые могут вас затронуть';$('overviewDescription').textContent='Посмотрите адреса и график. Время работ может измениться.';overview.classList.add('planned')}else{$('statusLabel').textContent='НЕТ АДРЕСНЫХ СОВПАДЕНИЙ';$('overviewTitle').textContent='По доступным публикациям совпадений для адреса не найдено';$('overviewDescription').textContent='Проверяются публикации администрации и перепечатки со ссылками на документы УРСВ. Это не полный мониторинг водоснабжения: часть объявлений может быть недоступна, по электричеству и газу доступно не всё; МЧС проверяется по официальной ленте.';overview.classList.add('clear')}
 $('summaryCount').textContent=state.demo? `${all.length} тестовых событий` : `${all.length} совпадений по адресу или радиусу`;$('checkStamp').textContent=state.checkedAt?`Проверено: ${fmtTime(state.checkedAt)}`:'Онлайн-проверка не выполнена';updateMap()}
 async function checkSources(){
@@ -240,16 +264,12 @@ async function checkSources(){
     const scanAge=Date.now()-Date.parse(state.checkedAt||0);
     const scanRecent=Number.isFinite(scanAge)&&scanAge>=0&&scanAge<4*3600000;
     const sourceById=Object.fromEntries(state.checks.map(s=>[s.id,s]));
-    const isCurrent=s=>!!s&&s.status==='ok'&&Number.isFinite(Date.parse(s.lastPostAt||''))&&
-      Date.now()-Date.parse(s.lastPostAt)>=0&&Date.now()-Date.parse(s.lastPostAt)<7*86400000;
+    const isCurrent=s=>{const age=Date.now()-Date.parse(s?.checkedAt||state.checkedAt||'');
+      return !!s&&(s.status==='ok'||s.readStatus==='ok')&&Number.isFinite(age)&&age>=-120000&&age<4*3600000;};
     state.backendConnected=scanRecent&&state.checks.some(isCurrent);
     state.events=scanRecent?data.events.filter(e=>{
       const url=String(e.url||'');
-      if(e.category==='water'){
-        if(e.origin==='verified_repost'&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(e.officialUrl||''))
-          return isCurrent(sourceById.repost_rostov)||isCurrent(sourceById.repost_don);
-        return e.source==='Администрация города Шахты'&&isCurrent(sourceById.city);
-      }
+      if(e.category==='water')return waterSourceAccepted(e,sourceById,isCurrent);
       if(e.category==='power'){
         if(e.origin==='official_city_post'&&e.sourceId==='power_city')
           return isCurrent(sourceById.power_city)&&url.startsWith('https://t.me/admshakhty/');

@@ -59,3 +59,30 @@ assert.match(html,/id:'mchs'/,"official MCHS feed");
 assert.match(html,/data-filter="warning"/,"MCHS notices can be filtered separately");
 
 console.log("City frontend: "+blocks.length+" scripts parsed, 21 address/scope/source checks passed");
+
+// A valid read with no local notices differs from a network error or missing access.
+const summaryScript=html.slice(html.indexOf('function sourceSummary('),html.indexOf('function renderSources('));
+const summaryCtx=vm.createContext({Date,Set,Number,state:{checkedAt:new Date().toISOString()}});
+new vm.Script(summaryScript).runInContext(summaryCtx);
+const rows=[{id:'a',url:'https://one.example/rss'},{id:'b',url:'https://one.example/rss'},
+  {id:'c',url:'https://two.example/rss'},{id:'d',url:'https://max.ru/shakhtygorod'}];
+const checks={a:{status:'ok'},b:{status:'partial',readStatus:'ok'},c:{status:'error'},d:{status:'not_configured'}};
+const summary=summaryCtx.sourceSummary(rows,checks);
+assert.equal(summary.read,2);
+assert.equal(summary.errors,1);
+assert.equal(summary.unconfigured,1);
+assert.equal(summary.unique,3);
+assert.equal(summaryCtx.sourceSummary(rows,checks,Date.now()+5*3600000).read,0);
+console.log('Source status: empty matches, network errors, missing access, duplicate URLs and stale data checked');
+
+const waterScript=html.slice(html.indexOf('function waterSourceAccepted('),html.indexOf('function sourceSummary('));
+const waterCtx=vm.createContext({});new vm.Script(waterScript).runInContext(waterCtx);
+const accept=waterCtx.waterSourceAccepted, fresh=s=>s?.status==='ok';
+const src={water_kvu:{status:'ok'},repost_don:{status:'error'},repost_rostov:{status:'ok'}};
+const media={origin:'media_report',sourceId:'water_kvu',url:'https://kvu.su/utilities/report.html'};
+assert.equal(accept(media,src,fresh),true);
+assert.equal(accept({...media,url:'https://kvu.su.evil.test/utilities/report'},src,fresh),false);
+assert.equal(accept(media,{water_kvu:{status:'stale'}},fresh),false);
+assert.equal(accept({origin:'municipal_repost',sourceId:'repost_don',url:'https://news-don.ru/society/report'},src,fresh),false,'another healthy mirror cannot validate a failed source');
+assert.equal(accept({origin:'municipal_repost',sourceId:'repost_rostov',url:'https://newsrostov.ru/society/report'},src,fresh),true);
+console.log('Water sources: attribution, domain restrictions and source-specific freshness passed');
