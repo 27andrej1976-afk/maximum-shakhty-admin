@@ -30,5 +30,5 @@ if compact.exists():
     s=compact.read_text()
     anchor=' app.append(headline,metrics,address,overview,toolbar,mapCard,notice);'
     assert anchor in s
-    s=s.replace(anchor,anchor+"\n const report=left.querySelector('.report-civic-cta');\n if(report)toolbar.insertAdjacentElement('afterend',report);",1)
+    s=s.replace(anchor,anchor+"\n const report=left.querySelector('#reportIssueButton')?.closest('section');\n if(report)toolbar.insertAdjacentElement('afterend',report);",1)
     compact.write_text(s)
