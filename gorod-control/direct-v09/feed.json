@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-20T08:17:04.879059+00:00",
+  "checkedAt": "2026-10-20T08:56:36.545455+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -94,15 +94,15 @@
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-20T08:17:04.879059+00:00",
+      "checkedAt": "2026-10-20T08:56:36.545455+00:00",
       "lastPostAt": null,
       "posts": 5,
       "matchingPosts": 5,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "3c70aa878189d7aa12bac84efc619ecc879b90a5388afbf93304896f6d57fcd8",
-      "durationSeconds": 1.84
+      "contentSha256": "1a58b23ead8548d6a76f578bf7c05caa8fd2b59f16daf68ca9d5303d6728eac7",
+      "durationSeconds": 4.07
     }
   ],
   "events": [
@@ -138,7 +138,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T08:17:04.879059+00:00",
+      "observedAt": "2026-10-20T08:56:36.545455+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -202,7 +202,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T08:17:04.879059+00:00",
+      "observedAt": "2026-10-20T08:56:36.545455+00:00",
       "start": "2026-10-19T13:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -253,7 +253,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T08:17:04.879059+00:00",
+      "observedAt": "2026-10-20T08:56:36.545455+00:00",
       "start": "2026-10-19T09:00:00+03:00",
       "end": "2026-10-19T17:00:00+03:00",
       "startBasis": "explicit",
@@ -511,7 +511,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T08:17:04.879059+00:00",
+      "observedAt": "2026-10-20T08:56:36.545455+00:00",
       "start": "2026-10-20T13:00:00+03:00",
       "end": "2026-10-20T17:00:00+03:00",
       "startBasis": "explicit",
@@ -555,7 +555,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T08:17:04.879059+00:00",
+      "observedAt": "2026-10-20T08:56:36.545455+00:00",
       "start": "2026-10-20T09:00:00+03:00",
       "end": "2026-10-20T14:00:00+03:00",
       "startBasis": "explicit",

@@ -5114,7 +5114,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:продольный 2-2 б": {
-      "timestamp": 1792399373.542517,
+      "timestamp": 1792486600.627047,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -5199,7 +5199,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:даниловского": {
-      "timestamp": 1792399373.542517,
+      "timestamp": 1792486600.627047,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -6662,7 +6662,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:2 милиционный": {
-      "timestamp": 1792399373.542517,
+      "timestamp": 1792486600.627047,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -6723,7 +6723,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:1 милиционный": {
-      "timestamp": 1792399373.542517,
+      "timestamp": 1792486600.627047,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
