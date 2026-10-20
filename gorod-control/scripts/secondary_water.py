@@ -4,7 +4,7 @@ from email.utils import parsedate_to_datetime
 from hashlib import sha256
 import re
 import xml.etree.ElementTree as ET
-from urllib.request import Request, urlopen
+from public_rss import fetch
 from rss_water import ENCODED, SHACHTY, html_text
 URL='https://kvu.su/utilities/rss.xml'
 
@@ -46,9 +46,7 @@ def collect(now=None):
     now=now or datetime.now(timezone.utc)
     state={'id':'water_kvu','url':URL,'checkedAt':now.isoformat(),'coverage':'partial'}
     try:
-        with urlopen(Request(URL,headers={'User-Agent':'CityControlShakhty/1.0 public RSS'}),timeout=20) as response:
-            raw=response.read(7_000_001)
-        if len(raw)>7_000_000:raise ValueError('RSS exceeds size limit')
+        raw=fetch(URL,timeout=20)
         posts=feed_messages(raw)
         valid=[p for p in posts if timedelta(0)<=now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=15)]
         state.update(status='ok',readStatus='ok',posts=len(ET.fromstring(raw).findall('./channel/item')),

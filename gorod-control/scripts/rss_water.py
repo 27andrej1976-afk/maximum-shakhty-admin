@@ -12,7 +12,7 @@ from html.parser import HTMLParser
 import re
 from hashlib import sha256
 import xml.etree.ElementTree as ET
-from urllib.request import Request, urlopen
+from public_rss import fetch
 
 RSS_URLS = [
     'https://newsrostov.ru/rss.xml',
@@ -91,9 +91,7 @@ def collect_rss(now=None):
     for url in RSS_URLS:
         domain=url.split('/')[2]
         try:
-            req=Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; CityControlShakhty/0.3; public notices only)'})
-            with urlopen(req,timeout=17) as response:
-                raw=response.read(7_000_000)
+            raw=fetch(url)
             posts=feed_messages(raw,domain)
             valid=[p for p in posts if abs((now-datetime.fromisoformat(p['publishedAt'])).total_seconds()) < 15*86400]
             for p in valid:
