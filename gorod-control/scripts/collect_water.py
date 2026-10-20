@@ -4,6 +4,8 @@ Only municipal public messages are processed; no user coordinates or home are up
 """
 import json, re, sys
 from rss_water import collect_rss
+from secondary_water import collect as collect_secondary
+import importlib.util
 from datetime import datetime, timedelta, timezone
 from html.parser import HTMLParser
 from pathlib import Path
@@ -242,6 +244,9 @@ def main():
             states.append({'id':'water' if channel=='shakhtinskiy' else 'city',
                            'status':'error','posts':0,'url':url,'note':str(exc)[:140]})
     rss_posts,rss_status=collect_rss(now)
+    secondary,secondary_state=collect_secondary(now)
+    all_posts.extend(secondary)
+    states.append(secondary_state)
     states.extend(rss_status)
     all_posts.extend(rss_posts)
     try:old=json.loads(OUTPUT.read_text(encoding='utf-8'))
@@ -255,13 +260,18 @@ def main():
     unique={}
     for m in all_posts:
         if m.get('id') and m.get('text'):
-            candidate=unique.get(m['id'])
-            if not candidate or len(m['text'])>len(candidate['text']):
-                unique[m['id']]=m
+            # Freshly fetched posts precede the archive, including shorter edits.
+            unique.setdefault(m['id'],m)
     archive=sorted(
         (p for p in unique.values() if -timedelta(hours=1)<now-datetime.fromisoformat(p['publishedAt'])<timedelta(days=16)),
         key=lambda x:x['publishedAt'],reverse=True)[:120]
-    result=feed(list(unique.values()),now)
+    spec=importlib.util.spec_from_file_location('water_verified_live',Path(__file__).resolve().parents[1]/'direct-v09/water_verified.py')
+    parser=importlib.util.module_from_spec(spec);spec.loader.exec_module(parser)
+    result=parser.build_feed(archive,now)
+    result.pop('candidateOnly',None)
+    result['coverage']='partial'
+    for event in result['events']:event['fullText']=event.get('text','')
+    for source in states:source.setdefault('checkedAt',now.isoformat())
     result['sources']=states
     result['archive']=archive
     result['serviceArchive']=old.get('serviceArchive',[]) if isinstance(old,dict) else []

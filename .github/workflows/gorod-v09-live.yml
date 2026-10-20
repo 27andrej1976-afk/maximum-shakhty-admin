@@ -7,6 +7,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/gorod-v09-live.yml'
+      - 'gorod-control/direct-v09/*.py'
+      - 'gorod-control/scripts/**'
 permissions:
   contents: write
 concurrency:
@@ -28,6 +30,7 @@ jobs:
           MAX_POWER_CHAT_ID: ${{ vars.MAX_POWER_CHAT_ID }}
         run: |
           python -m compileall -q gorod-control/direct-v09
+          python gorod-control/scripts/collect_water.py
           python gorod-control/direct-v09/build_feed.py
           python - <<'PY'
           from pathlib import Path
@@ -48,11 +51,14 @@ jobs:
           for file in feed.json map-geometry.json street-geometry.json; do
             cp "gorod-control/direct-v09/$file" "/tmp/direct-live-ready/$file"
           done
-          git restore gorod-control/direct-v09
+          BUILT_WATER_SHA=$(git rev-parse HEAD:gorod-control/direct-v09/water_verified.py)
+          BUILT_SCRIPTS_SHA=$(git rev-parse HEAD:gorod-control/scripts)
+          git restore gorod-control/direct-v09 gorod-control/data
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for attempt in 1 2 3; do
             git fetch origin main
+            if [ "$BUILT_WATER_SHA" != "$(git rev-parse origin/main:gorod-control/direct-v09/water_verified.py)" ] || [ "$BUILT_SCRIPTS_SHA" != "$(git rev-parse origin/main:gorod-control/scripts)" ]; then exit 0; fi
             git checkout -B direct-live-publish origin/main
             cp /tmp/direct-live-ready/*.json gorod-control/direct-v09/
             git add gorod-control/direct-v09/feed.json gorod-control/direct-v09/map-geometry.json gorod-control/direct-v09/street-geometry.json

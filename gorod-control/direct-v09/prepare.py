@@ -7,7 +7,6 @@ def change(s,a,b):
  return s.replace(a,b,1)
 
 def main():
- shutil.copy2(ROOT/'source-lab-v08/water_verified.py',D/'water_verified.py')
  java=ANDROID/'app/src/main/java/ru/citycontrol/shakhty'
  for name in ('WaterNotice.java','DirectClient.java'):shutil.copy2(D/name,java/name)
  grad=ANDROID/'app/build.gradle';s=grad.read_text()
@@ -107,7 +106,7 @@ function ingestFeed(data){
     if(e.origin==='official_max')return !e.requiresReview&&freshSource(by[e.sourceId])&&['max_city','max_power'].includes(e.sourceId)&&/^https:\/\/max\.ru\/(?:shakhtygorod|id6163089292_biz)(?:\/|$)/.test(url);
     if(e.sourceId==='power_direct')return freshSource(by.power_direct)&&e.origin==='official_site'&&url==='https://donenergo.ru/grafik-otklyucheniy/61/1/';
     if(e.sourceId==='ursv_device')return ['ok','partial'].includes(by.ursv_device?.status)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(url)&&e.origin==='official_device';
-    if(e.category==='water')return e.origin==='verified_repost'&&(freshSource(by.repost_rostov)||freshSource(by.repost_don))||e.source==='Администрация города Шахты'&&freshSource(by.city);
+    if(e.category==='water')return waterSourceAccepted(e,by,freshSource);
     if(e.category==='mchs')return freshSource(by.mchs)&&url.startsWith('https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/');
     if(e.category==='power')return e.origin==='official_city_post'&&freshSource(by.power_city)||e.origin==='attributed_repost'&&(freshSource(by.power_repost_don)||freshSource(by.power_repost_rostov));
     if(e.category==='gas')return e.origin==='official_city_post'&&freshSource(by.gas_city);

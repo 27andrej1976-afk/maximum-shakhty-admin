@@ -74,3 +74,15 @@ assert.equal(summary.unconfigured,1);
 assert.equal(summary.unique,3);
 assert.equal(summaryCtx.sourceSummary(rows,checks,Date.now()+5*3600000).read,0);
 console.log('Source status: empty matches, network errors, missing access, duplicate URLs and stale data checked');
+
+const waterScript=html.slice(html.indexOf('function waterSourceAccepted('),html.indexOf('function sourceSummary('));
+const waterCtx=vm.createContext({});new vm.Script(waterScript).runInContext(waterCtx);
+const accept=waterCtx.waterSourceAccepted, fresh=s=>s?.status==='ok';
+const src={water_kvu:{status:'ok'},repost_don:{status:'error'},repost_rostov:{status:'ok'}};
+const media={origin:'media_report',sourceId:'water_kvu',url:'https://kvu.su/utilities/report.html'};
+assert.equal(accept(media,src,fresh),true);
+assert.equal(accept({...media,url:'https://kvu.su.evil.test/utilities/report'},src,fresh),false);
+assert.equal(accept(media,{water_kvu:{status:'stale'}},fresh),false);
+assert.equal(accept({origin:'municipal_repost',sourceId:'repost_don',url:'https://news-don.ru/society/report'},src,fresh),false,'another healthy mirror cannot validate a failed source');
+assert.equal(accept({origin:'municipal_repost',sourceId:'repost_rostov',url:'https://newsrostov.ru/society/report'},src,fresh),true);
+console.log('Water sources: attribution, domain restrictions and source-specific freshness passed');

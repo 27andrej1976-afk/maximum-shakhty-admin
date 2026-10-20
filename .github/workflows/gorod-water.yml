@@ -7,6 +7,7 @@ on:
     branches: [main]
     paths:
       - 'gorod-control/scripts/**'
+      - 'gorod-control/direct-v09/water_verified.py'
       - 'gorod-control/map-v07/geometry.py'
       - '.github/workflows/gorod-water.yml'
 permissions:
@@ -63,12 +64,14 @@ jobs:
             cp gorod-control/data/map-geometry.json /tmp/city-control-publish/map-geometry.json
             cp gorod-control/data/street-geometry.json /tmp/city-control-publish/street-geometry.json
           fi
+          BUILT_WATER_SHA=$(git rev-parse HEAD:gorod-control/direct-v09/water_verified.py)
           BUILT_PARSER_SHA=$(git rev-parse HEAD:gorod-control/scripts)
           git restore --source=HEAD --worktree -- gorod-control/data
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for attempt in 1 2 3 4; do
             git fetch origin main
+            if [ "$BUILT_WATER_SHA" != "$(git rev-parse origin/main:gorod-control/direct-v09/water_verified.py)" ]; then exit 0; fi
             CURRENT_PARSER_SHA=$(git rev-parse origin/main:gorod-control/scripts)
             if [ "$BUILT_PARSER_SHA" != "$CURRENT_PARSER_SHA" ]; then
               echo 'Parser changed while checking; skip results from old code.'
