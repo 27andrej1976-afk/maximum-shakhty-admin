@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-19T23:32:47.572130+00:00",
+  "checkedAt": "2026-10-20T00:00:35.779323+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,7 +12,7 @@
       "lastPostAt": "2026-10-17T13:45:11+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "repost_rostov",
@@ -21,26 +21,23 @@
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "repost_don",
-      "status": "partial",
+      "status": "error",
       "posts": 0,
-      "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
-      "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "note": "<urlopen error timed out>",
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "power_repost_rostov",
-      "status": "partial",
+      "status": "error",
       "url": "https://newsrostov.ru/rss.xml",
-      "posts": 200,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "posts": 0,
+      "note": "Нет доступа к RSS: <urlopen error timed out>",
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "power_repost_don",
@@ -50,7 +47,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "power_city",
@@ -60,7 +57,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "gas_city",
@@ -70,7 +67,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "gas",
@@ -79,7 +76,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "mchs",
@@ -89,13 +86,13 @@
       "matchingPosts": 0,
       "lastPostAt": "2026-10-19T20:00:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-10-19T23:12:51.562456+00:00"
+      "checkedAt": "2026-10-19T23:48:30.111484+00:00"
     },
     {
       "id": "power_direct",
       "status": "error",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-19T23:32:47.572130+00:00",
+      "checkedAt": "2026-10-20T00:00:35.779323+00:00",
       "posts": 0,
       "note": "Не удалось прочитать официальный график: HTTP Error 500: Internal Server Error",
       "tlsVerified": true
@@ -121,7 +118,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-10-19T23:12:51.562456+00:00"
+      "observedAt": "2026-10-19T23:48:30.111484+00:00"
     }
   ],
   "archive": [
