@@ -23,3 +23,12 @@ check(evaluate("!CityMapV07.inspect().allIds.includes('water-test-secondary')"),
 '''
         assert 'ws.close()' in s;s=s.replace('ws.close()',extra+'\nws.close()')
     p.write_text(s)
+# The report button can initialize before compact's window-level DOMContentLoaded
+# handler. Move its existing section before compact removes the old left panel.
+compact=Path('gorod-control/compact-v11/compact.js')
+if compact.exists():
+    s=compact.read_text()
+    anchor=' app.append(headline,metrics,address,overview,toolbar,mapCard,notice);'
+    assert anchor in s
+    s=s.replace(anchor,anchor+"\n const report=left.querySelector('.report-civic-cta');\n if(report)toolbar.insertAdjacentElement('afterend',report);",1)
+    compact.write_text(s)

@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [normal, compact]
+        variant: [compact]
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
