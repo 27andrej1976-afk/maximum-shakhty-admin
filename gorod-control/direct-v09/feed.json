@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-20T20:10:56.961554+00:00",
+  "checkedAt": "2026-10-20T20:45:38.855945+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,16 +12,31 @@
       "lastPostAt": "2026-10-20T08:34:40+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
+      "checkedAt": "2026-10-20T20:45:14.418222+00:00"
+    },
+    {
+      "id": "water_kvu",
+      "url": "https://kvu.su/utilities/rss.xml",
+      "checkedAt": "2026-10-20T20:45:14.418222+00:00",
+      "coverage": "partial",
+      "status": "ok",
+      "readStatus": "ok",
+      "posts": 10,
+      "matchingPosts": 4,
+      "lastPostAt": "2026-10-20T09:12:41+03:00",
+      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
     },
     {
       "id": "repost_rostov",
-      "status": "partial",
-      "posts": 0,
+      "status": "ok",
+      "readStatus": "ok",
+      "coverage": "partial",
+      "posts": 200,
+      "matchingPosts": 0,
+      "checkedAt": "2026-10-20T20:45:14.418222+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
-      "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
+      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
@@ -29,82 +44,191 @@
       "posts": 0,
       "url": "https://news-don.ru/rss.xml",
       "note": "<urlopen error timed out>",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
-    },
-    {
-      "id": "power_repost_rostov",
-      "status": "error",
-      "url": "https://newsrostov.ru/rss.xml",
-      "posts": 0,
-      "note": "Нет доступа к RSS: <urlopen error timed out>",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
-    },
-    {
-      "id": "power_repost_don",
-      "status": "partial",
-      "url": "https://news-don.ru/rss.xml",
-      "posts": 200,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
-    },
-    {
-      "id": "power_city",
-      "status": "partial",
-      "url": "https://t.me/s/admshakhty",
-      "posts": 11,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
-    },
-    {
-      "id": "gas_city",
-      "status": "partial",
-      "url": "https://t.me/s/admshakhty",
-      "posts": 11,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
-    },
-    {
-      "id": "gas",
-      "status": "partial",
-      "url": "https://www.rostovoblgaz.ru/press-center/news/",
-      "posts": 0,
-      "lastPostAt": null,
-      "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
-    },
-    {
-      "id": "mchs",
-      "status": "ok",
-      "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
-      "posts": 10,
-      "matchingPosts": 0,
-      "lastPostAt": "2026-10-20T20:00:00+03:00",
-      "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-10-20T19:50:53.328300+00:00"
+      "checkedAt": "2026-10-20T20:45:14.418222+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-20T20:10:56.961554+00:00",
+      "checkedAt": "2026-10-20T20:45:38.855945+00:00",
       "lastPostAt": null,
       "posts": 3,
       "matchingPosts": 3,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "4bcc348fbbca68d1c8c483d135a18822bfaaf049fb2887f6a7efc6c3dd11e619",
-      "durationSeconds": 13.37
+      "contentSha256": "b7c168a790b7d0a273c1a16d710af5954b345d89ab3f1336d929b299ebd8bdb3",
+      "durationSeconds": 1.4
+    },
+    {
+      "id": "max_city",
+      "url": "https://max.ru/shakhtygorod",
+      "status": "not_configured",
+      "readStatus": "not_configured",
+      "posts": 0,
+      "coverage": "partial",
+      "transport": "max_bot_api",
+      "note": "Нужны серверный токен бота, ID канала и права администратора на чтение"
+    },
+    {
+      "id": "max_power",
+      "url": "https://max.ru/id6163089292_biz",
+      "status": "not_configured",
+      "readStatus": "not_configured",
+      "posts": 0,
+      "coverage": "partial",
+      "transport": "max_bot_api",
+      "note": "Нужны серверный токен бота, ID канала и права администратора на чтение"
     }
   ],
   "events": [
+    {
+      "id": "water-kvu-e71fb7b7f4913ee6c504-0",
+      "publishedAt": "2026-10-20T09:12:41+03:00",
+      "kind": "emergency",
+      "start": "2026-10-20T09:30:00+03:00",
+      "end": "2026-10-20T18:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "estimated",
+      "resolvedAt": null,
+      "workSite": null,
+      "url": "https://kvu.su/utilities/19258-gde-v-shahtah-otkljuchili-vodosnabzhenie-vo-vtornik-20-oktjabrja.html",
+      "officialUrl": null,
+      "source": "КВУ — публикация СМИ",
+      "origin": "media_report",
+      "text": "В Шахтах отключили водоснабжение во вторник, 20 октября.\nВ связи с проведением аварийно-ремонтных работ по ул. Гагарина с 9.30 снижено давление подачи холодного водоснабжения в направлении улиц:\nШоссейная\nВоровского\nКаманина\nГагарина\nСемашко\nРыночный.\nОриентировочное время окончания работ – 18.00, 20 октября.",
+      "textSha256": "4e19ee85148166f7a57050c6414bc0a15176f819edee93396e7c73b539f25562",
+      "affected": [],
+      "zones": [],
+      "unmappedAreaText": [
+        "Шоссейная",
+        "Воровского",
+        "Каманина",
+        "Гагарина",
+        "Семашко",
+        "Рыночный"
+      ],
+      "sourceId": "water_kvu",
+      "reviewRequired": true,
+      "requiresReview": true,
+      "noticeId": "kvu/e71fb7b7f4913ee6c504/0",
+      "category": "water",
+      "status": "unconfirmed",
+      "revision": 1,
+      "evidence": [
+        "https://kvu.su/utilities/19258-gde-v-shahtah-otkljuchili-vodosnabzhenie-vo-vtornik-20-oktjabrja.html"
+      ],
+      "updates": [
+        "kvu/e71fb7b7f4913ee6c504/0"
+      ],
+      "point": null,
+      "precision": "unresolved",
+      "description": "В Шахтах отключили водоснабжение во вторник, 20 октября. В связи с проведением аварийно-ремонтных работ по ул. Гагарина с 9.30 снижено давление подачи холодного водоснабжения в направлении улиц: Шоссейная Воровского Каманина Гагарина Семашко Рыночный. Ориентировочное время окончания работ – 18.00, 20 октября.",
+      "title": "Ограничение водоснабжения",
+      "fullText": "В Шахтах отключили водоснабжение во вторник, 20 октября.\nВ связи с проведением аварийно-ремонтных работ по ул. Гагарина с 9.30 снижено давление подачи холодного водоснабжения в направлении улиц:\nШоссейная\nВоровского\nКаманина\nГагарина\nСемашко\nРыночный.\nОриентировочное время окончания работ – 18.00, 20 октября.",
+      "observedAt": "2026-10-20T20:45:14.418222+00:00"
+    },
+    {
+      "id": "water-kvu-e71fb7b7f4913ee6c504-1",
+      "publishedAt": "2026-10-20T09:12:41+03:00",
+      "kind": "emergency",
+      "start": "2026-10-20T09:30:00+03:00",
+      "end": "2026-10-20T18:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "estimated",
+      "resolvedAt": null,
+      "workSite": "ул капровая|47",
+      "url": "https://kvu.su/utilities/19258-gde-v-shahtah-otkljuchili-vodosnabzhenie-vo-vtornik-20-oktjabrja.html",
+      "officialUrl": null,
+      "source": "КВУ — публикация СМИ",
+      "origin": "media_report",
+      "text": "С 9.30 в связи с проведением аварийно - ремонтных работ на трубопроводе по адресу: ул.Капровая, д. 47 снижено давление при подаче воды.\nНа период проведения работ нестабильное водоснабжение по адресам:\nул Капровая\nул Ильюшина\nул Заветы Ильича\nул Калинина\nул Погодина\nул Благотворная\nул Рахманинова\nул Ангарская\nул Миусская\nул Драйзера\nул Гризодубовой\nбульвар Олимпийский \nпер Мичурина\nпер Татаркина\nпер. Студенческий.\nОриентировочное время завершения работ в 18-00 час. 20.10.2026. \nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863) 28-55-777.",
+      "textSha256": "580650a92bc40f0618e04b2a3c5bcb99098f9a9fae99823e22243e902faa456c",
+      "affected": [
+        {
+          "street": "ул Капровая",
+          "houses": []
+        },
+        {
+          "street": "ул Ильюшина",
+          "houses": []
+        },
+        {
+          "street": "ул Заветы Ильича",
+          "houses": []
+        },
+        {
+          "street": "ул Калинина",
+          "houses": []
+        },
+        {
+          "street": "ул Погодина",
+          "houses": []
+        },
+        {
+          "street": "ул Благотворная",
+          "houses": []
+        },
+        {
+          "street": "ул Рахманинова",
+          "houses": []
+        },
+        {
+          "street": "ул Ангарская",
+          "houses": []
+        },
+        {
+          "street": "ул Миусская",
+          "houses": []
+        },
+        {
+          "street": "ул Драйзера",
+          "houses": []
+        },
+        {
+          "street": "ул Гризодубовой",
+          "houses": []
+        },
+        {
+          "street": "бул Олимпийский",
+          "houses": []
+        },
+        {
+          "street": "пер Мичурина",
+          "houses": []
+        },
+        {
+          "street": "пер Татаркина",
+          "houses": []
+        },
+        {
+          "street": "пер Студенческий",
+          "houses": []
+        }
+      ],
+      "zones": [],
+      "unmappedAreaText": [],
+      "sourceId": "water_kvu",
+      "reviewRequired": false,
+      "requiresReview": false,
+      "noticeId": "kvu/e71fb7b7f4913ee6c504/1",
+      "category": "water",
+      "status": "unconfirmed",
+      "revision": 1,
+      "evidence": [
+        "https://kvu.su/utilities/19258-gde-v-shahtah-otkljuchili-vodosnabzhenie-vo-vtornik-20-oktjabrja.html"
+      ],
+      "updates": [
+        "kvu/e71fb7b7f4913ee6c504/1"
+      ],
+      "point": null,
+      "precision": "street",
+      "description": "С 9.30 в связи с проведением аварийно - ремонтных работ на трубопроводе по адресу: ул.Капровая, д. 47 снижено давление при подаче воды. На период проведения работ нестабильное водоснабжение по адресам: ул Капровая ул Ильюшина ул Заветы Ильича ул Калинина ул Погодина ул Благотворная ул Рахманинова ул Ангарская ул Миусская ул Драйзера ул Гризодубовой бульвар Олимпийский пер Мичурина пер Татаркина пер. Студенческий. Ориентировочное время з",
+      "title": "Ограничение водоснабжения",
+      "fullText": "С 9.30 в связи с проведением аварийно - ремонтных работ на трубопроводе по адресу: ул.Капровая, д. 47 снижено давление при подаче воды.\nНа период проведения работ нестабильное водоснабжение по адресам:\nул Капровая\nул Ильюшина\nул Заветы Ильича\nул Калинина\nул Погодина\nул Благотворная\nул Рахманинова\nул Ангарская\nул Миусская\nул Драйзера\nул Гризодубовой\nбульвар Олимпийский \nпер Мичурина\nпер Татаркина\nпер. Студенческий.\nОриентировочное время завершения работ в 18-00 час. 20.10.2026. \nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863) 28-55-777.",
+      "observedAt": "2026-10-20T20:45:14.418222+00:00"
+    },
     {
       "id": "power-direct-41e24fe83c42f9e3ad",
       "category": "power",
@@ -116,7 +240,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T20:10:56.961554+00:00",
+      "observedAt": "2026-10-20T20:45:38.855945+00:00",
       "start": "2026-10-20T13:00:00+03:00",
       "end": "2026-10-20T17:00:00+03:00",
       "startBasis": "explicit",
@@ -160,7 +284,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T20:10:56.961554+00:00",
+      "observedAt": "2026-10-20T20:45:38.855945+00:00",
       "start": "2026-10-21T09:00:00+03:00",
       "end": "2026-10-21T14:00:00+03:00",
       "startBasis": "explicit",
@@ -192,7 +316,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T20:10:56.961554+00:00",
+      "observedAt": "2026-10-20T20:45:38.855945+00:00",
       "start": "2026-10-21T09:00:00+03:00",
       "end": "2026-10-21T14:00:00+03:00",
       "startBasis": "explicit",
@@ -250,6 +374,42 @@
     }
   ],
   "archive": [
+    {
+      "id": "kvu/e71fb7b7f4913ee6c504/0",
+      "publishedAt": "2026-10-20T09:12:41+03:00",
+      "text": "В Шахтах отключили водоснабжение во вторник, 20 октября.\nВ связи с проведением аварийно-ремонтных работ по ул. Гагарина с 9.30 снижено давление подачи холодного водоснабжения в направлении улиц:\nШоссейная\nВоровского\nКаманина\nГагарина\nСемашко\nРыночный.\nОриентировочное время окончания работ – 18.00, 20 октября.",
+      "url": "https://kvu.su/utilities/19258-gde-v-shahtah-otkljuchili-vodosnabzhenie-vo-vtornik-20-oktjabrja.html",
+      "origin": "media_report",
+      "source": "КВУ — публикация СМИ",
+      "sourceId": "water_kvu"
+    },
+    {
+      "id": "kvu/e71fb7b7f4913ee6c504/1",
+      "publishedAt": "2026-10-20T09:12:41+03:00",
+      "text": "С 9.30 в связи с проведением аварийно - ремонтных работ на трубопроводе по адресу: ул.Капровая, д. 47 снижено давление при подаче воды.\nНа период проведения работ нестабильное водоснабжение по адресам:\nул Капровая\nул Ильюшина\nул Заветы Ильича\nул Калинина\nул Погодина\nул Благотворная\nул Рахманинова\nул Ангарская\nул Миусская\nул Драйзера\nул Гризодубовой\nбульвар Олимпийский \nпер Мичурина\nпер Татаркина\nпер. Студенческий.\nОриентировочное время завершения работ в 18-00 час. 20.10.2026. \nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863) 28-55-777.",
+      "url": "https://kvu.su/utilities/19258-gde-v-shahtah-otkljuchili-vodosnabzhenie-vo-vtornik-20-oktjabrja.html",
+      "origin": "media_report",
+      "source": "КВУ — публикация СМИ",
+      "sourceId": "water_kvu"
+    },
+    {
+      "id": "kvu/e5667a19499d32a84c3b/0",
+      "publishedAt": "2026-10-19T12:25:34+03:00",
+      "text": "В городе Шахты произошло аварийное отключение воды 19 октября.\nСотрудники водоканала с 12:10 приступили к ремонтным работам на трубопроводе по переулку Капустина. Ориентировочно до 18:00 будет снижено давление в трубах в следующих направлениях:\nпер Капустина\nул Административная\nул Милиционная\nул Горняцкая\nул Свободы\nПодвоз воды будет осуществляться по заявкам абонентов. Телефон диспетчерской службы ГУП РО «УРСВ»: 88632855777.",
+      "url": "https://kvu.su/utilities/19247-gde-v-shahtah-ne-budet-vody-19-oktjabrja.html",
+      "origin": "media_report",
+      "source": "КВУ — публикация СМИ",
+      "sourceId": "water_kvu"
+    },
+    {
+      "id": "kvu/43edff4c8a546417c138/0",
+      "publishedAt": "2026-10-17T10:35:24+03:00",
+      "text": "Шахтинцы остались без воды в выходной день 17 октября. Причиной стала авария на трубопроводе в переулке Шишкина, 183 А. Примерно в 9:30 сотрудники водоканала приступили к ремонтным работам. Ориентировочно они завершат до 18:00.\nДо этого времени будет снижено давление в следующих направлениях:\nул Юный Спартак\nул Федюнина\nул Кадровая\nпер Шишкина\nпр-кт Красной Армии",
+      "url": "https://kvu.su/utilities/19233-v-shahtah-otkljuchili-vodu-v-vyhodnoj-den-17-oktjabrja.html",
+      "origin": "media_report",
+      "source": "КВУ — публикация СМИ",
+      "sourceId": "water_kvu"
+    },
     {
       "id": "oursv/1591",
       "publishedAt": "2026-10-17T10:00:35+03:00",
