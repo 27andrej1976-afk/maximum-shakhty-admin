@@ -3555,7 +3555,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:строителей": {
-      "timestamp": 1792367524.189235,
+      "timestamp": 1792457014.281249,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -3809,7 +3809,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:вишневый": {
-      "timestamp": 1792367524.189235,
+      "timestamp": 1792457014.281249,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
