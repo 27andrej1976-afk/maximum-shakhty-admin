@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-20T15:34:13.295085+00:00",
+  "checkedAt": "2026-10-20T16:10:36.134516+00:00",
   "sources": [
     {
       "id": "city",
@@ -29,21 +29,17 @@
     },
     {
       "id": "power_repost_rostov",
-      "status": "partial",
+      "status": "error",
       "url": "https://newsrostov.ru/rss.xml",
-      "posts": 200,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
+      "posts": 0,
+      "note": "Нет доступа к RSS: <urlopen error timed out>"
     },
     {
       "id": "power_repost_don",
-      "status": "partial",
+      "status": "error",
       "url": "https://news-don.ru/rss.xml",
-      "posts": 200,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
+      "posts": 0,
+      "note": "Нет доступа к RSS: <urlopen error timed out>"
     },
     {
       "id": "power_city",
