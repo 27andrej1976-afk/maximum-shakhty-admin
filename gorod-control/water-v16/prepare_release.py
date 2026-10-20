@@ -7,7 +7,7 @@ for name in ('prepare_variant.py','android_test.py'):
     s=s.replace('Город · классика+','Город · вода').replace('Город · компакт+','Город · вода компакт')
     if name=='android_test.py':
         extra='''
-check(evaluate("document.body.innerText.includes('КВУ')"),'KVU source included in installed app')
+check(evaluate("document.querySelector('#sourcesGrid').textContent.includes('КВУ')"),'KVU source included in installed app')
 fixture={
  'schema':2,'checkedAt':__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),
  'sources':[{'id':'water_kvu','status':'ok'},{'id':'repost_don','status':'ok'}],
