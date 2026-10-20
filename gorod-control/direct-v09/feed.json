@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-20T13:26:50.754763+00:00",
+  "checkedAt": "2026-10-20T14:11:52.844665+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,7 +12,7 @@
       "lastPostAt": "2026-10-20T08:34:40+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "repost_rostov",
@@ -21,7 +21,7 @@
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "repost_don",
@@ -30,23 +30,27 @@
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "power_repost_rostov",
-      "status": "error",
+      "status": "partial",
       "url": "https://newsrostov.ru/rss.xml",
-      "posts": 0,
-      "note": "Нет доступа к RSS: <urlopen error timed out>",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "posts": 200,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "power_repost_don",
-      "status": "error",
+      "status": "partial",
       "url": "https://news-don.ru/rss.xml",
-      "posts": 0,
-      "note": "Нет доступа к RSS: <urlopen error timed out>",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "posts": 200,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "power_city",
@@ -56,7 +60,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "gas_city",
@@ -66,7 +70,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "gas",
@@ -75,7 +79,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "mchs",
@@ -85,22 +89,22 @@
       "matchingPosts": 0,
       "lastPostAt": "2026-10-20T10:50:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-10-20T13:05:37.484213+00:00"
+      "checkedAt": "2026-10-20T13:45:14.721531+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-20T13:26:50.754763+00:00",
+      "checkedAt": "2026-10-20T14:11:52.844665+00:00",
       "lastPostAt": null,
       "posts": 3,
       "matchingPosts": 3,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "e6184271fdfec98995a4492e0d41d77653ce3de33ad0339f414ec7eef4c18a2f",
-      "durationSeconds": 6.2
+      "contentSha256": "4758654a25277c36707a16c35fed24c0e09669422da6403805199055c65f39cc",
+      "durationSeconds": 4.52
     }
   ],
   "events": [
@@ -108,14 +112,14 @@
       "id": "power-direct-41e24fe83c42f9e3ad",
       "category": "power",
       "kind": "planned",
-      "status": "active",
+      "status": "unconfirmed",
       "sourceId": "power_direct",
       "source": "Донэнерго · официальный график ШМЭС",
       "origin": "official_site",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T13:26:50.754763+00:00",
+      "observedAt": "2026-10-20T14:11:52.844665+00:00",
       "start": "2026-10-20T13:00:00+03:00",
       "end": "2026-10-20T17:00:00+03:00",
       "startBasis": "explicit",
@@ -159,7 +163,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T13:26:50.754763+00:00",
+      "observedAt": "2026-10-20T14:11:52.844665+00:00",
       "start": "2026-10-21T09:00:00+03:00",
       "end": "2026-10-21T14:00:00+03:00",
       "startBasis": "explicit",
@@ -191,7 +195,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-20T13:26:50.754763+00:00",
+      "observedAt": "2026-10-20T14:11:52.844665+00:00",
       "start": "2026-10-21T09:00:00+03:00",
       "end": "2026-10-21T14:00:00+03:00",
       "startBasis": "explicit",
