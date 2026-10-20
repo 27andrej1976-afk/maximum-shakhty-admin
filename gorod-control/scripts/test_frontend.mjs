@@ -59,3 +59,18 @@ assert.match(html,/id:'mchs'/,"official MCHS feed");
 assert.match(html,/data-filter="warning"/,"MCHS notices can be filtered separately");
 
 console.log("City frontend: "+blocks.length+" scripts parsed, 21 address/scope/source checks passed");
+
+// A valid read with no local notices differs from a network error or missing access.
+const summaryScript=html.slice(html.indexOf('function sourceSummary('),html.indexOf('function renderSources('));
+const summaryCtx=vm.createContext({Date,Set,Number,state:{checkedAt:new Date().toISOString()}});
+new vm.Script(summaryScript).runInContext(summaryCtx);
+const rows=[{id:'a',url:'https://one.example/rss'},{id:'b',url:'https://one.example/rss'},
+  {id:'c',url:'https://two.example/rss'},{id:'d',url:'https://max.ru/shakhtygorod'}];
+const checks={a:{status:'ok'},b:{status:'partial',readStatus:'ok'},c:{status:'error'},d:{status:'not_configured'}};
+const summary=summaryCtx.sourceSummary(rows,checks);
+assert.equal(summary.read,2);
+assert.equal(summary.errors,1);
+assert.equal(summary.unconfigured,1);
+assert.equal(summary.unique,3);
+assert.equal(summaryCtx.sourceSummary(rows,checks,Date.now()+5*3600000).read,0);
+console.log('Source status: empty matches, network errors, missing access, duplicate URLs and stale data checked');

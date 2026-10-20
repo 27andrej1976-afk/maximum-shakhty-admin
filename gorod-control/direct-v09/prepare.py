@@ -104,6 +104,7 @@ function ingestFeed(data){
   state.checkedAt=data.nativeCheckedAt||data.checkedAt;state.backendConnected=state.checks.some(freshSource);
   state.events=data.events.filter(e=>{
     const url=String(e.url||'');
+    if(e.origin==='official_max')return !e.requiresReview&&freshSource(by[e.sourceId])&&['max_city','max_power'].includes(e.sourceId)&&/^https:\/\/max\.ru\/(?:shakhtygorod|id6163089292_biz)(?:\/|$)/.test(url);
     if(e.sourceId==='power_direct')return freshSource(by.power_direct)&&e.origin==='official_site'&&url==='https://donenergo.ru/grafik-otklyucheniy/61/1/';
     if(e.sourceId==='ursv_device')return ['ok','partial'].includes(by.ursv_device?.status)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(url)&&e.origin==='official_device';
     if(e.category==='water')return e.origin==='verified_repost'&&(freshSource(by.repost_rostov)||freshSource(by.repost_don))||e.source==='Администрация города Шахты'&&freshSource(by.city);

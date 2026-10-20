@@ -6,6 +6,9 @@ from power_direct import collect as collect_power
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'direct-v09'
 sys.path.insert(0,str(ROOT/'scripts'))
+from max_sources import collect as collect_max
+from city_utility import parse_posts as parse_city_posts
+from service_events import CITY, classify_power
 
 def main():
  now=datetime.now(timezone.utc)
@@ -14,11 +17,15 @@ def main():
  oldcheck=baseline.get('checkedAt')
  spec=importlib.util.spec_from_file_location('verified_v09',OUT/'water_verified.py')
  verified=importlib.util.module_from_spec(spec);spec.loader.exec_module(verified)
- norm=verified.build_feed(baseline.get('archive',[]),now)
+ max_posts,max_states=collect_max(now)
+ max_water=[p for p in max_posts if p['sourceId']=='max_city']
+ norm=verified.build_feed(baseline.get('archive',[])+max_water,now)
  water=[]
  for e in norm['events']:
   e['fullText']=e.get('text',e.get('description',''))
   if e.get('unmappedAreaText') or e.get('zones'):e['requiresReview']=True
+  if e.get('origin')=='official_max':
+   e['sourceId']='max_city';e['requiresReview']=True
   water.append(e)
  power,source=collect_power(now)
  sources=[]
@@ -26,7 +33,15 @@ def main():
   if s.get('id') in ('power_planned','power_direct','ursv_device'):continue
   s=dict(s);s['checkedAt']=s.get('checkedAt',oldcheck);sources.append(s)
  sources.append(source)
- events=water+[e for e in baseline.get('events',[]) if e.get('category')!='water']+power
+ sources.extend(max_states)
+ max_events=[]
+ for post in max_posts:
+  if not CITY.search(post['text'][:500]) or classify_power(post['text'])=='resolved':continue
+  for e in parse_city_posts([post],now):
+   e.update(id=post['id']+'-'+e['category'],sourceId=post['sourceId'],source=post['source'],
+            origin='official_max',requiresReview=True)
+   max_events.append(e)
+ events=water+[e for e in baseline.get('events',[]) if e.get('category')!='water']+power+max_events
  for e in events:
   e['observedAt']=e.get('observedAt') or oldcheck
  data={'schema':2,'version':'0.9.0-test','checkedAt':now.isoformat(),'coverage':'partial',

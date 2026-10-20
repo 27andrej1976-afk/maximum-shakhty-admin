@@ -160,6 +160,8 @@ const LGC = window.CityLogic;
 const CITY = {lat:47.7086,lon:40.2146}; // public approximate city centre, not a private address
 const KEY = 'gorod_control_home_v1';
 const sources = [
+  {id:'max_city',icon:'🏛',name:'MAX · администрация Шахт',detail:'Прямое чтение официального канала через API',url:'https://max.ru/shakhtygorod'},
+  {id:'max_power',icon:'⚡',name:'MAX · Донэнерго',detail:'Официальные сообщения об аварийных отключениях',url:'https://max.ru/id6163089292_biz'},
   {id:'repost_rostov',icon:'📰',name:'УРСВ · сообщения о воде',detail:'Проверяемые перепечатки официальных уведомлений',url:'https://newsrostov.ru/'},
   {id:'repost_don',icon:'🗞',name:'УРСВ · резервная лента',detail:'Перепечатки со ссылкой на первоисточник',url:'https://news-don.ru/'},
   {id:'power_repost_rostov', icon:'⚡', name:'Донэнерго · аварии', detail:'Перепечатки с указанием Донэнерго как источника', url:'https://newsrostov.ru/rss.xml'},
@@ -200,22 +202,35 @@ function demoEvents(){const h=state.home||{...CITY,street:'Тестовая',hou
  {id:'example-gas',source:'Учебный пример',kind:'planned',status:'active',category:'gas',title:'Проверка газовых сетей на вашей улице',description:'Учебное событие: указана улица, но номер дома неизвестен. Совпадение считается предварительным.',start:isoFuture(2,10),end:isoFuture(2,16),affected:[{street:st,houses:[]}],point:null,demo:true},
  {id:'example-far',source:'Учебный пример',kind:'emergency',status:'active',category:'water',title:'Далёкая авария — должна быть скрыта',description:'Это событие в нескольких километрах без влияния на ваш дом; приложение его отфильтрует.',start:isoFuture(0,8),end:isoFuture(0,22),affected:[{street:'Другая',houses:['1-50']}],point:{lat:+h.lat+.06,lon:+h.lon},demo:true}
 ]}
+function sourceSummary(list,states,now=Date.now()){
+  let read=0,errors=0,unconfigured=0;
+  for(const item of list){
+    const s=states[item.id];
+    const age=now-Date.parse(s?.checkedAt||state.checkedAt||'');
+    const fresh=Number.isFinite(age)&&age>=-120000&&age<4*3600000;
+    if(s?.status==='not_configured'||!s){unconfigured++;continue;}
+    if(s.status==='error'){errors++;continue;}
+    if(fresh&&(s.status==='ok'||s.readStatus==='ok'))read++;
+  }
+  return {read,errors,unconfigured,unique:new Set(list.map(s=>states[s.id]?.url||s.url)).size};
+}
 function renderSources(){
   const states=Object.fromEntries(state.checks.map(s=>[s.id,s]));
   $('sourcesGrid').innerHTML=sources.map(s=>{
     const st=states[s.id];
     let status=st?.status==='ok' ? ('Источник прочитан'+(st.posts!=null?' · '+st.posts+' сообщений':'')):
       st?.status==='stale'?'Нет новых публикаций · источник устарел':
-      st?.status==='partial'?'Неполная проверка':
-      st?.status==='error'?'Нет автоматического доступа':'Подключение не завершено';
-    if(st?.status==='partial'||st?.status==='error')status+=' · '+(st.note||'Адресные сведения недоступны');
+      st?.status==='partial'?(st.readStatus==='ok'?'Лента прочитана · охват неполный':'Неполная проверка'):
+      st?.status==='error'?'Нет автоматического доступа':st?.status==='not_configured'?'Требуется настройка доступа':'Подключение не завершено';
+    if(['partial','error','not_configured'].includes(st?.status))status+=' · '+(st.note||'Адресные сведения недоступны');
     return '<a class="source" href="'+s.url+'" target="_blank" rel="noopener noreferrer" title="'+escapeHtml(st?.note||s.detail)+'">'+
       '<span class="source-icon">'+s.icon+'</span><span class="source-main"><strong>'+escapeHtml(s.name)+
       '</strong><small>'+escapeHtml(status)+'</small></span><span class="arrow">↗</span></a>';
   }).join('');
-  const ok=sources.filter(s=>states[s.id]?.status==='ok').length;
-  $('sourceStatus').textContent=state.checks.length?'Проверено '+ok+' из '+sources.length:'Нет онлайн-проверки';
-  $('sourceStatus').classList.toggle('partial',ok>0);
+  const summary=sourceSummary(sources,states);
+  $('sourceStatus').textContent=state.checks.length?'Прочитано '+summary.read+' из '+sources.length+' · ошибок '+summary.errors+' · требуют настройки '+summary.unconfigured:'Нет онлайн-проверки';
+  $('sourceStatus').title='Строки включают повторные ленты для разных категорий. Уникальных адресов: '+summary.unique+'. Прочитано не означает полный охват отключений.';
+  $('sourceStatus').classList.toggle('partial',summary.read>0);
 }
 function paintHome(){const h=state.home;$('pointStatus').textContent=h?'Задана':state.demo?'Тестовая':'Не задана';$('pointStatus').classList.toggle('set',!!h);$('addressValue').textContent=h? h.label || 'Точка GPS, Шахты' : state.demo?'Центр Шахт — условная точка':'Укажите адрес или определите его автоматически';$('mapName').textContent=h?(h.label||'Ваша контрольная точка'):state.demo?'Шахты · учебная точка':'Шахты · точка не задана';$('addressHint').textContent=!h&&state.demo?'Это условный адрес для проверки приложения. Для настоящего мониторинга выберите свой дом.':h&&(!h.street||LGC.normalStreet(h.street).startsWith('неуточн:'))?'Тип улицы не определён. Для точных отключений введите адрес с названием улицы и номером дома.':h&&!h.house?'Для оповещений по адресным спискам желательно добавить улицу и номер дома. Координат для этого недостаточно.':'Адрес и координаты сохраняются только в этом браузере. Карта и поиск адреса используют сторонние сервисы.';}
 function makeMap(){window.CityMapV07.start();}

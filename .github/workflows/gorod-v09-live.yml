@@ -22,6 +22,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Read direct official graph and preserve individual source timestamps
+        env:
+          MAX_BOT_TOKEN: ${{ secrets.MAX_BOT_TOKEN }}
+          MAX_CITY_CHAT_ID: ${{ vars.MAX_CITY_CHAT_ID }}
+          MAX_POWER_CHAT_ID: ${{ vars.MAX_POWER_CHAT_ID }}
         run: |
           python -m compileall -q gorod-control/direct-v09
           python gorod-control/direct-v09/build_feed.py

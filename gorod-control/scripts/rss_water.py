@@ -94,7 +94,7 @@ def collect_rss(now=None):
                 notices.setdefault(p['id'],p)
             latest=max((p['publishedAt'] for p in posts),default=None)
             status.append({'id':('repost_rostov' if 'newsrostov.' in domain else 'repost_don'),
-                           'status':'ok' if valid else 'partial',
+                           'status':'ok' if valid else 'partial','readStatus':'ok','coverage':'partial',
                            'posts':len(posts),'lastPostAt':latest,'url':url,
                            'note':'Независимый агрегатор, перепечатка со ссылкой на официальный документ УРСВ'})
             print('RSS MIRROR',domain,'official refs',len(posts),'recent',len(valid))

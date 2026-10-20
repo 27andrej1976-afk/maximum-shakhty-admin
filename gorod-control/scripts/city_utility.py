@@ -92,7 +92,7 @@ def collect_city(now):
         for cat in ('power','gas'):
             n=len([e for e in events if e['category']==cat])
             states.append({'id':cat+'_city','status':'ok' if n else 'partial',
-             'url':CHANNEL,'posts':len(posts),'matchingPosts':n,
+             'url':CHANNEL,'readStatus':'ok' if posts else 'error','coverage':'partial','posts':len(posts),'matchingPosts':n,
              'lastPostAt':latest if n else None,
              'note':'Официальный канал администрации Шахт; отбираются только адресные сообщения о '+('свете' if cat=='power' else 'газе')})
         return events,states
