@@ -6730,14 +6730,14 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:звездная": {
-      "timestamp": 1792502816.965748,
+      "timestamp": 1792592571.141553,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:парижской коммуны": {
-      "timestamp": 1792502816.965748,
+      "timestamp": 1792592571.141553,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
@@ -6777,7 +6777,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:кольцевая 1-29 а": {
-      "timestamp": 1792502816.965748,
+      "timestamp": 1792592571.141553,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
@@ -6886,14 +6886,14 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:вольный 2-8 а": {
-      "timestamp": 1792502816.965748,
+      "timestamp": 1792592571.141553,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:мастеровой 7-7 а": {
-      "timestamp": 1792502816.965748,
+      "timestamp": 1792592571.141553,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
