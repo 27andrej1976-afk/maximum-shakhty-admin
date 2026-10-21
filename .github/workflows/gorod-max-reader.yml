@@ -1,0 +1,55 @@
+name: City Control | MAX Windows connector
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/max-reader]
+    paths:
+      - 'gorod-control/max-reader/**'
+      - 'gorod-control/scripts/max_user_reader.py'
+      - '.github/workflows/gorod-max-reader.yml'
+permissions:
+  contents: write
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test reader without personal accounts or credentials
+        run: |
+          python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -q
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pip install --quiet -r gorod-control/max-reader/requirements.txt pyinstaller==6.13.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python gorod-control/max-reader/connect.py --self-test
+      - name: Build standalone Windows connector
+        run: |
+          python -m PyInstaller --noconfirm --clean --onedir --console --name CityControl-MAX --paths gorod-control/scripts --collect-all pymax gorod-control/max-reader/connect.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & dist/CityControl-MAX/CityControl-MAX.exe --self-test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item gorod-control/max-reader/README.md dist/CityControl-MAX/README.md
+          Compress-Archive -Path dist/CityControl-MAX/* -DestinationPath "$env:RUNNER_TEMP/CityControl-MAX-Connector.zip"
+          Get-FileHash "$env:RUNNER_TEMP/CityControl-MAX-Connector.zip" -Algorithm SHA256
+      - name: Publish tested connector without sessions or account data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for ($attempt=1; $attempt -le 3; $attempt++) {
+            git fetch origin main
+            git checkout -f -B max-connector-publish origin/main
+            New-Item -ItemType Directory -Force gorod-control/max-reader/downloads | Out-Null
+            Copy-Item "$env:RUNNER_TEMP/CityControl-MAX-Connector.zip" gorod-control/max-reader/downloads/
+            git add gorod-control/max-reader/downloads/CityControl-MAX-Connector.zip
+            git diff --cached --quiet
+            if ($LASTEXITCODE -eq 0) { break }
+            git commit -m 'Publish standalone MAX channel connector for Windows'
+            git push origin HEAD:main
+            if ($LASTEXITCODE -eq 0) { break }
+            if ($attempt -eq 3) { exit 1 }
+          }

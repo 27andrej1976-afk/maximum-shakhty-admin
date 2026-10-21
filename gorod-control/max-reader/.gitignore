@@ -1,0 +1,10 @@
+*.db
+*.db-*
+*.sqlite*
+*session*.json
+max-login.html
+public-channel-check.json
+__pycache__/
+dist/
+build/
+*.spec
