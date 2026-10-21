@@ -30,4 +30,15 @@ class Retention(unittest.TestCase):
  def test_previous_restoration_is_not_a_new_incident_resolution(self):
   r={**self.e,'id':'restore','status':'resolved','publishedAt':(self.now-timedelta(hours=1)).isoformat()}
   self.assertEqual(merge([r],[self.e],[{'id':'power_direct','status':'ok'}],self.now)[0]['status'],'unconfirmed')
+ def test_verified_max_survives_source_error_and_expires_at_36_hours(self):
+  e={**self.e,'sourceId':'max_power','origin':'official_max','url':'https://max.ru/id6163089292_biz','requiresReview':False}
+  saved=merge([e],[],[{'id':'max_power','status':'ok','checkedAt':self.now.isoformat()}],self.now)
+  self.assertEqual(len(saved),1)
+  self.assertEqual(len(merge([],saved,[{'id':'max_power','status':'error'}],self.now+timedelta(hours=35))),1)
+  self.assertEqual(merge([],saved,[],self.now+timedelta(hours=36)),[])
+  e['sourceId']='max_city';self.assertEqual(merge([e],[],[{'id':'max_city','status':'ok'}],self.now),[])
+ def test_max_review_candidate_cannot_close_a_verified_power_event(self):
+  r={**self.e,'id':'candidate','sourceId':'max_power','origin':'official_max','url':'https://max.ru/id6163089292_biz','requiresReview':True,'status':'resolved','publishedAt':(self.now+timedelta(hours=1)).isoformat()}
+  out=merge([r],[self.e],[{'id':'max_power','status':'ok'}],self.now+timedelta(hours=2))
+  self.assertEqual(out[0]['status'],'unconfirmed')
 if __name__=='__main__':unittest.main()
