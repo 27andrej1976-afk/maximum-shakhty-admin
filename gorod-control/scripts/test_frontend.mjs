@@ -86,3 +86,6 @@ assert.equal(accept(media,{water_kvu:{status:'stale'}},fresh),false);
 assert.equal(accept({origin:'municipal_repost',sourceId:'repost_don',url:'https://news-don.ru/society/report'},src,fresh),false,'another healthy mirror cannot validate a failed source');
 assert.equal(accept({origin:'municipal_repost',sourceId:'repost_rostov',url:'https://newsrostov.ru/society/report'},src,fresh),true);
 console.log('Water sources: attribution, domain restrictions and source-specific freshness passed');
+
+const sourceIds=[...html.split("const sources = [")[1].split("];",1)[0].matchAll(/id:\s*'([^']+)'/g)].map(m=>m[1]);
+assert.equal(new Set(sourceIds).size,sourceIds.length,"Source registry must not duplicate IDs");

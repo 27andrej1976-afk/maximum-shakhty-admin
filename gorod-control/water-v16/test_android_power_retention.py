@@ -17,4 +17,5 @@ check(not evaluate("CityMapV07.inspect().allIds.includes('retention-power')"),'P
 e['end']=end.isoformat();e['retainUntil']=(end+timedelta(hours=36)).isoformat();e['url']='https://example.org/unverified';inject_power()
 check(not evaluate("CityMapV07.inspect().allIds.includes('retention-power')"),'Retention never accepts untrusted source URL')
 check(evaluate("document.querySelector('#sourcesGrid').textContent.includes('MAX · Донэнерго')"),'MAX source visibly listed without claiming connected access')
+check(evaluate("document.querySelectorAll('#sourcesGrid .source').length")==14,'All fourteen source entries present exactly once')
 evaluate('window.CityControlNativeFeed=window.powerTestFeed;true')
