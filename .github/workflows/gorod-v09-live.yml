@@ -17,7 +17,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -31,12 +31,15 @@ jobs:
         run: |
           python -m compileall -q gorod-control/direct-v09
           python gorod-control/scripts/collect_water.py
+          python gorod-control/scripts/collect_services.py
           python gorod-control/direct-v09/build_feed.py
           python - <<'PY'
           from pathlib import Path
           import json
           d=json.loads(Path('gorod-control/direct-v09/feed.json').read_text())
           assert d['schema']==2 and d['coverage']=='partial'
+          required={'city','water_kvu','repost_rostov','repost_don','power_direct','power_city','gas_city','gas','mchs'}
+          assert required.issubset({s['id'] for s in d['sources']}), 'Incomplete source registry'
           for e in d['events']:
             if e.get('sourceId')=='power_direct':
               assert e['url']=='https://donenergo.ru/grafik-otklyucheniy/61/1/'

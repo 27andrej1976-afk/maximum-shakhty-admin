@@ -1,0 +1,75 @@
+name: City Control | Compact installed APK health check
+on:
+  workflow_dispatch:
+  push:
+    branches: [audit/compact-health-20261021]
+    paths:
+      - '.github/workflows/gorod-compact-health.yml'
+      - 'gorod-control/water-v16/test_android_behaviour.py'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CITY_VARIANT: compact
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Test sources, dates, address matching and map adapter
+        run: |
+          python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -v
+          node gorod-control/scripts/test_frontend.mjs
+          node gorod-control/map-v07/test_pan_sync.mjs
+          mkdir -p /tmp/compact-address-check
+          javac -encoding UTF-8 -d /tmp/compact-address-check gorod-control/android/app/src/main/java/ru/citycontrol/shakhty/CityAddress.java gorod-control/scripts/CityAddressCheck.java
+          java -cp /tmp/compact-address-check CityAddressCheck
+      - name: Validate shipped APK and embedded scripts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,re,subprocess,tempfile,hashlib
+          apk=Path('gorod-control/water-v16/downloads/GorodPodKontrolem-Compact-Water-1.4.apk')
+          print('SHIPPED_APK_SHA256',hashlib.sha256(apk.read_bytes()).hexdigest())
+          with zipfile.ZipFile(apk) as z:
+              assert z.testzip() is None
+              html=z.read('assets/web/index.html').decode()
+              assert 'compactV11Logic' in html and 'waterSourceAccepted' in html
+              for script in re.findall(r'<script(?:\s+[^>]*)?>(.*?)</script>',html,re.S):
+                  if not script.strip():continue
+                  with tempfile.NamedTemporaryFile('w',suffix='.js') as f:
+                      f.write(script);f.flush()
+                      subprocess.run(['node','--check',f.name],check=True)
+          print('SHIPPED_APK_SCRIPTS_OK')
+          PY
+      - name: Enable emulator virtualization
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Check actual APK on Android with touch input
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          script: |
+            python -m pip install --quiet websocket-client
+            python gorod-control/water-v16/test_installed_compact.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        continue-on-error: true
+        with:
+          name: compact-health-report
+          path: compact-health-report/
+          retention-days: 3

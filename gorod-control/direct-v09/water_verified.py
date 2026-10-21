@@ -54,7 +54,7 @@ def extract_areas(text):
     result=[];unknown=[];zones=[];active=False;settlements=False
     for raw in text.splitlines():
         line=raw.strip(STRIP)
-        if re.match(r'^Адрес(?:а|ы)?\s*:',line,re.I):
+        if re.match(r'^(?:С\s+нестабильным\s+водоснабжением\s+)?Адрес(?:а|ы)?\s*:',line,re.I):
             active=True;line=line.split(':',1)[1].strip()
             if not line:continue
         elif re.search(r'водоснабжение\s+поселков\s*:',line,re.I):
