@@ -2,6 +2,8 @@
 # Use the installed adapter and map, but a deterministic style with no external tiles.
 evaluate("""(() => {
  const map=CityMapV07.getMap();
+ // Replace the base layer: two relative GL containers would stack vertically.
+ map.eachLayer(layer=>{if(layer instanceof L.MaplibreGL || layer instanceof L.GridLayer)map.removeLayer(layer);});
  document.querySelector('#map').scrollIntoView({block:'center'});
  map.invalidateSize({animate:false});
  map.setView([47.7086,40.2146],14,{animate:false});
@@ -34,6 +36,8 @@ def touch(points,kind):
   if d.get('id')==identity:
    if d.get('error'):raise RuntimeError(str(d['error']))
    break
+print('ANDROID_PAN_INITIAL',json.dumps(snapshot()),flush=True)
+check(max(snapshot()['errors'])<5,'Initial vector and marker pixel alignment')
 for direction in (1,-1):
  before=snapshot();b=before['box'];x=b['x']+b['w']*.5;y=b['y']+b['h']*.48
  touch([(x,y)],'touchStart')
@@ -41,6 +45,7 @@ for direction in (1,-1):
   touch([(x+direction*70*i/12,y+direction*35*i/12)],'touchMove');time.sleep(.025)
  touch([],'touchEnd');time.sleep(1)
  after=snapshot()
+ print('ANDROID_PAN_AFTER',json.dumps(after),flush=True)
  check(max(abs(a-b) for a,b in zip(before['center'],after['center']))>.0001,'Touch swipe moves map '+str(direction))
  check(max(abs(a-b) for a,b in zip(after['center'],after['glCenter']))<.0001,'Vector and marker centers agree after swipe '+str(direction))
  check(max(after['errors'])<5,'Water and gas marker pixels stay aligned after swipe '+str(direction))
