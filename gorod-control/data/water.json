@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-21T17:32:51.331687+00:00",
+  "checkedAt": "2026-10-21T18:02:36.685692+00:00",
   "events": [
     {
       "id": "water-city-repost-36e3756684a66016ff87",
@@ -1193,12 +1193,12 @@
       "lastPostAt": "2026-10-20T08:34:40+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-21T17:31:24.933807+00:00"
+      "checkedAt": "2026-10-21T18:02:26.247761+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-10-21T17:31:24.933807+00:00",
+      "checkedAt": "2026-10-21T18:02:26.247761+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -1209,11 +1209,15 @@
     },
     {
       "id": "repost_rostov",
-      "status": "error",
-      "posts": 0,
+      "status": "ok",
+      "readStatus": "ok",
+      "coverage": "partial",
+      "posts": 200,
+      "matchingPosts": 1,
+      "checkedAt": "2026-10-21T18:02:26.247761+00:00",
+      "lastPostAt": "2026-10-21T11:10:02+03:00",
       "url": "https://newsrostov.ru/rss.xml",
-      "note": "<urlopen error _ssl.c:993: The handshake operation timed out>",
-      "checkedAt": "2026-10-21T17:31:24.933807+00:00"
+      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
@@ -1222,7 +1226,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 2,
-      "checkedAt": "2026-10-21T17:31:24.933807+00:00",
+      "checkedAt": "2026-10-21T18:02:26.247761+00:00",
       "lastPostAt": "2026-10-21T11:08:22+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -1293,7 +1297,7 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 0,
-      "lastPostAt": "2026-10-21T12:00:00+03:00",
+      "lastPostAt": "2026-10-21T20:34:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам"
     }
   ],
