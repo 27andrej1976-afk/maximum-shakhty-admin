@@ -40,3 +40,9 @@
 .cm-map-source-credit a[hidden]{display:none!important}
 #map .leaflet-control-attribution,#map .maplibregl-ctrl-attrib{display:none!important}
 @media(max-width:760px){.cm-map-source-credit{font-size:9.5px;line-height:1.5;gap:4px 9px}}
+
+/* Keep the provider label on its own row on narrow phone displays. */
+.cm-modes{flex-wrap:wrap;min-width:0}
+.cm-modes button{min-width:0}
+.cm-provider{flex:0 0 100%;min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:right;padding:0 4px 3px}
+#map{isolation:isolate}

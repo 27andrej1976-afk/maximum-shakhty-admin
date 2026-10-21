@@ -2,7 +2,7 @@ name: City Control | Water monitoring Android update
 on:
   workflow_dispatch:
   push:
-    branches: [fix/city-source-checks-max-20261020]
+    branches: [fix/water-map-pan-20261021]
     paths:
       - 'gorod-control/water-v16/**'
       - '.github/workflows/gorod-water-apks-v16.yml'
@@ -58,6 +58,7 @@ jobs:
         run: |
           python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -q
           node gorod-control/scripts/test_frontend.mjs
+          node gorod-control/map-v07/test_pan_sync.mjs
           python gorod-control/water-v16/prepare_release.py
           python gorod-control/direct-v09/prepare.py
           python -m pip install --quiet pillow
@@ -76,9 +77,9 @@ jobs:
           unzip -l "$APK" | grep 'assets/web/light-v10/vendor/maplibre-gl.js'
           mkdir -p /tmp/city-report-apk
           if [ "$CITY_VARIANT" = "normal" ]; then
-            cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Classic-Water-1.3.apk
+            cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Classic-Water-1.4.apk
           else
-            cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.3.apk
+            cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.4.apk
           fi
           sha256sum /tmp/city-report-apk/*.apk
       - name: Enable virtualization
@@ -124,7 +125,7 @@ jobs:
             cp /tmp/city-report-apk/*.apk gorod-control/water-v16/downloads/
             git add gorod-control/water-v16/downloads/
             if git diff --cached --quiet; then break; fi
-            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.3"
+            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.4"
             if git push origin HEAD:main; then echo "REPORT APK PUBLISHED: $CITY_VARIANT"; break; fi
             if [ "$attempt" = 5 ]; then exit 1; fi
             sleep 3
