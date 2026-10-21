@@ -23,8 +23,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install optional MAX user reader only when configured
+        env:
+          MAX_USER_SESSION_B64: ${{ secrets.MAX_USER_SESSION_B64 }}
+        run: |
+          if [ -n "$MAX_USER_SESSION_B64" ]; then python -m pip install --quiet -r gorod-control/max-reader/requirements.txt; fi
       - name: Read direct official graph and preserve individual source timestamps
         env:
+          MAX_USER_SESSION_B64: ${{ secrets.MAX_USER_SESSION_B64 }}
           MAX_BOT_TOKEN: ${{ secrets.MAX_BOT_TOKEN }}
           MAX_CITY_CHAT_ID: ${{ vars.MAX_CITY_CHAT_ID }}
           MAX_POWER_CHAT_ID: ${{ vars.MAX_POWER_CHAT_ID }}

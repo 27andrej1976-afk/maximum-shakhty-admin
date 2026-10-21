@@ -58,6 +58,9 @@ def collect(now=None, environ=None, opener=urlopen):
     now = now or datetime.now(timezone.utc)
     env = os.environ if environ is None else environ
     token = env.get('MAX_BOT_TOKEN', '').strip()
+    if env.get('MAX_USER_SESSION_B64', '').strip() and not token:
+        from max_user_reader import collect_session
+        return collect_session(now, env)
     posts, states = [], []
     for ident, slug, name, variable in CHANNELS:
         chat_id = env.get(variable, '').strip()
@@ -65,7 +68,7 @@ def collect(now=None, environ=None, opener=urlopen):
         state = dict(id=ident, url=channel['url'], status='not_configured',
                      readStatus='not_configured', posts=0, coverage='partial', transport='max_bot_api')
         if not token or not chat_id:
-            state['note'] = 'Нужны серверный токен бота, ID канала и права администратора на чтение'
+            state['note'] = 'Нужен вход через MAX-коннектор либо токен бота с правами администратора канала'
             states.append(state)
             continue
         if not re.fullmatch(r'-?\d+', chat_id):
