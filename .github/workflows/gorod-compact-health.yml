@@ -36,7 +36,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import zipfile,re,subprocess,tempfile,hashlib
-          apk=Path('gorod-control/water-v16/downloads/GorodPodKontrolem-Compact-Water-1.5.apk')
+          apk=Path('gorod-control/water-v16/downloads/GorodPodKontrolem-Compact-Water-1.6.apk')
           print('SHIPPED_APK_SHA256',hashlib.sha256(apk.read_bytes()).hexdigest())
           with zipfile.ZipFile(apk) as z:
               assert z.testzip() is None

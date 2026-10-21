@@ -1,10 +1,10 @@
-"""Android emulator smoke test for both competing City Control APK variants."""
+"""Android emulator smoke test for the published compact City Control APK."""
 import os,sys,subprocess,time,json,urllib.request,atexit,hashlib
 from pathlib import Path
-variant=os.environ.get('CITY_VARIANT','normal')
-assert variant in ('normal','compact')
-PKG='ru.citycontrol.shakhty.'+('normalwater' if variant=='normal' else 'compactwater')
-APK=Path('gorod-control/water-v16/downloads/GorodPodKontrolem-Compact-Water-1.5.apk')
+variant=os.environ.get('CITY_VARIANT','compact')
+assert variant=='compact'
+PKG='ru.citycontrol.shakhty.compactwater'
+APK=Path('gorod-control/water-v16/downloads/GorodPodKontrolem-Compact-Water-1.6.apk')
 OUT=Path('compact-health-report')/variant
 OUT.mkdir(parents=True,exist_ok=True)
 checks=[]
@@ -66,8 +66,6 @@ check(evaluate("!document.querySelector('#map .leaflet-control-attribution')"),'
 if variant=='compact':
  check(evaluate("!!document.querySelector('#compactNav')"),'Compact bottom navigation available')
  check(evaluate("!!document.querySelector('#compactSourcesFold')&&!document.querySelector('#compactSourcesFold').open"),'Compact source details collapsed')
-else:
- check(evaluate("!document.querySelector('#compactNav')"),'Original UI remains original')
 exec(Path('gorod-control/water-v16/test_android_behaviour.py').read_text())
 exec(Path('gorod-control/water-v16/test_android_pan.py').read_text())
 ws.close()
