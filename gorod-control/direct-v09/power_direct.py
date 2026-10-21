@@ -64,7 +64,7 @@ def parse(html,now=None):
   try:start,end=stamp(row[3],row[5]),stamp(row[4],row[6])
   except Exception:rejected.append({'row':row[0],'reason':'Нераспознанные дата/время'});continue
   if end<start:rejected.append({'row':row[0],'reason':'Конец раньше начала'});continue
-  if end<now-timedelta(hours=24) or start>now+timedelta(days=14):continue
+  if end<=now-timedelta(hours=36) or start>now+timedelta(days=14):continue
   impact,issues=addresses(row[2])
   if not impact:rejected.append({'row':row[0],'reason':'Не распознаны адреса'});continue
   evidence='\n'.join([row[1],row[2],row[3]+' '+row[5]+' — '+row[4]+' '+row[6],row[7],row[8]])

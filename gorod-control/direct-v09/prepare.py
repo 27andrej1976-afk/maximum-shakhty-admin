@@ -95,6 +95,20 @@ def main():
   const age=Date.now()-Date.parse(s?.checkedAt||'');
   return !!s&&s.status==='ok'&&Number.isFinite(age)&&age>=-120000&&age<4*3600000;
 }
+function powerSourceAccepted(e,by){
+  const url=String(e.url||'');
+  const sid=e.origin==='official_site'&&e.sourceId==='power_direct'&&url==='https://donenergo.ru/grafik-otklyucheniy/61/1/'?'power_direct':
+    e.origin==='official_city_post'&&/^https:\/\/t\.me\/admshakhty\/\d+$/.test(url)?'power_city':
+    e.origin==='attributed_repost'&&url.startsWith('https://news-don.ru/')?'power_repost_don':
+    e.origin==='attributed_repost'&&url.startsWith('https://newsrostov.ru/')?'power_repost_rostov':null;
+  if(!sid||['resolved','cancelled','canceled'].includes(e.status))return false;
+  const anchor=Date.parse(e.end||e.start||e.publishedAt||e.observedAt||'');
+  const until=anchor+36*3600000;
+  if(!Number.isFinite(until)||Date.now()>=until)return false;
+  if(freshSource(by[sid]))return true;
+  const last=Date.parse(e.lastConfirmedAt||'');
+  return Number.isFinite(last)&&last<=Date.now()+120000&&last<=until&&Date.parse(e.retainUntil||'')===until;
+}
 function ingestFeed(data){
   if(data.schema!==2||!Array.isArray(data.sources)||!Array.isArray(data.events))throw Error('Нет доступной сводки');
   const defaultStamp=data.cloudCheckedAt||data.checkedAt;
@@ -104,7 +118,7 @@ function ingestFeed(data){
   state.events=data.events.filter(e=>{
     const url=String(e.url||'');
     if(e.origin==='official_max')return !e.requiresReview&&freshSource(by[e.sourceId])&&['max_city','max_power'].includes(e.sourceId)&&/^https:\/\/max\.ru\/(?:shakhtygorod|id6163089292_biz)(?:\/|$)/.test(url);
-    if(e.sourceId==='power_direct')return freshSource(by.power_direct)&&e.origin==='official_site'&&url==='https://donenergo.ru/grafik-otklyucheniy/61/1/';
+    if(e.category==='power'&&e.origin!=='official_max')return powerSourceAccepted(e,by);
     if(e.sourceId==='ursv_device')return ['ok','partial'].includes(by.ursv_device?.status)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(url)&&e.origin==='official_device';
     if(e.category==='water')return waterSourceAccepted(e,by,freshSource);
     if(e.category==='mchs')return freshSource(by.mchs)&&url.startsWith('https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/');

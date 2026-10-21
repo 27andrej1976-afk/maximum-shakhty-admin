@@ -105,9 +105,8 @@ def power_posts(xml_data,domain,now=None):
         if hours:end=start+timedelta(hours=int(hours[1]))
         if kind=='emergency' and now-published>timedelta(hours=48):continue
         if kind=='planned' and not (timedelta(days=-1)<=start-now<=timedelta(days=14)):continue
-        if kind=='resolved':continue
-        if end and end<now-timedelta(hours=24):continue
-        status='unconfirmed' if end and end<now else 'active'
+        if end and end<now-timedelta(hours=36):continue
+        status='resolved' if kind=='resolved' else 'unconfirmed' if end and end<now else 'active'
         token=make_id('power',start.isoformat()+'|'+','.join(sorted(a['street'] for a in affected)))
         out.append({'id':token,'category':'power','kind':kind,'status':status,
             'source':'Донэнерго — перепечатка','sourceId':'power_repost',

@@ -1,0 +1,20 @@
+from datetime import datetime,timezone,timedelta
+now=datetime.now(timezone.utc)
+evaluate('window.powerTestFeed=window.CityControlNativeFeed;window.CityControlNativeFeed=()=>{};true')
+end=now-timedelta(hours=35)
+e={'id':'retention-power','category':'power','sourceId':'power_direct','origin':'official_site','url':'https://donenergo.ru/grafik-otklyucheniy/61/1/','kind':'planned','status':'unconfirmed','title':'Проверка сохранения света','affected':[{'street':'ул Тестовая','houses':['12']}],'start':(end-timedelta(hours=3)).isoformat(),'end':end.isoformat(),'lastConfirmedAt':end.isoformat(),'retainUntil':(end+timedelta(hours=36)).isoformat(),'retained':True}
+f={'schema':2,'checkedAt':now.isoformat(),'sources':[{'id':'power_direct','status':'error','checkedAt':now.isoformat(),'note':'HTTP 500'}],'events':[e]}
+def inject_power():evaluate('powerTestFeed('+json.dumps(f,ensure_ascii=False)+')')
+inject_power()
+check(evaluate("CityMapV07.inspect().allIds.includes('retention-power')"),'Power survives HTTP 500 and 35 hours after scheduled end')
+evaluate('CityMapV07.openDetails('+json.dumps(e,ensure_ascii=False)+')')
+check(evaluate("document.querySelector('#cityEventBody').textContent.includes('Последняя сохранённая публикация')"),'Retained power discloses cached provenance')
+evaluate("document.querySelector('#cityEventClose').click()")
+e['status']='resolved';inject_power()
+check(not evaluate("CityMapV07.inspect().allIds.includes('retention-power')"),'Explicit restoration removes power marker immediately')
+e['status']='unconfirmed';e['end']=(now-timedelta(hours=37)).isoformat();e['retainUntil']=(now-timedelta(hours=1)).isoformat();inject_power()
+check(not evaluate("CityMapV07.inspect().allIds.includes('retention-power')"),'Power expires after 36 hours without extending on refresh')
+e['end']=end.isoformat();e['retainUntil']=(end+timedelta(hours=36)).isoformat();e['url']='https://example.org/unverified';inject_power()
+check(not evaluate("CityMapV07.inspect().allIds.includes('retention-power')"),'Retention never accepts untrusted source URL')
+check(evaluate("document.querySelector('#sourcesGrid').textContent.includes('MAX · Донэнерго')"),'MAX source visibly listed without claiming connected access')
+evaluate('window.CityControlNativeFeed=window.powerTestFeed;true')

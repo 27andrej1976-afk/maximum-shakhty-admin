@@ -29,6 +29,7 @@ jobs:
           MAX_CITY_CHAT_ID: ${{ vars.MAX_CITY_CHAT_ID }}
           MAX_POWER_CHAT_ID: ${{ vars.MAX_POWER_CHAT_ID }}
         run: |
+          python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -q
           python -m compileall -q gorod-control/direct-v09
           python gorod-control/scripts/collect_water.py
           python gorod-control/scripts/collect_services.py
@@ -38,7 +39,7 @@ jobs:
           import json
           d=json.loads(Path('gorod-control/direct-v09/feed.json').read_text())
           assert d['schema']==2 and d['coverage']=='partial'
-          required={'city','water_kvu','repost_rostov','repost_don','power_direct','power_city','gas_city','gas','mchs'}
+          required={'city','water_kvu','repost_rostov','repost_don','power_direct','power_city','gas_city','gas','mchs','power_repost_don','power_repost_rostov','max_city','max_power'}
           assert required.issubset({s['id'] for s in d['sources']}), 'Incomplete source registry'
           for e in d['events']:
             if e.get('sourceId')=='power_direct':
@@ -51,20 +52,20 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/direct-live-ready
-          for file in feed.json map-geometry.json street-geometry.json; do
+          for file in feed.json map-geometry.json street-geometry.json power-cache.json; do
             cp "gorod-control/direct-v09/$file" "/tmp/direct-live-ready/$file"
           done
-          BUILT_WATER_SHA=$(git rev-parse HEAD:gorod-control/direct-v09/water_verified.py)
+          BUILT_CODE_SHA=$(git ls-tree -r HEAD gorod-control/direct-v09/ | grep '\.py$' | sha256sum)
           BUILT_SCRIPTS_SHA=$(git rev-parse HEAD:gorod-control/scripts)
           git restore gorod-control/direct-v09 gorod-control/data
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for attempt in 1 2 3; do
             git fetch origin main
-            if [ "$BUILT_WATER_SHA" != "$(git rev-parse origin/main:gorod-control/direct-v09/water_verified.py)" ] || [ "$BUILT_SCRIPTS_SHA" != "$(git rev-parse origin/main:gorod-control/scripts)" ]; then exit 0; fi
+            if [ "$BUILT_CODE_SHA" != "$(git ls-tree -r origin/main gorod-control/direct-v09/ | grep '\.py$' | sha256sum)" ] || [ "$BUILT_SCRIPTS_SHA" != "$(git rev-parse origin/main:gorod-control/scripts)" ]; then exit 0; fi
             git checkout -B direct-live-publish origin/main
             cp /tmp/direct-live-ready/*.json gorod-control/direct-v09/
-            git add gorod-control/direct-v09/feed.json gorod-control/direct-v09/map-geometry.json gorod-control/direct-v09/street-geometry.json
+            git add gorod-control/direct-v09/power-cache.json gorod-control/direct-v09/feed.json gorod-control/direct-v09/map-geometry.json gorod-control/direct-v09/street-geometry.json
             if git diff --cached --quiet; then break; fi
             git commit -m 'City Control: refresh direct official v0.9 notices and street geometry'
             if git push origin HEAD:main; then echo 'DIRECT LIVE FEED UPDATED'; break; fi

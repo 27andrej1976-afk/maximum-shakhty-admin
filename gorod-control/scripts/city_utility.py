@@ -3,7 +3,7 @@ import re
 from datetime import datetime,timedelta,timezone
 from urllib.request import Request,urlopen
 from collect_water import parse_html,parse_affected,schedule
-from service_events import affected_power,incident_time
+from service_events import affected_power,incident_time,classify_power
 
 CHANNEL='https://t.me/s/admshakhty'
 CITY_POWER=re.compile(r'(?:отключени\w*\s+электроснабж|планов\w*\s+работ\w*\s+в\s+сетях\s+электроснабж|технологическ\w*\s+нарушени\w*\s+в\s+сети|отключени\w*\s+электроэнерг|отключени\w*\s+электричеств)',re.I)
@@ -14,7 +14,7 @@ MSK=timezone(timedelta(hours=3))
 def detect(text):
     lower=text.lower()
     if CITY_GAS.search(lower):return 'gas'
-    if CITY_POWER.search(lower):return 'power'
+    if CITY_POWER.search(lower) or classify_power(lower)=='resolved':return 'power'
     return None
 
 def affected(text):
@@ -59,7 +59,7 @@ def parse_posts(posts,now):
             start=incident_time(text,published).isoformat()
             end=None
         events.append({'id':'city-'+cat+'-'+p['id'].split('/')[-1],
-            'category':cat,'kind':kind,'status':'active',
+            'category':cat,'kind':kind,'status':'resolved' if cat=='power' and classify_power(text)=='resolved' else 'active',
             'title':('Плановое' if planned else 'Аварийное')+
               (' отключение газа' if cat=='gas' else ' отключение электроэнергии'),
             'source':'Администрация города Шахты','sourceId':cat+'_city',
