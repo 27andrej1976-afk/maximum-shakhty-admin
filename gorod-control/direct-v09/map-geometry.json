@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-10-21T13:04:37.452919+00:00",
-  "status": "cached",
+  "generatedAt": "2026-10-21T13:45:52.343881+00:00",
+  "status": "unavailable",
   "source": "© OpenStreetMap contributors · ODbL",
   "sourceUrl": "https://www.openstreetmap.org/copyright",
   "events": {
@@ -3671,5 +3671,6 @@
       "fullText": "г. Шахты\nул. Горького 17-45, 46-78;\nул. Кадровая 59-85, 68-96;\nул. Горковенко 1-15, 4-10;\nул. Федюнина 59-81, 104-130;\nул. Шишкина 175-181;\nул. Юный Спартак 35-51, 32-52\n22.10.26 09=00 — 22.10.26 12=00\nТехническое обслуживание ТП-301, РУ-10кВ\n",
       "note": "Подсвечены улицы, указанные в сообщении. Это не точные границы отключения и не координаты поломки."
     }
-  }
+  },
+  "error": "HTTPError: HTTP Error 504: Gateway Time-out; HTTPError: HTTP Error 502: Bad Gateway"
 }
