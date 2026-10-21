@@ -4,7 +4,7 @@ from pathlib import Path
 variant=os.environ.get('CITY_VARIANT','normal')
 assert variant in ('normal','compact')
 PKG='ru.citycontrol.shakhty.'+('normalwater' if variant=='normal' else 'compactwater')
-APK=Path('gorod-control/water-v16/downloads/GorodPodKontrolem-Compact-Water-1.4.apk')
+APK=Path('gorod-control/water-v16/downloads/GorodPodKontrolem-Compact-Water-1.5.apk')
 OUT=Path('compact-health-report')/variant
 OUT.mkdir(parents=True,exist_ok=True)
 checks=[]
