@@ -3,7 +3,7 @@ import path from "node:path";
 import vm from "node:vm";
 import assert from "node:assert/strict";
 
-const html=fs.readFileSync(path.resolve("gorod-control/index.html"),"utf8");
+const html=fs.readFileSync(path.resolve("gorod-control/app-template.txt"),"utf8");
 const blocks=[...html.matchAll(/<script(?:\s+[^>]*)?>([\s\S]*?)<\/script>/gi)]
   .map(m=>m[1]).filter(Boolean);
 assert.ok(blocks.length>=2,"expected two inline scripts");

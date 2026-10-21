@@ -64,12 +64,12 @@ bridge._transformGL.call({ _map: map }, legacy);
 assert.equal(legacy.transform.center.lng, view.lng);
 assert.equal(legacy.transform.zoom, 13);
 
-// Classic and Compact must still consume exactly the same corrected adapter.
-for (const path of ['index.html', 'compact-v11/index.html']) {
+// Shared template and Compact must still consume exactly the same corrected adapter.
+for (const path of ['app-template.txt', 'compact-v11/index.html']) {
   const html = readFileSync(resolve(root, path), 'utf8');
   assert.ok(html.includes('./light-v10/vendor/leaflet-maplibre-gl.js'), path);
   assert.ok(html.includes('./map-v07/city-map.js'), path);
   assert.ok(html.includes('./map-v07/vendor/leaflet.js'), path);
 }
 assert.match(readFileSync(resolve(root, 'compact-v11/index.html'), 'utf8'), /<base href="\.\.\/">/);
-console.log('PASS MapLibre v5 pan/redraw adapter + Classic/Compact shared reference');
+console.log('PASS MapLibre v5 pan/redraw adapter + compact template/page shared reference');

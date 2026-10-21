@@ -1,5 +1,8 @@
 """Keep the existing report layouts; install the water update as separate apps."""
 from pathlib import Path
+import os
+if os.environ.get('CITY_VARIANT')!='compact':
+    raise SystemExit('Only the compact app is supported')
 r=Path('gorod-control/report-apks-v15')
 for name in ('prepare_variant.py','android_test.py'):
     p=r/name;s=p.read_text().replace('normalreport','normalwater').replace('compactreport','compactwater')

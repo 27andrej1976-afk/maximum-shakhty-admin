@@ -85,7 +85,7 @@ def main():
  assets=ANDROID/'app/src/main/assets/web';assets.mkdir(parents=True,exist_ok=True)
  shutil.copytree(ROOT/'map-v07',assets/'map-v07',dirs_exist_ok=True,ignore=shutil.ignore_patterns('*.py','*.pyc','__pycache__'))
  (assets/'data').mkdir(exist_ok=True)
- s=(ROOT/'index.html').read_text()
+ s=(ROOT/'app-template.txt').read_text()
  s=s.replace('КАРТА v0.7','АПК 0.9 · ТЕСТ')
  s=re.sub(r"@import url\('https://fonts.googleapis.com/[^\n]+\n",'',s)
  s=change(s,"const sources = [","const sources = [\n  {id:'ursv_device',icon:'💧',name:'УРСВ · напрямую с телефона',detail:'Результат прямого чтения оригиналов',url:'https://rovodokanal.ru/emergency-alerts/'},\n  {id:'power_direct',icon:'⚡',name:'Донэнерго · прямой официальный график',detail:'Плановые отключения ШМЭС',url:'https://donenergo.ru/grafik-otklyucheniy/61/1/'},")

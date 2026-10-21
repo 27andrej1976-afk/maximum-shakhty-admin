@@ -73,7 +73,7 @@ def main():
             "--disable-dev-shm-usage"
         ])
         try:
-            for name, suffix in [("Classic","index.html"),("Compact","compact-v11/index.html")]:
+            for name, suffix in [("Compact","compact-v11/index.html")]:
                 context=browser.new_context(viewport={"width":393,"height":852},
                                             is_mobile=True,has_touch=True,device_scale_factor=1)
                 page=context.new_page()
@@ -89,7 +89,7 @@ def main():
         finally:
             browser.close()
             httpd.shutdown()
-    print("PASS Classic + Compact: vector and Leaflet map pan together")
+    print("PASS Compact: vector and Leaflet map pan together")
 
 if __name__ == "__main__":
     main()

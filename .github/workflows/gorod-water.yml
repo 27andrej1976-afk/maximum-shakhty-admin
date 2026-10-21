@@ -42,7 +42,7 @@ jobs:
         run: |
           python - <<'PY'
           import re,subprocess,pathlib,tempfile
-          html=pathlib.Path('gorod-control/index.html').read_text(encoding='utf-8')
+          html=pathlib.Path('gorod-control/app-template.txt').read_text(encoding='utf-8')
           scripts=re.findall(r'<script(?:\s+[^>]*)?>(.*?)</script>',html,re.S|re.I)
           inline=[s for s in scripts if s.strip()]
           if len(inline)<2:raise SystemExit('Expected inline logic and frontend scripts')

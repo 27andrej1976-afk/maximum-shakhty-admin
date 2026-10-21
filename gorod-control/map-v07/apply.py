@@ -29,7 +29,7 @@ def assets():
     (FOLDER/'ASSETS.md').write_text('''# Asset sources\n\nThe Shakhty coat of arms is reproduced without changing the image.\nResource: https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Shakhty.png\nVersion: 16 May 2019, 165 × 220 pixels. SHA-1: '''+CREST_SHA1+'''\nOfficial symbol description: City Duma decision 208, 29 February 2012, as amended.\nThe interface explicitly identifies itself as an independent prototype, not a municipal website.\nUse of the city symbol does not imply municipal approval of this application.\n\nLeaflet 1.9.4: https://leafletjs.com, BSD-2-Clause license included in vendor/LICENSE.\nMap tiles and affected road geometry: © OpenStreetMap contributors, ODbL.\nhttps://www.openstreetmap.org/copyright\n\nOnly public road names from published incident notices are submitted to Overpass.\nMaximum 12 newly needed road names per run in one query, cached for 90 days.\nNo home address, device coordinates or other personal data is sent by geometry.py.\n''',encoding='utf-8')
 
 def patch():
-    path=BASE/'index.html';text=path.read_text(encoding='utf-8')
+    path=BASE/'app-template.txt';text=path.read_text(encoding='utf-8')
     if 'CityMapV07.configure' in text:return
     def replace(old,new):
         nonlocal text

@@ -1,4 +1,4 @@
-name: City Control | Water monitoring Android update
+name: City Control | Compact Android app
 on:
   workflow_dispatch:
   push:
@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [normal, compact]
+        variant: [compact]
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -76,11 +76,7 @@ jobs:
           unzip -l "$APK" | grep 'res/drawable-nodpi-v4/coat_launcher.png'
           unzip -l "$APK" | grep 'assets/web/light-v10/vendor/maplibre-gl.js'
           mkdir -p /tmp/city-report-apk
-          if [ "$CITY_VARIANT" = "normal" ]; then
-            cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Classic-Water-1.4.apk
-          else
-            cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.4.apk
-          fi
+          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.4.apk
           sha256sum /tmp/city-report-apk/*.apk
       - name: Enable virtualization
         run: |

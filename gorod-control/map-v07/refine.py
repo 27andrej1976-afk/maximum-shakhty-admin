@@ -47,6 +47,6 @@ patch(test,"    page.wait_for_function('CityMapV07.inspect().mapped===1')", "   
 patch(test,"    livepage.screenshot(path=str(REPORT/'mobile-live-top.png'))", "    livepage.wait_for_timeout(3000)\n    livepage.evaluate('window.scrollTo(0,0)')\n    livepage.screenshot(path=str(REPORT/'mobile-live-top.png'))")
 patch(test,"desktop.wait_for_timeout(800)","desktop.wait_for_timeout(4800)")
 # Incident deadlines are always displayed in the city's timezone, not the developer runner's UTC.
-index=ROOT/'gorod-control'/'index.html'
+index=ROOT/'gorod-control'/'app-template.txt'
 patch(index,"{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}", "{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Moscow'}")
 print('CITY MAP refinements installed')
