@@ -173,8 +173,6 @@ const sources = [
   {id:'city', icon:'🏛', name:'Администрация Шахт', detail:'Объявления о работах', url:'https://t.me/s/admshakhty'},
   {id:'gas', icon:'♨', name:'Газораспределение · проверка источника', detail:'Адресные отключения пока не подтверждены', url:'https://www.rostovoblgaz.ru/press-center/news/'},
   {id:'gas_city', icon:'🏛', name:'Газ · администрация Шахт', detail:'Адресные сообщения о работах газовой службы',url:'https://t.me/s/admshakhty'},
-  {id:'max_city',icon:'🏛',name:'MAX · администрация Шахт',detail:'Требуется доступ к каналу',url:'https://max.ru/shakhtygorod'},
-  {id:'max_power',icon:'⚡',name:'MAX · Донэнерго',detail:'Требуется доступ к каналу',url:'https://max.ru/id6163089292_biz'},
   {id:'mchs', icon:'⚠', name:'МЧС Ростовской области', detail:'Региональные предупреждения', url:'https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya'},
 ];
 const state = {home:null, demo:false, filter:'all', events:[], backendConnected:false, checkedAt:null, checks:[], map:null, homeMarker:null, circle:null, incidentLayers:[], notifications:false, mapLoaded:false, toastTimer:null, sourceRecent:null,lastLocalCheck:0};
