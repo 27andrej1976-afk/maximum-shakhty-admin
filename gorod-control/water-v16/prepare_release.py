@@ -6,7 +6,7 @@ if os.environ.get('CITY_VARIANT')!='compact':
 r=Path('gorod-control/report-apks-v15')
 for name in ('prepare_variant.py','android_test.py'):
     p=r/name;s=p.read_text().replace('normalreport','normalwater').replace('compactreport','compactwater')
-    s=s.replace('1.2.0-report-','1.6.0-water-').replace('versionCode 15','versionCode 19').replace('versionCode 16','versionCode 22')
+    s=s.replace('1.2.0-report-','1.7.0-water-').replace('versionCode 15','versionCode 19').replace('versionCode 16','versionCode 23')
     s=s.replace('Город · классика+','Город · вода').replace('Город · компакт+','Город · вода компакт')
     if name=='android_test.py':
         extra='''
@@ -26,7 +26,7 @@ evaluate('window.releaseTestFeed('+json.dumps(fixture,ensure_ascii=False)+')')
 check(evaluate("!CityMapV07.inspect().allIds.includes('water-test-secondary')"),'Failed source cannot validate secondary event')
 evaluate("window.CityControlNativeFeed=window.releaseTestFeed;true")
 '''
-        assert 'ws.close()' in s;s=s.replace('ws.close()',extra+"\nexec(Path('gorod-control/water-v16/test_android_power_retention.py').read_text())\nexec(Path('gorod-control/water-v16/test_android_pan.py').read_text())\nws.close()")
+        assert 'ws.close()' in s;s=s.replace('ws.close()',extra+"\nexec(Path('gorod-control/water-v16/test_android_power_retention.py').read_text())\nexec(Path('gorod-control/water-v16/test_android_pan.py').read_text())\nexec(Path('gorod-control/water-v16/test_android_zoom.py').read_text())\nws.close()")
     p.write_text(s)
 # The report button can initialize before compact's window-level DOMContentLoaded
 # handler. Move its existing section before compact removes the old left panel.

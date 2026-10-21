@@ -1,10 +1,12 @@
-name: City Control | Compact Android app
+name: City Control | Compact Android app · map zoom fix 1.7
 on:
   workflow_dispatch:
   push:
-    branches: [feature/max-activate]
+    branches: [main]
     paths:
-      - 'gorod-control/water-v16/**'
+      - 'gorod-control/water-v16/prepare_release.py'
+      - 'gorod-control/water-v16/test_android_zoom.py'
+      - 'gorod-control/map-v07/city-map.js'
       - '.github/workflows/gorod-water-apks-v16.yml'
 permissions:
   contents: write
@@ -59,6 +61,7 @@ jobs:
           python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -q
           node gorod-control/scripts/test_frontend.mjs
           node gorod-control/map-v07/test_pan_sync.mjs
+          node gorod-control/map-v07/test_zoom_mode.mjs
           python gorod-control/water-v16/prepare_release.py
           python gorod-control/direct-v09/prepare.py
           python -m pip install --quiet pillow
@@ -76,7 +79,7 @@ jobs:
           unzip -l "$APK" | grep 'res/drawable-nodpi-v4/coat_launcher.png'
           unzip -l "$APK" | grep 'assets/web/light-v10/vendor/maplibre-gl.js'
           mkdir -p /tmp/city-report-apk
-          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.6.apk
+          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.7.apk
           sha256sum /tmp/city-report-apk/*.apk
       - name: Enable virtualization
         run: |
@@ -121,7 +124,7 @@ jobs:
             cp /tmp/city-report-apk/*.apk gorod-control/water-v16/downloads/
             git add gorod-control/water-v16/downloads/
             if git diff --cached --quiet; then break; fi
-            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.6"
+            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.7"
             if git push origin HEAD:main; then echo "REPORT APK PUBLISHED: $CITY_VARIANT"; break; fi
             if [ "$attempt" = 5 ]; then exit 1; fi
             sleep 3

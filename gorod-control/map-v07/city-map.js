@@ -1,7 +1,7 @@
 /* City map v0.7. City browsing never changes the user's saved home or notifications. */
 (function(root){
 'use strict';
-let api=null,map=null,layer=null,homeLayer=null,homeKey='',mode='near',automatic=false,category='all',geo={events:{}},fitting=false;
+let api=null,map=null,layer=null,homeLayer=null,homeKey='',mode='near',category='all',geo={events:{}};
 let mounted=false,lastDetail=null,previousFocus=null;
 let geometryLoading=false,geometryStamp=null;
 const CITY_BOUNDS=[[47.61,40.075],[47.86,40.385]];
@@ -107,7 +107,7 @@ function card(e){
   if(e.category==='mchs')item.append(el('p','cm-muted','Город / область · не точечная авария'));
   const buttons=el('div','cm-card-actions');buttons.append(detailButton(e,'Подробности и сроки'));
   if(mapped){const locate=el('button','cm-locate','На карте');locate.type='button';locate.addEventListener('click',()=>{
-    if(map){const p=rows(e)[0];fitting=true;map.setView([p.lat,p.lon],15,{animate:false});fitting=false;
+    if(map){const p=rows(e)[0];map.setView([p.lat,p.lon],15,{animate:false});
       openDetails(e);$('map').scrollIntoView({behavior:'smooth',block:'center'});}
   });buttons.append(locate);}
   item.append(buttons);return item;
@@ -151,7 +151,7 @@ function renderDeck(){
   $('cityNearButton').setAttribute('aria-pressed',String(mode==='near'));$('cityAllButton').setAttribute('aria-pressed',String(mode==='city'));
   $('cityMapScope').textContent=mode==='city'?'Весь город · '+allEvents().length+' сообщений':'Рядом с домом · '+nearEvents().length+' сообщений';
   $('cityMapCounts').textContent=pins.length+' с привязкой к карте · '+unplaced.length+' без точного места · '+area.length+' территориальных';
-  $('cityMapHint').textContent=(mode==='city'?'Показаны доступные публикации по Шахтам, а не только возле вашего дома.':'Отдалите карту, чтобы увидеть город, или нажмите «Весь город».')+
+  $('cityMapHint').textContent=(mode==='city'?'Показаны доступные публикации по Шахтам, а не только возле вашего дома.':'Показаны сообщения для вашего адреса. Для остальных событий нажмите «Весь город».')+
     ' Цветные линии — улицы из объявления, не границы отключения.';
   const deck=$('cityMapEvents');deck.replaceChildren();
   if(!items.length)deck.append(el('p','cm-empty',mode==='city'?'В доступных данных нет событий выбранного типа. Это не подтверждение отсутствия происшествий.':
@@ -164,9 +164,8 @@ function renderDeck(){
   const pill=document.querySelector('.scale-pill');if(pill)pill.textContent=mode==='city'?'Весь город':'◎ 1 км';
 }
 function setMode(next,options={}){
-  mode=next==='city'?'city':'near';automatic=!!options.automatic;
+  mode=next==='city'?'city':'near';
   if(map&&options.fit!==false){
-    fitting=true;
     if(mode==='city'){
       const bounds=root.L.latLngBounds(CITY_BOUNDS);
       for(const e of allEvents())for(const p of rows(e))bounds.extend([p.lat,p.lon]);
@@ -174,7 +173,6 @@ function setMode(next,options={}){
     }else{
       const home=api.state.home||api.city;map.setView([home.lat,home.lon],14,{animate:false});
     }
-    fitting=false;
   }
   renderDeck();paintMarkers();
 }
@@ -197,7 +195,7 @@ function refresh(){
     homeKey=key;homeLayer.clearLayers();
     if(h){root.L.circle([h.lat,h.lon],{radius:1000,color:'#139d84',fillColor:'#21b59c',fillOpacity:.065,weight:2,dashArray:'6 6'}).addTo(homeLayer);
       root.L.circleMarker([h.lat,h.lon],{radius:9,color:'#fff',weight:3,fillColor:'#0cac8d',fillOpacity:1}).addTo(homeLayer).bindTooltip('Контрольная точка');}
-    if(mode==='near'&&h){fitting=true;map.setView([h.lat,h.lon],14,{animate:false});fitting=false;}
+    if(mode==='near'&&h){map.setView([h.lat,h.lon],14,{animate:false});}
   }
   renderDeck();paintMarkers();
 }
@@ -317,16 +315,13 @@ function start(){
     map=root.L.map('map',{zoomControl:false,attributionControl:false}).setView([h.lat,h.lon],api.state.home?14:12);api.state.map=map;
     setupBrightBasemap(map);
     root.L.control.zoom({position:'bottomright'}).addTo(map);layer=root.L.layerGroup().addTo(map);homeLayer=root.L.layerGroup().addTo(map);
-    map.on('zoomend',()=>{
-      if(fitting)return;
-      if(mode==='near'&&map.getZoom()<=13){setMode('city',{fit:false,automatic:true});return;}
-      if(mode==='city'&&automatic&&map.getZoom()>=14&&api.state.home&&map.getCenter().distanceTo(root.L.latLng(api.state.home.lat,api.state.home.lon))<1600)setMode('near',{fit:false});
-    });
+    // Zoom and pan change only the viewport. Scope changes only through mode buttons.
+    // Auto-switching here silently removed city markers on zoom 13 -> 14 near home.
   }else $('map').textContent='Карта не загрузилась. Публикации и подробности доступны ниже.';
   refresh();
 
 }
 root.CityMapV07={configure,start,refresh,setMode,openDetails,core:{isCurrent,validPoint},
-  inspect:()=>({mode,automatic,category,ids:visible().map(e=>e.id),allIds:allEvents().map(e=>e.id),zoom:map?.getZoom(),basemap:activeBase,mapped:visible().filter(e=>rows(e).length).length}),
+  inspect:()=>({mode,category,ids:visible().map(e=>e.id),allIds:allEvents().map(e=>e.id),zoom:map?.getZoom(),basemap:activeBase,mapped:visible().filter(e=>rows(e).length).length}),
   getMap:()=>map,getVectorMap:()=>vectorBase?.getMaplibreMap(),hideCountryFlags:removeCountryFlagSymbols};
 })(window);
