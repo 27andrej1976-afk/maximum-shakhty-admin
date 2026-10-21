@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-21T18:35:44.832333+00:00",
+  "checkedAt": "2026-10-21T19:16:04.145742+00:00",
   "events": [
     {
       "id": "water-city-repost-36e3756684a66016ff87",
@@ -60,7 +60,7 @@
       "requiresReview": false,
       "noticeId": "city-repost/36e3756684a66016ff87",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/other/2026/10/21/147916.html",
@@ -528,7 +528,7 @@
       "requiresReview": false,
       "noticeId": "city-repost/36e3756684a66016ff87",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/other/2026/10/21/147916.html",
@@ -1193,19 +1193,16 @@
       "lastPostAt": "2026-10-20T08:34:40+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-21T18:35:36.793008+00:00"
+      "checkedAt": "2026-10-21T19:14:42.013184+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-10-21T18:35:36.793008+00:00",
+      "checkedAt": "2026-10-21T19:14:42.013184+00:00",
       "coverage": "partial",
-      "status": "ok",
-      "readStatus": "ok",
-      "posts": 10,
-      "matchingPosts": 4,
-      "lastPostAt": "2026-10-20T09:12:41+03:00",
-      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
+      "status": "error",
+      "posts": 0,
+      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
     },
     {
       "id": "repost_rostov",
@@ -1213,23 +1210,19 @@
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 200,
-      "matchingPosts": 1,
-      "checkedAt": "2026-10-21T18:35:36.793008+00:00",
-      "lastPostAt": "2026-10-21T11:10:02+03:00",
+      "matchingPosts": 0,
+      "checkedAt": "2026-10-21T19:14:42.013184+00:00",
+      "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
-      "status": "ok",
-      "readStatus": "ok",
-      "coverage": "partial",
-      "posts": 200,
-      "matchingPosts": 2,
-      "checkedAt": "2026-10-21T18:35:36.793008+00:00",
-      "lastPostAt": "2026-10-21T11:08:22+03:00",
+      "status": "error",
+      "posts": 0,
       "url": "https://news-don.ru/rss.xml",
-      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
+      "note": "<urlopen error timed out>",
+      "checkedAt": "2026-10-21T19:14:42.013184+00:00"
     },
     {
       "id": "power_repost_rostov",
