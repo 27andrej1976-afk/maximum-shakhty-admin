@@ -6,7 +6,7 @@ if os.environ.get('CITY_VARIANT')!='compact':
 r=Path('gorod-control/report-apks-v15')
 for name in ('prepare_variant.py','android_test.py'):
     p=r/name;s=p.read_text().replace('normalreport','normalwater').replace('compactreport','compactwater')
-    s=s.replace('1.2.0-report-','1.5.0-water-').replace('versionCode 15','versionCode 19').replace('versionCode 16','versionCode 21')
+    s=s.replace('1.2.0-report-','1.6.0-water-').replace('versionCode 15','versionCode 19').replace('versionCode 16','versionCode 22')
     s=s.replace('Город · классика+','Город · вода').replace('Город · компакт+','Город · вода компакт')
     if name=='android_test.py':
         extra='''

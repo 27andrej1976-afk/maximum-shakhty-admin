@@ -8,8 +8,8 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'direct-v09'
 sys.path.insert(0,str(ROOT/'scripts'))
 from max_sources import collect as collect_max
-from city_utility import parse_posts as parse_city_posts
 from service_events import CITY, classify_power
+from max_utility import water_posts as max_water_posts,power_posts as max_power_posts
 
 def main():
  now=datetime.now(timezone.utc)
@@ -22,17 +22,17 @@ def main():
  verified=importlib.util.module_from_spec(spec);spec.loader.exec_module(verified)
  max_posts,max_states=collect_max(now)
  # Only utility publications from the two public channels are retained for parser review.
- max_review=[p for p in max_posts if re.search(r'водоснабж|подач[а-я]* вод|давлен|электро|технологическ[а-я]* наруш|газоснабж',p['text'],re.I)
+ max_review=[p for p in max_posts if re.search(r'водоснабж|подач[а-я]*\s+вод|электро|технологическ[а-я]* наруш|газоснабж',p['text'],re.I)
              and (p['sourceId']=='max_city' or CITY.search(p['text'][:500]))]
  (OUT/'max-public.json').write_text(json.dumps({'checkedAt':now.isoformat(),'sources':max_states,'posts':max_review},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
- max_water=[p for p in max_posts if p['sourceId']=='max_city' and re.search(r'водоснабж|подач[а-я]* вод|давлен',p['text'],re.I)]
+ max_water=max_water_posts(max_posts)
  norm=verified.build_feed(baseline.get('archive',[])+max_water,now)
  water=[]
  for e in norm['events']:
   e['fullText']=e.get('text',e.get('description',''))
   if e.get('unmappedAreaText') or e.get('zones'):e['requiresReview']=True
   if e.get('origin')=='official_max':
-   e['sourceId']='max_city';e['requiresReview']=True
+   e['sourceId']='max_city'
   water.append(e)
  power,source=collect_power(now)
  sources=[]
@@ -41,13 +41,7 @@ def main():
   s=dict(s);s['checkedAt']=s.get('checkedAt',oldcheck);sources.append(s)
  sources.append(source)
  sources.extend(max_states)
- max_events=[]
- for post in max_posts:
-  if not CITY.search(post['text'][:500]) or classify_power(post['text'])=='resolved':continue
-  for e in parse_city_posts([post],now):
-   e.update(id=post['id']+'-'+e['category'],sourceId=post['sourceId'],source=post['source'],
-            origin='official_max',requiresReview=True)
-   max_events.append(e)
+ max_events=max_power_posts(max_posts,now)
  events=water+[e for e in baseline.get('events',[]) if e.get('category')!='water']+power+max_events
  power_saved=retain_power(events,previous,sources,now)
  events=[e for e in events if e.get('category')!='power']+[e for e in power_saved if e.get('status') not in ('resolved','cancelled','canceled')]

@@ -33,7 +33,7 @@ def addresses(raw):
  for part in re.split(r';|\n',raw):
   part=clean(part).strip(' .;,')
   if not part:continue
-  m=re.fullmatch(r'(ул\.?|улица|пер\.?|переулок|просп\.?|проспект|пр-кт|пр-т|проезд|пр-д)\s*(.+)',part,re.I)
+  m=re.fullmatch(r'(улица|ул\.?|переулок|пер\.?|проспект|просп\.?|пр-кт|пр-т|проезд|пр-д)\s*(.+)',part,re.I)
   if not m:issues.append(part);continue
   typ=m[1].lower();typ='проспект' if typ in ('просп','просп.','пр-кт','пр-т') else typ
   n=re.fullmatch(r'(.*?)\s*(\d+[а-яa-z]?(?:/\d+[а-яa-z]?)?(?:\s*[-–]\s*\d+[а-яa-z]?)?(?:\s*,\s*\d+[а-яa-z]?(?:/\d+[а-яa-z]?)?(?:\s*[-–]\s*\d+[а-яa-z]?)?)*)',m[2],re.I)

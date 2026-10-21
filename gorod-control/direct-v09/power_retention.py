@@ -15,6 +15,10 @@ def source_id(e):
     if origin=='official_site' and e.get('sourceId')=='power_direct' and e.get('url')=='https://donenergo.ru/grafik-otklyucheniy/61/1/':return 'power_direct'
     if origin=='official_city_post' and host=='t.me' and urlparse(e.get('url','')).path.startswith('/admshakhty/'):return 'power_city'
     if origin=='attributed_repost':return {'news-don.ru':'power_repost_don','newsrostov.ru':'power_repost_rostov'}.get(host)
+    if origin=='official_max' and not e.get('requiresReview'):
+        expected={'max_city':'https://max.ru/shakhtygorod','max_power':'https://max.ru/id6163089292_biz'}
+        sid=e.get('sourceId')
+        if sid in expected and e.get('url')==expected[sid]:return sid
     return None
 
 def deadline(e):

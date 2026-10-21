@@ -67,18 +67,22 @@ def main():
  service=java/'WaterMonitorJobService.java';s=service.read_text()
  a=s.index('    HttpURLConnection conn=');b=s.index('    if(data.optInt("schema",0)!=2)return;',a)
  s=s[:a]+'    JSONObject data=DirectClient.refresh(getApplicationContext());\n'+s[b:]
- s=change(s,'    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false;','    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false,powerDirect=false,ursvDevice=false;')
+ s=change(s,'    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false;','    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false,powerDirect=false,ursvDevice=false,maxCity=false,maxPower=false;')
  s=change(s,'      String sourceId=src.optString("id","");','''      long checked=utcMillis(src.optString("checkedAt",data.optString("checkedAt","")));
       if(checked<=0||now-checked>4L*3600000)continue;
       String sourceId=src.optString("id","");
       if(sourceId.equals("power_direct"))powerDirect=true;
       if(sourceId.equals("ursv_device"))ursvDevice=true;''')
- s=s.replace('if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs))return;','if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs||powerDirect||ursvDevice))return;')
+ s=s.replace('if(sourceId.equals("mchs"))mchs=true;','if(sourceId.equals("mchs"))mchs=true;\n      if(sourceId.equals("max_city"))maxCity=true;\n      if(sourceId.equals("max_power"))maxPower=true;')
+ s=s.replace('if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs))return;','if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs||powerDirect||ursvDevice||maxCity||maxPower))return;')
  s=change(s,'      if(e==null||!"active".equals(e.optString("status")))continue;','      if(e==null||!"active".equals(e.optString("status"))||e.optBoolean("requiresReview",false))continue;')
- s=change(s,'        if(origin.equals("verified_repost")){','''        if(origin.equals("official_device")){
+ s=change(s,'        if(origin.equals("verified_repost")){','''        if(origin.equals("official_max")){
+          if(!maxCity||!e.optString("sourceId").equals("max_city")||!e.optString("url").equals("https://max.ru/shakhtygorod"))continue;
+        }else if(origin.equals("official_device")){
           if(!ursvDevice||!e.optString("url","").matches("^https://rovodokanal\\\\.ru/emergency-alerts/\\\\d+$"))continue;
         }else if(origin.equals("verified_repost")){''')
- s=change(s,'        if(origin.equals("attributed_repost"))valid=', '''        if(origin.equals("official_site")&&powerDirect&&e.optString("sourceId","").equals("power_direct")&&url.equals("https://donenergo.ru/grafik-otklyucheniy/61/1/"))valid=true;
+ s=change(s,'        if(origin.equals("attributed_repost"))valid=', '''        if(origin.equals("official_max"))valid=(maxCity&&e.optString("sourceId").equals("max_city")&&url.equals("https://max.ru/shakhtygorod"))||(maxPower&&e.optString("sourceId").equals("max_power")&&url.equals("https://max.ru/id6163089292_biz"));
+        if(origin.equals("official_site")&&powerDirect&&e.optString("sourceId","").equals("power_direct")&&url.equals("https://donenergo.ru/grafik-otklyucheniy/61/1/"))valid=true;
         if(origin.equals("attributed_repost"))valid=''')
  service.write_text(s)
  # Self-contained UI. Neither a production HTML replacement nor a hidden server-side source shortcut.
@@ -98,10 +102,12 @@ def main():
 function powerSourceAccepted(e,by){
   const url=String(e.url||'');
   const sid=e.origin==='official_site'&&e.sourceId==='power_direct'&&url==='https://donenergo.ru/grafik-otklyucheniy/61/1/'?'power_direct':
+    e.origin==='official_max'&&e.sourceId==='max_city'&&url==='https://max.ru/shakhtygorod'?'max_city':
+    e.origin==='official_max'&&e.sourceId==='max_power'&&url==='https://max.ru/id6163089292_biz'?'max_power':
     e.origin==='official_city_post'&&/^https:\/\/t\.me\/admshakhty\/\d+$/.test(url)?'power_city':
     e.origin==='attributed_repost'&&url.startsWith('https://news-don.ru/')?'power_repost_don':
     e.origin==='attributed_repost'&&url.startsWith('https://newsrostov.ru/')?'power_repost_rostov':null;
-  if(!sid||['resolved','cancelled','canceled'].includes(e.status))return false;
+  if(!sid||e.requiresReview||['resolved','cancelled','canceled'].includes(e.status))return false;
   const anchor=Date.parse(e.end||e.start||e.publishedAt||e.observedAt||'');
   const until=anchor+36*3600000;
   if(!Number.isFinite(until)||Date.now()>=until)return false;
@@ -117,8 +123,8 @@ function ingestFeed(data){
   state.checkedAt=data.nativeCheckedAt||data.checkedAt;state.backendConnected=state.checks.some(freshSource);
   state.events=data.events.filter(e=>{
     const url=String(e.url||'');
-    if(e.origin==='official_max')return !e.requiresReview&&freshSource(by[e.sourceId])&&['max_city','max_power'].includes(e.sourceId)&&/^https:\/\/max\.ru\/(?:shakhtygorod|id6163089292_biz)(?:\/|$)/.test(url);
-    if(e.category==='power'&&e.origin!=='official_max')return powerSourceAccepted(e,by);
+    if(e.category==='power')return powerSourceAccepted(e,by);
+    if(e.origin==='official_max')return e.category==='water'&&!e.requiresReview&&freshSource(by.max_city)&&e.sourceId==='max_city'&&url==='https://max.ru/shakhtygorod';
     if(e.sourceId==='ursv_device')return ['ok','partial'].includes(by.ursv_device?.status)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(url)&&e.origin==='official_device';
     if(e.category==='water')return waterSourceAccepted(e,by,freshSource);
     if(e.category==='mchs')return freshSource(by.mchs)&&url.startsWith('https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/');
