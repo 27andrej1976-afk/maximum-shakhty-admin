@@ -14,6 +14,9 @@ class ReaderTests(unittest.TestCase):
  def test_mismatched_chat_rejected(self):
   self.m.chat_id=12345
   with self.assertRaises(ValueError):public_post(self.m,self.c,self.now)
+ def test_channel_posts_are_accepted_but_system_messages_are_not(self):
+  self.m.type='CHANNEL';self.assertIsNotNone(public_post(self.m,self.c,self.now))
+  self.m.type='SERVICE';self.assertIsNone(public_post(self.m,self.c,self.now))
  def test_no_secret_or_private_profile_in_public_payload(self):
   self.m.token='must-not-leak';self.m.sender=100
   p=public_post(self.m,self.c,self.now)

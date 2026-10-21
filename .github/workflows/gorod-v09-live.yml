@@ -58,7 +58,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/direct-live-ready
-          for file in feed.json map-geometry.json street-geometry.json power-cache.json; do
+          for file in feed.json map-geometry.json street-geometry.json power-cache.json max-public.json; do
             cp "gorod-control/direct-v09/$file" "/tmp/direct-live-ready/$file"
           done
           BUILT_CODE_SHA=$(git ls-tree -r HEAD gorod-control/direct-v09/ | grep '\.py$' | sha256sum)
@@ -71,7 +71,7 @@ jobs:
             if [ "$BUILT_CODE_SHA" != "$(git ls-tree -r origin/main gorod-control/direct-v09/ | grep '\.py$' | sha256sum)" ] || [ "$BUILT_SCRIPTS_SHA" != "$(git rev-parse origin/main:gorod-control/scripts)" ]; then exit 0; fi
             git checkout -B direct-live-publish origin/main
             cp /tmp/direct-live-ready/*.json gorod-control/direct-v09/
-            git add gorod-control/direct-v09/power-cache.json gorod-control/direct-v09/feed.json gorod-control/direct-v09/map-geometry.json gorod-control/direct-v09/street-geometry.json
+            git add gorod-control/direct-v09/max-public.json gorod-control/direct-v09/power-cache.json gorod-control/direct-v09/feed.json gorod-control/direct-v09/map-geometry.json gorod-control/direct-v09/street-geometry.json
             if git diff --cached --quiet; then break; fi
             git commit -m 'City Control: refresh direct official v0.9 notices and street geometry'
             if git push origin HEAD:main; then echo 'DIRECT LIVE FEED UPDATED'; break; fi

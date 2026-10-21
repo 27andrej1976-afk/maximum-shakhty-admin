@@ -25,7 +25,8 @@ def validate_channel(chat,channel):
 def public_post(message,channel,now):
     if message.chat_id not in (None,channel['chat_id']):raise ValueError('Unexpected message channel')
     if not isinstance(message.text,str) or not message.text.strip() or len(message.text)>40000:return None
-    if enum_value(getattr(message,'type',None))!='TEXT':return None
+    # MAX channel posts use CHANNEL; TEXT is retained for the older payload shape.
+    if enum_value(getattr(message,'type',None)) not in ('CHANNEL','TEXT'):return None
     # A forwarded message needs separate provenance review; don't publish its wrapper as original.
     if getattr(message,'link',None) is not None:return None
     try:published=datetime.fromtimestamp(message.time/1000,timezone.utc)

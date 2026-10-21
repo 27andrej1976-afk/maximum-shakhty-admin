@@ -1,7 +1,7 @@
 """Independent v0.9 feed. Never changes the installed v0.7 website or fabricates publication times."""
 from pathlib import Path
 from datetime import datetime,timezone
-import importlib.util,sys,json,shutil
+import importlib.util,sys,json,shutil,re
 from power_direct import collect as collect_power
 from power_retention import merge as retain_power
 ROOT=Path(__file__).resolve().parents[1]
@@ -21,7 +21,11 @@ def main():
  spec=importlib.util.spec_from_file_location('verified_v09',OUT/'water_verified.py')
  verified=importlib.util.module_from_spec(spec);spec.loader.exec_module(verified)
  max_posts,max_states=collect_max(now)
- max_water=[p for p in max_posts if p['sourceId']=='max_city']
+ # Only utility publications from the two public channels are retained for parser review.
+ max_review=[p for p in max_posts if re.search(r'водоснабж|подач[а-я]* вод|давлен|электро|технологическ[а-я]* наруш|газоснабж',p['text'],re.I)
+             and (p['sourceId']=='max_city' or CITY.search(p['text'][:500]))]
+ (OUT/'max-public.json').write_text(json.dumps({'checkedAt':now.isoformat(),'sources':max_states,'posts':max_review},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+ max_water=[p for p in max_posts if p['sourceId']=='max_city' and re.search(r'водоснабж|подач[а-я]* вод|давлен',p['text'],re.I)]
  norm=verified.build_feed(baseline.get('archive',[])+max_water,now)
  water=[]
  for e in norm['events']:
