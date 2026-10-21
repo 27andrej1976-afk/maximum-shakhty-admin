@@ -11,6 +11,7 @@ for name in ('prepare_variant.py','android_test.py'):
     if name=='android_test.py':
         extra='''
 check(evaluate("document.querySelector('#sourcesGrid').textContent.includes('КВУ')"),'KVU source included in installed app')
+evaluate("window.releaseTestFeed=window.CityControlNativeFeed;window.CityControlNativeFeed=()=>{};true")
 fixture={
  'schema':2,'checkedAt':__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),
  'sources':[{'id':'water_kvu','status':'ok'},{'id':'repost_don','status':'ok'}],
@@ -18,11 +19,12 @@ fixture={
  'origin':'media_report','sourceId':'water_kvu','source':'КВУ — публикация СМИ',
  'url':'https://kvu.su/utilities/test.html','title':'Проверка источника','description':'Тест',
  'affected':[{'street':'ул Тестовая','houses':[]}]}]}
-evaluate('window.CityControlNativeFeed('+json.dumps(fixture,ensure_ascii=False)+')')
+evaluate('window.releaseTestFeed('+json.dumps(fixture,ensure_ascii=False)+')')
 check(evaluate("CityMapV07.inspect().allIds.includes('water-test-secondary')"),'Installed app accepts fresh secondary water source')
 fixture['sources'][0]['status']='error'
-evaluate('window.CityControlNativeFeed('+json.dumps(fixture,ensure_ascii=False)+')')
+evaluate('window.releaseTestFeed('+json.dumps(fixture,ensure_ascii=False)+')')
 check(evaluate("!CityMapV07.inspect().allIds.includes('water-test-secondary')"),'Failed source cannot validate secondary event')
+evaluate("window.CityControlNativeFeed=window.releaseTestFeed;true")
 '''
         assert 'ws.close()' in s;s=s.replace('ws.close()',extra+"\nexec(Path('gorod-control/water-v16/test_android_power_retention.py').read_text())\nexec(Path('gorod-control/water-v16/test_android_pan.py').read_text())\nws.close()")
     p.write_text(s)
