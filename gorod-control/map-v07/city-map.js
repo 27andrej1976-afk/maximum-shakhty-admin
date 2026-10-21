@@ -17,6 +17,7 @@ function isCurrent(e,now=Date.now()){
   if(Number.isFinite(pub)&&pub>now+1800000)return false;
   if(e.category==='mchs')return Number.isFinite(end)&&end>=now;
   if(Number.isFinite(start)&&start>now+14*86400000)return false;
+  if(e.category==='power')return now<Date.parse(e.end||e.start||e.publishedAt||e.observedAt||'')+36*3600000;
   if(Number.isFinite(end)&&end<now-24*3600000)return false;
   if(e.kind!=='planned'&&!Number.isFinite(end)&&Number.isFinite(pub)&&pub<now-48*3600000)return false;
   return true;
@@ -81,6 +82,7 @@ function openDetails(e){
   field('Расположение',e.category==='mchs'?'Предупреждение для города / области, без точечной аварии':
     features.length?features.some(r=>r.role==='street')?'На карте выделены улицы из объявления. Точное место поломки не установлено.':'Точка из полученных данных; точность зависит от первоисточника.':
     'Достоверные координаты не найдены. Случайная точка на карте не ставится.');
+  if(e.category==='power'&&e.retained){field('Состояние данных','Последняя сохранённая публикация; восстановление не подтверждено');field('Последнее подтверждение источником',format(e.lastConfirmedAt));field('Сохранится до',format(e.retainUntil));}
   field('Источник',sourceText(e));body.append(grid);
   body.append(el('h3','cm-detail-subtitle','Затронутые адреса'));
   const areas=e.affected||[];

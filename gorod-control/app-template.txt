@@ -114,7 +114,7 @@
   }
   function matchImpact(event, home, radiusM=1000) {
     if (!home || !Number.isFinite(+home.lat) || !Number.isFinite(+home.lon)) return { relevant:false, reason:'Нет контрольной точки', confidence:'unknown' };
-    if (event.status === 'resolved') return { relevant:false, reason:'Работы завершены', confidence:'high' };
+    if (['resolved','cancelled','canceled'].includes(event.status)) return { relevant:false, reason:'Работы завершены', confidence:'high' };
     if (event.category === 'mchs' && (event.scope === 'city' || event.scope === 'region')) {
       const expiry=Date.parse(event.end||'');
       if(Number.isFinite(expiry)&&expiry<Date.now()-3600000)return {relevant:false,reason:'Период предупреждения завершён',confidence:'high'};
@@ -127,7 +127,8 @@
         confidence:'high',match:'area',distance:NaN};
     }
     const today = Date.now(), end = event.end ? Date.parse(event.end) : NaN, start = event.start ? Date.parse(event.start) : NaN;
-    if (Number.isFinite(end) && end < today - 24*3600000) return { relevant:false, reason:'Истёк срок актуальности сообщения, требуется новая проверка', confidence:'unknown' };
+    if(event.category==='power' && today>=Date.parse(event.end||event.start||event.publishedAt||event.observedAt||'')+36*3600000)return {relevant:false,reason:'Истёк срок сохранения 36 часов',confidence:'unknown'};
+    if (event.category!=='power' && Number.isFinite(end) && end < today - 24*3600000) return { relevant:false, reason:'Истёк срок актуальности сообщения, требуется новая проверка', confidence:'unknown' };
     if (event.kind === 'planned' && Number.isFinite(start) && start > today + 14*86400000) return { relevant:false, reason:'План слишком далеко', confidence:'high' };
     if (event.kind !== 'planned' && !Number.isFinite(end) && Number.isFinite(start) && start < today - 48*3600000) return { relevant:false, reason:'Устаревшее сообщение', confidence:'high' };
     const street = normalStreet(home.street);
@@ -172,6 +173,8 @@ const sources = [
   {id:'city', icon:'🏛', name:'Администрация Шахт', detail:'Объявления о работах', url:'https://t.me/s/admshakhty'},
   {id:'gas', icon:'♨', name:'Газораспределение · проверка источника', detail:'Адресные отключения пока не подтверждены', url:'https://www.rostovoblgaz.ru/press-center/news/'},
   {id:'gas_city', icon:'🏛', name:'Газ · администрация Шахт', detail:'Адресные сообщения о работах газовой службы',url:'https://t.me/s/admshakhty'},
+  {id:'max_city',icon:'🏛',name:'MAX · администрация Шахт',detail:'Требуется доступ к каналу',url:'https://max.ru/shakhtygorod'},
+  {id:'max_power',icon:'⚡',name:'MAX · Донэнерго',detail:'Требуется доступ к каналу',url:'https://max.ru/id6163089292_biz'},
   {id:'mchs', icon:'⚠', name:'МЧС Ростовской области', detail:'Региональные предупреждения', url:'https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya'},
 ];
 const state = {home:null, demo:false, filter:'all', events:[], backendConnected:false, checkedAt:null, checks:[], map:null, homeMarker:null, circle:null, incidentLayers:[], notifications:false, mapLoaded:false, toastTimer:null, sourceRecent:null,lastLocalCheck:0};

@@ -2,7 +2,7 @@ name: City Control | Compact Android app
 on:
   workflow_dispatch:
   push:
-    branches: [fix/water-map-pan-20261021]
+    branches: [fix/power-retention-36h]
     paths:
       - 'gorod-control/water-v16/**'
       - '.github/workflows/gorod-water-apks-v16.yml'
@@ -76,7 +76,7 @@ jobs:
           unzip -l "$APK" | grep 'res/drawable-nodpi-v4/coat_launcher.png'
           unzip -l "$APK" | grep 'assets/web/light-v10/vendor/maplibre-gl.js'
           mkdir -p /tmp/city-report-apk
-          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.4.apk
+          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.5.apk
           sha256sum /tmp/city-report-apk/*.apk
       - name: Enable virtualization
         run: |
@@ -100,7 +100,7 @@ jobs:
         continue-on-error: true
         if: always()
         with:
-          retention-days: 7
+          retention-days: 3
           name: report-apk-${{ matrix.variant }}-android-results
           path: two-apks-android-report/
           if-no-files-found: warn
@@ -121,7 +121,7 @@ jobs:
             cp /tmp/city-report-apk/*.apk gorod-control/water-v16/downloads/
             git add gorod-control/water-v16/downloads/
             if git diff --cached --quiet; then break; fi
-            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.4"
+            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.5"
             if git push origin HEAD:main; then echo "REPORT APK PUBLISHED: $CITY_VARIANT"; break; fi
             if [ "$attempt" = 5 ]; then exit 1; fi
             sleep 3

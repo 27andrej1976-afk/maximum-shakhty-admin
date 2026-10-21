@@ -16,6 +16,7 @@ from xml.etree import ElementTree as ET
 from service_events import mchs_posts, power_posts
 from city_utility import collect_city
 from rss_water import RSS_URLS
+from public_rss import fetch as fetch_rss
 
 OUTPUT=Path(__file__).resolve().parents[1]/'data'/'water.json'
 MCHS='https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss'
@@ -40,7 +41,7 @@ def collect_power(now):
         id='power_repost_rostov' if index==0 else 'power_repost_don'
         domain=url.split('/')[2]
         try:
-            raw=fetch(url,timeout=16)
+            raw=fetch_rss(url,timeout=16)
             items=ET.fromstring(raw).findall('.//item')
             parsed=power_posts(raw,domain,now)
             accepted+=len(parsed)
@@ -63,7 +64,7 @@ def collect_power(now):
 
 def collect_mchs(now):
     try:
-        raw=fetch(MCHS,timeout=18)
+        raw=fetch_rss(MCHS,timeout=18)
         root=ET.fromstring(raw)
         items=root.findall('.//item')
         last=None
