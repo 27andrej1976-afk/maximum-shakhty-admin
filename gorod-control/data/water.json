@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-22T18:00:49.816552+00:00",
+  "checkedAt": "2026-10-22T18:34:26.051220+00:00",
   "events": [
     {
       "id": "water-city-repost-36e3756684a66016ff87",
@@ -1118,12 +1118,12 @@
       "lastPostAt": "2026-10-20T08:34:40+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-22T18:00:38.351128+00:00"
+      "checkedAt": "2026-10-22T18:34:16.505700+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-10-22T18:00:38.351128+00:00",
+      "checkedAt": "2026-10-22T18:34:16.505700+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -1139,7 +1139,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-22T18:00:38.351128+00:00",
+      "checkedAt": "2026-10-22T18:34:16.505700+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -1151,7 +1151,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-22T18:00:38.351128+00:00",
+      "checkedAt": "2026-10-22T18:34:16.505700+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -1169,14 +1169,10 @@
     },
     {
       "id": "power_repost_don",
-      "status": "partial",
+      "status": "error",
       "url": "https://news-don.ru/rss.xml",
-      "readStatus": "ok",
-      "coverage": "partial",
-      "posts": 200,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
+      "posts": 0,
+      "note": "Нет доступа к RSS: <urlopen error timed out>"
     },
     {
       "id": "power_city",
