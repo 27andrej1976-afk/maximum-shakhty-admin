@@ -6730,17 +6730,17 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:звездная": {
-      "timestamp": 1792592571.141553,
+      "timestamp": 1792684278.069797,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:парижской коммуны": {
-      "timestamp": 1792592571.141553,
+      "timestamp": 1792684278.069797,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:энгельса": {
@@ -6777,10 +6777,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:кольцевая 1-29 а": {
-      "timestamp": 1792592571.141553,
+      "timestamp": 1792684278.069797,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:орлова": {
@@ -6886,17 +6886,17 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:вольный 2-8 а": {
-      "timestamp": 1792592571.141553,
+      "timestamp": 1792684278.069797,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:мастеровой 7-7 а": {
-      "timestamp": 1792592571.141553,
+      "timestamp": 1792684278.069797,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:капровая": {
