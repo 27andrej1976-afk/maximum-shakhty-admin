@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-10-22T14:22:27.286718+00:00",
-  "status": "cached",
+  "generatedAt": "2026-10-22T15:10:31.537341+00:00",
+  "status": "unavailable",
   "source": "© OpenStreetMap contributors · ODbL",
   "sourceUrl": "https://www.openstreetmap.org/copyright",
   "events": {
@@ -6700,5 +6700,6 @@
       "fullText": "г. Шахты\nул. Советская 174, 176;\nул. Ленина 151, 180;\nПросп. Пушкина 4, 6-18;\nПросп.  Карла Маркса 73\n23.10.26 09=00 — 23.10.26 14=00\nТехническое обслуживание оборудования \nТП-92\n",
       "note": "Подсвечены улицы, указанные в сообщении. Это не точные границы отключения и не координаты поломки."
     }
-  }
+  },
+  "error": "HTTPError: HTTP Error 504: Gateway Time-out; HTTPError: HTTP Error 502: Bad Gateway"
 }
