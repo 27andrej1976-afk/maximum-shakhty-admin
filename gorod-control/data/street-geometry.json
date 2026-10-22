@@ -2115,10 +2115,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:краснознаменная": {
-      "timestamp": 1792570675.397149,
+      "timestamp": 1792663992.962241,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:василевской": {
