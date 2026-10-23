@@ -161,7 +161,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-23T05:29:55.934702+00:00",
+      "observedAt": "2026-10-23T06:05:17.317664+00:00",
       "start": "2026-10-23T09:00:00+03:00",
       "end": "2026-10-23T12:00:00+03:00",
       "startBasis": "explicit",
@@ -181,7 +181,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-10-23T05:29:55.934702+00:00",
+      "lastConfirmedAt": "2026-10-23T06:05:17.317664+00:00",
       "retainUntil": "2026-10-25T00:00:00+03:00",
       "retained": false
     },
@@ -252,7 +252,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-23T05:29:55.934702+00:00",
+      "observedAt": "2026-10-23T06:05:17.317664+00:00",
       "start": "2026-10-23T09:00:00+03:00",
       "end": "2026-10-23T14:00:00+03:00",
       "startBasis": "explicit",
@@ -293,7 +293,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-10-23T05:29:55.934702+00:00",
+      "lastConfirmedAt": "2026-10-23T06:05:17.317664+00:00",
       "retainUntil": "2026-10-25T02:00:00+03:00",
       "retained": false
     }
