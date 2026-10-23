@@ -9235,10 +9235,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:казакова": {
-      "timestamp": 1792658234.533344,
+      "timestamp": 1792747126.479068,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:грушевский антрацит": {
@@ -9644,10 +9644,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:новопоселочная 2-16 а": {
-      "timestamp": 1792658234.533344,
+      "timestamp": 1792747126.479068,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:львовская": {
@@ -9700,10 +9700,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:рыночный 8-34, 1-13 а, 13 б": {
-      "timestamp": 1792658234.533344,
+      "timestamp": 1792747126.479068,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:ростовская": {
@@ -9834,17 +9834,17 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:горковенко": {
-      "timestamp": 1792658234.533344,
+      "timestamp": 1792747126.479068,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:шишкина": {
-      "timestamp": 1792658234.533344,
+      "timestamp": 1792747126.479068,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:делегатская": {
