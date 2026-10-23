@@ -154,14 +154,14 @@
       "id": "power-direct-740e858a47d80645eb",
       "category": "power",
       "kind": "planned",
-      "status": "unconfirmed",
+      "status": "active",
       "sourceId": "power_direct",
       "source": "Донэнерго · официальный график ШМЭС",
       "origin": "official_site",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-23T00:41:09.614249+00:00",
+      "observedAt": "2026-10-23T02:08:27.507962+00:00",
       "start": "2026-10-23T09:00:00+03:00",
       "end": "2026-10-23T12:00:00+03:00",
       "startBasis": "explicit",
@@ -181,9 +181,9 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-10-23T00:41:09.614249+00:00",
+      "lastConfirmedAt": "2026-10-23T02:08:27.507962+00:00",
       "retainUntil": "2026-10-25T00:00:00+03:00",
-      "retained": true
+      "retained": false
     },
     {
       "id": "power-direct-912868159dc785e6a2",
@@ -245,14 +245,14 @@
       "id": "power-direct-68eca55bd324bc16ac",
       "category": "power",
       "kind": "planned",
-      "status": "unconfirmed",
+      "status": "active",
       "sourceId": "power_direct",
       "source": "Донэнерго · официальный график ШМЭС",
       "origin": "official_site",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-23T00:41:09.614249+00:00",
+      "observedAt": "2026-10-23T02:08:27.507962+00:00",
       "start": "2026-10-23T09:00:00+03:00",
       "end": "2026-10-23T14:00:00+03:00",
       "startBasis": "explicit",
@@ -293,9 +293,9 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-10-23T00:41:09.614249+00:00",
+      "lastConfirmedAt": "2026-10-23T02:08:27.507962+00:00",
       "retainUntil": "2026-10-25T02:00:00+03:00",
-      "retained": true
+      "retained": false
     }
   ]
 }
