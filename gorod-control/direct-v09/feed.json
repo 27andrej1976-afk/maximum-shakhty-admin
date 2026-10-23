@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-23T06:05:17.317664+00:00",
+  "checkedAt": "2026-10-23T07:03:41.753073+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,12 +12,12 @@
       "lastPostAt": "2026-10-20T08:34:40+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-23T06:04:49.511012+00:00"
+      "checkedAt": "2026-10-23T07:03:16.216006+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-10-23T06:04:49.511012+00:00",
+      "checkedAt": "2026-10-23T07:03:16.216006+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -33,7 +33,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-23T06:04:49.511012+00:00",
+      "checkedAt": "2026-10-23T07:03:16.216006+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -45,7 +45,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-23T06:04:49.511012+00:00",
+      "checkedAt": "2026-10-23T07:03:16.216006+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -60,7 +60,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-23T06:05:03.828988+00:00"
+      "checkedAt": "2026-10-23T07:03:27.939949+00:00"
     },
     {
       "id": "power_repost_don",
@@ -72,7 +72,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-23T06:05:03.828988+00:00"
+      "checkedAt": "2026-10-23T07:03:27.939949+00:00"
     },
     {
       "id": "power_city",
@@ -84,7 +84,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-10-23T06:05:03.828988+00:00"
+      "checkedAt": "2026-10-23T07:03:27.939949+00:00"
     },
     {
       "id": "gas_city",
@@ -96,7 +96,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-10-23T06:05:03.828988+00:00"
+      "checkedAt": "2026-10-23T07:03:27.939949+00:00"
     },
     {
       "id": "gas",
@@ -106,7 +106,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-10-23T06:05:03.828988+00:00"
+      "checkedAt": "2026-10-23T07:03:27.939949+00:00"
     },
     {
       "id": "mchs",
@@ -114,42 +114,42 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 0,
-      "lastPostAt": "2026-10-23T08:31:00+03:00",
+      "lastPostAt": "2026-10-23T09:55:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-10-23T06:05:03.828988+00:00"
+      "checkedAt": "2026-10-23T07:03:27.939949+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-23T06:05:17.317664+00:00",
+      "checkedAt": "2026-10-23T07:03:41.753073+00:00",
       "lastPostAt": null,
       "posts": 2,
       "matchingPosts": 2,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "9f61630de4cc07822c590741c1b2f7e8109fd7e001c13cf06c43773d5b3aa202",
-      "durationSeconds": 3.22
+      "contentSha256": "bcd4cb17d34b42c4558f20e5e82e9d9a2423f47aa35996e3e89d4b14f96f5d13",
+      "durationSeconds": 1.37
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-10-23T06:05:17.317664+00:00",
+      "checkedAt": "2026-10-23T07:03:41.753073+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
       "matchingPosts": 84,
-      "lastPostAt": "2026-10-23T05:30:02.845000+00:00",
+      "lastPostAt": "2026-10-23T06:18:18.403000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     },
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-10-23T06:05:17.317664+00:00",
+      "checkedAt": "2026-10-23T07:03:41.753073+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -322,7 +322,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-23T06:05:17.317664+00:00",
+      "observedAt": "2026-10-23T07:03:41.753073+00:00",
       "start": "2026-10-23T09:00:00+03:00",
       "end": "2026-10-23T12:00:00+03:00",
       "startBasis": "explicit",
@@ -342,7 +342,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-10-23T06:05:17.317664+00:00",
+      "lastConfirmedAt": "2026-10-23T07:03:41.753073+00:00",
       "retainUntil": "2026-10-25T00:00:00+03:00",
       "retained": false
     },
@@ -413,7 +413,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-10-23T06:05:17.317664+00:00",
+      "observedAt": "2026-10-23T07:03:41.753073+00:00",
       "start": "2026-10-23T09:00:00+03:00",
       "end": "2026-10-23T14:00:00+03:00",
       "startBasis": "explicit",
@@ -454,7 +454,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-10-23T06:05:17.317664+00:00",
+      "lastConfirmedAt": "2026-10-23T07:03:41.753073+00:00",
       "retainUntil": "2026-10-25T02:00:00+03:00",
       "retained": false
     }
