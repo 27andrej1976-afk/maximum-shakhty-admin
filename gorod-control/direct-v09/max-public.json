@@ -1,10 +1,10 @@
 {
-  "checkedAt": "2026-10-24T13:23:18.455184+00:00",
+  "checkedAt": "2026-10-24T16:53:04.151849+00:00",
   "sources": [
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-10-24T13:23:18.455184+00:00",
+      "checkedAt": "2026-10-24T16:53:04.151849+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -17,7 +17,7 @@
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-10-24T13:23:18.455184+00:00",
+      "checkedAt": "2026-10-24T16:53:04.151849+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
