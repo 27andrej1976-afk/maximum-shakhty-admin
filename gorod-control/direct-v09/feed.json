@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-24T16:53:04.151849+00:00",
+  "checkedAt": "2026-10-24T19:23:56.757264+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,12 +12,12 @@
       "lastPostAt": "2026-10-24T11:07:26+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-24T16:52:42.758935+00:00"
+      "checkedAt": "2026-10-24T19:23:35.937291+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-10-24T16:52:42.758935+00:00",
+      "checkedAt": "2026-10-24T19:23:35.937291+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -33,7 +33,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-24T16:52:42.758935+00:00",
+      "checkedAt": "2026-10-24T19:23:35.937291+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -45,7 +45,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-24T16:52:42.758935+00:00",
+      "checkedAt": "2026-10-24T19:23:35.937291+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -60,7 +60,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-24T16:52:51.901496+00:00"
+      "checkedAt": "2026-10-24T19:23:45.218608+00:00"
     },
     {
       "id": "power_repost_don",
@@ -72,7 +72,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-24T16:52:51.901496+00:00"
+      "checkedAt": "2026-10-24T19:23:45.218608+00:00"
     },
     {
       "id": "power_city",
@@ -84,7 +84,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-10-24T16:52:51.901496+00:00"
+      "checkedAt": "2026-10-24T19:23:45.218608+00:00"
     },
     {
       "id": "gas_city",
@@ -96,7 +96,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-10-24T16:52:51.901496+00:00"
+      "checkedAt": "2026-10-24T19:23:45.218608+00:00"
     },
     {
       "id": "gas",
@@ -106,7 +106,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-10-24T16:52:51.901496+00:00"
+      "checkedAt": "2026-10-24T19:23:45.218608+00:00"
     },
     {
       "id": "mchs",
@@ -114,16 +114,16 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 0,
-      "lastPostAt": "2026-10-24T09:40:00+03:00",
+      "lastPostAt": "2026-10-24T21:23:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-10-24T16:52:51.901496+00:00"
+      "checkedAt": "2026-10-24T19:23:45.218608+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-24T16:53:04.151849+00:00",
+      "checkedAt": "2026-10-24T19:23:56.757264+00:00",
       "lastPostAt": null,
       "posts": 1,
       "matchingPosts": 0,
@@ -132,13 +132,13 @@
         "Заявок на 24.10.-25.10.26 г нет"
       ],
       "tlsVerified": true,
-      "contentSha256": "7f6659fd757bc14cec52d4d865f8e5b5f39fbd051c097015d7cb84c2abe07199",
-      "durationSeconds": 1.64
+      "contentSha256": "86ea3affbddc11bf8848e7e1d24e2eba4e10a0a981c18cf2623f154984b176e9",
+      "durationSeconds": 2.33
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-10-24T16:53:04.151849+00:00",
+      "checkedAt": "2026-10-24T19:23:56.757264+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -151,14 +151,14 @@
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-10-24T16:53:04.151849+00:00",
+      "checkedAt": "2026-10-24T19:23:56.757264+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
-      "matchingPosts": 60,
-      "lastPostAt": "2026-10-24T12:04:42.816000+00:00",
+      "matchingPosts": 62,
+      "lastPostAt": "2026-10-24T17:20:33.978000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     }
   ],
