@@ -1,30 +1,30 @@
 {
-  "checkedAt": "2026-10-24T09:03:52.828118+00:00",
+  "checkedAt": "2026-10-24T13:23:18.455184+00:00",
   "sources": [
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-10-24T09:03:52.828118+00:00",
+      "checkedAt": "2026-10-24T13:23:18.455184+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
-      "matchingPosts": 84,
+      "matchingPosts": 83,
       "lastPostAt": "2026-10-24T08:00:05.307000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     },
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-10-24T09:03:52.828118+00:00",
+      "checkedAt": "2026-10-24T13:23:18.455184+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
-      "matchingPosts": 57,
-      "lastPostAt": "2026-10-24T04:23:48.667000+00:00",
+      "matchingPosts": 60,
+      "lastPostAt": "2026-10-24T12:04:42.816000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     }
   ],
