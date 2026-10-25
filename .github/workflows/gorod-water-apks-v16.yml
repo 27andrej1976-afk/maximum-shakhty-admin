@@ -1,13 +1,6 @@
 name: City Control | Compact Android app · URSV MAX and top GPS 1.8
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'gorod-control/water-v16/prepare_release.py'
-      - 'gorod-control/water-v16/test_android_zoom.py'
-      - 'gorod-control/map-v07/city-map.js'
-      - '.github/workflows/gorod-water-apks-v16.yml'
 permissions:
   contents: write
 concurrency:

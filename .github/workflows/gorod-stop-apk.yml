@@ -1,0 +1,15 @@
+name: City Control | Stop unapproved APK build
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/gorod-stop-apk.yml']
+permissions:
+  contents: read
+concurrency:
+  group: water-android-v16
+  cancel-in-progress: true
+jobs:
+  stop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'APK build stopped. Future builds require explicit user approval and manual dispatch.'
