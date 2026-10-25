@@ -23,7 +23,7 @@ def main():
  max_posts,max_states=collect_max(now)
  # Only utility publications from the two public channels are retained for parser review.
  max_review=[p for p in max_posts if re.search(r'водоснабж|подач[а-я]*\s+вод|электро|технологическ[а-я]* наруш|газоснабж',p['text'],re.I)
-             and (p['sourceId']=='max_city' or CITY.search(p['text'][:500]))]
+             and (p['sourceId']=='max_city' or CITY.search(p['text'][:500]) or p['sourceId']=='max_water' and re.search(r'Шахтинск|ФШ\s+ГУП',p['text'],re.I))]
  (OUT/'max-public.json').write_text(json.dumps({'checkedAt':now.isoformat(),'sources':max_states,'posts':max_review},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  max_water=max_water_posts(max_posts)
  norm=verified.build_feed(baseline.get('archive',[])+max_water,now)
