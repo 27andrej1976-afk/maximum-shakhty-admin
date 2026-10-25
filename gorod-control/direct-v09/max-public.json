@@ -1,10 +1,10 @@
 {
-  "checkedAt": "2026-10-25T20:00:33.622703+00:00",
+  "checkedAt": "2026-10-25T22:28:31.502215+00:00",
   "sources": [
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-10-25T20:00:33.622703+00:00",
+      "checkedAt": "2026-10-25T22:28:31.502215+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -17,7 +17,7 @@
     {
       "id": "max_water",
       "url": "https://max.ru/id6167110467_gos",
-      "checkedAt": "2026-10-25T20:00:33.622703+00:00",
+      "checkedAt": "2026-10-25T22:28:31.502215+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -30,7 +30,7 @@
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-10-25T20:00:33.622703+00:00",
+      "checkedAt": "2026-10-25T22:28:31.502215+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
