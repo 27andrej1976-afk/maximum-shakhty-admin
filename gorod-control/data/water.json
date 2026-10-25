@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-25T01:45:00.879865+00:00",
+  "checkedAt": "2026-10-25T06:58:11.711543+00:00",
   "events": [],
   "incidents": [
     {
@@ -1330,12 +1330,12 @@
       "lastPostAt": "2026-10-24T11:07:26+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-25T01:44:49.685040+00:00"
+      "checkedAt": "2026-10-25T06:57:59.356793+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-10-25T01:44:49.685040+00:00",
+      "checkedAt": "2026-10-25T06:57:59.356793+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -1351,7 +1351,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-25T01:44:49.685040+00:00",
+      "checkedAt": "2026-10-25T06:57:59.356793+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -1363,7 +1363,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-25T01:44:49.685040+00:00",
+      "checkedAt": "2026-10-25T06:57:59.356793+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -1434,7 +1434,7 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 0,
-      "lastPostAt": "2026-10-24T21:23:00+03:00",
+      "lastPostAt": "2026-10-25T06:00:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам"
     }
   ],
