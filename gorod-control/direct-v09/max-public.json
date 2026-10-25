@@ -1,29 +1,42 @@
 {
-  "checkedAt": "2026-10-25T09:43:58.961494+00:00",
+  "checkedAt": "2026-10-25T11:09:01.379352+00:00",
   "sources": [
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-10-25T09:43:58.961494+00:00",
+      "checkedAt": "2026-10-25T11:09:01.379352+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
-      "matchingPosts": 84,
+      "matchingPosts": 83,
       "lastPostAt": "2026-10-25T09:15:29.068000+00:00",
+      "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
+    },
+    {
+      "id": "max_water",
+      "url": "https://max.ru/id6167110467_gos",
+      "checkedAt": "2026-10-25T11:09:01.379352+00:00",
+      "status": "ok",
+      "readStatus": "ok",
+      "coverage": "partial",
+      "transport": "max_user_session",
+      "posts": 100,
+      "matchingPosts": 24,
+      "lastPostAt": "2026-10-25T10:31:32.268000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     },
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-10-25T09:43:58.961494+00:00",
+      "checkedAt": "2026-10-25T11:09:01.379352+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
-      "matchingPosts": 62,
+      "matchingPosts": 61,
       "lastPostAt": "2026-10-25T02:01:38.712000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     }
@@ -136,6 +149,39 @@
       "officialUrl": "https://max.ru/shakhtygorod",
       "sourceId": "max_city",
       "source": "Администрация города Шахты",
+      "origin": "official_max",
+      "transport": "max_user_session"
+    },
+    {
+      "id": "max_water/117490249417753884",
+      "publishedAt": "2026-10-23T12:35:32.766000+00:00",
+      "text": "Филиал \"Шахтинский\" сообщает:\n\n⚠️ Снижение давления\n\n🔧 Причина\nВ 15-30 час. аварийно-ремонтные работы по адресу: ул. Луганская, д. 49 завершены. Водоснабжение восстановлено.\n\n🗺️ Адреса:\nг Шахты, пер Шишкина\nг Шахты, ул Подбельского\nг Шахты, ул 26 Бакинских Комиссаров\nг Шахты, пер Кольчугина\nг Шахты, ул Знаменская\nг Шахты, ул Луганская\nг Шахты, Минский пер\n\n🔗 Подробнее: https://rovodokanal.ru/emergency-alerts/1665",
+      "url": "https://max.ru/id6167110467_gos",
+      "officialUrl": "https://max.ru/id6167110467_gos",
+      "sourceId": "max_water",
+      "source": "ГУП РО «УРСВ»",
+      "origin": "official_max",
+      "transport": "max_user_session"
+    },
+    {
+      "id": "max_water/117490315942628117",
+      "publishedAt": "2026-10-23T12:52:27.855000+00:00",
+      "text": "Филиал \"Шахтинский\" сообщает:\n\n⚠️ Работы завершены\n\n🔧 Причина\nВ 15-30 час. аварийно-ремонтные работы по адресу: ул.  Луганская , д.49 завершены. Водоснабжение восстановлено.\n\n🗺️ Адреса:\nг Шахты, пер Шишкина\nг Шахты, ул Подбельского\nг Шахты, ул 26 Бакинских Комиссаров\nг Шахты, пер Кольчугина\nг Шахты, ул Знаменская\nг Шахты, ул Луганская\nг Шахты, Минский пер\n\n🔗 Подробнее: https://rovodokanal.ru/emergency-alerts/1666",
+      "url": "https://max.ru/id6167110467_gos",
+      "officialUrl": "https://max.ru/id6167110467_gos",
+      "sourceId": "max_water",
+      "source": "ГУП РО «УРСВ»",
+      "origin": "official_max",
+      "transport": "max_user_session"
+    },
+    {
+      "id": "max_water/117490384695263365",
+      "publishedAt": "2026-10-23T13:09:56.937000+00:00",
+      "text": "Филиал \"Шахтинский\" сообщает:\n\n⚠️ Работы завершены\n\n🔧 Причина\nВ 16-05 час. аварийно-ремонтные работы по адресу: ул.  Куйбышева, д.140 завершены. Водоснабжение восстановлено.\n\n🗺️ Адреса:\nг Шахты, ул Темерницкая\nг Шахты, пер Куйбышева\nг Шахты, Камчатский пер\nг Шахты, Минский пер\nг Шахты, ул Кадровая\nг Шахты, пер Демехина\nг Шахты, ул Юный Спартак\nг Шахты, Гражданский пер\n\n🔗 Подробнее: https://rovodokanal.ru/emergency-alerts/1667",
+      "url": "https://max.ru/id6167110467_gos",
+      "officialUrl": "https://max.ru/id6167110467_gos",
+      "sourceId": "max_water",
+      "source": "ГУП РО «УРСВ»",
       "origin": "official_max",
       "transport": "max_user_session"
     },
