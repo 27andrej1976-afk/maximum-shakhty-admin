@@ -26,19 +26,12 @@ evaluate('window.releaseTestFeed('+json.dumps(fixture,ensure_ascii=False)+')')
 check(evaluate("!CityMapV07.inspect().allIds.includes('water-test-secondary')"),'Failed source cannot validate secondary event')
 evaluate("window.CityControlNativeFeed=window.releaseTestFeed;true")
 '''
-        extra+="\ncheck(evaluate(\"document.querySelector('main.main').firstElementChild.contains(document.querySelector('#geoButton'))\"),'GPS control is first on main screen')\ncheck(evaluate(\"document.querySelector('#geoButton').getBoundingClientRect().bottom<innerHeight\"),'GPS visible without scrolling')\ncheck(evaluate(\"document.querySelector('#sourcesGrid').textContent.includes('MAX · УРСВ')\"),'URSV MAX source registered')\n"
+        extra+='\nevaluate("window.scrollTo({top:0,behavior:\'instant\'});true")\ncheck(evaluate("document.querySelector(\'.compact-metrics\').compareDocumentPosition(document.querySelector(\'#geoButton\'))&Node.DOCUMENT_POSITION_FOLLOWING"),\'GPS follows counters\')\ncheck(evaluate("document.querySelector(\'#geoButton\').getBoundingClientRect().bottom<innerHeight"),\'GPS visible without scrolling\')\ncheck(evaluate("document.querySelector(\'#sourcesGrid\').textContent.includes(\'MAX · УРСВ\')"),\'URSV MAX source registered\')\ncheck(evaluate("getComputedStyle(document.querySelector(\'#compactSourcesFold\')).display===\'none\'"),\'Source diagnostics hidden from customer view\')\ncheck(evaluate("getComputedStyle(document.querySelector(\'#compactSettingsFold\')).display===\'none\'"),\'Extra settings hidden from customer view\')\ncheck(evaluate("document.querySelector(\'.map-card\').compareDocumentPosition(document.querySelector(\'#reportIssueButton\'))&Node.DOCUMENT_POSITION_FOLLOWING"),\'Complaint button follows city map\')\ncheck(evaluate("!!document.querySelector(\'.notification-card\') && getComputedStyle(document.querySelector(\'.notification-card\')).display!==\'none\'"),\'Advance warnings block preserved\')\n'
         assert 'ws.close()' in s;s=s.replace('ws.close()',extra+"\nexec(Path('gorod-control/water-v16/test_android_power_retention.py').read_text())\nexec(Path('gorod-control/water-v16/test_android_pan.py').read_text())\nexec(Path('gorod-control/water-v16/test_android_zoom.py').read_text())\nws.close()")
     p.write_text(s)
-# The report button can initialize before compact's window-level DOMContentLoaded
-# handler. Move its existing section before compact removes the old left panel.
-compact=Path('gorod-control/compact-v11/compact.js')
-if compact.exists():
-    s=compact.read_text()
-    anchor=' app.append(headline,metrics,address,overview,toolbar,mapCard,notice);'
-    assert anchor in s
-    s=s.replace(anchor," app.append(address,headline,metrics,overview,toolbar,mapCard,notice);"+"\n const report=left.querySelector('#reportIssueButton')?.closest('section');\n if(report)toolbar.insertAdjacentElement('afterend',report);",1)
-    s=s.replace(" const radius=address.querySelector('.radius');"," const gps=document.getElementById('geoButton');\n if(gps){gps.textContent='◎ Определить моё местоположение';gps.setAttribute('aria-label','Определить моё местоположение');}\n const radius=address.querySelector('.radius');")
-    compact.write_text(s)
+# Apply the agreed customer screen to the recovered compact UI.
+import runpy
+runpy.run_path('gorod-control/water-v16/customer_ui.py',run_name='__main__')
 
 # Fail before building if the shared MapLibre v5 pan correction is lost again.
 bridge=Path('gorod-control/light-v10/vendor/leaflet-maplibre-gl.js').read_text()

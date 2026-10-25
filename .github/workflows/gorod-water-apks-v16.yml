@@ -1,6 +1,8 @@
 name: City Control | Compact Android app · URSV MAX and top GPS 1.8
 on:
   workflow_dispatch:
+  push:
+    branches: [build/approved-city-ui-20261025]
 permissions:
   contents: write
 concurrency:
