@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-10-25T13:57:51.656479+00:00",
+  "checkedAt": "2026-10-25T17:34:25.889102+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,12 +12,12 @@
       "lastPostAt": "2026-10-24T11:07:26+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-25T13:57:20.052059+00:00"
+      "checkedAt": "2026-10-25T17:34:06.256641+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-10-25T13:57:20.052059+00:00",
+      "checkedAt": "2026-10-25T17:34:06.256641+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -33,7 +33,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-25T13:57:20.052059+00:00",
+      "checkedAt": "2026-10-25T17:34:06.256641+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -45,7 +45,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-25T13:57:20.052059+00:00",
+      "checkedAt": "2026-10-25T17:34:06.256641+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -60,7 +60,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-25T13:57:34.123971+00:00"
+      "checkedAt": "2026-10-25T17:34:15.713305+00:00"
     },
     {
       "id": "power_repost_don",
@@ -72,7 +72,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-10-25T13:57:34.123971+00:00"
+      "checkedAt": "2026-10-25T17:34:15.713305+00:00"
     },
     {
       "id": "power_city",
@@ -84,7 +84,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-10-25T13:57:34.123971+00:00"
+      "checkedAt": "2026-10-25T17:34:15.713305+00:00"
     },
     {
       "id": "gas_city",
@@ -96,7 +96,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-10-25T13:57:34.123971+00:00"
+      "checkedAt": "2026-10-25T17:34:15.713305+00:00"
     },
     {
       "id": "gas",
@@ -106,7 +106,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-10-25T13:57:34.123971+00:00"
+      "checkedAt": "2026-10-25T17:34:15.713305+00:00"
     },
     {
       "id": "mchs",
@@ -114,16 +114,16 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 0,
-      "lastPostAt": "2026-10-25T10:15:00+03:00",
+      "lastPostAt": "2026-10-25T20:00:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-10-25T13:57:34.123971+00:00"
+      "checkedAt": "2026-10-25T17:34:15.713305+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-10-25T13:57:51.656479+00:00",
+      "checkedAt": "2026-10-25T17:34:25.889102+00:00",
       "lastPostAt": null,
       "posts": 1,
       "matchingPosts": 0,
@@ -132,13 +132,13 @@
         "Заявок на 24.10.-25.10.26 г нет"
       ],
       "tlsVerified": true,
-      "contentSha256": "208ca5ef6c1d26a9a9bf3cb39b8b038aeb27a831d3a2bf7dc7f2b3808e7b3cdc",
-      "durationSeconds": 6.58
+      "contentSha256": "fdcd564b05849af4e089c5a1f311cc5295f96b469ca23ed1abfbaa0f28ae9104",
+      "durationSeconds": 1.42
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-10-25T13:57:51.656479+00:00",
+      "checkedAt": "2026-10-25T17:34:25.889102+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -151,20 +151,20 @@
     {
       "id": "max_water",
       "url": "https://max.ru/id6167110467_gos",
-      "checkedAt": "2026-10-25T13:57:51.656479+00:00",
+      "checkedAt": "2026-10-25T17:34:25.889102+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
-      "matchingPosts": 25,
-      "lastPostAt": "2026-10-25T13:03:01.516000+00:00",
+      "matchingPosts": 26,
+      "lastPostAt": "2026-10-25T15:02:34.509000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     },
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-10-25T13:57:51.656479+00:00",
+      "checkedAt": "2026-10-25T17:34:25.889102+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -233,7 +233,7 @@
       "requiresReview": false,
       "noticeId": "kvu/1fd809dde63ce37b531e/0",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://kvu.su/utilities/19319-gde-v-shahtah-otkljuchili-vodu-v-voskresene-25-oktjabrja.html"
@@ -246,10 +246,10 @@
       "description": "В Шахтах отключили водоснабжение в воскресенье, 25 октября. В связи с проведением аварийно-ремонтных работ на трубопроводе по ул. Индустриальная с 13.30 снижено давление в направлении улиц: Демехина Кольчугина Индустриальная Одесская Цуканова Планировочная Строителей Совхозный. Ориентировочное время завершения работ – 20.00, 25 октября. Организован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефо",
       "title": "Ограничение водоснабжения",
       "fullText": "В Шахтах отключили водоснабжение в воскресенье, 25 октября.\nВ связи с проведением аварийно-ремонтных работ на трубопроводе по ул. Индустриальная с 13.30 снижено давление в направлении улиц:\nДемехина\nКольчугина\nИндустриальная\nОдесская\nЦуканова\nПланировочная\nСтроителей\nСовхозный. \nОриентировочное время завершения работ – 20.00, 25 октября.\nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863)28-55-777.",
-      "lastConfirmedAt": "2026-10-25T13:57:20.052059+00:00",
+      "lastConfirmedAt": "2026-10-25T17:34:06.256641+00:00",
       "retainUntil": "2026-10-27T08:00:00+03:00",
       "retained": false,
-      "observedAt": "2026-10-25T13:57:34.123971+00:00"
+      "observedAt": "2026-10-25T17:34:15.713305+00:00"
     }
   ],
   "archive": [
@@ -429,6 +429,16 @@
           "water-max_city-117489569620524734",
           "water-city-repost-f1681c39099ed3c6127d",
           "water-city-repost-4805508d7c33c50b4bb7"
+        ]
+      },
+      {
+        "noticeId": "max_water/117502152180333788",
+        "reason": "Завершение требует сверки места ремонта/охвата",
+        "possibleIncidentIds": [
+          "water-max_city-117489569620524734",
+          "water-city-repost-f1681c39099ed3c6127d",
+          "water-city-repost-4805508d7c33c50b4bb7",
+          "water-kvu-1fd809dde63ce37b531e-0"
         ]
       }
     ]
