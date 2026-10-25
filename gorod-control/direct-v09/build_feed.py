@@ -4,6 +4,7 @@ from datetime import datetime,timezone
 import importlib.util,sys,json,shutil,re
 from power_direct import collect as collect_power
 from power_retention import merge as retain_power
+from water_retention import merge as retain_water
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'direct-v09'
 sys.path.insert(0,str(ROOT/'scripts'))
@@ -23,7 +24,7 @@ def main():
  max_posts,max_states=collect_max(now)
  # Only utility publications from the two public channels are retained for parser review.
  max_review=[p for p in max_posts if re.search(r'водоснабж|подач[а-я]*\s+вод|электро|технологическ[а-я]* наруш|газоснабж',p['text'],re.I)
-             and (p['sourceId']=='max_city' or CITY.search(p['text'][:500]) or p['sourceId']=='max_water' and re.search(r'Шахтинск|ФШ\s+ГУП',p['text'],re.I))]
+             and (p['sourceId']=='max_city' or CITY.search(p['text'][:500]) or p['sourceId']=='max_water' and re.search(r'\bШахтинск[а-я]*\b|\bФШ\s+ГУП\b',p['text'],re.I))]
  (OUT/'max-public.json').write_text(json.dumps({'checkedAt':now.isoformat(),'sources':max_states,'posts':max_review},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  max_water=max_water_posts(max_posts)
  norm=verified.build_feed(baseline.get('archive',[])+max_water,now)
@@ -43,9 +44,11 @@ def main():
  sources.extend(max_states)
  max_events=max_power_posts(max_posts,now)
  events=water+[e for e in baseline.get('events',[]) if e.get('category')!='water']+power+max_events
+ water_resolutions=[dict(n,category='water',status='resolved',id='restore-water-'+n['id']) for n in norm['notices'] if n.get('kind')=='resolved']
+ water_saved=retain_water(norm['incidents']+water_resolutions,previous,sources,now)
  power_saved=retain_power(events,previous,sources,now)
- events=[e for e in events if e.get('category')!='power']+[e for e in power_saved if e.get('status') not in ('resolved','cancelled','canceled')]
- cache.write_text(json.dumps({'events':power_saved},ensure_ascii=False,indent=2)+'\n')
+ events=[e for e in events if e.get('category') not in ('power','water')]+[e for e in water_saved+power_saved if e.get('status') not in ('resolved','cancelled','canceled')]
+ cache.write_text(json.dumps({'events':power_saved+water_saved},ensure_ascii=False,indent=2)+'\n')
  for e in events:
   e['observedAt']=e.get('observedAt') or oldcheck
  data={'schema':2,'version':'0.9.0-test','checkedAt':now.isoformat(),'coverage':'partial',

@@ -80,6 +80,10 @@ def main():
     data=read(FEED,{})
     cache=read(CACHE,{'schema':1,'roads':{}})
     if not isinstance(cache.get('roads'),dict):cache={'schema':1,'roads':{}}
+    verified=read(BASE/'direct-v09/street-points-verified.json',{}).get('roads',{})
+    for k,record in verified.items():
+        old=cache['roads'].get(k,{})
+        if not old.get('segments') and not old.get('point'):cache['roads'][k]=record
     wanted={}
     for event in data.get('events',[]):
         if event.get('category')=='mchs' or event.get('status') in ('resolved','cancelled'):continue
@@ -90,7 +94,7 @@ def main():
     for k,label in wanted.items():
         existing=cache['roads'].get(k,{})
         age=timestamp-existing.get('timestamp',0)
-        if age>(90*86400 if existing.get('segments') else 86400):pending.append(label)
+        if age>(90*86400 if existing.get('segments') or existing.get('point') else 86400):pending.append(label)
     pending=pending[:12]
     status='cached';error=None
     if pending:
@@ -121,7 +125,14 @@ def main():
         for area in event.get('affected',[]):
             k=key(area.get('street'));cached=cache['roads'].get(k,{})
             segments=cached.get('segments',[])
-            if not segments:continue
+            if not segments:
+                point=cached.get('point') or {}
+                lat,lon=point.get('lat'),point.get('lon')
+                if isinstance(lat,(int,float)) and isinstance(lon,(int,float)) and 47.61<=lat<=47.86 and 40.075<=lon<=40.385 and cached.get('osmId'):
+                    features.append({'lat':lat,'lon':lon,'role':'street','label':area['street'],'lines':[],
+                        'osmWays':['https://www.openstreetmap.org/way/'+str(cached['osmId'])],
+                        'precision':'verified_street_point'})
+                continue
             # Marker is placed on a real point of the longest mapped street segment, labelled as such.
             longest=max(segments,key=lambda v:len(v['line']))['line'];mid=longest[len(longest)//2]
             features.append({'lat':mid[0],'lon':mid[1],'role':'street','label':area['street'],

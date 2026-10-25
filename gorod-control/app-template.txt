@@ -127,7 +127,7 @@
         confidence:'high',match:'area',distance:NaN};
     }
     const today = Date.now(), end = event.end ? Date.parse(event.end) : NaN, start = event.start ? Date.parse(event.start) : NaN;
-    if(event.category==='power' && today>=Date.parse(event.end||event.start||event.publishedAt||event.observedAt||'')+36*3600000)return {relevant:false,reason:'Истёк срок сохранения 36 часов',confidence:'unknown'};
+    if(['power','water'].includes(event.category) && today>=Date.parse(event.end||event.start||event.publishedAt||event.observedAt||'')+36*3600000)return {relevant:false,reason:'Истёк срок сохранения 36 часов',confidence:'unknown'};
     if (event.category!=='power' && Number.isFinite(end) && end < today - 24*3600000) return { relevant:false, reason:'Истёк срок актуальности сообщения, требуется новая проверка', confidence:'unknown' };
     if (event.kind === 'planned' && Number.isFinite(start) && start > today + 14*86400000) return { relevant:false, reason:'План слишком далеко', confidence:'high' };
     if (event.kind !== 'planned' && !Number.isFinite(end) && Number.isFinite(start) && start < today - 48*3600000) return { relevant:false, reason:'Устаревшее сообщение', confidence:'high' };
@@ -207,11 +207,20 @@ function demoEvents(){const h=state.home||{...CITY,street:'Тестовая',hou
 ]}
 function waterSourceAccepted(e,by,fresh){
   const url=String(e.url||'');
+  if(['resolved','cancelled','canceled'].includes(e.status))return false;
+  let sid=null;
+  if(e.origin==='media_report'&&e.sourceId==='water_kvu'&&url.startsWith('https://kvu.su/utilities/'))sid='water_kvu';
   const mirror=url.startsWith('https://news-don.ru/')?'repost_don':url.startsWith('https://newsrostov.ru/')?'repost_rostov':null;
-  if(e.origin==='media_report')return e.sourceId==='water_kvu'&&url.startsWith('https://kvu.su/utilities/')&&fresh(by.water_kvu);
-  if(e.origin==='municipal_repost')return !!mirror&&e.sourceId===mirror&&fresh(by[mirror]);
-  if(e.origin==='verified_repost')return !!mirror&&(!e.sourceId||e.sourceId===mirror)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(e.officialUrl||'')&&fresh(by[mirror]);
-  return e.source==='Администрация города Шахты'&&url.startsWith('https://t.me/admshakhty/')&&fresh(by.city);
+  if(e.origin==='municipal_repost'&&mirror&&e.sourceId===mirror)sid=mirror;
+  if(e.origin==='verified_repost'&&mirror&&(!e.sourceId||e.sourceId===mirror)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(e.officialUrl||''))sid=mirror;
+  if(e.source==='Администрация города Шахты'&&url.startsWith('https://t.me/admshakhty/'))sid='city';
+  if(e.origin==='official_max'&&!e.requiresReview&&((e.sourceId==='max_water'&&url==='https://max.ru/id6167110467_gos')||(e.sourceId==='max_city'&&url==='https://max.ru/shakhtygorod')))sid=e.sourceId;
+  if(!sid)return false;
+  const until=Date.parse(e.end||e.start||e.publishedAt||e.observedAt||'')+36*3600000;
+  if(!Number.isFinite(until)||Date.now()>=until)return false;
+  if(fresh(by[sid]))return true;
+  const confirmed=Date.parse(e.lastConfirmedAt||'');
+  return Number.isFinite(confirmed)&&confirmed<=Date.now()+120000&&confirmed<=until&&Date.parse(e.retainUntil||'')===until;
 }
 function sourceSummary(list,states,now=Date.now()){
   let read=0,errors=0,unconfigured=0;

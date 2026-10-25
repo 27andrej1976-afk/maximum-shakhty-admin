@@ -5,7 +5,8 @@ from __future__ import annotations
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
-import re
+import re,json
+from pathlib import Path
 from typing import Any
 MSK=timezone(timedelta(hours=3))
 MONTHS={s:i+1 for i,s in enumerate('января февраля марта апреля мая июня июля августа сентября октября ноября декабря'.split())}
@@ -15,6 +16,9 @@ NUMDATE=re.compile(r'(?<!\d)([0-3]?\d)[./]([01]?\d)[./](20\d{2})(?!\d)')
 WORDDATE=re.compile(r'(?<!\d)([0-3]?\d)\s+('+'|'.join(MONTHS)+r')(?:\s+(20\d{2}))?',re.I)
 TIME=r'([01]?\d|2[0-3])\s*[:.\-]\s*([0-5]\d)(?!\d)'
 STRIP=' \t\r\n▫▪•-–✔✅🔹🔸🗺️'
+try:STREET_ALIASES=json.loads(Path(__file__).with_name('street-name-index.json').read_text(encoding='utf-8')).get('aliases',{})
+except (OSError,ValueError):STREET_ALIASES={}
+
 
 def clean(text):
     return re.sub(r'\s+',' ',str(text or '').replace('\xa0',' ').replace('\ufe0f','')).strip()
@@ -38,11 +42,13 @@ def road(raw,implied=None):
         houses=[re.sub(r'\s+','',s).lower().replace('–','-') for s in match[1].split(',')]
         text=text[:match.start()].strip(' ,;.')
     for name,pattern in KINDS:
-        m=re.fullmatch(r'(?:'+pattern+r')\s*(.+)',text,re.I)
+        m=re.fullmatch(r'(?:'+pattern+r')(?:\s+|(?<=\.))(.+)',text,re.I)
         if not m:m=re.fullmatch(r'(.+?)\s+(?:'+pattern+r')',text,re.I)
         if m:
             value=m[1].strip(' ,;.')
             if value and len(value)<100:return {'street':name+' '+value,'houses':houses}
+    canonical=STREET_ALIASES.get(text.lower().replace('ё','е'))
+    if canonical and canonical!=text:return {'street':canonical,'houses':houses}
     if implied and text and len(text)<70:return {'street':implied+' '+text,'houses':houses}
     return None
 
@@ -262,8 +268,8 @@ def build_feed(posts,now):
         start=datetime.fromisoformat(e['start']) if e['start'] else None
         end=datetime.fromisoformat(e['end']) if e['end'] else None
         pub=datetime.fromisoformat(e['publishedAt'])
-        if end and end<now-timedelta(hours=24):continue
-        if not end and now-pub>timedelta(hours=48):continue
+        if end and end<now-timedelta(hours=36):continue
+        if not end and now-pub>=timedelta(hours=36):continue
         if e['kind']=='planned' and start and start>now+timedelta(days=14):continue
         if end and end<now:e['status']='unconfirmed'
         live.append(e)

@@ -79,13 +79,20 @@ const waterScript=html.slice(html.indexOf('function waterSourceAccepted('),html.
 const waterCtx=vm.createContext({});new vm.Script(waterScript).runInContext(waterCtx);
 const accept=waterCtx.waterSourceAccepted, fresh=s=>s?.status==='ok';
 const src={water_kvu:{status:'ok'},repost_don:{status:'error'},repost_rostov:{status:'ok'}};
-const media={origin:'media_report',sourceId:'water_kvu',url:'https://kvu.su/utilities/report.html'};
+const media={origin:'media_report',sourceId:'water_kvu',url:'https://kvu.su/utilities/report.html',end:new Date(Date.now()+3600000).toISOString()};
 assert.equal(accept(media,src,fresh),true);
 assert.equal(accept({...media,url:'https://kvu.su.evil.test/utilities/report'},src,fresh),false);
 assert.equal(accept(media,{water_kvu:{status:'stale'}},fresh),false);
-assert.equal(accept({origin:'municipal_repost',sourceId:'repost_don',url:'https://news-don.ru/society/report'},src,fresh),false,'another healthy mirror cannot validate a failed source');
-assert.equal(accept({origin:'municipal_repost',sourceId:'repost_rostov',url:'https://newsrostov.ru/society/report'},src,fresh),true);
+assert.equal(accept({origin:'municipal_repost',sourceId:'repost_don',url:'https://news-don.ru/society/report',end:media.end},src,fresh),false,'another healthy mirror cannot validate a failed source');
+assert.equal(accept({origin:'municipal_repost',sourceId:'repost_rostov',url:'https://newsrostov.ru/society/report',end:media.end},src,fresh),true);
 console.log('Water sources: attribution, domain restrictions and source-specific freshness passed');
 
 const sourceIds=[...html.split("const sources = [")[1].split("];",1)[0].matchAll(/id:\s*'([^']+)'/g)].map(m=>m[1]);
 assert.equal(new Set(sourceIds).size,sourceIds.length,"Source registry must not duplicate IDs");
+
+const end=new Date(Date.now()-35*3600000).toISOString(),until=new Date(Date.parse(end)+36*3600000).toISOString();
+const retained={...media,end,lastConfirmedAt:end,retainUntil:until};
+assert.equal(accept(retained,{water_kvu:{status:'error'}},fresh),true,'verified cached water survives provider error within 36 hours');
+assert.equal(accept({...retained,status:'resolved'},{water_kvu:{status:'ok'}},fresh),false);
+assert.equal(accept({...retained,end:new Date(Date.now()-37*3600000).toISOString()},{water_kvu:{status:'ok'}},fresh),false);
+console.log('Water retention: provider errors, restoration, and original 36 hour expiry passed');

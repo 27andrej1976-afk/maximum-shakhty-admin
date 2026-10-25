@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "checkedAt": "2026-10-25T11:42:55.951459+00:00",
+  "aliases": {
+    "демехина": "пер Демехина",
+    "кольчугина": "пер Кольчугина",
+    "индустриальная": "ул Индустриальная",
+    "одесская": "ул Одесская",
+    "цуканова": "пер Цуканова",
+    "планировочная": "ул Планировочная",
+    "строителей": "проспект Строителей",
+    "совхозный": "пер Совхозный"
+  },
+  "evidence": {
+    "Демехина": {
+      "name": "переулок Демехина",
+      "osmWay": 99798143,
+      "query": "https://nominatim.openstreetmap.org/search?street=%D0%94%D0%B5%D0%BC%D0%B5%D1%85%D0%B8%D0%BD%D0%B0&city=%D0%A8%D0%B0%D1%85%D1%82%D1%8B&countrycodes=ru&format=jsonv2&addressdetails=1&namedetails=1&limit=5"
+    },
+    "Кольчугина": {
+      "name": "переулок Кольчугина",
+      "osmWay": 99798102,
+      "query": "https://nominatim.openstreetmap.org/search?street=%D0%9A%D0%BE%D0%BB%D1%8C%D1%87%D1%83%D0%B3%D0%B8%D0%BD%D0%B0&city=%D0%A8%D0%B0%D1%85%D1%82%D1%8B&countrycodes=ru&format=jsonv2&addressdetails=1&namedetails=1&limit=5"
+    },
+    "Индустриальная": {
+      "name": "Индустриальная улица",
+      "osmWay": 99798189,
+      "query": "https://nominatim.openstreetmap.org/search?street=%D0%98%D0%BD%D0%B4%D1%83%D1%81%D1%82%D1%80%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F&city=%D0%A8%D0%B0%D1%85%D1%82%D1%8B&countrycodes=ru&format=jsonv2&addressdetails=1&namedetails=1&limit=5"
+    },
+    "Одесская": {
+      "name": "Одесская улица",
+      "osmWay": 99798142,
+      "query": "https://nominatim.openstreetmap.org/search?street=%D0%9E%D0%B4%D0%B5%D1%81%D1%81%D0%BA%D0%B0%D1%8F&city=%D0%A8%D0%B0%D1%85%D1%82%D1%8B&countrycodes=ru&format=jsonv2&addressdetails=1&namedetails=1&limit=5"
+    },
+    "Цуканова": {
+      "name": "переулок Цуканова",
+      "osmWay": 99798108,
+      "query": "https://nominatim.openstreetmap.org/search?street=%D0%A6%D1%83%D0%BA%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0&city=%D0%A8%D0%B0%D1%85%D1%82%D1%8B&countrycodes=ru&format=jsonv2&addressdetails=1&namedetails=1&limit=5"
+    },
+    "Планировочная": {
+      "name": "Планировочная улица",
+      "osmWay": 99798243,
+      "query": "https://nominatim.openstreetmap.org/search?street=%D0%9F%D0%BB%D0%B0%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D0%B0%D1%8F&city=%D0%A8%D0%B0%D1%85%D1%82%D1%8B&countrycodes=ru&format=jsonv2&addressdetails=1&namedetails=1&limit=5"
+    },
+    "Строителей": {
+      "name": "проспект Строителей",
+      "osmWay": 343992057,
+      "query": "https://nominatim.openstreetmap.org/search?street=%D0%A1%D1%82%D1%80%D0%BE%D0%B8%D1%82%D0%B5%D0%BB%D0%B5%D0%B9&city=%D0%A8%D0%B0%D1%85%D1%82%D1%8B&countrycodes=ru&format=jsonv2&addressdetails=1&namedetails=1&limit=5"
+    },
+    "Совхозный": {
+      "name": "Совхозный переулок",
+      "osmWay": 99798127,
+      "query": "https://nominatim.openstreetmap.org/search?street=%D0%A1%D0%BE%D0%B2%D1%85%D0%BE%D0%B7%D0%BD%D1%8B%D0%B9&city=%D0%A8%D0%B0%D1%85%D1%82%D1%8B&countrycodes=ru&format=jsonv2&addressdetails=1&namedetails=1&limit=5"
+    }
+  }
+}

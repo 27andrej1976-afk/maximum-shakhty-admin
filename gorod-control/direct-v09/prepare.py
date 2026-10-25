@@ -124,7 +124,7 @@ function ingestFeed(data){
   state.events=data.events.filter(e=>{
     const url=String(e.url||'');
     if(e.category==='power')return powerSourceAccepted(e,by);
-    if(e.origin==='official_max')return e.category==='water'&&!e.requiresReview&&((freshSource(by.max_city)&&e.sourceId==='max_city'&&url==='https://max.ru/shakhtygorod')||(freshSource(by.max_water)&&e.sourceId==='max_water'&&url==='https://max.ru/id6167110467_gos'));
+    if(e.origin==='official_max')return e.category==='water'&&waterSourceAccepted(e,by,freshSource);
     if(e.sourceId==='ursv_device')return ['ok','partial'].includes(by.ursv_device?.status)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(url)&&e.origin==='official_device';
     if(e.category==='water')return waterSourceAccepted(e,by,freshSource);
     if(e.category==='mchs')return freshSource(by.mchs)&&url.startsWith('https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/');

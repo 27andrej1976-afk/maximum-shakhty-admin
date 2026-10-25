@@ -17,7 +17,7 @@ def water_posts(posts):
         if not trusted(p) or p['sourceId'] not in ('max_city','max_water'):continue
         text=p['text']
         # The URSV channel covers many towns. Require an explicit Shakhty branch/city.
-        if p['sourceId']=='max_water' and not re.search(r'\bШахты\b|филиал[^\n]{0,35}Шахтинск|Шахтинск[^\n]{0,25}филиал',text,re.I):continue
+        if p['sourceId']=='max_water' and not re.search(r'\bШахты\b|\bШахтинск[а-я]*\b|\bФШ\s+ГУП\b',text,re.I):continue
         if not re.search(r'водоснабж|водовод|водопровод|подач[а-я]*\s+вод',text,re.I):continue
         if not re.search(r'сниж\w*\s+давлен|отключ\w*\s+вод|водоснабжение\s+(?:восстановлено|приостановлено)|подача воды возобновлена|работы\s+(?:продлены|завершены)',text,re.I):continue
         sections=split_notices(text)

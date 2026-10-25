@@ -62,7 +62,7 @@ public final class WaterNotice {
     }
     if(start==null)return null;
     if(start.toInstant().isAfter(now.plusSeconds(14*86400))||start.toInstant().isBefore(now.minusSeconds(72*3600)))return null;
-    if(end!=null&&end.toInstant().isBefore(now.minusSeconds(24*3600)))return null;
+    if(end!=null&&end.toInstant().isBefore(now.minusSeconds(36*3600)))return null;
     boolean active=false,partial=false;List<Map<String,Object>> areas=new ArrayList<>();List<String> unknown=new ArrayList<>();
     for(String line:text.split("\\n")){
       line=clean(line).replaceAll("^[▫▪•✔✅🔹🔸🗺 \\t]+","");
