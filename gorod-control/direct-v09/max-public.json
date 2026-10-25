@@ -1,10 +1,10 @@
 {
-  "checkedAt": "2026-10-25T11:47:59.980382+00:00",
+  "checkedAt": "2026-10-25T13:57:51.656479+00:00",
   "sources": [
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-10-25T11:47:59.980382+00:00",
+      "checkedAt": "2026-10-25T13:57:51.656479+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -17,27 +17,27 @@
     {
       "id": "max_water",
       "url": "https://max.ru/id6167110467_gos",
-      "checkedAt": "2026-10-25T11:47:59.980382+00:00",
+      "checkedAt": "2026-10-25T13:57:51.656479+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
-      "matchingPosts": 24,
-      "lastPostAt": "2026-10-25T10:31:32.268000+00:00",
+      "matchingPosts": 25,
+      "lastPostAt": "2026-10-25T13:03:01.516000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     },
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-10-25T11:47:59.980382+00:00",
+      "checkedAt": "2026-10-25T13:57:51.656479+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "transport": "max_user_session",
       "posts": 100,
-      "matchingPosts": 61,
-      "lastPostAt": "2026-10-25T02:01:38.712000+00:00",
+      "matchingPosts": 63,
+      "lastPostAt": "2026-10-25T13:05:39.128000+00:00",
       "note": "Прочитано через пользовательскую сессию MAX: до 100 последних публикаций. Полнота не гарантируется."
     }
   ],
