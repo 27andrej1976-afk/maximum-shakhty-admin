@@ -162,6 +162,7 @@ const CITY = {lat:47.7086,lon:40.2146}; // public approximate city centre, not a
 const KEY = 'gorod_control_home_v1';
 const sources = [
   {id:'max_city',icon:'🏛',name:'MAX · администрация Шахт',detail:'Прямое чтение официального канала через API',url:'https://max.ru/shakhtygorod'},
+  {id:'max_water',icon:'💧',name:'MAX · УРСВ · водоканал',detail:'Официальные сообщения: только Шахты и Шахтинский филиал',url:'https://max.ru/id6167110467_gos'},
   {id:'max_power',icon:'⚡',name:'MAX · Донэнерго',detail:'Официальные сообщения об аварийных отключениях',url:'https://max.ru/id6163089292_biz'},
   {id:'water_kvu',icon:'💧',name:'КВУ · отключения воды',detail:'Резервная лента СМИ с адресами и сроками',url:'https://kvu.su/utilities/rss.xml'},
   {id:'repost_rostov',icon:'📰',name:'УРСВ · сообщения о воде',detail:'Проверяемые перепечатки официальных уведомлений',url:'https://newsrostov.ru/'},

@@ -14,6 +14,14 @@ class MaxUtilityTests(unittest.TestCase):
   self.assertEqual(len(result['events']),2)
   self.assertTrue(all(len(e['affected'])==8 and not e['requiresReview'] for e in result['events']))
   self.assertEqual({e['end'] for e in result['events']},{'2026-10-21T22:00:00+03:00','2026-10-21T20:00:00+03:00'})
+ def test_ursv_only_shakhty_water_keeps_its_source(self):
+  original=next(p for p in self.posts if p['sourceId']=='max_city' and 'Данилов' in p['text'])
+  post={**original,'id':'max_water/test','sourceId':'max_water','url':'https://max.ru/id6167110467_gos','source':'ГУП РО УРСВ','text':'Филиал «Шахтинский» сообщает:\n'+original['text']}
+  events=build_feed(water_posts([post]),self.now)['events']
+  self.assertTrue(events)
+  self.assertTrue(all(e['sourceId']=='max_water' for e in events))
+  post['text']=post['text'].replace('Шахтинский','Гуковский').replace('Шахты','Гуково')
+  self.assertEqual(water_posts([post]),[])
  def test_city_news_is_not_an_outage(self):
   news=next(p for p in self.posts if p['id']=='max_city/117438441723099196')
   self.assertEqual(water_posts([news]),[])

@@ -6,7 +6,7 @@ from service_events import CITY, classify_power, incident_time
 from collect_water import schedule
 from secondary_water import split_notices
 
-URLS={'max_city':'https://max.ru/shakhtygorod','max_power':'https://max.ru/id6163089292_biz'}
+URLS={'max_water':'https://max.ru/id6167110467_gos','max_city':'https://max.ru/shakhtygorod','max_power':'https://max.ru/id6163089292_biz'}
 
 def trusted(post):
     return post.get('origin')=='official_max' and post.get('sourceId') in URLS and post.get('url')==URLS[post['sourceId']]
@@ -14,8 +14,10 @@ def trusted(post):
 def water_posts(posts):
     out=[]
     for p in posts:
-        if not trusted(p) or p['sourceId']!='max_city':continue
+        if not trusted(p) or p['sourceId'] not in ('max_city','max_water'):continue
         text=p['text']
+        # The URSV channel covers many towns. Require an explicit Shakhty branch/city.
+        if p['sourceId']=='max_water' and not re.search(r'\bШахты\b|филиал[^\n]{0,35}Шахтинск|Шахтинск[^\n]{0,25}филиал',text,re.I):continue
         if not re.search(r'водоснабж|водовод|водопровод|подач[а-я]*\s+вод',text,re.I):continue
         if not re.search(r'сниж\w*\s+давлен|отключ\w*\s+вод|водоснабжение\s+(?:восстановлено|приостановлено)|подача воды возобновлена|работы\s+(?:продлены|завершены)',text,re.I):continue
         sections=split_notices(text)

@@ -32,7 +32,7 @@ def main():
   e['fullText']=e.get('text',e.get('description',''))
   if e.get('unmappedAreaText') or e.get('zones'):e['requiresReview']=True
   if e.get('origin')=='official_max':
-   e['sourceId']='max_city'
+   assert e.get('sourceId') in ('max_city','max_water')
   water.append(e)
  power,source=collect_power(now)
  sources=[]

@@ -6,7 +6,7 @@ if os.environ.get('CITY_VARIANT')!='compact':
 r=Path('gorod-control/report-apks-v15')
 for name in ('prepare_variant.py','android_test.py'):
     p=r/name;s=p.read_text().replace('normalreport','normalwater').replace('compactreport','compactwater')
-    s=s.replace('1.2.0-report-','1.7.0-water-').replace('versionCode 15','versionCode 19').replace('versionCode 16','versionCode 23')
+    s=s.replace('1.2.0-report-','1.8.0-water-').replace('versionCode 15','versionCode 19').replace('versionCode 16','versionCode 24')
     s=s.replace('Город · классика+','Город · вода').replace('Город · компакт+','Город · вода компакт')
     if name=='android_test.py':
         extra='''
@@ -26,6 +26,7 @@ evaluate('window.releaseTestFeed('+json.dumps(fixture,ensure_ascii=False)+')')
 check(evaluate("!CityMapV07.inspect().allIds.includes('water-test-secondary')"),'Failed source cannot validate secondary event')
 evaluate("window.CityControlNativeFeed=window.releaseTestFeed;true")
 '''
+        extra+="\ncheck(evaluate(\"document.querySelector('main.main').firstElementChild.contains(document.querySelector('#geoButton'))\"),'GPS control is first on main screen')\ncheck(evaluate(\"document.querySelector('#geoButton').getBoundingClientRect().bottom<innerHeight\"),'GPS visible without scrolling')\ncheck(evaluate(\"document.querySelector('#sourcesGrid').textContent.includes('MAX · УРСВ')\"),'URSV MAX source registered')\n"
         assert 'ws.close()' in s;s=s.replace('ws.close()',extra+"\nexec(Path('gorod-control/water-v16/test_android_power_retention.py').read_text())\nexec(Path('gorod-control/water-v16/test_android_pan.py').read_text())\nexec(Path('gorod-control/water-v16/test_android_zoom.py').read_text())\nws.close()")
     p.write_text(s)
 # The report button can initialize before compact's window-level DOMContentLoaded
@@ -35,7 +36,8 @@ if compact.exists():
     s=compact.read_text()
     anchor=' app.append(headline,metrics,address,overview,toolbar,mapCard,notice);'
     assert anchor in s
-    s=s.replace(anchor,anchor+"\n const report=left.querySelector('#reportIssueButton')?.closest('section');\n if(report)toolbar.insertAdjacentElement('afterend',report);",1)
+    s=s.replace(anchor," app.append(address,headline,metrics,overview,toolbar,mapCard,notice);"+"\n const report=left.querySelector('#reportIssueButton')?.closest('section');\n if(report)toolbar.insertAdjacentElement('afterend',report);",1)
+    s=s.replace(" const radius=address.querySelector('.radius');"," const gps=document.getElementById('geoButton');\n if(gps){gps.textContent='◎ Определить моё местоположение';gps.setAttribute('aria-label','Определить моё местоположение');}\n const radius=address.querySelector('.radius');")
     compact.write_text(s)
 
 # Fail before building if the shared MapLibre v5 pan correction is lost again.

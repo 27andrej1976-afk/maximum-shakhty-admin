@@ -67,17 +67,17 @@ def main():
  service=java/'WaterMonitorJobService.java';s=service.read_text()
  a=s.index('    HttpURLConnection conn=');b=s.index('    if(data.optInt("schema",0)!=2)return;',a)
  s=s[:a]+'    JSONObject data=DirectClient.refresh(getApplicationContext());\n'+s[b:]
- s=change(s,'    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false;','    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false,powerDirect=false,ursvDevice=false,maxCity=false,maxPower=false;')
+ s=change(s,'    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false;','    boolean powerRostov=false,powerDon=false,powerCity=false,gasCity=false,mchs=false,powerDirect=false,ursvDevice=false,maxCity=false,maxPower=false,maxWater=false;')
  s=change(s,'      String sourceId=src.optString("id","");','''      long checked=utcMillis(src.optString("checkedAt",data.optString("checkedAt","")));
       if(checked<=0||now-checked>4L*3600000)continue;
       String sourceId=src.optString("id","");
       if(sourceId.equals("power_direct"))powerDirect=true;
       if(sourceId.equals("ursv_device"))ursvDevice=true;''')
- s=s.replace('if(sourceId.equals("mchs"))mchs=true;','if(sourceId.equals("mchs"))mchs=true;\n      if(sourceId.equals("max_city"))maxCity=true;\n      if(sourceId.equals("max_power"))maxPower=true;')
- s=s.replace('if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs))return;','if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs||powerDirect||ursvDevice||maxCity||maxPower))return;')
+ s=s.replace('if(sourceId.equals("mchs"))mchs=true;','if(sourceId.equals("mchs"))mchs=true;\n      if(sourceId.equals("max_city"))maxCity=true;\n      if(sourceId.equals("max_power"))maxPower=true;\n      if(sourceId.equals("max_water"))maxWater=true;')
+ s=s.replace('if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs))return;','if(!(waterDirect||city||waterRepost||powerRostov||powerDon||powerCity||gasCity||mchs||powerDirect||ursvDevice||maxCity||maxPower||maxWater))return;')
  s=change(s,'      if(e==null||!"active".equals(e.optString("status")))continue;','      if(e==null||!"active".equals(e.optString("status"))||e.optBoolean("requiresReview",false))continue;')
  s=change(s,'        if(origin.equals("verified_repost")){','''        if(origin.equals("official_max")){
-          if(!maxCity||!e.optString("sourceId").equals("max_city")||!e.optString("url").equals("https://max.ru/shakhtygorod"))continue;
+          if(!((maxCity&&e.optString("sourceId").equals("max_city")&&e.optString("url").equals("https://max.ru/shakhtygorod"))||(maxWater&&e.optString("sourceId").equals("max_water")&&e.optString("url").equals("https://max.ru/id6167110467_gos"))))continue;
         }else if(origin.equals("official_device")){
           if(!ursvDevice||!e.optString("url","").matches("^https://rovodokanal\\\\.ru/emergency-alerts/\\\\d+$"))continue;
         }else if(origin.equals("verified_repost")){''')
@@ -124,7 +124,7 @@ function ingestFeed(data){
   state.events=data.events.filter(e=>{
     const url=String(e.url||'');
     if(e.category==='power')return powerSourceAccepted(e,by);
-    if(e.origin==='official_max')return e.category==='water'&&!e.requiresReview&&freshSource(by.max_city)&&e.sourceId==='max_city'&&url==='https://max.ru/shakhtygorod';
+    if(e.origin==='official_max')return e.category==='water'&&!e.requiresReview&&((freshSource(by.max_city)&&e.sourceId==='max_city'&&url==='https://max.ru/shakhtygorod')||(freshSource(by.max_water)&&e.sourceId==='max_water'&&url==='https://max.ru/id6167110467_gos'));
     if(e.sourceId==='ursv_device')return ['ok','partial'].includes(by.ursv_device?.status)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(url)&&e.origin==='official_device';
     if(e.category==='water')return waterSourceAccepted(e,by,freshSource);
     if(e.category==='mchs')return freshSource(by.mchs)&&url.startsWith('https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/');

@@ -1,4 +1,4 @@
-name: City Control | Compact Android app · map zoom fix 1.7
+name: City Control | Compact Android app · URSV MAX and top GPS 1.8
 on:
   workflow_dispatch:
   push:
@@ -79,7 +79,7 @@ jobs:
           unzip -l "$APK" | grep 'res/drawable-nodpi-v4/coat_launcher.png'
           unzip -l "$APK" | grep 'assets/web/light-v10/vendor/maplibre-gl.js'
           mkdir -p /tmp/city-report-apk
-          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.7.apk
+          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.8.apk
           sha256sum /tmp/city-report-apk/*.apk
       - name: Enable virtualization
         run: |
@@ -124,7 +124,7 @@ jobs:
             cp /tmp/city-report-apk/*.apk gorod-control/water-v16/downloads/
             git add gorod-control/water-v16/downloads/
             if git diff --cached --quiet; then break; fi
-            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.7"
+            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.8"
             if git push origin HEAD:main; then echo "REPORT APK PUBLISHED: $CITY_VARIANT"; break; fi
             if [ "$attempt" = 5 ]; then exit 1; fi
             sleep 3

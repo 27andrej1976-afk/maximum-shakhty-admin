@@ -14,6 +14,7 @@ from urllib.request import Request, urlopen
 API = 'https://platform-api2.max.ru/messages'
 CHANNELS = (
     ('max_city', 'shakhtygorod', 'Администрация города Шахты', 'MAX_CITY_CHAT_ID'),
+    ('max_water', 'id6167110467_gos', 'ГУП РО «УРСВ»', 'MAX_WATER_CHAT_ID'),
     ('max_power', 'id6163089292_biz', 'АО Донэнерго · отключения', 'MAX_POWER_CHAT_ID'),
 )
 

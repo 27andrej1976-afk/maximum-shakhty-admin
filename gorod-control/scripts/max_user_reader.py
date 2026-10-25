@@ -1,6 +1,7 @@
-"""Read only two allowlisted public MAX channels through a user-owned session.
+"""Read only allowlisted public MAX channels through a user-owned session.
 
-Uses unofficial PyMax, never sends/joins/marks messages read. Session material is
+Uses unofficial PyMax, never sends or marks messages read. Only the explicitly
+authorized URSV channel may be joined, after validating its public identity. Session material is
 never part of the returned public payload. Authentication is interactive only in
 our local Windows connector, never in GitHub Actions.
 """
@@ -9,6 +10,7 @@ from datetime import datetime,timedelta,timezone
 from pathlib import Path
 CHANNELS=(
  {'id':'max_city','slug':'shakhtygorod','chat_id':-68696541241372,'name':'Администрация города Шахты'},
+ {'id':'max_water','slug':'id6167110467_gos','chat_id':-69418948796459,'name':'ГУП РО «УРСВ»'},
  {'id':'max_power','slug':'id6163089292_biz','chat_id':-72527316071728,'name':'АО Донэнерго · отключения'},
 )
 SESSION='max-session.db'
@@ -20,6 +22,7 @@ def validate_channel(chat,channel):
         raise ValueError('Unexpected channel identity or access')
     title=re.sub(r'[^а-яa-z0-9]+',' ',(chat.title or '').lower()).strip()
     if channel['id']=='max_city' and title!='администрация города шахты':raise ValueError('Channel title changed')
+    if channel['id']=='max_water' and title!='гуп ро урсв':raise ValueError('Channel title changed')
     if channel['id']=='max_power' and not ('донэнерго' in title and 'отключения' in title):raise ValueError('Channel title changed')
 
 def public_post(message,channel,now):
@@ -45,6 +48,9 @@ async def read_channels(client,now=None):
           'status':'error','readStatus':'error','coverage':'partial','transport':'max_user_session','posts':0}
         try:
             chat=await client.get_chat(channel['chat_id']);validate_channel(chat,channel)
+            if channel['id']=='max_water' and not getattr(chat,'join_time',0):
+                chat=await client.join_channel('https://max.ru/'+channel['slug'])
+                validate_channel(chat,channel)
             messages=await client.fetch_history(chat_id=chat.id,backward=100,interactive=False)
             batch=[p for m in messages if (p:=public_post(m,channel,now))]
             posts.extend(batch)

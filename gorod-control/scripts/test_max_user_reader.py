@@ -33,13 +33,13 @@ class ReaderTests(unittest.TestCase):
   with self.assertRaises(ValueError):decode_session(bomb)
  def test_invalid_secret_is_redacted(self):
   posts,states=collect_session(self.now,{'MAX_USER_SESSION_B64':'secret-invalid-value'})
-  self.assertEqual(posts,[]);self.assertEqual(len(states),2);self.assertNotIn('secret-invalid-value',str(states))
+  self.assertEqual(posts,[]);self.assertEqual(len(states),len(CHANNELS));self.assertNotIn('secret-invalid-value',str(states))
  def test_reader_requests_only_allowlist_and_never_mutates(self):
   calls=[]
   class Fake:
    async def get_chat(s,id):
     calls.append(id);c=next(x for x in CHANNELS if x['chat_id']==id)
-    return Obj(id=id,type='CHANNEL',access='PUBLIC',title=c['name'])
+    return Obj(id=id,type='CHANNEL',access='PUBLIC',title=c['name'],join_time=1)
    async def fetch_history(s,**kw):
     calls.append(kw);return []
   posts,states=asyncio.run(read_channels(Fake(),self.now))
