@@ -1,105 +1,10 @@
 {
   "schema": 1,
-  "generatedAt": "2026-10-27T00:53:58.594989+00:00",
+  "generatedAt": "2026-10-27T06:11:03.239550+00:00",
   "status": "cached",
   "source": "© OpenStreetMap contributors · ODbL",
   "sourceUrl": "https://www.openstreetmap.org/copyright",
   "events": {
-    "water-kvu-1fd809dde63ce37b531e-0": {
-      "features": [
-        {
-          "lat": 47.7292833,
-          "lon": 40.2372994,
-          "role": "street",
-          "label": "пер Демехина",
-          "lines": [],
-          "osmWays": [
-            "https://www.openstreetmap.org/way/99798143"
-          ],
-          "precision": "verified_street_point"
-        },
-        {
-          "lat": 47.7404164,
-          "lon": 40.243504,
-          "role": "street",
-          "label": "пер Кольчугина",
-          "lines": [],
-          "osmWays": [
-            "https://www.openstreetmap.org/way/99798102"
-          ],
-          "precision": "verified_street_point"
-        },
-        {
-          "lat": 47.7293883,
-          "lon": 40.244586,
-          "role": "street",
-          "label": "ул Индустриальная",
-          "lines": [],
-          "osmWays": [
-            "https://www.openstreetmap.org/way/99798189"
-          ],
-          "precision": "verified_street_point"
-        },
-        {
-          "lat": 47.7384764,
-          "lon": 40.2347978,
-          "role": "street",
-          "label": "ул Одесская",
-          "lines": [],
-          "osmWays": [
-            "https://www.openstreetmap.org/way/99798142"
-          ],
-          "precision": "verified_street_point"
-        },
-        {
-          "lat": 47.7307084,
-          "lon": 40.2313804,
-          "role": "street",
-          "label": "пер Цуканова",
-          "lines": [],
-          "osmWays": [
-            "https://www.openstreetmap.org/way/99798108"
-          ],
-          "precision": "verified_street_point"
-        },
-        {
-          "lat": 47.7409865,
-          "lon": 40.2408943,
-          "role": "street",
-          "label": "ул Планировочная",
-          "lines": [],
-          "osmWays": [
-            "https://www.openstreetmap.org/way/99798243"
-          ],
-          "precision": "verified_street_point"
-        },
-        {
-          "lat": 47.7331803,
-          "lon": 40.243417,
-          "role": "street",
-          "label": "проспект Строителей",
-          "lines": [],
-          "osmWays": [
-            "https://www.openstreetmap.org/way/343992057"
-          ],
-          "precision": "verified_street_point"
-        },
-        {
-          "lat": 47.7403421,
-          "lon": 40.2424811,
-          "role": "street",
-          "label": "пер Совхозный",
-          "lines": [],
-          "osmWays": [
-            "https://www.openstreetmap.org/way/99798127"
-          ],
-          "precision": "verified_street_point"
-        }
-      ],
-      "affectedKey": "[[\"пер Демехина\",[]],[\"пер Кольчугина\",[]],[\"ул Индустриальная\",[]],[\"ул Одесская\",[]],[\"пер Цуканова\",[]],[\"ул Планировочная\",[]],[\"проспект Строителей\",[]],[\"пер Совхозный\",[]]]",
-      "fullText": "В Шахтах отключили водоснабжение в воскресенье, 25 октября.\nВ связи с проведением аварийно-ремонтных работ на трубопроводе по ул. Индустриальная с 13.30 снижено давление в направлении улиц:\nДемехина\nКольчугина\nИндустриальная\nОдесская\nЦуканова\nПланировочная\nСтроителей\nСовхозный. \nОриентировочное время завершения работ – 20.00, 25 октября.\nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863)28-55-777.",
-      "note": "Подсвечены улицы, указанные в сообщении. Это не точные границы отключения и не координаты поломки."
-    },
     "water-city-repost-012a3868f26cf17ff039": {
       "features": [
         {
