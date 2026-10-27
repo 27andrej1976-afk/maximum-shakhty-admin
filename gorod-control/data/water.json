@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-10-27T18:11:59.994931+00:00",
+  "checkedAt": "2026-10-27T22:23:08.506860+00:00",
   "events": [
     {
       "id": "water-city-repost-012a3868f26cf17ff039",
@@ -2938,12 +2938,12 @@
       "lastPostAt": "2026-10-27T09:50:37+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-10-27T18:11:51.174592+00:00"
+      "checkedAt": "2026-10-27T22:22:56.821621+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-10-27T18:11:51.174592+00:00",
+      "checkedAt": "2026-10-27T22:22:56.821621+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -2959,7 +2959,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-10-27T18:11:51.174592+00:00",
+      "checkedAt": "2026-10-27T22:22:56.821621+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -2971,17 +2971,21 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 1,
-      "checkedAt": "2026-10-27T18:11:51.174592+00:00",
+      "checkedAt": "2026-10-27T22:22:56.821621+00:00",
       "lastPostAt": "2026-10-27T10:37:03+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "power_repost_rostov",
-      "status": "error",
+      "status": "partial",
       "url": "https://newsrostov.ru/rss.xml",
-      "posts": 0,
-      "note": "Нет доступа к RSS: <urlopen error timed out>"
+      "readStatus": "ok",
+      "coverage": "partial",
+      "posts": 200,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
     },
     {
       "id": "power_repost_don",
