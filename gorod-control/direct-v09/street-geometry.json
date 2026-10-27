@@ -8224,10 +8224,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:краснознаменная": {
-      "timestamp": 1793014121.711524,
+      "timestamp": 1793105223.14451,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:василевской": {
@@ -10683,10 +10683,10 @@
       "note": "Проверенная точка на указанной улице в городе Шахты; не место аварии."
     },
     "пер:соколовский": {
-      "timestamp": 1793014121.711524,
+      "timestamp": 1793105223.14451,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:федосеева": {
