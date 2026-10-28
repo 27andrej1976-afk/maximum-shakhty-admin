@@ -11011,7 +11011,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:кислородный пер": {
-      "timestamp": 1793083614.954953,
+      "timestamp": 1793197585.479153,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
@@ -11131,7 +11131,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:объединенная": {
-      "timestamp": 1793083614.954953,
+      "timestamp": 1793197585.479153,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
