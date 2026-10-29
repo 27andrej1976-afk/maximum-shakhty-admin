@@ -8,7 +8,7 @@ def change(s,a,b):
 
 def main():
  java=ANDROID/'app/src/main/java/ru/citycontrol/shakhty'
- for name in ('WaterNotice.java','DirectClient.java'):shutil.copy2(D/name,java/name)
+ for name in ('WaterNotice.java','DirectClient.java','NativeFeedMerge.java'):shutil.copy2(D/name,java/name)
  grad=ANDROID/'app/build.gradle';s=grad.read_text()
  s=re.sub(r'versionCode \d+','versionCode 9',s)
  s=re.sub(r"versionName '[^']+'","versionName '0.9.0-test'",s)
@@ -95,43 +95,9 @@ def main():
  s=change(s,"const sources = [","const sources = [\n  {id:'ursv_device',icon:'💧',name:'УРСВ · напрямую с телефона',detail:'Результат прямого чтения оригиналов',url:'https://rovodokanal.ru/emergency-alerts/'},\n  {id:'power_direct',icon:'⚡',name:'Донэнерго · прямой официальный график',detail:'Плановые отключения ШМЭС',url:'https://donenergo.ru/grafik-otklyucheniy/61/1/'},")
  s=re.sub(r"^.*\{id:'power_planned'.*\n",'',s,flags=re.M)
  a=s.index('async function checkSources(){');b=s.index('function toggleDemo(){',a)
- replacement=r'''function freshSource(s){
-  const age=Date.now()-Date.parse(s?.checkedAt||'');
-  return !!s&&s.status==='ok'&&Number.isFinite(age)&&age>=-120000&&age<4*3600000;
-}
-function powerSourceAccepted(e,by){
-  const url=String(e.url||'');
-  const sid=e.origin==='official_site'&&e.sourceId==='power_direct'&&url==='https://donenergo.ru/grafik-otklyucheniy/61/1/'?'power_direct':
-    e.origin==='official_max'&&e.sourceId==='max_city'&&url==='https://max.ru/shakhtygorod'?'max_city':
-    e.origin==='official_max'&&e.sourceId==='max_power'&&url==='https://max.ru/id6163089292_biz'?'max_power':
-    e.origin==='official_city_post'&&/^https:\/\/t\.me\/admshakhty\/\d+$/.test(url)?'power_city':
-    e.origin==='attributed_repost'&&url.startsWith('https://news-don.ru/')?'power_repost_don':
-    e.origin==='attributed_repost'&&url.startsWith('https://newsrostov.ru/')?'power_repost_rostov':null;
-  if(!sid||e.requiresReview||['resolved','cancelled','canceled'].includes(e.status))return false;
-  const anchor=Date.parse(e.end||e.start||e.publishedAt||e.observedAt||'');
-  const until=anchor+36*3600000;
-  if(!Number.isFinite(until)||Date.now()>=until)return false;
-  if(freshSource(by[sid]))return true;
-  const last=Date.parse(e.lastConfirmedAt||'');
-  return Number.isFinite(last)&&last<=Date.now()+120000&&last<=until&&Date.parse(e.retainUntil||'')===until;
-}
-function ingestFeed(data){
-  if(data.schema!==2||!Array.isArray(data.sources)||!Array.isArray(data.events))throw Error('Нет доступной сводки');
-  const defaultStamp=data.cloudCheckedAt||data.checkedAt;
-  state.checks=data.sources.map(s=>({...s,checkedAt:s.checkedAt||defaultStamp}));
+ replacement=r'''function ingestFeed(data){
+  applyFeed(data);
   const by=Object.fromEntries(state.checks.map(s=>[s.id,s]));
-  state.checkedAt=data.nativeCheckedAt||data.checkedAt;state.backendConnected=state.checks.some(freshSource);
-  state.events=data.events.filter(e=>{
-    const url=String(e.url||'');
-    if(e.category==='power')return powerSourceAccepted(e,by);
-    if(e.origin==='official_max')return e.category==='water'&&waterSourceAccepted(e,by,freshSource);
-    if(e.sourceId==='ursv_device')return ['ok','partial'].includes(by.ursv_device?.status)&&/^https:\/\/rovodokanal\.ru\/emergency-alerts\/\d+$/.test(url)&&e.origin==='official_device';
-    if(e.category==='water')return waterSourceAccepted(e,by,freshSource);
-    if(e.category==='mchs')return freshSource(by.mchs)&&url.startsWith('https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/');
-    if(e.category==='power')return e.origin==='official_city_post'&&freshSource(by.power_city)||e.origin==='attributed_repost'&&(freshSource(by.power_repost_don)||freshSource(by.power_repost_rostov));
-    if(e.category==='gas')return e.origin==='official_city_post'&&freshSource(by.gas_city);
-    return false;
-  });
   const direct=by.ursv_device;
   $('directStatus').textContent=direct?(direct.status==='ok'?'Оригиналы УРСВ получены. ':'Прямое чтение воды пока не подтверждено. ')+(direct.note||''):'УРСВ: прямая проверка выполняется с телефона. До успешного чтения источник не считается подключённым.';
   $('directTime').textContent=direct?.checkedAt?'Проверка на телефоне: '+fmtTime(direct.checkedAt):'Прямой график света проверяется сервером, МЧС — по официальному RSS.';
@@ -150,7 +116,7 @@ async function checkSources(){
     setTimeout(()=>{if(state.nativePending){state.nativePending=false;$('checkButton').disabled=false;$('refreshIcon').textContent='↻';toast('Источники отвечают медленно. Нет подтверждения полной проверки.');}},100000);
     return;
   }
-  try{const r=await fetch('./direct-v09/feed.json?_='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);ingestFeed(await r.json());}
+  try{ingestFeed(await readPublicFeeds());}
   catch(e){toast('Не удалось обновить сведения. Прямое чтение воды доступно в Android-приложении.');}
   finally{$('checkButton').disabled=false;$('refreshIcon').textContent='↻';}
 }
@@ -165,7 +131,6 @@ async function checkSources(){
  s=s.replace("state.checks.some(s=>s.status==='stale')?'Последняя доступная публикация водоканала устарела. Приложение не может подтвердить текущую обстановку; проверяйте первоисточник.':'Проверка водоканала недоступна или давно не обновлялась. Нельзя утверждать, что всё спокойно.'","'Не все источники доступны или обновлены. Отсутствие сообщений не подтверждает отсутствие происшествий.'")
  (assets/'index.html').write_text(s)
  cmap=assets/'map-v07/city-map.js';s=cmap.read_text()
- s=s.replace("fetch('./data/map-geometry.json?_='+Date.now()","fetch('https://27andrej1976-afk.github.io/maximum-shakhty-admin/gorod-control/direct-v09/map-geometry.json?_='+Date.now()")
  s=s.replace("field(e.category==='mchs'?'Период начинается':'Начало по объявлению',format(e.start));","field(e.category==='mchs'?'Период начинается':'Начало по объявлению',e.startBasis==='date_only'?'Указана дата; точное время не опубликовано':format(e.start));")
  s=s.replace("field('Источник',sourceText(e));body.append(grid);","field('Источник',sourceText(e));if(e.requiresReview)field('Требуется уточнение','Часть адресов, диапазонов или сроков неоднозначна. Автоматическое уведомление по спорным данным не отправляется.');body.append(grid);")
  s=s.replace("  const links=el('div','cm-detail-links');","  if(e.unmappedAreaText?.length)body.append(el('p','cm-muted','Неоднозначные сведения: '+e.unmappedAreaText.join('; ')));\n  const links=el('div','cm-detail-links');")

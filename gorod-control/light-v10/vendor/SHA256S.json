@@ -11,9 +11,9 @@
   },
   "leaflet-maplibre-gl.js": {
     "url": "https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js",
-    "length": 11086,
-    "sha256": "1f4a3378fecf60c5c634756020974b3dd5ce336965ff229181b56841c34691b8",
-    "localPatch": "MapLibre v5 pan synchronization and public resize; upstream URL is provenance"
+    "length": 12169,
+    "sha256": "47954398a65fc036fc06112584dfa933204a2da47ddc3497ec0b36394c2155c8",
+    "localPatch": "MapLibre v5 pan synchronization, public resize, idempotent partial-init teardown and late-callback guards; upstream URL is provenance"
   },
   "maplibre-LICENSE.txt": {
     "url": "https://cdn.jsdelivr.net/npm/maplibre-gl@5.13.0/LICENSE.txt",

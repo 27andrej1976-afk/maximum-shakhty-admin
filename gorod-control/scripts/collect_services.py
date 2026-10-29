@@ -37,13 +37,18 @@ def source(id,status,url,**fields):
 
 def collect_power(now):
     results=[];states=[];accepted=0
-    for index,url in enumerate(RSS_URLS):
-        id='power_repost_rostov' if index==0 else 'power_repost_don'
+    for url in RSS_URLS:
         domain=url.split('/')[2]
+        id={'newsrostov.ru':'power_repost_rostov','news-don.ru':'power_repost_don'}[domain]
         try:
             raw=fetch_rss(url,timeout=16)
             items=ET.fromstring(raw).findall('.//item')
             parsed=power_posts(raw,domain,now)
+            # The parser verifies the original article domain. Bind each
+            # resulting report to THIS source check, never a generic mirror
+            # group that could be incorrectly validated by another healthy RSS.
+            for event in parsed:
+                event['sourceId']=id
             accepted+=len(parsed)
             results.extend(parsed)
             most_recent=max((datetime.fromisoformat(e['publishedAt']) for e in parsed),default=None)

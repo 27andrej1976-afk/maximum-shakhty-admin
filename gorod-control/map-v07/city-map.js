@@ -176,14 +176,42 @@ function setMode(next,options={}){
   }
   renderDeck();paintMarkers();
 }
+function mergeGeometry(previous,catalogs){
+  const events=Object.assign(Object.create(null),previous.events);
+  for(const data of catalogs){
+    if(!data||data.schema!==1||!data.events||Array.isArray(data.events)||typeof data.events!=='object')continue;
+    for(const [id,record] of Object.entries(data.events)){
+      if(!record||typeof record!=='object'||Array.isArray(record)||!Array.isArray(record.features))continue;
+      const generatedAt=record.generatedAt||data.generatedAt||'';
+      const nextStamp=Date.parse(generatedAt),oldStamp=Date.parse(events[id]?.generatedAt||'');
+      // One stale/failed pipeline must not replace newer geometry from the other.
+      if(events[id]&&Number.isFinite(oldStamp)&&(!Number.isFinite(nextStamp)||nextStamp<oldStamp))continue;
+      events[id]={...record,generatedAt};
+    }
+  }
+  // This is only a location index: accepted source events remain the sole input
+  // to allEvents()/visible(). A geometry record can never create an incident.
+  return {schema:1,events};
+}
+function fetchGeometry(url){
+  const controller=typeof AbortController==='function'?new AbortController():null;
+  let timer;
+  const timeout=new Promise((_,reject)=>{
+    timer=setTimeout(()=>{controller?.abort();reject(Error('Geometry timeout'));},12000);
+    timer?.unref?.();
+  });
+  const request=Promise.resolve().then(()=>fetch(url,{cache:'no-store',...(controller?{signal:controller.signal}:{})}))
+    .then(r=>{if(!r.ok)throw Error('geometry');return r.json();});
+  return Promise.race([request,timeout]).finally(()=>{if(typeof clearTimeout==='function')clearTimeout(timer);});
+}
 function loadGeometry(){
   const stamp=api.state.checkedAt||'initial';
   if(geometryLoading||geometryStamp===stamp)return;
   geometryLoading=true;geometryStamp=stamp;
-  fetch('./data/map-geometry.json?_='+Date.now(),{cache:'no-store'})
-    .then(r=>{if(!r.ok)throw Error('geometry');return r.json();})
-    .then(data=>{if(data&&data.schema===1&&data.events&&typeof data.events==='object')geo=data;})
-    .catch(()=>{})
+  Promise.all(['./direct-v09/map-geometry.json','./data/map-geometry.json'].map(url=>
+    fetchGeometry(url+'?_='+Date.now()).then(data=>{
+      geo=mergeGeometry(geo,[data]);refresh();
+    }).catch(()=>{})))
     .finally(()=>{geometryLoading=false;refresh();});
 }
 function refresh(){
@@ -251,8 +279,14 @@ function setupBrightBasemap(leafletMap){
   const giveUp=()=>{
     if(finished)return;
     finished=true;activeBase='fallback';vectorBase=null;setMapCreditType('fallback');
-    if(modern&&leafletMap.hasLayer(modern))leafletMap.removeLayer(modern);
     note('Резервная карта');
+    // A WebGL constructor can fail after Leaflet registered the layer but before
+    // MapLibre exists. A failed cleanup must never abort app initialization.
+    try{if(modern&&leafletMap.hasLayer(modern))leafletMap.removeLayer(modern);}
+    catch(_cleanupError){
+      try{if(modern?.getEvents)leafletMap.off(modern.getEvents(),modern);}catch(_ignored){}
+      try{const container=modern?.getContainer?.();if(container)container.remove();}catch(_ignored){}
+    }
   };
   try{
     modern=root.L.maplibreGL({style:'https://tiles.openfreemap.org/styles/bright'});

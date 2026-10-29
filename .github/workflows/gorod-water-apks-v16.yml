@@ -1,12 +1,12 @@
-name: City Control | Compact Android app · URSV MAX and top GPS 1.8
+name: City Control | Compact 1.9 reliability build-only
 on:
   workflow_dispatch:
   push:
-    branches: [build/approved-city-ui-20261025]
+    branches: [repair/compact-reliability-20261029]
 permissions:
-  contents: write
+  contents: read
 concurrency:
-  group: water-android-v16
+  group: water-android-v19-build-only
   cancel-in-progress: false
 jobs:
   build_test:
@@ -51,12 +51,21 @@ jobs:
             done
             node --check gorod-control/compact-v11/compact.js
           fi
+      - name: Install browser regression runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test actual failed WebGL startup and all fallback controls
+        run: node gorod-control/map-v07/test_fallback.mjs --browser
       - name: Prepare app with old map, native GPS, same verified feeds and approved report route
         run: |
           python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -q
           node gorod-control/scripts/test_frontend.mjs
+          node gorod-control/scripts/test_feed_policy.mjs
+          node gorod-control/map-v07/test_fallback.mjs
           node gorod-control/map-v07/test_pan_sync.mjs
           node gorod-control/map-v07/test_zoom_mode.mjs
+          python gorod-control/scripts/test_native_feed_merge.py
           python gorod-control/water-v16/prepare_release.py
           python gorod-control/direct-v09/prepare.py
           python -m pip install --quiet pillow
@@ -74,8 +83,12 @@ jobs:
           unzip -l "$APK" | grep 'res/drawable-nodpi-v4/coat_launcher.png'
           unzip -l "$APK" | grep 'assets/web/light-v10/vendor/maplibre-gl.js'
           mkdir -p /tmp/city-report-apk
-          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.8.apk
-          sha256sum /tmp/city-report-apk/*.apk
+          cp "$APK" /tmp/city-report-apk/GorodPodKontrolem-Compact-Water-1.9.apk
+          sha256sum /tmp/city-report-apk/*.apk > /tmp/city-report-apk/SHA256SUMS.txt
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$APK" > /tmp/city-report-apk/signature.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" > /tmp/city-report-apk/package.txt
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs gorod-control/water-v16/downloads/GorodPodKontrolem-Compact-Water-1.8.apk > /tmp/city-report-apk/previous-1.8-signature.txt
+          printf 'Source commit: %s\nBuild-only; not merged or deployed.\n' "$GITHUB_SHA" > /tmp/city-report-apk/BUILD.txt
       - name: Enable virtualization
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -107,20 +120,10 @@ jobs:
         run: |
           echo "::warning::Optional test archive was not saved; inspect upload logs. Build, test and publication failures are not ignored."
           echo "Optional test archive was not saved. Inspect upload logs; actual build, test and publication steps retain their failure status." >> "$GITHUB_STEP_SUMMARY"
-      - name: Publish only this independently tested app, never modify older APKs
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          for attempt in 1 2 3 4 5; do
-            git fetch origin main
-            git checkout -f -B report-apk-publish origin/main
-            mkdir -p gorod-control/water-v16/downloads
-            cp /tmp/city-report-apk/*.apk gorod-control/water-v16/downloads/
-            git add gorod-control/water-v16/downloads/
-            if git diff --cached --quiet; then break; fi
-            git commit -m "City Control: publish water monitoring $CITY_VARIANT Android variant v1.8"
-            if git push origin HEAD:main; then echo "REPORT APK PUBLISHED: $CITY_VARIANT"; break; fi
-            if [ "$attempt" = 5 ]; then exit 1; fi
-            sleep 3
-          done
+      - name: Save tested APK without publishing or changing main
+        uses: actions/upload-artifact@v4
+        with:
+          name: GorodPodKontrolem-Compact-Water-1.9-tested
+          path: /tmp/city-report-apk/
+          retention-days: 14
+          if-no-files-found: error

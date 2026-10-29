@@ -49,14 +49,22 @@
         },
 
         onRemove: function (map) {
-            if (this._map._proxy && this._map.options.zoomAnimation) {
-                L.DomEvent.off(this._map._proxy, L.DomUtil.TRANSITION_END, this._transitionEnd, this);
+            // onAdd can fail before MapLibre exists (for example, no WebGL).
+            // Cleanup must finish so Leaflet can unregister every map listener.
+            if (map && map._proxy && map.options.zoomAnimation) {
+                L.DomEvent.off(map._proxy, L.DomUtil.TRANSITION_END, this._transitionEnd, this);
             }
-            var paneName = this.getPaneName();
-            map.getPane(paneName).removeChild(this._container);
-
-            this._glMap.remove();
+            var gl = this._glMap;
             this._glMap = null;
+            this._zooming = false;
+            if (this._container && this._container.parentNode) {
+                this._container.parentNode.removeChild(this._container);
+            }
+            // remove() may itself fail for a partially initialized GL renderer.
+            // Never strand the failed overlay or abort the app's other controls.
+            if (gl && typeof gl.remove === 'function') {
+                try { gl.remove(); } catch (_cleanupError) {}
+            }
         },
 
         getEvents: function () {
@@ -155,7 +163,7 @@
         },
 
         _update: function (e) {
-            if (!this._map) {
+            if (!this._map || !this._glMap) {
                 return;
             }
             // update the offset so we can correct for it later when we zoom
@@ -187,6 +195,7 @@
         },
 
         _transformGL: function (gl) {
+            if (!this._map || !gl || !gl.transform) return;
             var center = this._map.getCenter();
 
             // gl.setView([center.lat, center.lng], this._map.getZoom() - 1, 0);
@@ -208,6 +217,7 @@
 
         // update the map constantly during a pinch zoom
         _pinchZoom: function (e) {
+            if (!this._map || !this._glMap) return;
             this._glMap.jumpTo({
                 zoom: this._map.getZoom() - 1,
                 center: this._map.getCenter()
@@ -217,6 +227,7 @@
         // borrowed from L.ImageOverlay
         // https://github.com/Leaflet/Leaflet/blob/master/src/layer/ImageOverlay.js#L139-L144
         _animateZoom: function (e) {
+            if (!this._map || !this._glMap || !this._glMap._actualCanvas) return;
             var scale = this._map.getZoomScale(e.zoom);
             var padding = this._map.getSize().multiplyBy(this.options.padding * scale);
             var viewHalf = this.getSize()._divideBy(2);
@@ -237,10 +248,12 @@
         },
 
         _zoomStart: function (e) {
+            if (!this._map || !this._glMap) return;
             this._zooming = true;
         },
 
         _zoomEnd: function () {
+            if (!this._map || !this._glMap || !this._glMap._actualCanvas) return;
             var scale = this._map.getZoomScale(this._map.getZoom());
 
             L.DomUtil.setTransform(
@@ -256,7 +269,10 @@
         },
 
         _transitionEnd: function (e) {
+            if (!this._map || !this._glMap) return;
             L.Util.requestAnimFrame(function () {
+                // A scheduled frame may run after the vector layer was removed.
+                if (!this._map || !this._glMap || !this._glMap._actualCanvas) return;
                 var zoom = this._map.getZoom();
                 var center = this._map.getCenter();
                 var offset = this._map.latLngToContainerPoint(

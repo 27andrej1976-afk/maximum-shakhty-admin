@@ -1,6 +1,12 @@
 name: City Control | Direct live feed v0.9
 on:
   workflow_dispatch:
+  # Schedules can be delayed by Actions; follow each successful baseline read
+  # as well. This trigger becomes active only after reviewed publication to main.
+  workflow_run:
+    workflows: ['City Control | Shakhty Water Notices']
+    types: [completed]
+    branches: [main]
   schedule:
     - cron: '3,18,33,48 * * * *'
   push:
@@ -16,10 +22,19 @@ concurrency:
   cancel-in-progress: false
 jobs:
   refresh:
+    # Never execute branch/fork code with live-source secrets or publish rights.
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -37,8 +52,12 @@ jobs:
         run: |
           python -m unittest discover -s gorod-control/scripts -p 'test_*.py' -q
           python -m compileall -q gorod-control/direct-v09
-          python gorod-control/scripts/collect_water.py
-          python gorod-control/scripts/collect_services.py
+          # A completed baseline run has already published its checked data.
+          # Independently scheduled/manual runs still perform their own read.
+          if [ "$GITHUB_EVENT_NAME" != "workflow_run" ]; then
+            python gorod-control/scripts/collect_water.py
+            python gorod-control/scripts/collect_services.py
+          fi
           python gorod-control/direct-v09/build_feed.py
           python - <<'PY'
           from pathlib import Path

@@ -14,6 +14,7 @@ import java.util.regex.*;
 /** Original URSV pages are read from the user's network, not an overseas scraping proxy. */
 public final class DirectClient {
   public static final String FEED="https://27andrej1976-afk.github.io/maximum-shakhty-admin/gorod-control/direct-v09/feed.json";
+  public static final String BASELINE="https://27andrej1976-afk.github.io/maximum-shakhty-admin/gorod-control/data/water.json";
   public static final String URSV="https://rovodokanal.ru/emergency-alerts/";
   private static final int MAX_BYTES=2200000;
   private static final class Net {int status;String body;Net(int s,String b){status=s;body=b;}}
@@ -24,7 +25,7 @@ public final class DirectClient {
       if(!u.getProtocol().equals("https")||!u.getHost().equals(allowedHost)||u.getUserInfo()!=null)throw new IOException("Недопустимое перенаправление");
       HttpURLConnection c=(HttpURLConnection)u.openConnection();c.setInstanceFollowRedirects(false);
       c.setConnectTimeout(10000);c.setReadTimeout(12000);c.setRequestProperty("User-Agent","CityControlShakhty/0.9 Android public notices");
-      c.setRequestProperty("Accept","text/html,application/json");
+      c.setRequestProperty("Accept","text/html,application/json");c.setRequestProperty("Cache-Control","no-cache");
       try{
         int status=c.getResponseCode();
         if(status>=300&&status<400){String target=c.getHeaderField("Location");if(target==null)throw new IOException("Пустое перенаправление");u=new URL(u,target);continue;}
@@ -61,21 +62,30 @@ public final class DirectClient {
     Matcher meta=re("<meta[^>]*(?:property|name)=[\"']article:published_time[\"'][^>]*content=[\"']([^\"']+)[\"']").matcher(html);
     return meta.find()?meta.group(1):null;
   }
+  private static Map<String,Object> objectMap(JSONObject object) throws JSONException {
+    Map<String,Object> out=new LinkedHashMap<>();
+    for(Iterator<String> it=object.keys();it.hasNext();){String key=it.next();out.put(key,jsonValue(object.get(key)));}return out;
+  }
+  private static Object jsonValue(Object value) throws JSONException {
+    if(value==JSONObject.NULL)return null;
+    if(value instanceof JSONObject)return objectMap((JSONObject)value);
+    if(value instanceof JSONArray){List<Object> out=new ArrayList<>();JSONArray array=(JSONArray)value;for(int i=0;i<array.length();i++)out.add(jsonValue(array.get(i)));return out;}
+    return value;
+  }
+  private static JSONObject readFeed(String url,long requestTime) throws Exception {
+    Net r=read(url+"?_="+requestTime,"27andrej1976-afk.github.io");if(r.status!=200)throw new IOException("HTTP "+r.status);
+    JSONObject feed=new JSONObject(r.body);
+    if(feed.optInt("schema")!=2||feed.optJSONArray("events")==null||feed.optJSONArray("sources")==null)throw new IOException("Формат облачной сводки изменён");
+    return feed;
+  }
   public static synchronized JSONObject refresh(Context ctx){
-    Instant now=Instant.now();JSONObject data=cached(ctx);boolean cloudRead=false;String cloudError=null;
-    try{Net r=read(FEED,"27andrej1976-afk.github.io");if(r.status!=200)throw new IOException("HTTP "+r.status);
-      JSONObject fresh=new JSONObject(r.body);if(fresh.optInt("schema")!=2||fresh.optJSONArray("events")==null||fresh.optJSONArray("sources")==null)throw new IOException("Формат облачной сводки изменён");data=fresh;cloudRead=true;
-    }catch(Exception e){cloudError=e.getClass().getSimpleName()+": "+e.getMessage();}
+    Instant now=Instant.now();JSONObject data=cached(ctx),cloud=null,baseline=null;boolean cloudRead=false,baselineRead=false;String cloudError=null,baselineError=null;
+    try{cloud=readFeed(FEED,now.toEpochMilli());cloudRead=true;}
+    catch(Exception e){cloudError=e.getClass().getSimpleName()+": "+e.getMessage();}
+    // The municipal feed has an independent schedule. A delayed direct/MAX job must not hide newer notices.
+    try{baseline=readFeed(BASELINE,now.toEpochMilli());baselineRead=true;}
+    catch(Exception e){baselineError=e.getClass().getSimpleName()+": "+e.getMessage();}
     try{
-      JSONArray src=new JSONArray(),events=new JSONArray();String cloudStamp=data.optString("checkedAt","");
-      JSONArray oldSrc=data.optJSONArray("sources");if(oldSrc!=null)for(int i=0;i<oldSrc.length();i++){
-        JSONObject s=oldSrc.optJSONObject(i);if(s==null||s.optString("id").equals("ursv_device"))continue;
-        if(!s.has("checkedAt"))s.put("checkedAt",cloudStamp);
-        long checked=millis(s.optString("checkedAt",""));if(checked==0||now.toEpochMilli()-checked>4*3600000L)s.put("status","stale");src.put(s);
-      }
-      JSONArray oldEvents=data.optJSONArray("events");if(oldEvents!=null)for(int i=0;i<oldEvents.length();i++){
-        JSONObject e=oldEvents.optJSONObject(i);if(e!=null&&!e.optString("sourceId").equals("ursv_device"))events.put(e);
-      }
       JSONObject water=new JSONObject();water.put("id","ursv_device");water.put("url",URSV);water.put("transport","device_direct_https");water.put("checkedAt",now.toString());water.put("posts",0);water.put("status","error");
       int fetched=0,accepted=0,failed=0;JSONArray direct=new JSONArray();
       try{
@@ -97,12 +107,17 @@ public final class DirectClient {
         water.put("status",accepted>0&&failed==0?"ok":"partial");
         water.put("note",accepted>0?"Оригиналы УРСВ получены с телефона. Проверена ограниченная часть ленты; это не полный перечень аварий.":"Сайт прочитан, но свежие адресные объявления Шахт не распознаны. Полнота не подтверждена.");
       }catch(Exception e){water.put("note","Прямое чтение УРСВ не подтверждено: "+e.getMessage());}
-      Set<String> originalIds=new HashSet<>();for(int i=0;i<direct.length();i++)originalIds.add(direct.getJSONObject(i).optString("id"));
-      JSONArray combined=new JSONArray();for(int i=0;i<events.length();i++){JSONObject e=events.getJSONObject(i);if(!originalIds.contains(e.optString("id")))combined.put(e);}
-      for(int i=0;i<direct.length();i++)combined.put(direct.getJSONObject(i));src.put(water);
-      data.put("schema",2);data.put("events",combined);data.put("sources",src);data.put("cloudCheckedAt",cloudStamp);
-      data.put("checkedAt",now.toString());data.put("nativeCheckedAt",now.toString());data.put("cloudOnline",cloudRead);
-      data.put("cloudError",cloudError==null?JSONObject.NULL:cloudError);data.put("cached",!cloudRead);data.put("coverage","partial");
+      Map<String,Object> device=new LinkedHashMap<>();device.put("checkedAt",now.toString());device.put("sources",Arrays.asList(objectMap(water)));
+      device.put("events",jsonValue(direct));
+      data=new JSONObject(NativeFeedMerge.merge(objectMap(data),cloud==null?null:objectMap(cloud),baseline==null?null:objectMap(baseline),device,now));
+      JSONArray src=data.getJSONArray("sources");
+      for(int i=0;i<src.length();i++){
+        JSONObject source=src.getJSONObject(i);long checked=millis(source.optString("checkedAt",""));
+        if(checked==0||now.toEpochMilli()-checked>4*3600000L||checked>now.toEpochMilli()+120000)source.put("status","stale");
+      }
+      data.put("checkedAt",now.toString());data.put("nativeCheckedAt",now.toString());data.put("cloudOnline",cloudRead);data.put("baselineOnline",baselineRead);
+      data.put("cloudError",cloudError==null?JSONObject.NULL:cloudError);data.put("baselineError",baselineError==null?JSONObject.NULL:baselineError);
+      data.put("cached",!(cloudRead||baselineRead));data.put("coverage","partial");
       save(ctx,data);
     }catch(Exception ignored){}
     return data;

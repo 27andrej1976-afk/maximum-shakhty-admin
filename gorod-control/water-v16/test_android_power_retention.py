@@ -29,6 +29,7 @@ check(not evaluate("CityMapV07.inspect().allIds.includes('retention-power')"),'M
 e.update(sourceId='max_power',end=(now-timedelta(hours=37)).isoformat(),retainUntil=(now-timedelta(hours=1)).isoformat());inject_power()
 check(not evaluate("CityMapV07.inspect().allIds.includes('retention-power')"),'MAX markers expire at the original 36-hour deadline')
 water={**e,'id':'max-water-test','category':'water','sourceId':'max_city','url':'https://max.ru/shakhtygorod','start':(now-timedelta(hours=1)).isoformat(),'end':(now+timedelta(hours=1)).isoformat(),'status':'active'}
+water.pop('lastConfirmedAt',None);water.pop('retainUntil',None);water['retained']=False
 f['events']=[water];f['sources']=[{'id':'max_city','status':'ok','checkedAt':now.isoformat()}];inject_power()
 check(evaluate("CityMapV07.inspect().allIds.includes('max-water-test')"),'Verified current MAX water appears on the installed map')
 check(evaluate("document.querySelector('#sourcesGrid').textContent.includes('MAX · Донэнерго')"),'MAX source visibly listed without claiming connected access')

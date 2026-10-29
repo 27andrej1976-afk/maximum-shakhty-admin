@@ -75,7 +75,7 @@ assert.equal(summary.unique,3);
 assert.equal(summaryCtx.sourceSummary(rows,checks,Date.now()+5*3600000).read,0);
 console.log('Source status: empty matches, network errors, missing access, duplicate URLs and stale data checked');
 
-const waterScript=html.slice(html.indexOf('function waterSourceAccepted('),html.indexOf('function sourceSummary('));
+const waterScript=html.slice(html.indexOf('function freshSource('),html.indexOf('function sourceSummary('));
 const waterCtx=vm.createContext({});new vm.Script(waterScript).runInContext(waterCtx);
 const accept=waterCtx.waterSourceAccepted, fresh=s=>s?.status==='ok';
 const src={water_kvu:{status:'ok'},repost_don:{status:'error'},repost_rostov:{status:'ok'}};
