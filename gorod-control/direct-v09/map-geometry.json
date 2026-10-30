@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generatedAt": "2026-10-30T15:48:55.593125+00:00",
+  "generatedAt": "2026-10-30T20:12:36.730807+00:00",
   "status": "updated",
   "source": "© OpenStreetMap contributors · ODbL",
   "sourceUrl": "https://www.openstreetmap.org/copyright",
@@ -8631,6 +8631,62 @@
             "https://www.openstreetmap.org/way/66040273",
             "https://www.openstreetmap.org/way/66437221",
             "https://www.openstreetmap.org/way/378718419"
+          ]
+        },
+        {
+          "lat": 47.7015491,
+          "lon": 40.2345343,
+          "role": "street",
+          "label": "пер. Нижний",
+          "lines": [
+            [
+              [
+                47.702609,
+                40.2358364
+              ],
+              [
+                47.7025889,
+                40.2358136
+              ],
+              [
+                47.7017468,
+                40.2347162
+              ],
+              [
+                47.7015491,
+                40.2345343
+              ],
+              [
+                47.7012247,
+                40.2343794
+              ],
+              [
+                47.7002666,
+                40.2333388
+              ]
+            ],
+            [
+              [
+                47.7001877,
+                40.2332598
+              ],
+              [
+                47.6992271,
+                40.2323037
+              ],
+              [
+                47.6984727,
+                40.2313683
+              ],
+              [
+                47.6977515,
+                40.2306203
+              ]
+            ]
+          ],
+          "osmWays": [
+            "https://www.openstreetmap.org/way/66040185",
+            "https://www.openstreetmap.org/way/66040243"
           ]
         }
       ],
