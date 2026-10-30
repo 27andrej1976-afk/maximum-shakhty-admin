@@ -3978,7 +3978,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:звездная": {
-      "timestamp": 1793267327.231153,
+      "timestamp": 1793369947.48276,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
