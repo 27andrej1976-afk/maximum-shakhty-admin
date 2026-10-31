@@ -13657,10 +13657,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:о. кошевого": {
-      "timestamp": 1793327520.10483,
+      "timestamp": 1793424024.13826,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://overpass-api.de/api/interpreter",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:тюленина": {
