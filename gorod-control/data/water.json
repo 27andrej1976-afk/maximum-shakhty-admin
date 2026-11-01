@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-01T19:08:03.864756+00:00",
+  "checkedAt": "2026-11-01T22:54:16.798326+00:00",
   "events": [
     {
       "id": "water-city-repost-a58030444399d06c8244",
@@ -3354,12 +3354,12 @@
       "lastPostAt": "2026-10-31T13:24:04+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-01T19:07:56.285218+00:00"
+      "checkedAt": "2026-11-01T22:54:07.981538+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-01T19:07:56.285218+00:00",
+      "checkedAt": "2026-11-01T22:54:07.981538+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -3375,7 +3375,7 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-01T19:07:56.285218+00:00",
+      "checkedAt": "2026-11-01T22:54:07.981538+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3387,7 +3387,7 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-01T19:07:56.285218+00:00",
+      "checkedAt": "2026-11-01T22:54:07.981538+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
