@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-01T07:23:04.374732+00:00",
+  "checkedAt": "2026-11-01T14:28:22.137566+00:00",
   "events": [
     {
       "id": "water-city-repost-a58030444399d06c8244",
@@ -3354,12 +3354,12 @@
       "lastPostAt": "2026-10-31T13:24:04+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-01T07:22:55.194444+00:00"
+      "checkedAt": "2026-11-01T14:27:40.791368+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-01T07:22:55.194444+00:00",
+      "checkedAt": "2026-11-01T14:27:40.791368+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -3375,22 +3375,18 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-01T07:22:55.194444+00:00",
+      "checkedAt": "2026-11-01T14:27:40.791368+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
-      "status": "ok",
-      "readStatus": "ok",
-      "coverage": "partial",
-      "posts": 50,
-      "matchingPosts": 0,
-      "checkedAt": "2026-11-01T07:22:55.194444+00:00",
-      "lastPostAt": null,
+      "status": "error",
+      "posts": 0,
       "url": "https://news-don.ru/rss.xml",
-      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
+      "note": "<urlopen error timed out>",
+      "checkedAt": "2026-11-01T14:27:40.791368+00:00"
     },
     {
       "id": "power_repost_rostov",
@@ -3458,7 +3454,7 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 0,
-      "lastPostAt": "2026-11-01T09:40:00+03:00",
+      "lastPostAt": "2026-11-01T15:42:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам"
     }
   ],
