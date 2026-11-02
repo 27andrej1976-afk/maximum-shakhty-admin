@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-02T09:40:45.783529+00:00",
+  "checkedAt": "2026-11-02T19:49:43.658367+00:00",
   "events": [],
   "incidents": [
     {
@@ -3040,17 +3040,17 @@
     {
       "id": "city",
       "status": "ok",
-      "posts": 28,
+      "posts": 27,
       "matchingPosts": 2,
-      "lastPostAt": "2026-10-31T13:24:04+00:00",
+      "lastPostAt": "2026-11-02T14:29:53+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-02T09:40:38.322393+00:00"
+      "checkedAt": "2026-11-02T19:49:33.875163+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-02T09:40:38.322393+00:00",
+      "checkedAt": "2026-11-02T19:49:33.875163+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -3066,7 +3066,7 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-02T09:40:38.322393+00:00",
+      "checkedAt": "2026-11-02T19:49:33.875163+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3078,22 +3078,15 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-02T09:40:38.322393+00:00",
+      "checkedAt": "2026-11-02T19:49:33.875163+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "power_repost_rostov",
-      "status": "error",
-      "url": "https://newsrostov.ru/rss.xml",
-      "posts": 0,
-      "note": "Нет доступа к RSS: <urlopen error timed out>"
-    },
-    {
-      "id": "power_repost_don",
       "status": "partial",
-      "url": "https://news-don.ru/rss.xml",
+      "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 50,
@@ -3102,12 +3095,19 @@
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
     },
     {
+      "id": "power_repost_don",
+      "status": "error",
+      "url": "https://news-don.ru/rss.xml",
+      "posts": 0,
+      "note": "Нет доступа к RSS: <urlopen error timed out>"
+    },
+    {
       "id": "power_city",
       "status": "partial",
       "url": "https://t.me/s/admshakhty",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 28,
+      "posts": 27,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете"
@@ -3118,7 +3118,7 @@
       "url": "https://t.me/s/admshakhty",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 28,
+      "posts": 27,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе"
@@ -3145,7 +3145,7 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 0,
-      "lastPostAt": "2026-11-02T10:35:00+03:00",
+      "lastPostAt": "2026-11-02T17:00:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам"
     }
   ],
