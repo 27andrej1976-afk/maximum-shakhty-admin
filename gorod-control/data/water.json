@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-02T19:49:43.658367+00:00",
+  "checkedAt": "2026-11-03T01:53:43.222364+00:00",
   "events": [],
   "incidents": [
     {
@@ -3045,43 +3045,36 @@
       "lastPostAt": "2026-11-02T14:29:53+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-02T19:49:33.875163+00:00"
+      "checkedAt": "2026-11-03T01:52:23.393042+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-02T19:49:33.875163+00:00",
+      "checkedAt": "2026-11-03T01:52:23.393042+00:00",
       "coverage": "partial",
-      "status": "ok",
-      "readStatus": "ok",
-      "posts": 10,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
+      "status": "error",
+      "posts": 0,
+      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
     },
     {
       "id": "repost_rostov",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 50,
+      "posts": 8,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-02T19:49:33.875163+00:00",
+      "checkedAt": "2026-11-03T01:52:23.393042+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
-      "status": "ok",
-      "readStatus": "ok",
-      "coverage": "partial",
-      "posts": 50,
-      "matchingPosts": 0,
-      "checkedAt": "2026-11-02T19:49:33.875163+00:00",
-      "lastPostAt": null,
+      "status": "error",
+      "posts": 0,
       "url": "https://news-don.ru/rss.xml",
-      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
+      "note": "<urlopen error timed out>",
+      "checkedAt": "2026-11-03T01:52:23.393042+00:00"
     },
     {
       "id": "power_repost_rostov",
@@ -3089,17 +3082,21 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 50,
+      "posts": 8,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
     },
     {
       "id": "power_repost_don",
-      "status": "error",
+      "status": "partial",
       "url": "https://news-don.ru/rss.xml",
-      "posts": 0,
-      "note": "Нет доступа к RSS: <urlopen error timed out>"
+      "readStatus": "ok",
+      "coverage": "partial",
+      "posts": 50,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
     },
     {
       "id": "power_city",
