@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-02T22:42:19.978735+00:00",
-  "status": "updated",
+  "generatedAt": "2026-11-03T03:45:06.852143+00:00",
+  "status": "unavailable",
   "source": "© OpenStreetMap contributors · ODbL",
   "sourceUrl": "https://www.openstreetmap.org/copyright",
   "events": {
@@ -4477,5 +4477,6 @@
       "fullText": "г. Шахты\nул. Станиславского 39-143, 66-166; \nпер. Ильича 46 А-78, 33 А-35;\nпер. Пинский 1-19, 2-20;\nпер. Ушинского 1-11;\nпер. Художественный 2-26, 1-17;\nпер. Вахтангова 2 А-20, 1-15;\nпер. Сурикова 1-27, 2-24;               пер. Муравьева 51-59\n03.11.26 09=00 — 03.11.26 12=00\nТехническое обслуживание  оборудования ТП-594\n",
       "note": "Подсвечены улицы, указанные в сообщении. Это не точные границы отключения и не координаты поломки."
     }
-  }
+  },
+  "error": "HTTPError: HTTP Error 504: Gateway Time-out; TimeoutError: The read operation timed out"
 }
