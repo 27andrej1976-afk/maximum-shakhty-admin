@@ -18396,14 +18396,14 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:мечникова": {
-      "timestamp": 1793762498.86922,
+      "timestamp": 1793862134.113048,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:дубровского 1-13, 2-14 а": {
-      "timestamp": 1793762498.86922,
+      "timestamp": 1793862134.113048,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
