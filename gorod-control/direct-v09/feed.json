@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-11-05T21:34:15.351659+00:00",
+  "checkedAt": "2026-11-06T01:47:33.476394+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,40 +12,39 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-05T21:32:41.749229+00:00"
+      "checkedAt": "2026-11-06T01:46:25.645533+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-05T21:32:41.749229+00:00",
+      "checkedAt": "2026-11-06T01:46:25.645533+00:00",
       "coverage": "partial",
-      "status": "error",
-      "posts": 0,
-      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
+      "status": "ok",
+      "readStatus": "ok",
+      "posts": 10,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
     },
     {
       "id": "repost_rostov",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 49,
+      "posts": 48,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-05T21:32:41.749229+00:00",
+      "checkedAt": "2026-11-06T01:46:25.645533+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
-      "status": "ok",
-      "readStatus": "ok",
-      "coverage": "partial",
-      "posts": 50,
-      "matchingPosts": 0,
-      "checkedAt": "2026-11-05T21:32:41.749229+00:00",
-      "lastPostAt": null,
+      "status": "error",
+      "posts": 0,
       "url": "https://news-don.ru/rss.xml",
-      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
+      "note": "<urlopen error timed out>",
+      "checkedAt": "2026-11-06T01:46:25.645533+00:00"
     },
     {
       "id": "power_repost_rostov",
@@ -53,11 +52,11 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 49,
+      "posts": 48,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-05T21:33:28.795902+00:00"
+      "checkedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "power_repost_don",
@@ -69,7 +68,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-05T21:33:28.795902+00:00"
+      "checkedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "power_city",
@@ -81,7 +80,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-11-05T21:33:28.795902+00:00"
+      "checkedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "gas_city",
@@ -93,7 +92,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-11-05T21:33:28.795902+00:00"
+      "checkedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "gas",
@@ -103,7 +102,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-11-05T21:33:28.795902+00:00"
+      "checkedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "mchs",
@@ -113,29 +112,29 @@
       "matchingPosts": 1,
       "lastPostAt": "2026-11-05T13:23:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-11-05T21:33:28.795902+00:00"
+      "checkedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-11-05T21:34:15.351659+00:00",
+      "checkedAt": "2026-11-06T01:47:33.476394+00:00",
       "lastPostAt": null,
       "posts": 3,
       "matchingPosts": 0,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "7d32e1e926fbf173fbade69657937b9386aa8d25d2d9bf716db4ae06ad67d880",
-      "durationSeconds": 12.46
+      "contentSha256": "2684b765e6e947f7ceb5968a4aa17eb38325905344e61998bb108eaae8b17c74",
+      "durationSeconds": 1.62
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-05T21:34:15.351659+00:00",
+      "checkedAt": "2026-11-06T01:47:33.476394+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -146,7 +145,7 @@
       "url": "https://max.ru/id6167110467_gos",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-05T21:34:15.351659+00:00",
+      "checkedAt": "2026-11-06T01:47:33.476394+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -157,7 +156,7 @@
       "url": "https://max.ru/id6163089292_biz",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-05T21:34:15.351659+00:00",
+      "checkedAt": "2026-11-06T01:47:33.476394+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -184,7 +183,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-11-05T21:33:28.795902+00:00"
+      "observedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "mchs-3b56c072842a523695",
@@ -205,7 +204,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-11-05T21:33:28.795902+00:00"
+      "observedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "water-max_water-117523703069306201",
@@ -336,7 +335,7 @@
       "lastConfirmedAt": "2026-11-04T11:29:38.395408+00:00",
       "retainUntil": "2026-11-07T18:00:00+03:00",
       "retained": true,
-      "observedAt": "2026-11-05T21:33:28.795902+00:00"
+      "observedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "water-max_city-117556870592160019",
@@ -378,7 +377,7 @@
       "lastConfirmedAt": "2026-11-04T11:29:38.395408+00:00",
       "retainUntil": "2026-11-06T06:00:00+03:00",
       "retained": true,
-      "observedAt": "2026-11-05T21:33:28.795902+00:00"
+      "observedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "water-city-repost-f28dfcb7c2aeb2d65f6d",
@@ -418,10 +417,10 @@
       "description": "В Шахтах проводят ремонт трубопровода на улице Кадровой В связи с проведением аварийно-ремонтных работ по ул. Кадровая / ул.Демехина с 09.45, 04 ноября снижено давление холодного водоснабжения: Темерницкая Куйбышева Камчатский Минский Кадровая Демехина Юный Спартак Гражданский. Ориентировочное время завершения работ – 18.00, 04 ноября. Организован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефон",
       "title": "Ограничение водоснабжения",
       "fullText": "В Шахтах проводят ремонт трубопровода на улице Кадровой\nВ связи с проведением аварийно-ремонтных работ по ул. Кадровая / ул.Демехина с 09.45, 04 ноября снижено давление холодного водоснабжения:\nТемерницкая\nКуйбышева\nКамчатский\nМинский\nКадровая\nДемехина\nЮный Спартак\nГражданский.\nОриентировочное время завершения работ – 18.00, 04 ноября.\nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863)28-55-777 (многоканальный).\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "lastConfirmedAt": "2026-11-05T21:32:41.749229+00:00",
+      "lastConfirmedAt": "2026-11-06T01:46:25.645533+00:00",
       "retainUntil": "2026-11-06T06:00:00+03:00",
       "retained": false,
-      "observedAt": "2026-11-05T21:33:28.795902+00:00"
+      "observedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "water-city-repost-c0de8c2f420f082c46eb",
@@ -504,7 +503,7 @@
       "lastConfirmedAt": "2026-11-05T07:01:49.454303+00:00",
       "retainUntil": "2026-11-06T21:51:50+03:00",
       "retained": true,
-      "observedAt": "2026-11-05T21:33:28.795902+00:00"
+      "observedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "water-city-repost-3cb5ae5a2bd62ac9a62d",
@@ -587,7 +586,7 @@
       "lastConfirmedAt": "2026-11-05T07:01:49.454303+00:00",
       "retainUntil": "2026-11-06T21:54:15+03:00",
       "retained": true,
-      "observedAt": "2026-11-05T21:33:28.795902+00:00"
+      "observedAt": "2026-11-06T01:47:05.958202+00:00"
     },
     {
       "id": "power-direct-292901970e306dcd1e",
