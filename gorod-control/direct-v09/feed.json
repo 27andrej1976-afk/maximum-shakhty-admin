@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-11-07T01:19:12.393278+00:00",
+  "checkedAt": "2026-11-07T07:21:49.752189+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,12 +12,12 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-07T01:18:06.063652+00:00"
+      "checkedAt": "2026-11-07T07:20:31.254322+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-07T01:18:06.063652+00:00",
+      "checkedAt": "2026-11-07T07:20:31.254322+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -33,7 +33,7 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-07T01:18:06.063652+00:00",
+      "checkedAt": "2026-11-07T07:20:31.254322+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -45,7 +45,7 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-07T01:18:06.063652+00:00",
+      "checkedAt": "2026-11-07T07:20:31.254322+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -56,7 +56,7 @@
       "url": "https://newsrostov.ru/rss.xml",
       "posts": 0,
       "note": "Нет доступа к RSS: <urlopen error timed out>",
-      "checkedAt": "2026-11-07T01:18:13.650501+00:00"
+      "checkedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "power_repost_don",
@@ -68,7 +68,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-07T01:18:13.650501+00:00"
+      "checkedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "power_city",
@@ -80,7 +80,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-11-07T01:18:13.650501+00:00"
+      "checkedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "gas_city",
@@ -92,7 +92,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-11-07T01:18:13.650501+00:00"
+      "checkedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "gas",
@@ -102,7 +102,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-11-07T01:18:13.650501+00:00"
+      "checkedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "mchs",
@@ -110,31 +110,31 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 10,
       "matchingPosts": 1,
-      "lastPostAt": "2026-11-06T16:40:00+03:00",
+      "lastPostAt": "2026-11-07T09:30:00+03:00",
       "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-11-07T01:18:13.650501+00:00"
+      "checkedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-11-07T01:19:12.393278+00:00",
+      "checkedAt": "2026-11-07T07:21:49.752189+00:00",
       "lastPostAt": null,
       "posts": 6,
       "matchingPosts": 1,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "08f52ee3267217cb393af0bf98b2c9e9ebec9f0378ca12f4986955103c2f765a",
-      "durationSeconds": 4.06
+      "contentSha256": "df4bd625679777a79ec69bc3521e37c2d0feaec07ee0aa451665d3195c9571b0",
+      "durationSeconds": 1.36
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-07T01:19:12.393278+00:00",
+      "checkedAt": "2026-11-07T07:21:49.752189+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -145,7 +145,7 @@
       "url": "https://max.ru/id6167110467_gos",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-07T01:19:12.393278+00:00",
+      "checkedAt": "2026-11-07T07:21:49.752189+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -156,7 +156,7 @@
       "url": "https://max.ru/id6163089292_biz",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-07T01:19:12.393278+00:00",
+      "checkedAt": "2026-11-07T07:21:49.752189+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -183,7 +183,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-11-07T01:18:13.650501+00:00"
+      "observedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "mchs-1e127e5e29bd19dea0",
@@ -204,7 +204,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-11-07T01:18:13.650501+00:00"
+      "observedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "water-max_water-117523703069306201",
@@ -335,7 +335,7 @@
       "lastConfirmedAt": "2026-11-04T11:29:38.395408+00:00",
       "retainUntil": "2026-11-07T18:00:00+03:00",
       "retained": true,
-      "observedAt": "2026-11-07T01:18:13.650501+00:00"
+      "observedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "water-city-repost-737397e46cfa4d0e5e1a",
@@ -378,7 +378,7 @@
       "lastConfirmedAt": "2026-11-06T08:33:36.719516+00:00",
       "retainUntil": "2026-11-07T22:41:30+03:00",
       "retained": true,
-      "observedAt": "2026-11-07T01:18:13.650501+00:00"
+      "observedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "water-city-repost-c6407902bfec834bff4a",
@@ -421,7 +421,7 @@
       "lastConfirmedAt": "2026-11-06T08:33:36.719516+00:00",
       "retainUntil": "2026-11-07T22:41:37+03:00",
       "retained": true,
-      "observedAt": "2026-11-07T01:18:13.650501+00:00"
+      "observedAt": "2026-11-07T07:20:40.360166+00:00"
     },
     {
       "id": "power-direct-cb6d1afe1582e3b6c5",
@@ -434,7 +434,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-07T01:19:12.393278+00:00",
+      "observedAt": "2026-11-07T07:21:49.752189+00:00",
       "start": "2026-11-09T09:00:00+03:00",
       "end": "2026-11-09T16:00:00+03:00",
       "startBasis": "explicit",
@@ -506,7 +506,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-07T01:19:12.393278+00:00",
+      "lastConfirmedAt": "2026-11-07T07:21:49.752189+00:00",
       "retainUntil": "2026-11-11T04:00:00+03:00",
       "retained": false
     }
