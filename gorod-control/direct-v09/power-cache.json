@@ -1,68 +1,6 @@
 {
   "events": [
     {
-      "id": "power-direct-72b01e1c6646e24fa2",
-      "category": "power",
-      "kind": "planned",
-      "status": "unconfirmed",
-      "sourceId": "power_direct",
-      "source": "Донэнерго · официальный график ШМЭС",
-      "origin": "official_site",
-      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "publishedAt": null,
-      "observedAt": "2026-11-05T07:02:10.632544+00:00",
-      "start": "2026-11-05T09:00:00+03:00",
-      "end": "2026-11-05T16:00:00+03:00",
-      "startBasis": "explicit",
-      "endBasis": "scheduled",
-      "title": "Плановое отключение электричества",
-      "description": "По заявке ССО",
-      "fullText": "г. Шахты\nпер. Чапаева 1-19, 2-36;\nпер. Курчатова 2-18;\nул. Евлахова 73-77, 82-90;\nул. Культурная 15-23, 16-18;\nул. Планировочная 82-84\n05.11.26 09=00 — 05.11.26 16=00\nПо заявке ССО\n",
-      "affected": [
-        {
-          "street": "пер. Чапаева",
-          "houses": [
-            "1-19",
-            "2-36"
-          ]
-        },
-        {
-          "street": "пер. Курчатова",
-          "houses": [
-            "2-18"
-          ]
-        },
-        {
-          "street": "ул. Евлахова",
-          "houses": [
-            "73-77",
-            "82-90"
-          ]
-        },
-        {
-          "street": "ул. Культурная",
-          "houses": [
-            "15-23",
-            "16-18"
-          ]
-        },
-        {
-          "street": "ул. Планировочная",
-          "houses": [
-            "82-84"
-          ]
-        }
-      ],
-      "unmappedAreaText": [],
-      "requiresReview": false,
-      "point": null,
-      "precision": "street",
-      "lastConfirmedAt": "2026-11-05T07:02:10.632544+00:00",
-      "retainUntil": "2026-11-07T04:00:00+03:00",
-      "retained": true
-    },
-    {
       "id": "power-direct-cb6d1afe1582e3b6c5",
       "category": "power",
       "kind": "planned",
@@ -73,7 +11,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-06T21:44:56.808764+00:00",
+      "observedAt": "2026-11-07T01:19:12.393278+00:00",
       "start": "2026-11-09T09:00:00+03:00",
       "end": "2026-11-09T16:00:00+03:00",
       "startBasis": "explicit",
@@ -145,7 +83,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-06T21:44:56.808764+00:00",
+      "lastConfirmedAt": "2026-11-07T01:19:12.393278+00:00",
       "retainUntil": "2026-11-11T04:00:00+03:00",
       "retained": false
     },
