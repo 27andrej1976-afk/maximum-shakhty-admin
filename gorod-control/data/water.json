@@ -1,28 +1,7 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-09T08:42:50.206235+00:00",
-  "events": [
-    {
-      "id": "mchs-a36a9e4ddb9cc566d0",
-      "category": "mchs",
-      "kind": "warning",
-      "source": "МЧС Ростовской области",
-      "sourceId": "mchs",
-      "scope": "city",
-      "status": "unconfirmed",
-      "priority": "info",
-      "publishedAt": "2026-11-07T20:00:00+03:00",
-      "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/5854790",
-      "title": "МЧС: высокая пожароопасность (4 класс) в Шахтах",
-      "description": "Метеорологическая обстановка на 08 ноября обусловлена благоприятными погодными условиями. В связи с установлением в муниципальных районах Ростовской области чрезвычайных и высоких классов пожароопасности существует вероятность возникновения происшествий, связанных с возникновением ландшафтных и лесных пожаров. Чрезвычайная пожароопасность (5 класс) в 13 муниципальных образованиях (далее – МО): Багаевский, Белокалитвинский, Боковский, Веселовский,",
-      "start": "2026-11-08T00:00:00+03:00",
-      "end": "2026-11-08T23:59:00+03:00",
-      "affected": [],
-      "point": null,
-      "precision": "city",
-      "confidence": "official"
-    }
-  ],
+  "checkedAt": "2026-11-09T19:13:59.032637+00:00",
+  "events": [],
   "incidents": [
     {
       "id": "water-kvu-1fd809dde63ce37b531e-0",
@@ -2344,12 +2323,12 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-09T08:42:23.903769+00:00"
+      "checkedAt": "2026-11-09T19:13:17.398650+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-09T08:42:23.903769+00:00",
+      "checkedAt": "2026-11-09T19:13:17.398650+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -2365,22 +2344,18 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-09T08:42:23.903769+00:00",
+      "checkedAt": "2026-11-09T19:13:17.398650+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
-      "status": "ok",
-      "readStatus": "ok",
-      "coverage": "partial",
-      "posts": 50,
-      "matchingPosts": 0,
-      "checkedAt": "2026-11-09T08:42:23.903769+00:00",
-      "lastPostAt": null,
+      "status": "error",
+      "posts": 0,
       "url": "https://news-don.ru/rss.xml",
-      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
+      "note": "<urlopen error timed out>",
+      "checkedAt": "2026-11-09T19:13:17.398650+00:00"
     },
     {
       "id": "power_repost_rostov",
@@ -2700,26 +2675,5 @@
       "sourceId": "water_kvu"
     }
   ],
-  "serviceArchive": [
-    {
-      "id": "mchs-a36a9e4ddb9cc566d0",
-      "category": "mchs",
-      "kind": "warning",
-      "source": "МЧС Ростовской области",
-      "sourceId": "mchs",
-      "scope": "city",
-      "status": "unconfirmed",
-      "priority": "info",
-      "publishedAt": "2026-11-07T20:00:00+03:00",
-      "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/5854790",
-      "title": "МЧС: высокая пожароопасность (4 класс) в Шахтах",
-      "description": "Метеорологическая обстановка на 08 ноября обусловлена благоприятными погодными условиями. В связи с установлением в муниципальных районах Ростовской области чрезвычайных и высоких классов пожароопасности существует вероятность возникновения происшествий, связанных с возникновением ландшафтных и лесных пожаров. Чрезвычайная пожароопасность (5 класс) в 13 муниципальных образованиях (далее – МО): Багаевский, Белокалитвинский, Боковский, Веселовский,",
-      "start": "2026-11-08T00:00:00+03:00",
-      "end": "2026-11-08T23:59:00+03:00",
-      "affected": [],
-      "point": null,
-      "precision": "city",
-      "confidence": "official"
-    }
-  ]
+  "serviceArchive": []
 }
