@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-11-09T05:59:47.776076+00:00",
+  "checkedAt": "2026-11-09T16:01:11.332207+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,19 +12,16 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-09T05:58:32.274525+00:00"
+      "checkedAt": "2026-11-09T15:58:28.581830+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-09T05:58:32.274525+00:00",
+      "checkedAt": "2026-11-09T15:58:28.581830+00:00",
       "coverage": "partial",
-      "status": "ok",
-      "readStatus": "ok",
-      "posts": 10,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
+      "status": "error",
+      "posts": 0,
+      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
     },
     {
       "id": "repost_rostov",
@@ -33,30 +30,30 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-09T05:58:32.274525+00:00",
+      "checkedAt": "2026-11-09T15:58:28.581830+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
-      "status": "ok",
+      "status": "error",
+      "posts": 0,
+      "url": "https://news-don.ru/rss.xml",
+      "note": "<urlopen error timed out>",
+      "checkedAt": "2026-11-09T15:58:28.581830+00:00"
+    },
+    {
+      "id": "power_repost_rostov",
+      "status": "partial",
+      "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-09T05:58:32.274525+00:00",
       "lastPostAt": null,
-      "url": "https://news-don.ru/rss.xml",
-      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
-    },
-    {
-      "id": "power_repost_rostov",
-      "status": "error",
-      "url": "https://newsrostov.ru/rss.xml",
-      "posts": 0,
-      "note": "Нет доступа к RSS: <urlopen error timed out>",
-      "checkedAt": "2026-11-09T05:58:39.677001+00:00"
+      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
+      "checkedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "power_repost_don",
@@ -68,7 +65,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-09T05:58:39.677001+00:00"
+      "checkedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "power_city",
@@ -80,7 +77,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-11-09T05:58:39.677001+00:00"
+      "checkedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "gas_city",
@@ -92,7 +89,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-11-09T05:58:39.677001+00:00"
+      "checkedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "gas",
@@ -102,39 +99,37 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-11-09T05:58:39.677001+00:00"
+      "checkedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "mchs",
-      "status": "ok",
+      "status": "error",
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
-      "posts": 10,
-      "matchingPosts": 0,
-      "lastPostAt": "2026-11-09T06:00:00+03:00",
-      "note": "Официальный RSS. Только актуальные предупреждения, прямо относящиеся к Шахтам",
-      "checkedAt": "2026-11-09T05:58:39.677001+00:00"
+      "posts": 0,
+      "note": "Не удалось получить официальный RSS МЧС: <urlopen error timed out>",
+      "checkedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-11-09T05:59:47.776076+00:00",
+      "checkedAt": "2026-11-09T16:01:11.332207+00:00",
       "lastPostAt": null,
-      "posts": 6,
-      "matchingPosts": 1,
+      "posts": 4,
+      "matchingPosts": 3,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "7b6c19b1ff96c3d14b18be338911b5a4b6fca01e16dc42b098d0c0934811c7b5",
-      "durationSeconds": 1.03
+      "contentSha256": "b9805f168d521fa093dbcec7d5c9074a0832f52906219f5fa8d3bebb967baab6",
+      "durationSeconds": 20.24
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-09T05:59:47.776076+00:00",
+      "checkedAt": "2026-11-09T16:01:11.332207+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -145,7 +140,7 @@
       "url": "https://max.ru/id6167110467_gos",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-09T05:59:47.776076+00:00",
+      "checkedAt": "2026-11-09T16:01:11.332207+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -156,7 +151,7 @@
       "url": "https://max.ru/id6163089292_biz",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-09T05:59:47.776076+00:00",
+      "checkedAt": "2026-11-09T16:01:11.332207+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -183,7 +178,7 @@
       "point": null,
       "precision": "city",
       "confidence": "official",
-      "observedAt": "2026-11-09T05:58:39.677001+00:00"
+      "observedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "water-city-repost-c147a196c1dcbaf9ed5d",
@@ -210,7 +205,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/c147a196c1dcbaf9ed5d",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/07/151863.html"
@@ -224,8 +219,8 @@
       "title": "Плановые работы: вода",
       "lastConfirmedAt": "2026-11-09T05:58:32.274525+00:00",
       "retainUntil": "2026-11-10T12:00:00+03:00",
-      "retained": false,
-      "observedAt": "2026-11-09T05:58:39.677001+00:00"
+      "retained": true,
+      "observedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "water-city-repost-55a8a7492dcc497b93ea",
@@ -264,23 +259,23 @@
       "precision": "unresolved",
       "description": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе Уважаемые жители! 9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения. Ограничения затронут следующие улицы и переулки: ул. Советская ул. Шевченко ул. Садовая ул. Маяковского пр-т. Победа Революции ул. Дачная пер. Мечникова ул. Парковая ул. Миха",
       "title": "Плановые работы: вода",
-      "lastConfirmedAt": "2026-11-09T05:58:32.274525+00:00",
+      "lastConfirmedAt": "2026-11-09T15:58:28.581830+00:00",
       "retainUntil": "2026-11-10T12:00:00+03:00",
       "retained": false,
-      "observedAt": "2026-11-09T05:58:39.677001+00:00"
+      "observedAt": "2026-11-09T15:59:49.573667+00:00"
     },
     {
       "id": "power-direct-cb6d1afe1582e3b6c5",
       "category": "power",
       "kind": "planned",
-      "status": "active",
+      "status": "unconfirmed",
       "sourceId": "power_direct",
       "source": "Донэнерго · официальный график ШМЭС",
       "origin": "official_site",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-09T05:59:47.776076+00:00",
+      "observedAt": "2026-11-09T16:01:11.332207+00:00",
       "start": "2026-11-09T09:00:00+03:00",
       "end": "2026-11-09T16:00:00+03:00",
       "startBasis": "explicit",
@@ -352,8 +347,138 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-09T05:59:47.776076+00:00",
+      "lastConfirmedAt": "2026-11-09T16:01:11.332207+00:00",
       "retainUntil": "2026-11-11T04:00:00+03:00",
+      "retained": false
+    },
+    {
+      "id": "power-direct-8d3e30a11ab65c396e",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-11-09T16:01:11.332207+00:00",
+      "start": "2026-11-10T09:00:00+03:00",
+      "end": "2026-11-10T15:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Техническое обслуживание оборудования ЛЭП 0,4 кВ ТП-400 Л-1",
+      "fullText": "г. Шахты\nул. Благотворная 1-10; ул. Вышинского 1-15; ул. Заветы Ильича 1-30\n10.11.26 09=00 — 10.11.26 15=00\nТехническое обслуживание  оборудования ЛЭП 0,4 кВ ТП-400 Л-1\n",
+      "affected": [
+        {
+          "street": "ул. Благотворная",
+          "houses": [
+            "1-10"
+          ]
+        },
+        {
+          "street": "ул. Вышинского",
+          "houses": [
+            "1-15"
+          ]
+        },
+        {
+          "street": "ул. Заветы Ильича",
+          "houses": [
+            "1-30"
+          ]
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street",
+      "lastConfirmedAt": "2026-11-09T16:01:11.332207+00:00",
+      "retainUntil": "2026-11-12T03:00:00+03:00",
+      "retained": false
+    },
+    {
+      "id": "power-direct-9723f3096095834fa4",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-11-09T16:01:11.332207+00:00",
+      "start": "2026-11-10T09:00:00+03:00",
+      "end": "2026-11-10T16:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Техническое обслуживание оборудования ТП-417",
+      "fullText": "г. Шахты\nул. Жукова 7-20; ул. Невельского 7-9; ул. Калинина 10-35; ул. Артема 20-35; ул. Свободы 10-40; ул. Кривошлыкова 21-41; ул. Горбачева 1-30; пер. Пятницкого 1-30; пер. Тамбовский 1-30\n10.11.26 09=00 — 10.11.26 16=00\nТехническое обслуживание оборудования ТП-417\n",
+      "affected": [
+        {
+          "street": "ул. Жукова",
+          "houses": [
+            "7-20"
+          ]
+        },
+        {
+          "street": "ул. Невельского",
+          "houses": [
+            "7-9"
+          ]
+        },
+        {
+          "street": "ул. Калинина",
+          "houses": [
+            "10-35"
+          ]
+        },
+        {
+          "street": "ул. Артема",
+          "houses": [
+            "20-35"
+          ]
+        },
+        {
+          "street": "ул. Свободы",
+          "houses": [
+            "10-40"
+          ]
+        },
+        {
+          "street": "ул. Кривошлыкова",
+          "houses": [
+            "21-41"
+          ]
+        },
+        {
+          "street": "ул. Горбачева",
+          "houses": [
+            "1-30"
+          ]
+        },
+        {
+          "street": "пер. Пятницкого",
+          "houses": [
+            "1-30"
+          ]
+        },
+        {
+          "street": "пер. Тамбовский",
+          "houses": [
+            "1-30"
+          ]
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street",
+      "lastConfirmedAt": "2026-11-09T16:01:11.332207+00:00",
+      "retainUntil": "2026-11-12T04:00:00+03:00",
       "retained": false
     }
   ],

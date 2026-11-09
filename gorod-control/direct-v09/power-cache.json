@@ -4,14 +4,14 @@
       "id": "power-direct-cb6d1afe1582e3b6c5",
       "category": "power",
       "kind": "planned",
-      "status": "active",
+      "status": "unconfirmed",
       "sourceId": "power_direct",
       "source": "Донэнерго · официальный график ШМЭС",
       "origin": "official_site",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-09T05:59:47.776076+00:00",
+      "observedAt": "2026-11-09T16:01:11.332207+00:00",
       "start": "2026-11-09T09:00:00+03:00",
       "end": "2026-11-09T16:00:00+03:00",
       "startBasis": "explicit",
@@ -83,8 +83,138 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-09T05:59:47.776076+00:00",
+      "lastConfirmedAt": "2026-11-09T16:01:11.332207+00:00",
       "retainUntil": "2026-11-11T04:00:00+03:00",
+      "retained": false
+    },
+    {
+      "id": "power-direct-8d3e30a11ab65c396e",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-11-09T16:01:11.332207+00:00",
+      "start": "2026-11-10T09:00:00+03:00",
+      "end": "2026-11-10T15:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Техническое обслуживание оборудования ЛЭП 0,4 кВ ТП-400 Л-1",
+      "fullText": "г. Шахты\nул. Благотворная 1-10; ул. Вышинского 1-15; ул. Заветы Ильича 1-30\n10.11.26 09=00 — 10.11.26 15=00\nТехническое обслуживание  оборудования ЛЭП 0,4 кВ ТП-400 Л-1\n",
+      "affected": [
+        {
+          "street": "ул. Благотворная",
+          "houses": [
+            "1-10"
+          ]
+        },
+        {
+          "street": "ул. Вышинского",
+          "houses": [
+            "1-15"
+          ]
+        },
+        {
+          "street": "ул. Заветы Ильича",
+          "houses": [
+            "1-30"
+          ]
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street",
+      "lastConfirmedAt": "2026-11-09T16:01:11.332207+00:00",
+      "retainUntil": "2026-11-12T03:00:00+03:00",
+      "retained": false
+    },
+    {
+      "id": "power-direct-9723f3096095834fa4",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-11-09T16:01:11.332207+00:00",
+      "start": "2026-11-10T09:00:00+03:00",
+      "end": "2026-11-10T16:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Техническое обслуживание оборудования ТП-417",
+      "fullText": "г. Шахты\nул. Жукова 7-20; ул. Невельского 7-9; ул. Калинина 10-35; ул. Артема 20-35; ул. Свободы 10-40; ул. Кривошлыкова 21-41; ул. Горбачева 1-30; пер. Пятницкого 1-30; пер. Тамбовский 1-30\n10.11.26 09=00 — 10.11.26 16=00\nТехническое обслуживание оборудования ТП-417\n",
+      "affected": [
+        {
+          "street": "ул. Жукова",
+          "houses": [
+            "7-20"
+          ]
+        },
+        {
+          "street": "ул. Невельского",
+          "houses": [
+            "7-9"
+          ]
+        },
+        {
+          "street": "ул. Калинина",
+          "houses": [
+            "10-35"
+          ]
+        },
+        {
+          "street": "ул. Артема",
+          "houses": [
+            "20-35"
+          ]
+        },
+        {
+          "street": "ул. Свободы",
+          "houses": [
+            "10-40"
+          ]
+        },
+        {
+          "street": "ул. Кривошлыкова",
+          "houses": [
+            "21-41"
+          ]
+        },
+        {
+          "street": "ул. Горбачева",
+          "houses": [
+            "1-30"
+          ]
+        },
+        {
+          "street": "пер. Пятницкого",
+          "houses": [
+            "1-30"
+          ]
+        },
+        {
+          "street": "пер. Тамбовский",
+          "houses": [
+            "1-30"
+          ]
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street",
+      "lastConfirmedAt": "2026-11-09T16:01:11.332207+00:00",
+      "retainUntil": "2026-11-12T04:00:00+03:00",
       "retained": false
     },
     {
@@ -112,7 +242,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/c147a196c1dcbaf9ed5d",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/07/151863.html"
@@ -126,7 +256,7 @@
       "title": "Плановые работы: вода",
       "lastConfirmedAt": "2026-11-09T05:58:32.274525+00:00",
       "retainUntil": "2026-11-10T12:00:00+03:00",
-      "retained": false
+      "retained": true
     },
     {
       "id": "water-city-repost-55a8a7492dcc497b93ea",
@@ -165,7 +295,7 @@
       "precision": "unresolved",
       "description": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе Уважаемые жители! 9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения. Ограничения затронут следующие улицы и переулки: ул. Советская ул. Шевченко ул. Садовая ул. Маяковского пр-т. Победа Революции ул. Дачная пер. Мечникова ул. Парковая ул. Миха",
       "title": "Плановые работы: вода",
-      "lastConfirmedAt": "2026-11-09T05:58:32.274525+00:00",
+      "lastConfirmedAt": "2026-11-09T15:58:28.581830+00:00",
       "retainUntil": "2026-11-10T12:00:00+03:00",
       "retained": false
     }
