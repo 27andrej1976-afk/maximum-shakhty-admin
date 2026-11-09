@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-08T21:56:59.230558+00:00",
+  "checkedAt": "2026-11-09T01:38:47.152829+00:00",
   "events": [
     {
       "id": "mchs-a36a9e4ddb9cc566d0",
@@ -2344,19 +2344,16 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-08T21:56:50.614953+00:00"
+      "checkedAt": "2026-11-09T01:37:58.881362+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-08T21:56:50.614953+00:00",
+      "checkedAt": "2026-11-09T01:37:58.881362+00:00",
       "coverage": "partial",
-      "status": "ok",
-      "readStatus": "ok",
-      "posts": 10,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
+      "status": "error",
+      "posts": 0,
+      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
     },
     {
       "id": "repost_rostov",
@@ -2365,7 +2362,7 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-08T21:56:50.614953+00:00",
+      "checkedAt": "2026-11-09T01:37:58.881362+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -2377,7 +2374,7 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-08T21:56:50.614953+00:00",
+      "checkedAt": "2026-11-09T01:37:58.881362+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -2395,14 +2392,10 @@
     },
     {
       "id": "power_repost_don",
-      "status": "partial",
+      "status": "error",
       "url": "https://news-don.ru/rss.xml",
-      "readStatus": "ok",
-      "coverage": "partial",
-      "posts": 50,
-      "matchingPosts": 0,
-      "lastPostAt": null,
-      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
+      "posts": 0,
+      "note": "Нет доступа к RSS: <urlopen error timed out>"
     },
     {
       "id": "power_city",
