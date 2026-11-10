@@ -1,0 +1,22 @@
+{
+  "name": "Дон под контролем",
+  "tagline": "Создано специально для жителей Ростовской области",
+  "ownerBrand": "Группа компаний «Финансовая аналитика»",
+  "independentProject": true,
+  "groupLogo": "assets/group-logo.png",
+  "regionalCoat": "assets/rostov-coat.png",
+  "regionalCoatUsageReview": "pending-before-release",
+  "androidIntegration": "not-applied",
+  "advertising": {
+    "enabled": false,
+    "placement": "dismissible-card-after-events",
+    "hideDuringEmergencyWarning": true,
+    "allowInterstitial": false,
+    "allowAdvertisingPush": false
+  },
+  "legacyApplicationId": "ru.citycontrol.shakhty.compactwater",
+  "newApplicationId": "ru.citycontrol.don",
+  "distribution": "new-separate-app-on-rustore",
+  "signingKeyStatus": "permanent-release-key-required-not-created",
+  "legacyUpgradeRequired": false
+}

@@ -1,0 +1,8 @@
+{
+  "regionId": "RU-ROS",
+  "dataMode": "production",
+  "status": "awaiting-verified-address-catalog",
+  "municipalities": [],
+  "addresses": [],
+  "notice": "Населённые пункты и координаты не добавляются без проверки справочника и охвата источников"
+}

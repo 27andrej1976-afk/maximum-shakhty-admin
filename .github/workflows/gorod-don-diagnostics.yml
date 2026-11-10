@@ -1,0 +1,37 @@
+name: Don Control | Read-only MAX diagnostics (no APK or deployment)
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/rostov-max-only]
+    paths:
+      - .github/workflows/gorod-don-diagnostics.yml
+      - gorod-control/region-v2/diagnose_max.py
+      - gorod-control/region-v2/test_diagnostics.py
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install existing pinned reader dependency
+        run: python -m pip install --quiet -r gorod-control/max-reader/requirements.txt
+      - name: Run local regression tests before account access
+        run: |
+          python -m unittest discover -s gorod-control/region-v2 -q
+          python gorod-control/region-v2/check_pymax_contract.py
+      - name: Read existing public channels and report only safe stages and counts
+        env:
+          MAX_USER_SESSION_B64: ${{ secrets.MAX_USER_SESSION_B64 }}
+        run: python gorod-control/region-v2/diagnose_max.py --output /tmp/don-max-diagnostics.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: don-max-safe-diagnostics
+          path: /tmp/don-max-diagnostics.json
+          retention-days: 3
+          if-no-files-found: error

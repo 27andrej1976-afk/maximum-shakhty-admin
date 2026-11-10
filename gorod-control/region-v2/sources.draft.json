@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-10",
+  "region": "RU-ROS",
+  "mode": "max-only",
+  "deployment": "draft-not-connected",
+  "categories": [
+    "water",
+    "power",
+    "gas",
+    "mchs"
+  ],
+  "coveragePolicy": "Only explicitly verified municipalities; regional organisation name does not imply complete regional coverage.",
+  "channels": [
+    {
+      "id": "ursv",
+      "url": "https://max.ru/id6167110467_gos",
+      "transport": "max",
+      "chat_id": -69418948796459,
+      "identity_verified": true,
+      "enabled": false,
+      "categories": [
+        "water"
+      ],
+      "municipalities": [],
+      "territoryNote": "Установить фактическую территорию обслуживания и подтверждённые населённые пункты. Не считать всей областью.",
+      "readVerified": false,
+      "lastKnownReaderState": "READER_ERROR",
+      "lastKnownReaderCheck": "2026-11-10T03:59:28.819522+00:00"
+    },
+    {
+      "id": "donenergo",
+      "url": "https://max.ru/id6163089292_biz",
+      "transport": "max",
+      "chat_id": -72527316071728,
+      "identity_verified": true,
+      "enabled": false,
+      "categories": [
+        "power"
+      ],
+      "municipalities": [],
+      "territoryNote": "Аварийные отключения; плановые канал направляет читать на сайте. Географический охват требует отдельного реестра.",
+      "readVerified": false,
+      "lastKnownReaderState": "READER_ERROR",
+      "lastKnownReaderCheck": "2026-11-10T03:59:28.819522+00:00"
+    },
+    {
+      "id": "shakhty-admin",
+      "url": "https://max.ru/shakhtygorod",
+      "transport": "max",
+      "chat_id": -68696541241372,
+      "identity_verified": true,
+      "enabled": false,
+      "categories": [
+        "water",
+        "power"
+      ],
+      "municipalities": [],
+      "territoryNote": "Только Шахты; вторичные сообщения. Нужна привязка к ГАР, не включён в областной охват.",
+      "readVerified": false,
+      "lastKnownReaderState": "READER_ERROR",
+      "lastKnownReaderCheck": "2026-11-10T03:59:28.819522+00:00"
+    },
+    {
+      "id": "mchs-rostov-candidate",
+      "url": "https://max.ru/id6164228703_gos",
+      "transport": "max",
+      "chat_id": null,
+      "identity_verified": false,
+      "enabled": false,
+      "categories": [
+        "mchs"
+      ],
+      "municipalities": [],
+      "territoryNote": "Кандидат из опубликованного МЧС перечня. Проверить идентификатор, чтение и территориальные предупреждения.",
+      "readVerified": false
+    }
+  ],
+  "unconfigured": [
+    {
+      "category": "gas",
+      "reason": "Не подтверждён MAX-канал с адресными отключениями газа по области."
+    },
+    {
+      "category": "water",
+      "reason": "Не подтверждены все водоканалы области."
+    },
+    {
+      "category": "power",
+      "reason": "Не подтверждены все сетевые организации и плановые работы в MAX."
+    }
+  ],
+  "enableGate": [
+    "Official identity verified",
+    "Numeric chat ID matches public channel",
+    "Read and catch-up tested",
+    "GAR municipality IDs configured",
+    "Coverage limitations shown in client"
+  ]
+}

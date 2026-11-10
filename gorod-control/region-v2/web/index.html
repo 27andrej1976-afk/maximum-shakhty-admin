@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102e46"><title>Дон под контролем</title><link rel="stylesheet" href="vendor/leaflet.css"><link rel="stylesheet" href="app.css"></head>
+<body><div class="development">Разработка областной версии · подключение к действующим каналам MAX ещё не проверено</div>
+<main><header><div class="brands"><img src="assets/group-logo.png" alt="Группа компаний — Финансовая аналитика"><img class="coat" src="assets/rostov-coat.png" alt="Герб Ростовской области"></div><div class="hero"><span>РОСТОВСКАЯ ОБЛАСТЬ · MAX</span><h1>Дон под контролем</h1><p>Создано специально для жителей Ростовской области</p><small>Независимый проект группы компаний «Финансовая аналитика»</small></div></header>
+<div id="testBanner" class="test-banner" hidden>ТЕСТОВЫЕ ДАННЫЕ · Все сообщения и адреса вымышлены</div>
+<section class="workspace"><div class="control-row"><label class="city-label">Населённый пункт<select id="city" aria-label="Населённый пункт"><option value="">Охват пока не подтверждён</option></select></label><label class="radius-label">Радиус<select id="radius" aria-label="Радиус"><option value="1">1 км</option><option value="3">3 км</option><option value="5">5 км</option></select></label></div>
+<div class="metrics"><div><b id="eventCount">0</b><span>событий в просмотре</span></div><div><b id="nearCount">—</b><span>рядом с точкой</span></div></div>
+<div class="actions"><button id="locate" class="primary">⌖ Моё местоположение</button><button id="refresh">↻ Проверить сообщения</button></div><p id="pointStatus" class="meta">Контрольная точка пока не задана. Геолокация запрашивается только по нажатию.</p>
+<section class="health"><h2>Доступность информации · MAX</h2><p id="connection" role="status">Загружаем последнюю серверную сводку…</p><div id="healthCards"></div><p id="healthNotice" class="health-notice"></p><p id="dataStamp" class="meta"></p></section>
+<div class="switches" role="group" aria-label="Область просмотра"><button id="near" aria-pressed="false">Рядом</button><button id="region" aria-pressed="true">Вся область</button></div>
+<div id="filters" class="filters" role="group" aria-label="Категории"><button data-category="all" aria-pressed="true">Все</button><button data-category="water" aria-pressed="false">💧 Вода</button><button data-category="power" aria-pressed="false">⚡ Свет</button><button data-category="gas" aria-pressed="false">♨ Газ</button><button data-category="mchs" aria-pressed="false">△ МЧС</button></div>
+<div id="map" aria-label="Карта событий Ростовской области"></div><p id="mapStatus" class="meta"></p>
+<section><h2>События и предупреждения</h2><div id="events"></div></section>
+<aside id="adSlot" hidden><span>Реклама</span><button aria-label="Закрыть рекламу" id="closeAd">×</button><div id="adContent"></div></aside>
+<button id="report" class="report">Сообщить о проблеме →</button><p id="reportStatus" role="status" class="meta"></p>
+<details><summary id="pendingCount">Публикации на проверке</summary><p class="meta">Эти сообщения не добавлены на карту: влияние и адрес ещё не подтверждены.</p><div id="pending"></div></details>
+<footer>Отсутствие найденных публикаций не означает отсутствие аварий. Сбой источника не означает восстановление услуги.</footer>
+</section></main><script src="vendor/leaflet.js"></script><script src="client.js"></script><script src="app.js"></script></body></html>
