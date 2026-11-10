@@ -1,38 +1,41 @@
 {
-  "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+  "checkedAt": "2026-11-10T03:59:28.819522+00:00",
   "sources": [
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+      "checkedAt": "2026-11-10T03:59:28.819522+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
-      "note": "Сессия MAX недоступна или требует нового входа через коннектор."
+      "errorCode": "READER_ERROR",
+      "note": "Ошибка подключения MAX; причина требует проверки, повторный вход пока не подтверждён."
     },
     {
       "id": "max_water",
       "url": "https://max.ru/id6167110467_gos",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+      "checkedAt": "2026-11-10T03:59:28.819522+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
-      "note": "Сессия MAX недоступна или требует нового входа через коннектор."
+      "errorCode": "READER_ERROR",
+      "note": "Ошибка подключения MAX; причина требует проверки, повторный вход пока не подтверждён."
     },
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+      "checkedAt": "2026-11-10T03:59:28.819522+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
-      "note": "Сессия MAX недоступна или требует нового входа через коннектор."
+      "errorCode": "READER_ERROR",
+      "note": "Ошибка подключения MAX; причина требует проверки, повторный вход пока не подтверждён."
     }
   ],
   "posts": []

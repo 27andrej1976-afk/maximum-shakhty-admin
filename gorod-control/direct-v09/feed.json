@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+  "checkedAt": "2026-11-10T03:59:28.819522+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,16 +12,19 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-10T03:50:17.032752+00:00"
+      "checkedAt": "2026-11-10T03:57:09.137840+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-10T03:50:17.032752+00:00",
+      "checkedAt": "2026-11-10T03:57:09.137840+00:00",
       "coverage": "partial",
-      "status": "error",
-      "posts": 0,
-      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
+      "status": "ok",
+      "readStatus": "ok",
+      "posts": 10,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
     },
     {
       "id": "repost_rostov",
@@ -30,30 +33,30 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-10T03:50:17.032752+00:00",
+      "checkedAt": "2026-11-10T03:57:09.137840+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
-      "status": "error",
-      "posts": 0,
-      "url": "https://news-don.ru/rss.xml",
-      "note": "<urlopen error timed out>",
-      "checkedAt": "2026-11-10T03:50:17.032752+00:00"
-    },
-    {
-      "id": "power_repost_rostov",
-      "status": "partial",
-      "url": "https://newsrostov.ru/rss.xml",
+      "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
+      "checkedAt": "2026-11-10T03:57:09.137840+00:00",
       "lastPostAt": null,
-      "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-10T03:51:38.714290+00:00"
+      "url": "https://news-don.ru/rss.xml",
+      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
+    },
+    {
+      "id": "power_repost_rostov",
+      "status": "error",
+      "url": "https://newsrostov.ru/rss.xml",
+      "posts": 0,
+      "note": "Нет доступа к RSS: <urlopen error timed out>",
+      "checkedAt": "2026-11-10T03:57:35.350403+00:00"
     },
     {
       "id": "power_repost_don",
@@ -65,7 +68,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-10T03:51:38.714290+00:00"
+      "checkedAt": "2026-11-10T03:57:35.350403+00:00"
     },
     {
       "id": "power_city",
@@ -77,7 +80,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-11-10T03:51:38.714290+00:00"
+      "checkedAt": "2026-11-10T03:57:35.350403+00:00"
     },
     {
       "id": "gas_city",
@@ -89,7 +92,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-11-10T03:51:38.714290+00:00"
+      "checkedAt": "2026-11-10T03:57:35.350403+00:00"
     },
     {
       "id": "gas",
@@ -99,7 +102,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-11-10T03:51:38.714290+00:00"
+      "checkedAt": "2026-11-10T03:57:35.350403+00:00"
     },
     {
       "id": "mchs",
@@ -107,55 +110,58 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 0,
       "note": "Не удалось получить официальный RSS МЧС: <urlopen error timed out>",
-      "checkedAt": "2026-11-10T03:51:38.714290+00:00"
+      "checkedAt": "2026-11-10T03:57:35.350403+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+      "checkedAt": "2026-11-10T03:59:28.819522+00:00",
       "lastPostAt": null,
       "posts": 4,
       "matchingPosts": 3,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "bf187e62886ef59f2e38352e015b925f1514f540f8f7d1509a2fda5196a6e16d",
-      "durationSeconds": 2.19
+      "contentSha256": "b3796d497e9af0a6e862b30e0f285335a3a1e0d76a66cfc23f8231c5d0082377",
+      "durationSeconds": 5.43
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+      "checkedAt": "2026-11-10T03:59:28.819522+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
-      "note": "Сессия MAX недоступна или требует нового входа через коннектор."
+      "errorCode": "READER_ERROR",
+      "note": "Ошибка подключения MAX; причина требует проверки, повторный вход пока не подтверждён."
     },
     {
       "id": "max_water",
       "url": "https://max.ru/id6167110467_gos",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+      "checkedAt": "2026-11-10T03:59:28.819522+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
-      "note": "Сессия MAX недоступна или требует нового входа через коннектор."
+      "errorCode": "READER_ERROR",
+      "note": "Ошибка подключения MAX; причина требует проверки, повторный вход пока не подтверждён."
     },
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T03:53:17.588902+00:00",
+      "checkedAt": "2026-11-10T03:59:28.819522+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
-      "note": "Сессия MAX недоступна или требует нового входа через коннектор."
+      "errorCode": "READER_ERROR",
+      "note": "Ошибка подключения MAX; причина требует проверки, повторный вход пока не подтверждён."
     }
   ],
   "events": [
@@ -163,10 +169,10 @@
       "id": "water-city-repost-c147a196c1dcbaf9ed5d",
       "publishedAt": "2026-11-07T11:12:21+03:00",
       "kind": "planned",
-      "start": "2026-11-09T00:00:00+03:00",
-      "end": null,
-      "startBasis": "date_only",
-      "endBasis": "unknown",
+      "start": "2026-11-09T21:00:00+03:00",
+      "end": "2026-11-10T05:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "estimated",
       "resolvedAt": null,
       "workSite": null,
       "url": "https://news-don.ru/society/2026/11/07/151863.html",
@@ -175,73 +181,171 @@
       "origin": "municipal_repost",
       "text": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе\nУважаемые жители!\n9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения.\nОграничения затронут следующие улицы и переулки:\nул. Советская\nул. Шевченко\nул. Садовая\nул. Маяковского\nпр-т. Победа Революции\nул. Дачная\nпер. Мечникова\nул. Парковая\nул. Михайлова\nул. Хабарова\nпер. Донской\nпер. Енисейский\nул. Ворошилова\nул. Текстильная\nул. Индустриальная\nпер. Шишкина\nул. Смидовича\nул. Мировая Коммуна\nул. Ведомственная\nул. Каштановая\nпроезд 3-й Микрорайон\nул. Платова\nул. Кооперативная\nул. Суворовская\nул. Стачки\nул. Екатерининская\nул. Таловская\nул. Евгения Кобылкина\nул. Кошевого\nул. Открытая\nпер. Совхозный\nул. Цуканова\nул. Темерницкая\nпер. Путиловский.\nРаботы планируется завершить к 05:00 10 ноября 2026 года.\nДля оформления заявки на подвоз воды обращаться в диспетчерскую службу по телефону: 8 (863) 28-55-777.\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
       "textSha256": "22e7a9b620da9fc2e5c3537ffe02a5174591430b47674b699b3b62622515f929",
-      "affected": [],
+      "affected": [
+        {
+          "street": "ул Советская",
+          "houses": []
+        },
+        {
+          "street": "ул Шевченко",
+          "houses": []
+        },
+        {
+          "street": "ул Садовая",
+          "houses": []
+        },
+        {
+          "street": "ул Маяковского",
+          "houses": []
+        },
+        {
+          "street": "проспект Победа Революции",
+          "houses": []
+        },
+        {
+          "street": "ул Дачная",
+          "houses": []
+        },
+        {
+          "street": "пер Мечникова",
+          "houses": []
+        },
+        {
+          "street": "ул Парковая",
+          "houses": []
+        },
+        {
+          "street": "ул Михайлова",
+          "houses": []
+        },
+        {
+          "street": "ул Хабарова",
+          "houses": []
+        },
+        {
+          "street": "пер Донской",
+          "houses": []
+        },
+        {
+          "street": "пер Енисейский",
+          "houses": []
+        },
+        {
+          "street": "ул Ворошилова",
+          "houses": []
+        },
+        {
+          "street": "ул Текстильная",
+          "houses": []
+        },
+        {
+          "street": "ул Индустриальная",
+          "houses": []
+        },
+        {
+          "street": "пер Шишкина",
+          "houses": []
+        },
+        {
+          "street": "ул Смидовича",
+          "houses": []
+        },
+        {
+          "street": "ул Мировая Коммуна",
+          "houses": []
+        },
+        {
+          "street": "ул Ведомственная",
+          "houses": []
+        },
+        {
+          "street": "ул Каштановая",
+          "houses": []
+        },
+        {
+          "street": "проезд 3-й Микрорайон",
+          "houses": []
+        },
+        {
+          "street": "ул Платова",
+          "houses": []
+        },
+        {
+          "street": "ул Кооперативная",
+          "houses": []
+        },
+        {
+          "street": "ул Суворовская",
+          "houses": []
+        },
+        {
+          "street": "ул Стачки",
+          "houses": []
+        },
+        {
+          "street": "ул Екатерининская",
+          "houses": []
+        },
+        {
+          "street": "ул Таловская",
+          "houses": []
+        },
+        {
+          "street": "ул Евгения Кобылкина",
+          "houses": []
+        },
+        {
+          "street": "ул Кошевого",
+          "houses": []
+        },
+        {
+          "street": "ул Открытая",
+          "houses": []
+        },
+        {
+          "street": "пер Совхозный",
+          "houses": []
+        },
+        {
+          "street": "ул Цуканова",
+          "houses": []
+        },
+        {
+          "street": "ул Темерницкая",
+          "houses": []
+        },
+        {
+          "street": "пер Путиловский",
+          "houses": []
+        }
+      ],
       "zones": [],
       "unmappedAreaText": [],
       "sourceId": "repost_don",
       "mirror": "news-don.ru",
-      "reviewRequired": true,
-      "requiresReview": true,
+      "reviewRequired": false,
+      "requiresReview": false,
       "noticeId": "city-repost/c147a196c1dcbaf9ed5d",
       "category": "water",
       "status": "unconfirmed",
       "revision": 1,
       "evidence": [
-        "https://news-don.ru/society/2026/11/07/151863.html"
-      ],
-      "updates": [
-        "city-repost/c147a196c1dcbaf9ed5d"
-      ],
-      "point": null,
-      "precision": "unresolved",
-      "description": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе Уважаемые жители! 9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения. Ограничения затронут следующие улицы и переулки: ул. Советская ул. Шевченко ул. Садовая ул. Маяковского пр-т. Победа Революции ул. Дачная пер. Мечникова ул. Парковая ул. Миха",
-      "title": "Плановые работы: вода",
-      "lastConfirmedAt": "2026-11-09T05:58:32.274525+00:00",
-      "retainUntil": "2026-11-10T12:00:00+03:00",
-      "retained": true,
-      "observedAt": "2026-11-10T03:51:38.714290+00:00"
-    },
-    {
-      "id": "water-city-repost-55a8a7492dcc497b93ea",
-      "publishedAt": "2026-11-07T11:15:32+03:00",
-      "kind": "planned",
-      "start": "2026-11-09T00:00:00+03:00",
-      "end": null,
-      "startBasis": "date_only",
-      "endBasis": "unknown",
-      "resolvedAt": null,
-      "workSite": null,
-      "url": "https://newsrostov.ru/society/2026/11/07/603895.html",
-      "officialUrl": null,
-      "source": "Администрация города Шахты — перепечатка",
-      "origin": "municipal_repost",
-      "text": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе\nУважаемые жители!\n9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения.\nОграничения затронут следующие улицы и переулки:\nул. Советская\nул. Шевченко\nул. Садовая\nул. Маяковского\nпр-т. Победа Революции\nул. Дачная\nпер. Мечникова\nул. Парковая\nул. Михайлова\nул. Хабарова\nпер. Донской\nпер. Енисейский\nул. Ворошилова\nул. Текстильная\nул. Индустриальная\nпер. Шишкина\nул. Смидовича\nул. Мировая Коммуна\nул. Ведомственная\nул. Каштановая\nпроезд 3-й Микрорайон\nул. Платова\nул. Кооперативная\nул. Суворовская\nул. Стачки\nул. Екатерининская\nул. Таловская\nул. Евгения Кобылкина\nул. Кошевого\nул. Открытая\nпер. Совхозный\nул. Цуканова\nул. Темерницкая\nпер. Путиловский.\nРаботы планируется завершить к 05:00 10 ноября 2026 года.\nДля оформления заявки на подвоз воды обращаться в диспетчерскую службу по телефону: 8 (863) 28-55-777.\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "textSha256": "22e7a9b620da9fc2e5c3537ffe02a5174591430b47674b699b3b62622515f929",
-      "affected": [],
-      "zones": [],
-      "unmappedAreaText": [],
-      "sourceId": "repost_rostov",
-      "mirror": "newsrostov.ru",
-      "reviewRequired": true,
-      "requiresReview": true,
-      "noticeId": "city-repost/55a8a7492dcc497b93ea",
-      "category": "water",
-      "status": "active",
-      "revision": 1,
-      "evidence": [
+        "https://news-don.ru/society/2026/11/07/151863.html",
         "https://newsrostov.ru/society/2026/11/07/603895.html"
       ],
       "updates": [
+        "city-repost/c147a196c1dcbaf9ed5d",
         "city-repost/55a8a7492dcc497b93ea"
       ],
       "point": null,
-      "precision": "unresolved",
+      "precision": "street",
       "description": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе Уважаемые жители! 9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения. Ограничения затронут следующие улицы и переулки: ул. Советская ул. Шевченко ул. Садовая ул. Маяковского пр-т. Победа Революции ул. Дачная пер. Мечникова ул. Парковая ул. Миха",
       "title": "Плановые работы: вода",
-      "lastConfirmedAt": "2026-11-10T03:50:17.032752+00:00",
-      "retainUntil": "2026-11-10T12:00:00+03:00",
+      "fullText": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе\nУважаемые жители!\n9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения.\nОграничения затронут следующие улицы и переулки:\nул. Советская\nул. Шевченко\nул. Садовая\nул. Маяковского\nпр-т. Победа Революции\nул. Дачная\nпер. Мечникова\nул. Парковая\nул. Михайлова\nул. Хабарова\nпер. Донской\nпер. Енисейский\nул. Ворошилова\nул. Текстильная\nул. Индустриальная\nпер. Шишкина\nул. Смидовича\nул. Мировая Коммуна\nул. Ведомственная\nул. Каштановая\nпроезд 3-й Микрорайон\nул. Платова\nул. Кооперативная\nул. Суворовская\nул. Стачки\nул. Екатерининская\nул. Таловская\nул. Евгения Кобылкина\nул. Кошевого\nул. Открытая\nпер. Совхозный\nул. Цуканова\nул. Темерницкая\nпер. Путиловский.\nРаботы планируется завершить к 05:00 10 ноября 2026 года.\nДля оформления заявки на подвоз воды обращаться в диспетчерскую службу по телефону: 8 (863) 28-55-777.\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
+      "lastConfirmedAt": "2026-11-10T03:57:09.137840+00:00",
+      "retainUntil": "2026-11-11T17:00:00+03:00",
       "retained": false,
-      "observedAt": "2026-11-10T03:51:38.714290+00:00"
+      "observedAt": "2026-11-10T03:57:35.350403+00:00"
     },
     {
       "id": "power-direct-cb6d1afe1582e3b6c5",
@@ -254,7 +358,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-10T03:53:17.588902+00:00",
+      "observedAt": "2026-11-10T03:59:28.819522+00:00",
       "start": "2026-11-09T09:00:00+03:00",
       "end": "2026-11-09T16:00:00+03:00",
       "startBasis": "explicit",
@@ -326,7 +430,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-10T03:53:17.588902+00:00",
+      "lastConfirmedAt": "2026-11-10T03:59:28.819522+00:00",
       "retainUntil": "2026-11-11T04:00:00+03:00",
       "retained": false
     },
@@ -341,7 +445,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-10T03:53:17.588902+00:00",
+      "observedAt": "2026-11-10T03:59:28.819522+00:00",
       "start": "2026-11-10T09:00:00+03:00",
       "end": "2026-11-10T15:00:00+03:00",
       "startBasis": "explicit",
@@ -373,7 +477,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-10T03:53:17.588902+00:00",
+      "lastConfirmedAt": "2026-11-10T03:59:28.819522+00:00",
       "retainUntil": "2026-11-12T03:00:00+03:00",
       "retained": false
     },
@@ -388,7 +492,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-10T03:53:17.588902+00:00",
+      "observedAt": "2026-11-10T03:59:28.819522+00:00",
       "start": "2026-11-10T09:00:00+03:00",
       "end": "2026-11-10T16:00:00+03:00",
       "startBasis": "explicit",
@@ -456,7 +560,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-10T03:53:17.588902+00:00",
+      "lastConfirmedAt": "2026-11-10T03:59:28.819522+00:00",
       "retainUntil": "2026-11-12T04:00:00+03:00",
       "retained": false
     }
@@ -712,7 +816,7 @@
     }
   ],
   "normalization": {
-    "duplicatePublications": 4,
+    "duplicatePublications": 5,
     "revisionConflicts": [],
     "unlinked": []
   }
