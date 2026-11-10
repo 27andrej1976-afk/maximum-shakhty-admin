@@ -10,6 +10,8 @@ import sys
 import uuid
 import webbrowser
 
+from qr_display import QRWindow, open_html
+
 if not Path(__file__).with_name('max_user_reader.py').is_file():
     sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts'))
 from max_user_reader import CHANNELS, SESSION, make_client, encode_session, validate_channel
@@ -20,6 +22,7 @@ SETTINGS = 'https://github.com/27andrej1976-afk/maximum-shakhty-admin/settings/s
 class LocalQR:
     def __init__(self, folder):
         self.folder = folder
+        self.window = None
     async def show_qr(self, url):
         from urllib.parse import urlsplit
         import qrcode
@@ -34,8 +37,22 @@ class LocalQR:
             '<h1>Дон под контролем · MAX</h1><p>Отсканируй QR в MAX на телефоне и подтверди вход.</p>'
             '<img width="380" src="data:image/svg+xml;base64,'+base64.b64encode(svg).decode()+'">'
             '<p>Не отправляй QR или файл сессии в переписку. После входа вернись в окно программы.</p>', encoding='utf-8')
-        webbrowser.open(page.as_uri())
-        print('QR открыт в браузере. Отсканируй его в MAX на телефоне и подтверди вход.', flush=True)
+        print('QR сохранён на этом компьютере. Если окно не видно, открой этот адрес через Ctrl+L в браузере:', flush=True)
+        print(page.as_uri(), flush=True)
+        print('Локальный файл QR:', str(page), flush=True)
+        try:
+            self.window = QRWindow(url, page)
+            print('Создано отдельное окно «Дон под контролем — QR для MAX · версия 2». Сканируй код в нём.', flush=True)
+        except Exception:
+            requested = open_html(page)
+            print('Отдельное окно QR недоступно. ' + ('Ссылка передана браузеру; показ QR нужно проверить.' if requested else 'Браузер не принял ссылку.'), flush=True)
+            print('Если открылся поисковик: нажми Ctrl+L, вставь адрес file:/// выше и нажми Enter.', flush=True)
+
+    def close(self):
+        if self.window is not None:
+            self.window.close()
+            self.window = None
+
 
 
 def new_session_folder(base):
@@ -45,10 +62,15 @@ def new_session_folder(base):
 
 
 async def login(folder, factory=make_client):
-    client = factory(folder, qr_provider=LocalQR(folder))
+    qr = LocalQR(folder)
+    client = None
     states = []
     try:
+        client = factory(folder, qr_provider=qr)
         await asyncio.wait_for(client.connect(), timeout=240)
+        qr.close()
+        (folder / 'login.html').unlink(missing_ok=True)
+        print('Вход в MAX подтверждён. Проверяем публичные каналы…', flush=True)
         for source in CHANNELS:
             ok = False
             try:
@@ -61,10 +83,12 @@ async def login(folder, factory=make_client):
                 pass
             states.append((source['name'], ok))
     finally:
-        try:
-            await asyncio.wait_for(client.close(), timeout=10)
-        except Exception:
-            pass
+        if client is not None:
+            try:
+                await asyncio.wait_for(client.close(), timeout=10)
+            except Exception:
+                pass
+        qr.close()
         (folder / 'login.html').unlink(missing_ok=True)
     return states
 
@@ -95,12 +119,12 @@ def main():
         print('Этот запуск предназначен для Windows 10/11.')
         return
     logging.disable(logging.CRITICAL)
-    print('ДОН ПОД КОНТРОЛЕМ — ПОВТОРНЫЙ ВХОД В MAX\n',flush=True)
+    print('ДОН ПОД КОНТРОЛЕМ — ПОВТОРНЫЙ ВХОД В MAX · ВЕРСИЯ 2\n',flush=True)
     print('Создаётся новая отдельная сессия. Старый коннектор и его файлы не изменяются.')
     print('Считываются только три ранее настроенных публичных канала; подписки и сообщения не отправляются.')
     print('Если MAX запросит пароль 2FA, вводи его только здесь. Символы пароля не отображаются — это нормально.')
     print('Сессия технически даёт доступ к аккаунту; её нельзя отправлять в чат или публичный файл.\n')
-    input('Нажми Enter, чтобы открыть QR для входа: ')
+    input('Нажми Enter, чтобы показать QR в отдельном окне: ')
     base = Path(os.environ['LOCALAPPDATA']) / 'DonControlMAX'
     folder = new_session_folder(base)
     states = asyncio.run(login(folder))

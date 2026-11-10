@@ -2,7 +2,7 @@
 chcp 65001 >nul
 setlocal
 cd /d "%~dp0"
-echo Дон под контролем — подготовка входа в MAX.
+echo Дон под контролем — вход в MAX, версия 2 (QR в отдельном окне).
 echo Сейчас идёт подготовка библиотек. Ничего вводить пока не нужно.
 where py >nul 2>nul
 if errorlevel 1 goto use_python
