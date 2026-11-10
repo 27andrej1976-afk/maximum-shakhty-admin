@@ -4,7 +4,8 @@ from datetime import datetime,timezone
 import importlib.util,sys,json,shutil,re
 from power_direct import collect as collect_power
 from power_retention import merge as retain_power
-from water_retention import merge as retain_water
+from water_retention import merge as retain_water, source_id as water_source_id
+from power_retention import deadline
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'direct-v09'
 sys.path.insert(0,str(ROOT/'scripts'))
@@ -27,7 +28,17 @@ def main():
              and (p['sourceId']=='max_city' or CITY.search(p['text'][:500]) or p['sourceId']=='max_water' and re.search(r'\bШахтинск[а-я]*\b|\bФШ\s+ГУП\b',p['text'],re.I))]
  (OUT/'max-public.json').write_text(json.dumps({'checkedAt':now.isoformat(),'sources':max_states,'posts':max_review},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  max_water=max_water_posts(max_posts)
- norm=verified.build_feed(baseline.get('archive',[])+max_water,now)
+ posts=baseline.get('archive',[])+max_water
+ known={p['id'] for p in posts}
+ # Recent notices can fall out of a short RSS window. Reparse their original
+ # evidence without claiming a new source read or extending their deadline.
+ for e in previous:
+  ident=e.get('noticeId');until=deadline(e)
+  if not ident or ident in known or not water_source_id(e) or not until or until<=now or e.get('status') in ('resolved','cancelled','canceled'):continue
+  if not e.get('text') or not e.get('publishedAt'):continue
+  p={k:e[k] for k in ('publishedAt','text','url','source','origin','sourceId','officialUrl','observedAt') if k in e}
+  p['id']=ident;p['reparsedFromCache']=True;posts.append(p);known.add(ident)
+ norm=verified.build_feed(posts,now)
  water=[]
  for e in norm['events']:
   e['fullText']=e.get('text',e.get('description',''))

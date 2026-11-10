@@ -62,8 +62,10 @@ async def read_channels(client,now=None):
         states.append(state)
     return posts,states
 
+class LoginRequired(RuntimeError):pass
+
 class NoInteractiveLogin:
-    async def authenticate(self,app):raise RuntimeError('MAX login required on local computer')
+    async def authenticate(self,app):raise LoginRequired('MAX login required on local computer')
 
 def make_client(work_dir,qr_provider=None):
     from pymax import WebClient,ExtraConfig
@@ -99,12 +101,21 @@ def collect_session(now=None,environ=None):
     env=os.environ if environ is None else environ
     value=env.get('MAX_USER_SESSION_B64','').strip()
     if not value:return [],[]
+    stage='session_decode'
     try:
         raw=decode_session(value)
         with tempfile.TemporaryDirectory(prefix='city-max-private-') as folder:
             target=Path(folder)/SESSION;target.write_bytes(raw);target.chmod(0o600)
+            stage='reader'
             return asyncio.run(run_reader(folder,now))
-    except Exception:
+    except Exception as exc:
+        # Only fixed codes: never publish raw exception text or account/session data.
+        code='SESSION_INVALID' if stage=='session_decode' else 'AUTH_REQUIRED' if isinstance(exc,LoginRequired) else 'TIMEOUT' if isinstance(exc,TimeoutError) else 'DEPENDENCY_ERROR' if isinstance(exc,ImportError) else 'READER_ERROR'
+        notes={'SESSION_INVALID':'Не удалось прочитать сохранённую сессию MAX.',
+          'AUTH_REQUIRED':'MAX запросил повторный вход через локальный коннектор.',
+          'TIMEOUT':'MAX не ответил за отведённое время. Истечение сессии не подтверждено.',
+          'DEPENDENCY_ERROR':'Не удалось загрузить компонент чтения MAX.',
+          'READER_ERROR':'Ошибка подключения MAX; причина требует проверки, повторный вход пока не подтверждён.'}
         return [],[{'id':c['id'],'url':'https://max.ru/'+c['slug'],'status':'error','readStatus':'error',
           'checkedAt':(now or datetime.now(timezone.utc)).isoformat(),'posts':0,'coverage':'partial',
-          'transport':'max_user_session','note':'Сессия MAX недоступна или требует нового входа через коннектор.'} for c in CHANNELS]
+          'transport':'max_user_session','errorCode':code,'note':notes[code]} for c in CHANNELS]

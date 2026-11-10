@@ -19,7 +19,17 @@ def merge(current,previous,sources,now):
   sid=source_id(item);state=states.get(sid,{})
   if not sid or not item.get('id') or not (state.get('status')=='ok' or state.get('readStatus')=='ok'):continue
   if saved.get(item['id'],{}).get('status') in ('resolved','cancelled','canceled') and item.get('status') not in ('resolved','cancelled','canceled'):continue
-  e=deepcopy(item);e['lastConfirmedAt']=state.get('checkedAt') or now.isoformat();saved[e['id']]=e;fresh.add(e['id'])
+  # Re-parsed mirror evidence supersedes its earlier malformed cached incident.
+  for notice in item.get('updates',[]):
+   obsolete='water-'+notice.replace('/','-')
+   if obsolete!=item['id'] and saved.get(obsolete,{}).get('noticeId')==notice:
+    saved.pop(obsolete)
+  e=deepcopy(item)
+  if e.get('reparsedFromCache'):
+   e['lastConfirmedAt']=saved.get(e['id'],{}).get('lastConfirmedAt') or e.get('publishedAt')
+  else:
+   e['lastConfirmedAt']=state.get('checkedAt') or now.isoformat();fresh.add(e['id'])
+  saved[e['id']]=e
  restorations=[e for e in saved.values() if e.get('status')=='resolved']
  for r in restorations:
   when=stamp(r.get('resolvedAt')) or stamp(r.get('publishedAt'))

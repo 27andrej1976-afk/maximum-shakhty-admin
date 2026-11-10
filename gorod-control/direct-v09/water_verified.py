@@ -10,11 +10,12 @@ from pathlib import Path
 from typing import Any
 MSK=timezone(timedelta(hours=3))
 MONTHS={s:i+1 for i,s in enumerate('января февраля марта апреля мая июня июля августа сентября октября ноября декабря'.split())}
-KINDS=[('ул',r'улица|ул\.?'),('пер',r'переулок|пер\.?'),('проспект',r'проспект|пр-кт|пр-т|просп\.?|пр\.'),('проезд',r'проезд|пр-д'),('пл',r'площадь|пл\.?'),('бул',r'бульвар|бул\.?'),('пос',r'пос[её]лок|пос\.?'),('мкр',r'микрорайон|мкр\.?')]
+KINDS=[('ул',r'улица|ул\.?'),('пер',r'переулок|пер\.?'),('проспект',r'проспект|пр-кт\.?|пр-т\.?|просп\.?|пр\.'),('проезд',r'проезд|пр-д'),('пл',r'площадь|пл\.?'),('бул',r'бульвар|бул\.?'),('пос',r'пос[её]лок|пос\.?'),('мкр',r'микрорайон|мкр\.?')]
 HOUSE=r'\d+[а-яa-z]?(?:/\d+[а-яa-z]?)?(?:\s*[-–]\s*\d+[а-яa-z]?)?'
 NUMDATE=re.compile(r'(?<!\d)([0-3]?\d)[./]([01]?\d)[./](20\d{2})(?!\d)')
 WORDDATE=re.compile(r'(?<!\d)([0-3]?\d)\s+('+'|'.join(MONTHS)+r')(?:\s+(20\d{2}))?',re.I)
 TIME=r'([01]?\d|2[0-3])\s*[:.\-]\s*([0-5]\d)(?!\d)'
+DATED_START=r'(?<!\d)(?:[0-3]?\d)\s+(?:'+'|'.join(MONTHS)+r')(?:\s+20\d{2}\s*(?:года|г\.?)?)?\s+в\s+'+TIME
 STRIP=' \t\r\n▫▪•-–✔✅🔹🔸🗺️'
 try:STREET_ALIASES=json.loads(Path(__file__).with_name('street-name-index.json').read_text(encoding='utf-8')).get('aliases',{})
 except (OSError,ValueError):STREET_ALIASES={}
@@ -63,13 +64,16 @@ def extract_areas(text):
         if re.match(r'^(?:С\s+нестабильным\s+водоснабжением\s+)?Адрес(?:а|ы)?\s*:',line,re.I):
             active=True;line=line.split(':',1)[1].strip()
             if not line:continue
+        elif re.match(r'^Ограничения\s+затронут\s+следующие\s+улицы\s+и\s+переулки\s*:',line,re.I):
+            active=True;line=line.split(':',1)[1].strip()
+            if not line:continue
         elif re.search(r'водоснабжение\s+поселков\s*:',line,re.I):
             settlements=True;continue
         elif re.search(r'(?:в направлении(?: улиц)?|в следующих направлениях|по следующим улицам|по адресам)\s*:',line,re.I):
             active=True;line=re.split(r'(?:в направлении(?: улиц)?|в следующих направлениях|по следующим улицам|по адресам)\s*:',line,maxsplit=1,flags=re.I)[1].strip()
             if not line:continue
         if not active and not settlements:continue
-        if re.match(r'^(?:ℹ|🔗|🔧|Подробност|Подробнее|Ориентировоч|По завершени|Просим|Подвоз|Организован|Телефон|Источник|Причина)',line,re.I):break
+        if re.match(r'^(?:ℹ|🔗|🔧|Подробност|Подробнее|Ориентировоч|Работы планируется завершить|Для оформления|По завершени|Просим|Подвоз|Организован|Телефон|Источник|Причина)',line,re.I):break
         if not line:continue
         line=re.sub(r'^(?:г\.?\s*Шахты|Шахты)\s*,?\s*','',line,flags=re.I)
         implied=None
@@ -136,13 +140,16 @@ def adjacent_after(text,position,ds):
 def schedule(text,published,kind):
     ds=dates(text,published)
     start_m=re.search(r'\bс\s+'+TIME,text,re.I)
-    end_m=re.search(r'(?:\bдо\s+|ориентировочн[^\n]{0,90}?(?:завершения|окончания)[^\d\n]{0,18})'+TIME,text,re.I)
+    if not start_m:
+        start_m=re.search(DATED_START,text,re.I)
+    end_m=re.search(r'(?:\bдо\s+|ориентировочн[^\n]{0,90}?(?:завершения|окончания)[^\d\n]{0,18}|работы\s+планируется\s+завершить\s+к\s+)'+TIME,text,re.I)
     base=published.astimezone(MSK).replace(hour=0,minute=0,second=0,microsecond=0)
     start=None;end=None
     if start_m:
         following=adjacent_after(text,start_m.end(),ds)
         preceding=[d for a,b,d in ds if b<=start_m.start() and start_m.start()-b<=80]
-        day=following or (preceding[-1] if preceding else (ds[0][2] if ds else base))
+        included=[d for a,b,d in ds if start_m.start()<=a and b<=start_m.start(1)]
+        day=(included[-1] if included else following) or (preceding[-1] if preceding else (ds[0][2] if ds else base))
         start=day.replace(hour=int(start_m[1]),minute=int(start_m[2]),second=0,microsecond=0)
     elif kind=='planned' and ds:start=ds[0][2]
     elif kind in ('emergency',None):start=published.astimezone(MSK)
@@ -179,11 +186,11 @@ def normalize(post):
         dd=dates(m[3],pub)
         if dd:resolved=dd[0][2].replace(hour=int(m[1]),minute=int(m[2])).isoformat()
     out={'id':p['id'],'publishedAt':p['publishedAt'],'kind':kind,'start':start,'end':end,
-      'startBasis':'explicit' if re.search(r'\bс\s+'+TIME,text,re.I) else ('date_only' if kind=='planned' and start else 'publication' if start else 'unknown'),
+      'startBasis':'explicit' if (re.search(r'\bс\s+'+TIME,text,re.I) or re.search(DATED_START,text,re.I)) else ('date_only' if kind=='planned' and start else 'publication' if start else 'unknown'),
       'endBasis':'estimated' if end else 'unknown','resolvedAt':resolved,'workSite':work_site(text),
       'url':p['url'],'officialUrl':official,'source':p.get('source','Шахтинский водоканал'),
       'origin':p.get('origin','official_archive'),'text':text,'textSha256':sha256(text.encode()).hexdigest(),**area}
-    for key in ('observedAt','editedAt','sourceId','mirror'):
+    for key in ('observedAt','editedAt','sourceId','mirror','reparsedFromCache'):
         if p.get(key):out[key]=p[key]
     out['reviewRequired']=bool(area['zones'] or area['unmappedAreaText'] or not area['affected'])
     out['requiresReview']=out['reviewRequired']
@@ -245,8 +252,8 @@ def build_feed(posts,now):
             continue
         signature=lambda x:(x['kind'],x['start'],x['end'],x['workSite'],coverage_key(x['affected']))
         matches=[e for e in incidents if e['status']!='resolved' and e['startBasis']=='explicit'
-                 and n['startBasis']=='explicit' and n['end'] and n['workSite']
-                 and not n['workSite'].startswith('неуточн:') and not n['reviewRequired']
+                 and n['startBasis']=='explicit' and n['end']
+                 and ((n['workSite'] and not n['workSite'].startswith('неуточн:')) or e['textSha256']==n['textSha256']) and not n['reviewRequired']
                  and not e['reviewRequired'] and signature(e)==signature(n)]
         if len(matches)==1:
             e=matches[0];duplicates+=1

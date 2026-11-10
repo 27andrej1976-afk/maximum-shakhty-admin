@@ -1,4 +1,6 @@
 import asyncio,tempfile,unittest,zlib,base64
+from unittest.mock import patch,AsyncMock
+from max_user_reader import LoginRequired
 from types import SimpleNamespace as Obj
 from pathlib import Path
 from datetime import datetime,timezone
@@ -34,6 +36,13 @@ class ReaderTests(unittest.TestCase):
  def test_invalid_secret_is_redacted(self):
   posts,states=collect_session(self.now,{'MAX_USER_SESSION_B64':'secret-invalid-value'})
   self.assertEqual(posts,[]);self.assertEqual(len(states),len(CHANNELS));self.assertNotIn('secret-invalid-value',str(states))
+ def test_session_error_diagnosis_does_not_leak_exception_details(self):
+  value=base64.b64encode(zlib.compress(b'SQLite format 3\x00'+b'a'*1000)).decode()
+  for error,code in [(TimeoutError('private-token'), 'TIMEOUT'),(LoginRequired('private-token'),'AUTH_REQUIRED'),(ImportError('private-token'),'DEPENDENCY_ERROR'),(RuntimeError('private-token'),'READER_ERROR')]:
+   with self.subTest(code=code),patch('max_user_reader.run_reader',new=AsyncMock(side_effect=error)):
+    posts,states=collect_session(self.now,{'MAX_USER_SESSION_B64':value})
+    self.assertEqual({s['errorCode'] for s in states},{code})
+    self.assertNotIn('private-token',str(states));self.assertNotIn(value,str(states))
  def test_reader_requests_only_allowlist_and_never_mutates(self):
   calls=[]
   class Fake:
