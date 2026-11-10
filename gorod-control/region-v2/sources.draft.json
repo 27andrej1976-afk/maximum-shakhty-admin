@@ -25,8 +25,9 @@
       "municipalities": [],
       "territoryNote": "Установить фактическую территорию обслуживания и подтверждённые населённые пункты. Не считать всей областью.",
       "readVerified": false,
-      "lastKnownReaderState": "READER_ERROR",
-      "lastKnownReaderCheck": "2026-11-10T03:59:28.819522+00:00"
+      "lastKnownReaderState": "AUTH_REQUIRED",
+      "lastKnownReaderCheck": "2026-11-10T09:21:03.065874+00:00",
+      "diagnosticNote": "MAX отклонил сохранённый login token до начала чтения каналов; доступность самого канала не проверена этим запуском."
     },
     {
       "id": "donenergo",
@@ -41,8 +42,9 @@
       "municipalities": [],
       "territoryNote": "Аварийные отключения; плановые канал направляет читать на сайте. Географический охват требует отдельного реестра.",
       "readVerified": false,
-      "lastKnownReaderState": "READER_ERROR",
-      "lastKnownReaderCheck": "2026-11-10T03:59:28.819522+00:00"
+      "lastKnownReaderState": "AUTH_REQUIRED",
+      "lastKnownReaderCheck": "2026-11-10T09:21:03.065874+00:00",
+      "diagnosticNote": "MAX отклонил сохранённый login token до начала чтения каналов; доступность самого канала не проверена этим запуском."
     },
     {
       "id": "shakhty-admin",
@@ -58,8 +60,9 @@
       "municipalities": [],
       "territoryNote": "Только Шахты; вторичные сообщения. Нужна привязка к ГАР, не включён в областной охват.",
       "readVerified": false,
-      "lastKnownReaderState": "READER_ERROR",
-      "lastKnownReaderCheck": "2026-11-10T03:59:28.819522+00:00"
+      "lastKnownReaderState": "AUTH_REQUIRED",
+      "lastKnownReaderCheck": "2026-11-10T09:21:03.065874+00:00",
+      "diagnosticNote": "MAX отклонил сохранённый login token до начала чтения каналов; доступность самого канала не проверена этим запуском."
     },
     {
       "id": "mchs-rostov-candidate",
