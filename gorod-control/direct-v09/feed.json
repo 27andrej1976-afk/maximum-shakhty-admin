@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-11-10T07:27:51.094331+00:00",
+  "checkedAt": "2026-11-10T15:45:34.209010+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,12 +12,12 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-10T07:25:35.398640+00:00"
+      "checkedAt": "2026-11-10T15:44:08.086153+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-10T07:25:35.398640+00:00",
+      "checkedAt": "2026-11-10T15:44:08.086153+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -33,18 +33,22 @@
       "coverage": "partial",
       "posts": 50,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-10T07:25:35.398640+00:00",
+      "checkedAt": "2026-11-10T15:44:08.086153+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "repost_don",
-      "status": "error",
-      "posts": 0,
+      "status": "ok",
+      "readStatus": "ok",
+      "coverage": "partial",
+      "posts": 50,
+      "matchingPosts": 0,
+      "checkedAt": "2026-11-10T15:44:08.086153+00:00",
+      "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
-      "note": "<urlopen error timed out>",
-      "checkedAt": "2026-11-10T07:25:35.398640+00:00"
+      "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
     {
       "id": "power_repost_rostov",
@@ -56,7 +60,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-10T07:26:15.425892+00:00"
+      "checkedAt": "2026-11-10T15:44:14.377327+00:00"
     },
     {
       "id": "power_repost_don",
@@ -68,7 +72,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-10T07:26:15.425892+00:00"
+      "checkedAt": "2026-11-10T15:44:14.377327+00:00"
     },
     {
       "id": "power_city",
@@ -80,7 +84,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-11-10T07:26:15.425892+00:00"
+      "checkedAt": "2026-11-10T15:44:14.377327+00:00"
     },
     {
       "id": "gas_city",
@@ -92,7 +96,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-11-10T07:26:15.425892+00:00"
+      "checkedAt": "2026-11-10T15:44:14.377327+00:00"
     },
     {
       "id": "gas",
@@ -102,7 +106,7 @@
       "posts": 0,
       "lastPostAt": null,
       "note": "Официальный сайт доступен, но адресная лента отключений газа не подтверждена; автоматических тревог по газу пока нет",
-      "checkedAt": "2026-11-10T07:26:15.425892+00:00"
+      "checkedAt": "2026-11-10T15:44:14.377327+00:00"
     },
     {
       "id": "mchs",
@@ -110,29 +114,29 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 0,
       "note": "Не удалось получить официальный RSS МЧС: <urlopen error timed out>",
-      "checkedAt": "2026-11-10T07:26:15.425892+00:00"
+      "checkedAt": "2026-11-10T15:44:14.377327+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-11-10T07:27:51.094331+00:00",
+      "checkedAt": "2026-11-10T15:45:34.209010+00:00",
       "lastPostAt": null,
-      "posts": 4,
+      "posts": 3,
       "matchingPosts": 3,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "d8bdeedf6ea0f596a10ede40f92004a2b02a1f4c0afc9ca81d9afc444417ec1a",
-      "durationSeconds": 1.28
+      "contentSha256": "da323c067acf980b9173ddeb795f17fdcba772d52213cbfcc088a3203c5b4c81",
+      "durationSeconds": 8.22
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T07:27:51.094331+00:00",
+      "checkedAt": "2026-11-10T15:45:34.209010+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -144,7 +148,7 @@
       "url": "https://max.ru/id6167110467_gos",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T07:27:51.094331+00:00",
+      "checkedAt": "2026-11-10T15:45:34.209010+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -156,7 +160,7 @@
       "url": "https://max.ru/id6163089292_biz",
       "status": "error",
       "readStatus": "error",
-      "checkedAt": "2026-11-10T07:27:51.094331+00:00",
+      "checkedAt": "2026-11-10T15:45:34.209010+00:00",
       "posts": 0,
       "coverage": "partial",
       "transport": "max_user_session",
@@ -342,10 +346,10 @@
       "description": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе Уважаемые жители! 9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения. Ограничения затронут следующие улицы и переулки: ул. Советская ул. Шевченко ул. Садовая ул. Маяковского пр-т. Победа Революции ул. Дачная пер. Мечникова ул. Парковая ул. Миха",
       "title": "Плановые работы: вода",
       "fullText": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе\nУважаемые жители!\n9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения.\nОграничения затронут следующие улицы и переулки:\nул. Советская\nул. Шевченко\nул. Садовая\nул. Маяковского\nпр-т. Победа Революции\nул. Дачная\nпер. Мечникова\nул. Парковая\nул. Михайлова\nул. Хабарова\nпер. Донской\nпер. Енисейский\nул. Ворошилова\nул. Текстильная\nул. Индустриальная\nпер. Шишкина\nул. Смидовича\nул. Мировая Коммуна\nул. Ведомственная\nул. Каштановая\nпроезд 3-й Микрорайон\nул. Платова\nул. Кооперативная\nул. Суворовская\nул. Стачки\nул. Екатерининская\nул. Таловская\nул. Евгения Кобылкина\nул. Кошевого\nул. Открытая\nпер. Совхозный\nул. Цуканова\nул. Темерницкая\nпер. Путиловский.\nРаботы планируется завершить к 05:00 10 ноября 2026 года.\nДля оформления заявки на подвоз воды обращаться в диспетчерскую службу по телефону: 8 (863) 28-55-777.\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "lastConfirmedAt": "2026-11-10T03:57:09.137840+00:00",
+      "lastConfirmedAt": "2026-11-10T15:44:08.086153+00:00",
       "retainUntil": "2026-11-11T17:00:00+03:00",
-      "retained": true,
-      "observedAt": "2026-11-10T07:26:15.425892+00:00"
+      "retained": false,
+      "observedAt": "2026-11-10T15:44:14.377327+00:00"
     },
     {
       "id": "power-direct-cb6d1afe1582e3b6c5",
@@ -432,13 +436,13 @@
       "precision": "street",
       "lastConfirmedAt": "2026-11-10T07:27:51.094331+00:00",
       "retainUntil": "2026-11-11T04:00:00+03:00",
-      "retained": false
+      "retained": true
     },
     {
       "id": "power-direct-8d3e30a11ab65c396e",
       "category": "power",
       "kind": "planned",
-      "status": "active",
+      "status": "unconfirmed",
       "sourceId": "power_direct",
       "source": "Донэнерго · официальный график ШМЭС",
       "origin": "official_site",
@@ -479,13 +483,13 @@
       "precision": "street",
       "lastConfirmedAt": "2026-11-10T07:27:51.094331+00:00",
       "retainUntil": "2026-11-12T03:00:00+03:00",
-      "retained": false
+      "retained": true
     },
     {
       "id": "power-direct-9723f3096095834fa4",
       "category": "power",
       "kind": "planned",
-      "status": "active",
+      "status": "unconfirmed",
       "sourceId": "power_direct",
       "source": "Донэнерго · официальный график ШМЭС",
       "origin": "official_site",
@@ -562,6 +566,216 @@
       "precision": "street",
       "lastConfirmedAt": "2026-11-10T07:27:51.094331+00:00",
       "retainUntil": "2026-11-12T04:00:00+03:00",
+      "retained": true
+    },
+    {
+      "id": "power-direct-1607f84410e524411f",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-11-10T15:45:34.209010+00:00",
+      "start": "2026-11-11T09:00:00+03:00",
+      "end": "2026-11-11T16:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Техническое обслуживание оборудования ТП-674",
+      "fullText": "г. Шахты\nпер. Урицкого 18-32, 17 А-29;\nпер. Тюменский 83-99;\nпер. Мусорского  2 А-30, 1; \nпер. Тимирязева 2-36, 1-29;\nпросп. Победа Революции  202-206\n11.11.26 09=00 — 11.11.26 16=00\nТехническое обслуживание оборудования ТП-674\n",
+      "affected": [
+        {
+          "street": "пер. Урицкого 18-32, 17 А-",
+          "houses": [
+            "29"
+          ]
+        },
+        {
+          "street": "пер. Тюменский",
+          "houses": [
+            "83-99"
+          ]
+        },
+        {
+          "street": "пер. Мусорского 2 А-",
+          "houses": [
+            "30",
+            "1"
+          ]
+        },
+        {
+          "street": "пер. Тимирязева",
+          "houses": [
+            "2-36",
+            "1-29"
+          ]
+        },
+        {
+          "street": "проспект Победа Революции",
+          "houses": [
+            "202-206"
+          ]
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street",
+      "lastConfirmedAt": "2026-11-10T15:45:34.209010+00:00",
+      "retainUntil": "2026-11-13T04:00:00+03:00",
+      "retained": false
+    },
+    {
+      "id": "power-direct-ea752b9fd93be8a506",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-11-10T15:45:34.209010+00:00",
+      "start": "2026-11-11T09:00:00+03:00",
+      "end": "2026-11-11T17:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Замена трансформатора ТП-555",
+      "fullText": "г. Шахты\nул. Стачки 54-62/2; ул. Паустовская 25/1-39, 20-38; пер. Покровский 2/1-2/2, 1/1-1/2; пер. Радужный 1/1-1/2, 2/1-6/2; ул. Екатерининская 17-53, 20-26; ул. Стачки 33, 68, 70, 72; ул. Драгунская 35; пер. Крещенский 4-4/2\n11.11.26 09=00 — 11.11.26 17=00\nЗамена трансформатора ТП-555\n",
+      "affected": [
+        {
+          "street": "ул. Стачки 54-",
+          "houses": [
+            "62/2"
+          ]
+        },
+        {
+          "street": "ул. Паустовская",
+          "houses": [
+            "25/1-39",
+            "20-38"
+          ]
+        },
+        {
+          "street": "пер. Покровский 2/1-2/2, 1/1-",
+          "houses": [
+            "1/2"
+          ]
+        },
+        {
+          "street": "пер. Радужный 1/1-1/2, 2/1-",
+          "houses": [
+            "6/2"
+          ]
+        },
+        {
+          "street": "ул. Екатерининская",
+          "houses": [
+            "17-53",
+            "20-26"
+          ]
+        },
+        {
+          "street": "ул. Стачки",
+          "houses": [
+            "33",
+            "68",
+            "70",
+            "72"
+          ]
+        },
+        {
+          "street": "ул. Драгунская",
+          "houses": [
+            "35"
+          ]
+        },
+        {
+          "street": "пер. Крещенский 4-",
+          "houses": [
+            "4/2"
+          ]
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street",
+      "lastConfirmedAt": "2026-11-10T15:45:34.209010+00:00",
+      "retainUntil": "2026-11-13T05:00:00+03:00",
+      "retained": false
+    },
+    {
+      "id": "power-direct-50f086db6df62735a5",
+      "category": "power",
+      "kind": "planned",
+      "status": "active",
+      "sourceId": "power_direct",
+      "source": "Донэнерго · официальный график ШМЭС",
+      "origin": "official_site",
+      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
+      "publishedAt": null,
+      "observedAt": "2026-11-10T15:45:34.209010+00:00",
+      "start": "2026-11-12T09:00:00+03:00",
+      "end": "2026-11-12T17:00:00+03:00",
+      "startBasis": "explicit",
+      "endBasis": "scheduled",
+      "title": "Плановое отключение электричества",
+      "description": "Техническое обслуживание ТП-481",
+      "fullText": "г. Шахты\nул. Шурфовая 166-202; ул. 10 лет ЗИ 145-175 А; пер. Громова 2-20 А; пер. Прокофьева 1-21, 2-20А; пер. Андропова 1-19, 2-22; пер. Карпинского 1 А-21; \nул. Дачная 264 А\n12.11.26 09=00 — 12.11.26 17=00\nТехническое обслуживание ТП-481\n",
+      "affected": [
+        {
+          "street": "ул. Шурфовая",
+          "houses": [
+            "166-202"
+          ]
+        },
+        {
+          "street": "ул. 10 лет ЗИ 145-175 А",
+          "houses": []
+        },
+        {
+          "street": "пер. Громова 2-20 А",
+          "houses": []
+        },
+        {
+          "street": "пер. Прокофьева",
+          "houses": [
+            "1-21",
+            "2-20а"
+          ]
+        },
+        {
+          "street": "пер. Андропова",
+          "houses": [
+            "1-19",
+            "2-22"
+          ]
+        },
+        {
+          "street": "пер. Карпинского 1 А-",
+          "houses": [
+            "21"
+          ]
+        },
+        {
+          "street": "ул. Дачная 264 А",
+          "houses": []
+        }
+      ],
+      "unmappedAreaText": [],
+      "requiresReview": false,
+      "point": null,
+      "precision": "street",
+      "lastConfirmedAt": "2026-11-10T15:45:34.209010+00:00",
+      "retainUntil": "2026-11-14T05:00:00+03:00",
       "retained": false
     }
   ],
@@ -804,15 +1018,6 @@
       "source": "Администрация города Шахты — перепечатка",
       "sourceId": "repost_don",
       "mirror": "news-don.ru"
-    },
-    {
-      "id": "kvu/1fd809dde63ce37b531e/0",
-      "publishedAt": "2026-10-25T13:49:54+03:00",
-      "text": "В Шахтах отключили водоснабжение в воскресенье, 25 октября.\nВ связи с проведением аварийно-ремонтных работ на трубопроводе по ул. Индустриальная с 13.30 снижено давление в направлении улиц:\nДемехина\nКольчугина\nИндустриальная\nОдесская\nЦуканова\nПланировочная\nСтроителей\nСовхозный. \nОриентировочное время завершения работ – 20.00, 25 октября.\nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863)28-55-777.",
-      "url": "https://kvu.su/utilities/19319-gde-v-shahtah-otkljuchili-vodu-v-voskresene-25-oktjabrja.html",
-      "origin": "media_report",
-      "source": "КВУ — публикация СМИ",
-      "sourceId": "water_kvu"
     }
   ],
   "normalization": {
