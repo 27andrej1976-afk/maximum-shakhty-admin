@@ -29,6 +29,8 @@ def error_code(error, stage):
     # Class names are mapped to constants; neither arbitrary class names nor
     # exception messages/URLs/API payloads are included in the public report.
     name = type(error).__name__
+    if name == 'ApiError' and safe_api_details(error)['loginTokenRejected']:
+        return 'AUTH_REQUIRED'
     if name in {'SSLError', 'SSLCertVerificationError', 'ClientConnectorCertificateError'}:
         return 'TLS_ERROR'
     if name in {'ApiError', 'ValidationError', 'OperationalError'}:
@@ -39,6 +41,18 @@ def error_code(error, stage):
             'InvalidStatusCode', 'ClientConnectorError', 'gaierror'}:
         return 'TRANSPORT_ERROR'
     return 'READER_ERROR'
+
+
+def safe_api_details(error):
+    if type(error).__name__ != 'ApiError':
+        return {}
+    opcode = getattr(error, 'opcode', None)
+    known_rejection = opcode == 19 and any(value in (
+        getattr(error, 'error', None), getattr(error, 'message', None))
+        for value in ('FAIL_LOGIN_TOKEN', 'FAIL_LOGOUT_ALL'))
+    return {'apiOperation': {6: 'HANDSHAKE', 19: 'LOGIN', 48: 'CHANNEL_IDENTITY',
+                             49: 'CHANNEL_HISTORY'}.get(opcode, 'OTHER'),
+            'loginTokenRejected': known_rejection}
 
 
 async def diagnose(environ=None, *, client_factory=make_client):
@@ -78,6 +92,7 @@ async def diagnose(environ=None, *, client_factory=make_client):
                         row.update(stage='complete', readVerified=True, messagesReceived=len(messages))
                     except Exception as error:
                         row['errorCode'] = error_code(error, row['stage'])
+                        row.update(safe_api_details(error))
                     report['channels'].append(row)
                 report['readVerified'] = bool(report['channels']) and all(
                     c['readVerified'] for c in report['channels'])
@@ -90,6 +105,7 @@ async def diagnose(environ=None, *, client_factory=make_client):
                         pass
     except Exception as error:
         report.update(stage=stage, errorCode=error_code(error, stage))
+        report.update(safe_api_details(error))
     finally:
         logging.disable(previous_logging)
     return report

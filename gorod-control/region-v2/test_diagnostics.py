@@ -4,7 +4,7 @@ import json
 import unittest
 import zlib
 from types import SimpleNamespace as Obj
-from diagnose_max import diagnose
+from diagnose_max import diagnose, error_code, safe_api_details
 from max_user_reader import CHANNELS
 
 
@@ -27,6 +27,26 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(report['errorCode'], 'TIMEOUT')
         self.assertNotIn('private-token', json.dumps(report))
         self.assertNotIn(value, json.dumps(report))
+    def test_known_login_rejection_uses_fixed_codes_only(self):
+        ApiError = type('ApiError', (Exception,), {})
+        error = ApiError('private-token')
+        error.opcode = 19
+        error.error = 'FAIL_LOGIN_TOKEN'
+        error.message = 'private-account-data'
+        self.assertEqual(error_code(error, 'connect'), 'AUTH_REQUIRED')
+        details = safe_api_details(error)
+        self.assertTrue(details['loginTokenRejected'])
+        self.assertEqual(details['apiOperation'], 'LOGIN')
+        self.assertNotIn('private', json.dumps(details))
+    def test_handshake_error_does_not_claim_login_expired(self):
+        ApiError = type('ApiError', (Exception,), {})
+        error = ApiError('private-token')
+        error.opcode = 6
+        error.error = 'private-opaque-value'
+        self.assertEqual(error_code(error, 'connect'), 'API_ERROR')
+        self.assertFalse(safe_api_details(error)['loginTokenRejected'])
+        self.assertEqual(safe_api_details(error)['apiOperation'], 'HANDSHAKE')
+        self.assertNotIn('private', json.dumps(safe_api_details(error)))
     def test_success_never_exposes_message_text_or_private_profile(self):
         value = base64.b64encode(zlib.compress(b'SQLite format 3\x00'+b'a'*1000)).decode()
         class Fake:
