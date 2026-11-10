@@ -19131,7 +19131,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:труженников": {
-      "timestamp": 1794269311.113988,
+      "timestamp": 1794282801.98382,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
@@ -19215,7 +19215,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:шахтерская": {
-      "timestamp": 1794269311.113988,
+      "timestamp": 1794282801.98382,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",

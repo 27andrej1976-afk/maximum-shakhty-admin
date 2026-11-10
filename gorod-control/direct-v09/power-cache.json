@@ -11,7 +11,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-10T00:08:26.427160+00:00",
+      "observedAt": "2026-11-10T03:53:17.588902+00:00",
       "start": "2026-11-09T09:00:00+03:00",
       "end": "2026-11-09T16:00:00+03:00",
       "startBasis": "explicit",
@@ -83,7 +83,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-10T00:08:26.427160+00:00",
+      "lastConfirmedAt": "2026-11-10T03:53:17.588902+00:00",
       "retainUntil": "2026-11-11T04:00:00+03:00",
       "retained": false
     },
@@ -98,7 +98,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-10T00:08:26.427160+00:00",
+      "observedAt": "2026-11-10T03:53:17.588902+00:00",
       "start": "2026-11-10T09:00:00+03:00",
       "end": "2026-11-10T15:00:00+03:00",
       "startBasis": "explicit",
@@ -130,7 +130,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-10T00:08:26.427160+00:00",
+      "lastConfirmedAt": "2026-11-10T03:53:17.588902+00:00",
       "retainUntil": "2026-11-12T03:00:00+03:00",
       "retained": false
     },
@@ -145,7 +145,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-10T00:08:26.427160+00:00",
+      "observedAt": "2026-11-10T03:53:17.588902+00:00",
       "start": "2026-11-10T09:00:00+03:00",
       "end": "2026-11-10T16:00:00+03:00",
       "startBasis": "explicit",
@@ -213,7 +213,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-10T00:08:26.427160+00:00",
+      "lastConfirmedAt": "2026-11-10T03:53:17.588902+00:00",
       "retainUntil": "2026-11-12T04:00:00+03:00",
       "retained": false
     },
@@ -242,7 +242,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/c147a196c1dcbaf9ed5d",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/07/151863.html"
@@ -254,9 +254,9 @@
       "precision": "unresolved",
       "description": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе Уважаемые жители! 9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения. Ограничения затронут следующие улицы и переулки: ул. Советская ул. Шевченко ул. Садовая ул. Маяковского пр-т. Победа Революции ул. Дачная пер. Мечникова ул. Парковая ул. Миха",
       "title": "Плановые работы: вода",
-      "lastConfirmedAt": "2026-11-10T00:06:57.467170+00:00",
+      "lastConfirmedAt": "2026-11-09T05:58:32.274525+00:00",
       "retainUntil": "2026-11-10T12:00:00+03:00",
-      "retained": false
+      "retained": true
     },
     {
       "id": "water-city-repost-55a8a7492dcc497b93ea",
@@ -295,7 +295,7 @@
       "precision": "unresolved",
       "description": "В Шахтах 9 ноября запланированы аварийно-восстановительные работы на водоводе Уважаемые жители! 9 ноября 2026 года в 21:00 в связи с проведением неотложных аварийно-восстановительных работ на территории 3-ШДВ будет временно снижено давление в системе водоснабжения. Ограничения затронут следующие улицы и переулки: ул. Советская ул. Шевченко ул. Садовая ул. Маяковского пр-т. Победа Революции ул. Дачная пер. Мечникова ул. Парковая ул. Миха",
       "title": "Плановые работы: вода",
-      "lastConfirmedAt": "2026-11-10T00:06:57.467170+00:00",
+      "lastConfirmedAt": "2026-11-10T03:50:17.032752+00:00",
       "retainUntil": "2026-11-10T12:00:00+03:00",
       "retained": false
     }
