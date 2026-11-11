@@ -23241,6 +23241,62 @@
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:10 лет зи 145-175 а": {
+      "timestamp": 1794360459.073726,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:громова 2-20 а": {
+      "timestamp": 1794360459.073726,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:прокофьева": {
+      "timestamp": 1794360459.073726,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:андропова": {
+      "timestamp": 1794360459.073726,
+      "segments": [
+        {
+          "osmId": 100086662,
+          "line": [
+            [
+              47.7076184,
+              40.1496031
+            ],
+            [
+              47.7052548,
+              40.1481339
+            ]
+          ]
+        }
+      ],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:карпинского 1 а-": {
+      "timestamp": 1794360459.073726,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:дачная 264 а": {
+      "timestamp": 1794360459.073726,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
     }
   }
 }
