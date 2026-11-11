@@ -1,6 +1,10 @@
 package ru.citycontrol.don;
 
 import android.graphics.Bitmap;
+import android.app.Instrumentation;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,10 +56,13 @@ public class RegionalClientTest {
   @Test public void offlineShellLoadsAndDoesNotClaimRegionalCoverage() throws Exception {
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
       loaded(scenario);
+      waitFor(scenario, "Array.from(document.querySelectorAll('.brands img')).every(image=>image.complete && image.naturalWidth>0)");
       waitFor(scenario, "document.getElementById('connection').textContent.includes('сборщик ещё не подключён')");
-      assertEquals("true", js(scenario, "document.querySelector('h1').textContent==='Дон под контролем' && document.getElementById('region').textContent==='Вся область' && document.querySelectorAll('#filters button').length===5"));
+      assertEquals("true", js(scenario, "document.querySelector('h1').textContent==='Дон под контролем' && document.getElementById('region').textContent==='Вся область' && document.querySelectorAll('#filters button').length===4 && !document.querySelector('[data-category=gas]')"));
+      assertEquals("true", js(scenario, "document.getElementById('report').getAttribute('href')==='https://www.gosuslugi.ru/10091/1'"));
       assertEquals("true", js(scenario, "document.getElementById('adSlot').hidden && document.querySelector('footer').textContent.includes('не означает отсутствие аварий')"));
       Bitmap image = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+      assertNotNull("Android screenshot must be captured", image);
       scenario.onActivity(activity -> {
         try (FileOutputStream out = new FileOutputStream(new File(activity.getExternalFilesDir(null), "don-preview.png"))) {
           if (image != null) image.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -75,6 +82,26 @@ public class RegionalClientTest {
       loaded(scenario);
       js(scenario, "for(const k of ['don-point','don-radius','don-preferences','don-feed'])localStorage.setItem(k,'synthetic-fixture'); document.getElementById('clearData').click();");
       assertEquals("true", js(scenario, "['don-point','don-radius','don-preferences','don-feed'].every(k=>localStorage.getItem(k)===null) && document.getElementById('eventCount').textContent==='0' && document.getElementById('radius').value==='1'"));
+    }
+  }
+  @Test public void reportOpensExternalOfficialServiceWithoutSubmittingAnything() throws Exception {
+    try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+      loaded(scenario);
+      Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+      IntentFilter filter = new IntentFilter(Intent.ACTION_VIEW);
+      filter.addDataScheme("https");
+      Instrumentation.ActivityMonitor monitor = instrumentation.addMonitor(filter,
+          new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, null), true);
+      try {
+        assertEquals("true", js(scenario, "document.getElementById('report').href==='https://www.gosuslugi.ru/10091/1'"));
+        js(scenario, "document.getElementById('report').click(); true");
+        long deadline = SystemClock.elapsedRealtime()+5000;
+        while (monitor.getHits()==0 && SystemClock.elapsedRealtime()<deadline) SystemClock.sleep(100);
+        assertEquals("Must delegate exactly one external navigation", 1, monitor.getHits());
+        assertEquals("true", js(scenario, "location.hostname==='appassets.androidplatform.net'"));
+      } finally {
+        instrumentation.removeMonitor(monitor);
+      }
     }
   }
 }

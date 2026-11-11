@@ -1,0 +1,22 @@
+[Unit]
+Description=Don Control regional MAX collector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=don-control
+Group=don-control
+UMask=0077
+WorkingDirectory=/opt/don-control/app/gorod-control/region-v2
+ExecStart=/opt/don-control/venv/bin/python worker.py --config /etc/don-control/collector.json
+Restart=on-failure
+RestartSec=60
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/don-control
+
+[Install]
+WantedBy=multi-user.target

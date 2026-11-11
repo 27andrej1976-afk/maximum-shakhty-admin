@@ -1,0 +1,10 @@
+{
+  "registry": "/etc/don-control/sources.json",
+  "catalog": "/etc/don-control/catalog.json",
+  "stateDir": "/var/lib/don-control/state",
+  "sessionDir": "/var/lib/don-control/session",
+  "healthOutput": "/var/lib/don-control/public/health.json",
+  "feedOutput": "/var/lib/don-control/public/feed.json",
+  "intervalSeconds": 120,
+  "maxPages": 20
+}

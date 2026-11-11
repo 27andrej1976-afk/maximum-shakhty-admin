@@ -6,7 +6,7 @@ from events import Ledger
 
 NOW = '2026-11-10T12:00:00+03:00'
 SOURCE = {'id': 'test', 'url': 'https://max.ru/fixture', 'chat_id': -123, 'transport': 'max',
-          'identity_verified': True, 'enabled': True, 'categories': ['water', 'power', 'gas', 'mchs'],
+          'identity_verified': True, 'enabled': True, 'categories': ['water', 'power', 'mchs'],
           'municipalities': ['city-a', 'city-b']}
 CATALOG = {'regionId': 'RU-ROS', 'dataMode': 'test', 'municipalities': [
     {'id': 'city-a', 'name': 'Тестовый город А', 'verified': True},
@@ -74,13 +74,13 @@ class EventTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.ledger.apply([self.record('2', type='restoration', targetEventId='e-1')], NOW)
         self.assertEqual(len(self.ledger.events(NOW)), 1)
-    def test_gas_restoration_cannot_close_water(self):
+    def test_excluded_gas_category_cannot_close_water(self):
         self.ledger.apply([self.record()], NOW)
         self.post('2', '2026-11-10T11:00:00+03:00')
         with self.assertRaises(ValueError):
             self.ledger.apply([self.record('2', type='restoration', targetEventId='e-1', category='gas')], NOW)
     def test_36_hours_boundary_for_each_utility_category(self):
-        for category in ['water', 'power', 'gas']:
+        for category in ['water', 'power']:
             with self.subTest(category=category):
                 store = Store(':memory:', [SOURCE])
                 store.ingest('test', self.store.posts('test'), 'cursor', NOW)

@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id),P=window.DonClient;
-const LABELS={water:['💧','Вода'],power:['⚡','Свет'],gas:['♨','Газ'],mchs:['△','МЧС']};
+const LABELS={water:['💧','Вода'],power:['⚡','Свет'],mchs:['△','МЧС']};
 const STATUS={read:'прочитано',unavailable:'нет проверки',unconfigured:'нет охвата',partial:'неполные'};
 const state={feed:null,offline:false,scope:'region',city:'',category:'all',radius:1,home:null,healthCategory:'water'};
 const storage={read(key){try{return JSON.parse(localStorage.getItem(key))}catch{return null}},write(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch{}}};
@@ -14,7 +14,7 @@ const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoo
 let tileFailed=false;tiles.on('tileerror',()=>{tileFailed=true;renderMapStatus()});tiles.on('tileload',()=>{tileFailed=false;renderMapStatus()});
 function el(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
 function fmt(stamp){if(!stamp)return 'не было';const d=new Date(stamp);return Number.isFinite(+d)?d.toLocaleString('ru-RU',{timeZone:'Europe/Moscow',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+' МСК':'время не подтверждено'}
-function sourceLink(url){const safe=P.safeMax(url);if(!safe)return el('span','Источник не подтверждён');const a=el('a','Источник в MAX ↗');a.href=safe;a.target='_blank';a.rel='noopener noreferrer';return a}
+function sourceLink(url){const safe=P.safeMax(url);if(!safe)return el('span','Источник не подтверждён');const a=el('a','Источник в MAX ↗');a.href=safe;a.target='_self';a.rel='noopener noreferrer';return a}
 function renderMapStatus(){const mapped=state.currentMapped||0;$('mapStatus').textContent=`Метки адресов: ${mapped}. `+(tileFailed?'Подложка карты недоступна; карточки и метки сохраняются.':'Адреса без проверенных координат показываются в карточках, без предположительных меток.')}
 function render(){const opened=new Set([...$('events').querySelectorAll('article')].filter(card=>card.querySelector('details')?.open).map(card=>card.id));const f=state.feed,events=P.select(f,state);$('testBanner').hidden=f?.dataMode!=='test';$('eventCount').textContent=events.length;
 $('nearCount').textContent=state.home?P.select(f,{...state,scope:'near'}).length:'—';
@@ -50,7 +50,6 @@ $('refresh').addEventListener('click',refresh);$('city').addEventListener('chang
 $('filters').addEventListener('click',event=>{const category=event.target.dataset.category;if(category){state.category=category;if(category!=='all')state.healthCategory=category;savePreferences();render()}});
 $('near').addEventListener('click',()=>{state.scope='near';savePreferences();render();if(state.home)map.setView([state.home.lat,state.home.lon],state.radius===1?14:12)});$('region').addEventListener('click',()=>{state.scope='region';savePreferences();render();focusTerritory()});
 $('locate').addEventListener('click',()=>{if(!navigator.geolocation){$('pointStatus').textContent='Геолокация недоступна на этом устройстве.';return}const generation=pointGeneration;$('locate').disabled=true;$('pointStatus').textContent='Ожидаем разрешение и координаты устройства…';navigator.geolocation.getCurrentPosition(position=>{if(generation!==pointGeneration)return;state.home={lat:position.coords.latitude,lon:position.coords.longitude,savedAt:new Date().toISOString()};storage.write('don-point',state.home);state.scope='near';savePreferences();$('locate').disabled=false;render();map.setView([state.home.lat,state.home.lon],14)},()=>{if(generation!==pointGeneration)return;$('locate').disabled=false;$('pointStatus').textContent='Местоположение не получено. Просмотр области доступен; сохранённая точка не изменена.'},{enableHighAccuracy:true,timeout:15000,maximumAge:0})});
-$('report').addEventListener('click',()=>{$('reportStatus').textContent='Маршрут обращения для выбранного муниципалитета пока не подключён. Сообщение никуда не отправлено.'});
 $('closeAd').addEventListener('click',()=>{$('adSlot').hidden=true});
 $('forgetPoint').addEventListener('click',()=>{pointGeneration++;$('locate').disabled=false;localStorage.removeItem('don-point');state.home=null;state.scope='region';savePreferences();render();focusTerritory();$('clearStatus').textContent='Контрольная точка удалена с устройства.'});
 $('clearData').addEventListener('click',()=>{pointGeneration++;feedGeneration++;$('locate').disabled=false;for(const key of ['don-point','don-radius','don-preferences','don-feed'])localStorage.removeItem(key);state.home=null;state.feed=null;state.offline=true;state.scope='region';state.city='';state.category='all';state.radius=1;state.healthCategory='water';$('radius').value=1;refreshCities();render();focusTerritory();$('connection').textContent='Сохранённая сводка удалена. Для загрузки нажмите «Проверить сообщения».';$('clearStatus').textContent='Точка, настройки и сохранённая сводка удалены с устройства.'});

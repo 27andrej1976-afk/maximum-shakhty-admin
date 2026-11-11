@@ -7,7 +7,6 @@
   "categories": [
     "water",
     "power",
-    "gas",
     "mchs"
   ],
   "coveragePolicy": "Only explicitly verified municipalities; regional organisation name does not imply complete regional coverage.",
@@ -110,10 +109,6 @@
   ],
   "unconfigured": [
     {
-      "category": "gas",
-      "reason": "Не подтверждён MAX-канал с адресными отключениями газа по области."
-    },
-    {
       "category": "water",
       "reason": "Не подтверждены все водоканалы области."
     },
@@ -134,7 +129,13 @@
     "target": "entire-Rostov-Oblast",
     "coverageComplete": false,
     "territoryPolicy": "Вся Ростовская область — целевая территория продукта. Доступность сведений подтверждается отдельно для каждой категории и территории; нет публикаций не означает нет аварий.",
-    "sourcePolicy": "regional-resource-and-emergency-only; no city administration or local news feeds"
+    "sourcePolicy": "regional-resource-and-emergency-only; no city administration or local news feeds",
+    "launchCategories": [
+      "water",
+      "power",
+      "mchs"
+    ],
+    "gasDecision": "excluded-from-first-release-by-owner-2026-11-11"
   },
   "excludedSources": [
     {

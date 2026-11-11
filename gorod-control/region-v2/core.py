@@ -3,7 +3,7 @@ import hashlib,json,sqlite3
 from copy import deepcopy
 from datetime import datetime,timedelta,timezone
 from urllib.parse import urlsplit
-CATEGORIES={'water','power','gas','mchs'}
+CATEGORIES={'water','power','mchs'}
 def utc(s):
  d=datetime.fromisoformat(s)
  if d.tzinfo is None:raise ValueError('Timezone required')

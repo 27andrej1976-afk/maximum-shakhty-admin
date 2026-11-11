@@ -1,6 +1,6 @@
 /* Shared feed/matching policy. Also executable in Node for deterministic checks. */
 (function(root){'use strict';
-const categories=['water','power','gas','mchs'];
+const categories=['water','power','mchs'];
 function safeMax(value){try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='max.ru'&&!u.username&&!u.password?u.href:null}catch{return null}}
 function validFeed(f){
 const stamp=x=>typeof x==='string'&&Number.isFinite(Date.parse(x)),str=x=>typeof x==='string';

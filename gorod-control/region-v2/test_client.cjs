@@ -13,7 +13,8 @@ assert.equal(P.select(f,{...initial,city:'fixture-b'},now).length,1,'same street
 assert.equal(P.select(f,{...initial,category:'gas'},now).length,0);
 assert.equal(P.health(f,'fixture-a',false,now).water.state,'unavailable');
 assert.equal(P.health(f,'fixture-a',false,now).power.state,'read');
-assert.equal(P.health(f,'fixture-a',false,now).gas.state,'unconfigured');
+assert.equal('gas' in P.health(f,'fixture-a',false,now),false,'excluded category is not presented as a source outage');
+assert.deepEqual(P.categories,['water','power','mchs']);
 assert.equal(P.health(f,'fixture-a',true,now).power.state,'unavailable','offline cache must not be green');
 assert.equal(P.health(f,'fixture-a',false,now+16*60e3).power.state,'unavailable','stale export must not be green');
 assert.equal(P.select(f,initial,now+40*3600e3).length,0,'client also enforces event expiration');

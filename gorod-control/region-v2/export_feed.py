@@ -20,7 +20,7 @@ def export(registry_path, state_dir, catalog_path, output, *, reviews_path=None,
         if reviews_path:
             ledger.apply(json.loads(Path(reviews_path).read_text())['records'], now)
         feed = ledger.feed(now)
-        atomic_json(output, feed)
+        atomic_json(output, feed, mode=0o644)
         return feed
     finally:
         store.db.close()

@@ -11,7 +11,7 @@
     "lint": "passed",
     "packageAndDebugSignature": "passed",
     "compileRunId": 43031541368,
-    "runtimeTests": "passed",
+    "runtimeTests": "pending-after-three-category-change",
     "runtimeRunId": 43032081804,
     "deviceGps": "not-tested",
     "upgradeWithPermanentKey": "not-tested",
@@ -26,8 +26,8 @@
   "max": {
     "publicChannelsRead": 4,
     "messagesPerChannel": 20,
-    "checkedAt": "2026-11-11T14:06:19.456236+00:00",
-    "gas": "not-configured",
+    "checkedAt": "2026-11-11T14:11:59.623155+00:00",
+    "gas": "excluded-by-owner",
     "newCandidatePublishers": "pending-review",
     "regionalCoverage": "incomplete",
     "excludedSourceIds": [
@@ -35,7 +35,7 @@
       "shakhty-admin"
     ],
     "sourcePolicy": "regional-resource-and-emergency-only",
-    "historicalCheckNote": "Последняя проверка после исключения администрации Шахт: четыре профильных канала прочитаны, местных администраций в запросах нет. Газ пока не подключён."
+    "historicalCheckNote": "Повторно прочитаны четыре профильных канала: УРСВ, Ростовводоканал, Донэнерго, МЧС области. Газ исключён из первого выпуска по решению владельца."
   },
   "productionCollector": "not-deployed",
   "catalog": "awaiting-verified-address-catalog",
@@ -57,5 +57,11 @@
     "legalFullName": "not-provided",
     "legalStatus": "not-explicitly-confirmed",
     "requiredRequisites": "pending"
-  }
+  },
+  "launchCategories": [
+    "water",
+    "power",
+    "mchs"
+  ],
+  "deploymentAccess": "blocked-by-browser-auto-review; owner console authorization required"
 }

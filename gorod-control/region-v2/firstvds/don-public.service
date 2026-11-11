@@ -1,0 +1,18 @@
+[Unit]
+Description=Don Control public read-only feed
+After=network.target
+
+[Service]
+Type=simple
+User=don-web
+Group=don-web
+ExecStart=/opt/don-control/venv/bin/python /opt/don-control/app/gorod-control/region-v2/serve.py --public-dir /var/lib/don-control/public
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

@@ -7,6 +7,7 @@ on:
       - .github/workflows/gorod-don-android.yml
       - gorod-control/region-v2/android/**
       - gorod-control/region-v2/prepare_android.py
+      - gorod-control/region-v2/android_verify.sh
       - gorod-control/region-v2/web/**
 permissions:
   contents: read
@@ -68,12 +69,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          script: cd gorod-control/region-v2/android && gradle --no-daemon :app:connectedDebugAndroidTest
-      - name: Collect Android proof
-        if: always()
-        run: |
-          mkdir -p /tmp/don-android-results
-          adb pull /sdcard/Android/data/ru.citycontrol.don/files/don-preview.png /tmp/don-android-results/ || true
+          script: bash gorod-control/region-v2/android_verify.sh
       - uses: actions/upload-artifact@v4
         if: always()
         with:

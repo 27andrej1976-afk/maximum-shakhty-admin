@@ -137,7 +137,7 @@ class CollectorTests(unittest.TestCase):
     def test_unknown_category_and_municipality_never_show_read(self):
         self.collect([[]])
         data = snapshot(self.store, 'test-city', NOW)
-        self.assertEqual(data['categoryHealth']['gas']['state'], 'unconfigured')
+        self.assertEqual(data['categoryHealth']['mchs']['state'], 'unconfigured')
         self.assertEqual(snapshot(self.store, 'other-city', NOW)['categoryHealth']['water']['state'], 'unconfigured')
     def test_gap_survives_a_later_connection_error(self):
         self.collect([[message(1)], TimeoutError()])

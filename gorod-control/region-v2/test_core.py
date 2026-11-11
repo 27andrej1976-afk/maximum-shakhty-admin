@@ -34,7 +34,7 @@ class RegionalTests(unittest.TestCase):
  def test_different_chat_is_not_ingested(self):
   with self.assertRaises(ValueError):self.s.ingest('demo',[dict(self.p,channel_id=999)],'1',self.now)
  def test_no_coverage_is_not_no_incidents(self):
-  self.assertEqual(self.s.category_status('gas','sha',self.now)['state'],'unconfigured')
+  self.assertEqual(self.s.category_status('mchs','sha',self.now)['state'],'unconfigured')
   self.assertEqual(self.s.category_status('water','rostov',self.now)['state'],'unconfigured')
  def test_old_check_never_becomes_green(self):
   self.s.ingest('demo',[],'1',self.now)

@@ -13,11 +13,12 @@ from core import Store
 from health import snapshot
 
 
-def atomic_json(path, payload):
+def atomic_json(path, payload, *, mode=0o600):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(dir=path.parent, prefix='.health-', suffix='.json')
     try:
+        os.fchmod(fd, mode)
         with os.fdopen(fd, 'w') as stream:
             json.dump(payload, stream, ensure_ascii=False, indent=2)
         os.replace(temporary, path)
@@ -62,11 +63,11 @@ async def run(args):
                 await asyncio.wait_for(client.close(), timeout=10)
             except Exception:
                 pass
-        atomic_json(args.health_output, snapshot(store, args.municipality, now))
+        atomic_json(args.health_output, snapshot(store, args.municipality, now), mode=0o644)
         if getattr(args, 'feed_output', None):
             from events import Ledger
             catalog = json.loads(Path(args.catalog).read_text())
-            atomic_json(args.feed_output, Ledger(store, catalog).feed(now))
+            atomic_json(args.feed_output, Ledger(store, catalog).feed(now), mode=0o644)
         store.db.close()
 
 

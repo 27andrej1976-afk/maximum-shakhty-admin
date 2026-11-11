@@ -2,7 +2,7 @@
 from datetime import timedelta
 from core import utc, covers
 
-LABELS = {'water': 'воде', 'power': 'электричеству', 'gas': 'газу', 'mchs': 'МЧС'}
+LABELS = {'water': 'воде', 'power': 'электричеству', 'mchs': 'МЧС'}
 
 
 def snapshot(store, municipality, now, *, pending_counts=None):
