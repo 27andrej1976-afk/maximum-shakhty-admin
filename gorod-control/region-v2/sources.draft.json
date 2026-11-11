@@ -80,6 +80,36 @@
       "municipalities": [],
       "territoryNote": "Кандидат из опубликованного МЧС перечня. Проверить идентификатор, чтение и территориальные предупреждения.",
       "readVerified": false
+    },
+    {
+      "id": "rostovvodokanal-candidate",
+      "url": "https://max.ru/id6167081833_biz",
+      "transport": "max",
+      "chat_id": null,
+      "identity_verified": false,
+      "enabled": false,
+      "categories": [
+        "water"
+      ],
+      "municipalities": [],
+      "readVerified": false,
+      "territoryNote": "Кандидат для расширения за пределы Шахт. В каталогах указаны Ростов-на-Дону, Батайск и отдельные населённые пункты соседних районов; официальная обратная ссылка, точный охват ГАР и чтение не подтверждены. Главная vodokanalrnd.ru при проверке потребовала anti-DDoS проверку.",
+      "discoveredAt": "2026-11-11"
+    },
+    {
+      "id": "rosseti-yug-candidate",
+      "url": "https://max.ru/rosseti_yug",
+      "transport": "max",
+      "chat_id": null,
+      "identity_verified": false,
+      "enabled": false,
+      "categories": [
+        "power"
+      ],
+      "municipalities": [],
+      "readVerified": false,
+      "territoryNote": "Публичная MAX-страница представляется каналом ПАО Россети Юг. Работа компании в нескольких регионах не доказывает наличие полной адресной ленты отключений Ростовской области. Обратная официальная ссылка, идентификатор, чтение и адресный охват требуют проверки.",
+      "discoveredAt": "2026-11-11"
     }
   ],
   "unconfigured": [
@@ -102,5 +132,11 @@
     "Read and catch-up tested",
     "GAR municipality IDs configured",
     "Coverage limitations shown in client"
-  ]
+  ],
+  "productScope": {
+    "name": "Дон под контролем",
+    "target": "entire-Rostov-Oblast",
+    "coverageComplete": false,
+    "territoryPolicy": "Вся Ростовская область — целевая территория продукта. Доступность сведений подтверждается отдельно для каждой категории и территории; нет публикаций не означает нет аварий."
+  }
 }
