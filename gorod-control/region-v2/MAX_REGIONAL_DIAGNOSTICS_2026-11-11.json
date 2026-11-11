@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-11-11T13:42:33.678072+00:00",
+  "sdkVersion": "2.4.1",
+  "readVerified": true,
+  "stage": "complete",
+  "channels": [
+    {
+      "id": "max_city",
+      "stage": "complete",
+      "readVerified": true,
+      "publisherVerification": "previously-reviewed",
+      "messagesReceived": 20
+    },
+    {
+      "id": "max_water",
+      "stage": "complete",
+      "readVerified": true,
+      "publisherVerification": "previously-reviewed",
+      "messagesReceived": 20
+    },
+    {
+      "id": "max_power",
+      "stage": "complete",
+      "readVerified": true,
+      "publisherVerification": "previously-reviewed",
+      "messagesReceived": 20
+    },
+    {
+      "id": "max_rostov_water",
+      "stage": "complete",
+      "readVerified": true,
+      "publisherVerification": "pending",
+      "messagesReceived": 20
+    },
+    {
+      "id": "max_rostov_mchs",
+      "stage": "complete",
+      "readVerified": true,
+      "publisherVerification": "pending",
+      "messagesReceived": 20
+    }
+  ],
+  "scope": "five-public-channels-discovery",
+  "workflowRunId": 43031541213,
+  "workflowJobId": 130559559686
+}

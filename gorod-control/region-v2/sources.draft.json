@@ -26,7 +26,7 @@
       "territoryNote": "Установить фактическую территорию обслуживания и подтверждённые населённые пункты. Не считать всей областью.",
       "readVerified": true,
       "lastKnownReaderState": "READ_VERIFIED",
-      "lastKnownReaderCheck": "2026-11-11T13:26:21.759792+00:00",
+      "lastKnownReaderCheck": "2026-11-11T13:42:33.678072+00:00",
       "diagnosticNote": "11.11.2026, 16:26 МСК: вход, идентичность и чтение последних 20 сообщений подтверждены. Региональный сборщик не включён: территории ГАР, полное дочитывание истории и обработка событий отдельно не проверены.",
       "lastDiagnosticMessagesReceived": 20
     },
@@ -44,7 +44,7 @@
       "territoryNote": "Аварийные отключения; плановые канал направляет читать на сайте. Географический охват требует отдельного реестра.",
       "readVerified": true,
       "lastKnownReaderState": "READ_VERIFIED",
-      "lastKnownReaderCheck": "2026-11-11T13:26:21.759792+00:00",
+      "lastKnownReaderCheck": "2026-11-11T13:42:33.678072+00:00",
       "diagnosticNote": "11.11.2026, 16:26 МСК: вход, идентичность и чтение последних 20 сообщений подтверждены. Региональный сборщик не включён: территории ГАР, полное дочитывание истории и обработка событий отдельно не проверены.",
       "lastDiagnosticMessagesReceived": 20
     },
@@ -63,7 +63,7 @@
       "territoryNote": "Только Шахты; вторичные сообщения. Нужна привязка к ГАР, не включён в областной охват.",
       "readVerified": true,
       "lastKnownReaderState": "READ_VERIFIED",
-      "lastKnownReaderCheck": "2026-11-11T13:26:21.759792+00:00",
+      "lastKnownReaderCheck": "2026-11-11T13:42:33.678072+00:00",
       "diagnosticNote": "11.11.2026, 16:26 МСК: вход, идентичность и чтение последних 20 сообщений подтверждены. Региональный сборщик не включён: территории ГАР, полное дочитывание истории и обработка событий отдельно не проверены.",
       "lastDiagnosticMessagesReceived": 20
     },
@@ -71,7 +71,7 @@
       "id": "mchs-rostov-candidate",
       "url": "https://max.ru/id6164228703_gos",
       "transport": "max",
-      "chat_id": null,
+      "chat_id": -69220795976413,
       "identity_verified": false,
       "enabled": false,
       "categories": [
@@ -79,22 +79,35 @@
       ],
       "municipalities": [],
       "territoryNote": "Кандидат из опубликованного МЧС перечня. Проверить идентификатор, чтение и территориальные предупреждения.",
-      "readVerified": false
+      "readVerified": true,
+      "lastKnownReaderState": "READ_VERIFIED",
+      "lastKnownReaderCheck": "2026-11-11T13:42:33.678072+00:00",
+      "lastDiagnosticMessagesReceived": 20,
+      "apiPublicIdentityMatched": true,
+      "publisherVerification": "pending",
+      "diagnosticNote": "Числовая подсказка проверена запросом MAX: публичный канал, ожидаемое название и чтение 20 сообщений. Это не подтверждает официальный статус издателя, территории ГАР или полноту ленты; enabled остаётся false."
     },
     {
       "id": "rostovvodokanal-candidate",
       "url": "https://max.ru/id6167081833_biz",
       "transport": "max",
-      "chat_id": null,
+      "chat_id": -69127719422667,
       "identity_verified": false,
       "enabled": false,
       "categories": [
         "water"
       ],
       "municipalities": [],
-      "readVerified": false,
-      "territoryNote": "Кандидат для расширения за пределы Шахт. В каталогах указаны Ростов-на-Дону, Батайск и отдельные населённые пункты соседних районов; официальная обратная ссылка, точный охват ГАР и чтение не подтверждены. Главная vodokanalrnd.ru при проверке потребовала anti-DDoS проверку.",
-      "discoveredAt": "2026-11-11"
+      "readVerified": true,
+      "territoryNote": "Официальная страница предприятия подтверждает Ростов-на-Дону, Батайск и отдельные населённые пункты Аксайского, Азовского и Мясниковского районов. Это не все территории этих районов и не вся область; список ГАР и публикации канала требуют проверки.",
+      "discoveredAt": "2026-11-11",
+      "lastKnownReaderState": "READ_VERIFIED",
+      "lastKnownReaderCheck": "2026-11-11T13:42:33.678072+00:00",
+      "lastDiagnosticMessagesReceived": 20,
+      "apiPublicIdentityMatched": true,
+      "publisherVerification": "pending",
+      "diagnosticNote": "Числовая подсказка проверена запросом MAX: публичный канал, ожидаемое название и чтение 20 сообщений. Это не подтверждает официальный статус издателя, территории ГАР или полноту ленты; enabled остаётся false.",
+      "territoryEvidenceUrl": "https://vodokanalrnd.ru/o-vodokanale/"
     },
     {
       "id": "rosseti-yug-candidate",
@@ -109,7 +122,9 @@
       "municipalities": [],
       "readVerified": false,
       "territoryNote": "Публичная MAX-страница представляется каналом ПАО Россети Юг. Работа компании в нескольких регионах не доказывает наличие полной адресной ленты отключений Ростовской области. Обратная официальная ссылка, идентификатор, чтение и адресный охват требуют проверки.",
-      "discoveredAt": "2026-11-11"
+      "discoveredAt": "2026-11-11",
+      "officialOrganisationEvidenceUrl": "https://ar2025.rosseti-yug.ru/ru/3/11/index.html",
+      "officialOrganisationEvidenceNote": "Годовой отчёт подтверждает коммуникации компании через MAX, но не точный handle, адресную полноту или все плановые отключения."
     }
   ],
   "unconfigured": [

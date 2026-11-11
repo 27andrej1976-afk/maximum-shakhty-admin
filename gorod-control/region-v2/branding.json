@@ -6,7 +6,7 @@
   "groupLogo": "assets/group-logo.png",
   "regionalCoat": "assets/rostov-coat.png",
   "regionalCoatUsageReview": "pending-before-release",
-  "androidIntegration": "not-applied",
+  "androidIntegration": "technical-preview-built-and-basic-android15-runtime-verified",
   "advertising": {
     "enabled": false,
     "placement": "dismissible-card-after-events",
@@ -18,5 +18,7 @@
   "newApplicationId": "ru.citycontrol.don",
   "distribution": "new-separate-app-on-rustore",
   "signingKeyStatus": "permanent-release-key-required-not-created",
-  "legacyUpgradeRequired": false
+  "legacyUpgradeRequired": false,
+  "androidApplicationId": "ru.citycontrol.don",
+  "releaseStatus": "not-ready-for-rustore"
 }
