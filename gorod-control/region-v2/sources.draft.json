@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-11-10",
+  "reviewedAt": "2026-11-11",
   "region": "RU-ROS",
   "mode": "max-only",
   "deployment": "draft-not-connected",
@@ -24,10 +24,11 @@
       ],
       "municipalities": [],
       "territoryNote": "Установить фактическую территорию обслуживания и подтверждённые населённые пункты. Не считать всей областью.",
-      "readVerified": false,
-      "lastKnownReaderState": "AUTH_REQUIRED",
-      "lastKnownReaderCheck": "2026-11-10T11:35:53.584484+00:00",
-      "diagnosticNote": "После сообщения пользователя об обновлении секрета MAX всё ещё отклоняет LOGIN; причина повторного отказа не установлена, чтение самого канала не начиналось."
+      "readVerified": true,
+      "lastKnownReaderState": "READ_VERIFIED",
+      "lastKnownReaderCheck": "2026-11-11T13:26:21.759792+00:00",
+      "diagnosticNote": "11.11.2026, 16:26 МСК: вход, идентичность и чтение последних 20 сообщений подтверждены. Региональный сборщик не включён: территории ГАР, полное дочитывание истории и обработка событий отдельно не проверены.",
+      "lastDiagnosticMessagesReceived": 20
     },
     {
       "id": "donenergo",
@@ -41,10 +42,11 @@
       ],
       "municipalities": [],
       "territoryNote": "Аварийные отключения; плановые канал направляет читать на сайте. Географический охват требует отдельного реестра.",
-      "readVerified": false,
-      "lastKnownReaderState": "AUTH_REQUIRED",
-      "lastKnownReaderCheck": "2026-11-10T11:35:53.584484+00:00",
-      "diagnosticNote": "После сообщения пользователя об обновлении секрета MAX всё ещё отклоняет LOGIN; причина повторного отказа не установлена, чтение самого канала не начиналось."
+      "readVerified": true,
+      "lastKnownReaderState": "READ_VERIFIED",
+      "lastKnownReaderCheck": "2026-11-11T13:26:21.759792+00:00",
+      "diagnosticNote": "11.11.2026, 16:26 МСК: вход, идентичность и чтение последних 20 сообщений подтверждены. Региональный сборщик не включён: территории ГАР, полное дочитывание истории и обработка событий отдельно не проверены.",
+      "lastDiagnosticMessagesReceived": 20
     },
     {
       "id": "shakhty-admin",
@@ -59,10 +61,11 @@
       ],
       "municipalities": [],
       "territoryNote": "Только Шахты; вторичные сообщения. Нужна привязка к ГАР, не включён в областной охват.",
-      "readVerified": false,
-      "lastKnownReaderState": "AUTH_REQUIRED",
-      "lastKnownReaderCheck": "2026-11-10T11:35:53.584484+00:00",
-      "diagnosticNote": "После сообщения пользователя об обновлении секрета MAX всё ещё отклоняет LOGIN; причина повторного отказа не установлена, чтение самого канала не начиналось."
+      "readVerified": true,
+      "lastKnownReaderState": "READ_VERIFIED",
+      "lastKnownReaderCheck": "2026-11-11T13:26:21.759792+00:00",
+      "diagnosticNote": "11.11.2026, 16:26 МСК: вход, идентичность и чтение последних 20 сообщений подтверждены. Региональный сборщик не включён: территории ГАР, полное дочитывание истории и обработка событий отдельно не проверены.",
+      "lastDiagnosticMessagesReceived": 20
     },
     {
       "id": "mchs-rostov-candidate",

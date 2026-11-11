@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-11T13:26:21.759792+00:00",
+  "sdkVersion": "2.4.1",
+  "readVerified": true,
+  "stage": "complete",
+  "channels": [
+    {
+      "id": "max_city",
+      "stage": "complete",
+      "readVerified": true,
+      "messagesReceived": 20
+    },
+    {
+      "id": "max_water",
+      "stage": "complete",
+      "readVerified": true,
+      "messagesReceived": 20
+    },
+    {
+      "id": "max_power",
+      "stage": "complete",
+      "readVerified": true,
+      "messagesReceived": 20
+    }
+  ],
+  "scope": "existing-three-public-channels-only"
+}
