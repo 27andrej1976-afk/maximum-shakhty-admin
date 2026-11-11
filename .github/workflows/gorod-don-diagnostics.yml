@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install existing pinned reader dependency
-        run: python -m pip install --quiet -r gorod-control/max-reader/requirements.txt
+        run: python -m pip install --quiet -r gorod-control/max-reader/requirements.txt qrcode==8.2
       - name: Run local regression tests before account access
         run: |
           python -m unittest discover -s gorod-control/region-v2 -q
@@ -28,7 +28,7 @@ jobs:
       - name: Read existing public channels and report only safe stages and counts
         env:
           MAX_USER_SESSION_B64: ${{ secrets.MAX_USER_SESSION_B64 }}
-        run: python gorod-control/region-v2/diagnose_max.py --output /tmp/don-max-diagnostics.json
+        run: python gorod-control/region-v2/diagnose_max.py --regional --output /tmp/don-max-diagnostics.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

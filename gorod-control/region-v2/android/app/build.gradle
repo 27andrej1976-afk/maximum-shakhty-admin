@@ -1,0 +1,28 @@
+plugins { id 'com.android.application' }
+android {
+  namespace 'ru.citycontrol.don'
+  compileSdk 35
+  buildFeatures { buildConfig true }
+  defaultConfig {
+    applicationId 'ru.citycontrol.don'
+    minSdk 26
+    targetSdk 35
+    versionCode 1
+    versionName '0.1.0-preview'
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+}
+dependencies { implementation 'androidx.webkit:webkit:1.12.1' }
+
+// This build is a QA preview, not a RuStore release. Never sign it with a
+// temporary/debug key and publish it as the permanent regional application.
+tasks.configureEach { task ->
+  if (task.name == 'preReleaseBuild') {
+    task.doFirst {
+      throw new GradleException('Regional release gate is not complete: verify live coverage, legal operator, Android acceptance and permanent backed-up signing key before enabling release builds.')
+    }
+  }
+}

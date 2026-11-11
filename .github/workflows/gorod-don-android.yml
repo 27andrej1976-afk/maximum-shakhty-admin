@@ -1,0 +1,65 @@
+name: Don Control | Android preview verification (no publication)
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/rostov-max-only]
+    paths:
+      - .github/workflows/gorod-don-android.yml
+      - gorod-control/region-v2/android/**
+      - gorod-control/region-v2/prepare_android.py
+      - gorod-control/region-v2/web/**
+permissions:
+  contents: read
+jobs:
+  verify_android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Verify regional data policy and prepare bundled interface
+        run: |
+          python -m pip install --quiet qrcode==8.2
+          python -m unittest discover -s gorod-control/region-v2 -q
+          python gorod-control/region-v2/make_test_feed.py --output /tmp/don-qa.json
+          node gorod-control/region-v2/test_client.cjs /tmp/don-qa.json
+          node --check gorod-control/region-v2/web/app.js
+          python gorod-control/region-v2/prepare_android.py
+      - name: Install pinned Android SDK
+        run: |
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)
+          "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0"
+      - name: Compile preview and run Android lint
+        working-directory: gorod-control/region-v2/android
+        run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+      - name: Verify package and preview signature; never publish it
+        run: |
+          APK=gorod-control/region-v2/android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" > /tmp/don-package.txt
+          python - <<'PY'
+          from pathlib import Path
+          data=Path('/tmp/don-package.txt').read_text()
+          assert "package: name='ru.citycontrol.don'" in data
+          assert "application-label:'Дон под контролем'" in data
+          assert 'android.permission.POST_NOTIFICATIONS' not in data
+          print('Independent regional package verified. Debug preview only; no RuStore upload.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: don-android-technical-preview-not-for-rustore
+          retention-days: 5
+          path: |
+            gorod-control/region-v2/android/app/build/outputs/apk/debug/*.apk
+            gorod-control/region-v2/android/app/build/reports/lint-results-debug.*
+          if-no-files-found: warn

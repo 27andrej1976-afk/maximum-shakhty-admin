@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102e46"><title>Дон под контролем</title><link rel="stylesheet" href="vendor/leaflet.css"><link rel="stylesheet" href="app.css"></head>
-<body><div class="development">Разработка областной версии · подключение к действующим каналам MAX ещё не проверено</div>
+<body><div class="development">Предварительная областная версия · полный охват источников ещё не подтверждён</div>
 <main><header><div class="brands"><img src="assets/group-logo.png" alt="Группа компаний — Финансовая аналитика"><img class="coat" src="assets/rostov-coat.png" alt="Герб Ростовской области"></div><div class="hero"><span>РОСТОВСКАЯ ОБЛАСТЬ · MAX</span><h1>Дон под контролем</h1><p>Создано специально для жителей Ростовской области</p><small>Независимый проект группы компаний «Финансовая аналитика»</small></div></header>
 <div id="testBanner" class="test-banner" hidden>ТЕСТОВЫЕ ДАННЫЕ · Все сообщения и адреса вымышлены</div>
 <section class="workspace"><div class="control-row"><label class="city-label">Населённый пункт<select id="city" aria-label="Населённый пункт"><option value="">Охват пока не подтверждён</option></select></label><label class="radius-label">Радиус<select id="radius" aria-label="Радиус"><option value="1">1 км</option><option value="3">3 км</option><option value="5">5 км</option></select></label></div>
@@ -14,5 +14,6 @@
 <aside id="adSlot" hidden><span>Реклама</span><button aria-label="Закрыть рекламу" id="closeAd">×</button><div id="adContent"></div></aside>
 <button id="report" class="report">Сообщить о проблеме →</button><p id="reportStatus" role="status" class="meta"></p>
 <details><summary id="pendingCount">Публикации на проверке</summary><p class="meta">Эти сообщения не добавлены на карту: влияние и адрес ещё не подтверждены.</p><div id="pending"></div></details>
+<details><summary>Данные и приложение</summary><p><a href="about.html">О приложении и данных</a></p><button id="forgetPoint">Удалить мою точку</button><button id="clearData">Очистить сохранённые данные</button><p id="clearStatus" role="status" class="meta"></p></details>
 <footer>Отсутствие найденных публикаций не означает отсутствие аварий. Сбой источника не означает восстановление услуги.</footer>
-</section></main><script src="vendor/leaflet.js"></script><script src="client.js"></script><script src="app.js"></script></body></html>
+</section></main><script src="config.js"></script><script src="vendor/leaflet.js"></script><script src="client.js"></script><script src="app.js"></script></body></html>

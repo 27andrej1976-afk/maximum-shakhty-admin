@@ -1,0 +1,3 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:width="56dp" android:height="59dp" android:gravity="center" android:drawable="@drawable/rostov_coat" />
+</layer-list>
