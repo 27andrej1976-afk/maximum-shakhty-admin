@@ -6,14 +6,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.SystemClock;
+import android.os.ParcelFileDescriptor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -63,11 +63,15 @@ public class RegionalClientTest {
       assertEquals("true", js(scenario, "document.getElementById('adSlot').hidden && document.querySelector('footer').textContent.includes('не означает отсутствие аварий')"));
       Bitmap image = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
       assertNotNull("Android screenshot must be captured", image);
-      scenario.onActivity(activity -> {
-        try (FileOutputStream out = new FileOutputStream(new File(activity.getExternalFilesDir(null), "don-preview.png"))) {
-          if (image != null) image.compress(Bitmap.CompressFormat.PNG, 100, out);
-        } catch (Exception error) { throw new AssertionError(error); }
-      });
+      // Gradle uninstalls the tested app and removes its external-files folder.
+      // The emulator shell owns this QA image outside the app sandbox, so it
+      // survives test cleanup without requesting user storage permissions.
+      try (InputStream proof = new ParcelFileDescriptor.AutoCloseInputStream(
+          InstrumentationRegistry.getInstrumentation().getUiAutomation()
+              .executeShellCommand("screencap -p /sdcard/Download/don-preview.png"))) {
+        byte[] buffer = new byte[256];
+        while (proof.read(buffer) != -1) { /* Wait for the shell capture to finish. */ }
+      }
     }
   }
   @Test public void deletedPointCannotBeRestoredByLateLocationCallback() throws Exception {
