@@ -49,25 +49,6 @@
       "lastDiagnosticMessagesReceived": 20
     },
     {
-      "id": "shakhty-admin",
-      "url": "https://max.ru/shakhtygorod",
-      "transport": "max",
-      "chat_id": -68696541241372,
-      "identity_verified": true,
-      "enabled": false,
-      "categories": [
-        "water",
-        "power"
-      ],
-      "municipalities": [],
-      "territoryNote": "Только Шахты; вторичные сообщения. Нужна привязка к ГАР, не включён в областной охват.",
-      "readVerified": true,
-      "lastKnownReaderState": "READ_VERIFIED",
-      "lastKnownReaderCheck": "2026-11-11T13:42:33.678072+00:00",
-      "diagnosticNote": "11.11.2026, 16:26 МСК: вход, идентичность и чтение последних 20 сообщений подтверждены. Региональный сборщик не включён: территории ГАР, полное дочитывание истории и обработка событий отдельно не проверены.",
-      "lastDiagnosticMessagesReceived": 20
-    },
-    {
       "id": "mchs-rostov-candidate",
       "url": "https://max.ru/id6164228703_gos",
       "transport": "max",
@@ -152,6 +133,15 @@
     "name": "Дон под контролем",
     "target": "entire-Rostov-Oblast",
     "coverageComplete": false,
-    "territoryPolicy": "Вся Ростовская область — целевая территория продукта. Доступность сведений подтверждается отдельно для каждой категории и территории; нет публикаций не означает нет аварий."
-  }
+    "territoryPolicy": "Вся Ростовская область — целевая территория продукта. Доступность сведений подтверждается отдельно для каждой категории и территории; нет публикаций не означает нет аварий.",
+    "sourcePolicy": "regional-resource-and-emergency-only; no city administration or local news feeds"
+  },
+  "excludedSources": [
+    {
+      "id": "shakhty-admin",
+      "url": "https://max.ru/shakhtygorod",
+      "reason": "Исключён по прямому указанию владельца 11.11.2026: только областные профильные источники, без городских администраций.",
+      "excludedAt": "2026-11-11"
+    }
+  ]
 }

@@ -1,4 +1,4 @@
-"""Read-only diagnostics for the EXISTING three public MAX channels.
+"""Read-only diagnostics for regional resource and emergency MAX channels.
 
 No login, joins, messages, read receipts, feed changes or APK build. The report
 contains fixed error classes/stages and counts only, never credentials or text.
@@ -15,6 +15,10 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from max_user_reader import CHANNELS, SESSION, LoginRequired, decode_session, make_client, validate_channel
+
+# The city application keeps its own legacy sources. The regional application
+# must never read the Shakhty administration feed, including in default mode.
+REGIONAL_BASE = tuple(source for source in CHANNELS if source['id'] != 'max_city')
 
 # Public numeric hints are discovery inputs, never production coverage claims.
 # API type/access/title must match before any history request. No join/search of
@@ -91,8 +95,8 @@ async def diagnose(environ=None, *, client_factory=make_client, regional=False):
     env = os.environ if environ is None else environ
     report = {'checkedAt': datetime.now(timezone.utc).isoformat(), 'sdkVersion': '2.4.1',
               'readVerified': False, 'stage': 'session', 'channels': [],
-              'scope': 'five-public-channels-discovery' if regional else 'existing-three-public-channels-only'}
-    sources = CHANNELS + REGIONAL_CANDIDATES if regional else CHANNELS
+              'scope': 'rostov-four-profile-channels' if regional else 'regional-water-and-power-only'}
+    sources = REGIONAL_BASE + REGIONAL_CANDIDATES if regional else REGIONAL_BASE
     value = env.get('MAX_USER_SESSION_B64', '').strip()
     if not value:
         return dict(report, errorCode='NOT_CONFIGURED')

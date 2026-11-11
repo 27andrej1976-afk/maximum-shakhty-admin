@@ -63,11 +63,11 @@ class DiagnosticTests(unittest.TestCase):
                 return [Obj(text='DO-NOT-PUBLISH-TEXT', sender='PRIVATE-PROFILE')]
         report = asyncio.run(diagnose({'MAX_USER_SESSION_B64': value}, client_factory=Fake))
         self.assertTrue(report['readVerified'])
-        self.assertEqual(len(report['channels']), 3)
+        self.assertEqual({r['id'] for r in report['channels']}, {'max_water', 'max_power'})
         self.assertNotIn('DO-NOT-PUBLISH-TEXT', json.dumps(report))
         self.assertNotIn('PRIVATE-PROFILE', json.dumps(report))
 
-    def test_regional_discovery_reads_five_public_channels_without_certifying_publisher(self):
+    def test_regional_discovery_excludes_city_feed_and_does_not_certify_publisher(self):
         value = base64.b64encode(zlib.compress(b'SQLite format 3\x00'+b'a'*1000)).decode()
         class Fake:
             def __init__(self, folder):
@@ -75,6 +75,7 @@ class DiagnosticTests(unittest.TestCase):
             async def connect(self): pass
             async def close(self): pass
             async def get_chat(self, chat_id):
+                assert chat_id != next(c['chat_id'] for c in CHANNELS if c['id'] == 'max_city')
                 c = self.sources[chat_id]
                 title = c['expected_titles'][0] if 'expected_titles' in c else c['name']
                 return Obj(id=chat_id, type='CHANNEL', access='PUBLIC', title=title)
@@ -83,7 +84,8 @@ class DiagnosticTests(unittest.TestCase):
                 return [Obj(text='DO-NOT-PUBLISH-RAW-TEXT')]
         report = asyncio.run(diagnose({'MAX_USER_SESSION_B64': value}, client_factory=Fake, regional=True))
         self.assertTrue(report['readVerified'])
-        self.assertEqual(len(report['channels']), 5)
+        self.assertEqual(len(report['channels']), 4)
+        self.assertNotIn('max_city', {r['id'] for r in report['channels']})
         self.assertTrue(all(r['publisherVerification'] == 'pending' for r in report['channels'][-2:]))
         self.assertNotIn('DO-NOT-PUBLISH', json.dumps(report))
 
@@ -104,8 +106,8 @@ class DiagnosticTests(unittest.TestCase):
                 return []
         report = asyncio.run(diagnose({'MAX_USER_SESSION_B64': value}, client_factory=Fake, regional=True))
         self.assertNotIn(private_id, requests)
-        self.assertEqual(report['channels'][3]['errorCode'], 'IDENTITY_ERROR')
-        self.assertTrue(report['channels'][4]['readVerified'])
+        self.assertEqual(report['channels'][2]['errorCode'], 'IDENTITY_ERROR')
+        self.assertTrue(report['channels'][3]['readVerified'])
         self.assertFalse(report['readVerified'])
 
 
