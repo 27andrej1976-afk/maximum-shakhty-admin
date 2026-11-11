@@ -37,10 +37,19 @@
   "reportRoute": "not-connected",
   "push": "not-implemented",
   "permanentSigningKey": "not-created",
-  "publisherDetails": "missing",
+  "publisherDetails": "partially-confirmed",
   "publishedPrivacyAndTerms": "missing",
   "pythonChecks": {
     "passed": 62,
     "syntheticData": true
+  },
+  "publisher": {
+    "displayName": "Андрей",
+    "type": "individual-owner-confirmed",
+    "publicSupportEmail": "Fefe-andrej@yandex.ru",
+    "confirmedDate": "2026-11-11",
+    "legalFullName": "not-provided",
+    "legalStatus": "not-explicitly-confirmed",
+    "requiredRequisites": "pending"
   }
 }
