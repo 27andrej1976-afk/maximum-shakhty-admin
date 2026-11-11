@@ -54,6 +54,26 @@ jobs:
           assert 'android.permission.POST_NOTIFICATIONS' not in data
           print('Independent regional package verified. Debug preview only; no RuStore upload.')
           PY
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Verify real Android startup and deletion controls
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          script: cd gorod-control/region-v2/android && gradle --no-daemon :app:connectedDebugAndroidTest
+      - name: Collect Android proof
+        if: always()
+        run: |
+          mkdir -p /tmp/don-android-results
+          adb pull /sdcard/Android/data/ru.citycontrol.don/files/don-preview.png /tmp/don-android-results/ || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -62,4 +82,7 @@ jobs:
           path: |
             gorod-control/region-v2/android/app/build/outputs/apk/debug/*.apk
             gorod-control/region-v2/android/app/build/reports/lint-results-debug.*
+            gorod-control/region-v2/android/app/build/reports/androidTests/
+            gorod-control/region-v2/android/app/build/outputs/androidTest-results/
+            /tmp/don-android-results/
           if-no-files-found: warn
