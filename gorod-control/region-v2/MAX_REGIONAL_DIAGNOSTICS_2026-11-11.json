@@ -1,16 +1,9 @@
 {
-  "checkedAt": "2026-11-11T13:42:33.678072+00:00",
+  "checkedAt": "2026-11-11T14:06:19.456236+00:00",
   "sdkVersion": "2.4.1",
   "readVerified": true,
   "stage": "complete",
   "channels": [
-    {
-      "id": "max_city",
-      "stage": "complete",
-      "readVerified": true,
-      "publisherVerification": "previously-reviewed",
-      "messagesReceived": 20
-    },
     {
       "id": "max_water",
       "stage": "complete",
@@ -40,7 +33,7 @@
       "messagesReceived": 20
     }
   ],
-  "scope": "five-public-channels-discovery",
-  "workflowRunId": 43031541213,
-  "workflowJobId": 130559559686
+  "scope": "rostov-four-profile-channels",
+  "workflowRunId": 43035235908,
+  "workflowJobId": 130572194430
 }

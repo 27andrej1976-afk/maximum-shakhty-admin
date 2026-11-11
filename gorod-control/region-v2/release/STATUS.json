@@ -26,7 +26,7 @@
   "max": {
     "publicChannelsRead": 4,
     "messagesPerChannel": 20,
-    "checkedAt": "2026-11-11T13:42:33.678072+00:00",
+    "checkedAt": "2026-11-11T14:06:19.456236+00:00",
     "gas": "not-configured",
     "newCandidatePublishers": "pending-review",
     "regionalCoverage": "incomplete",
@@ -35,7 +35,7 @@
       "shakhty-admin"
     ],
     "sourcePolicy": "regional-resource-and-emergency-only",
-    "historicalCheckNote": "Из пяти ранее прочитанных каналов администрация Шахт исключена. Четыре оставшихся канала относятся к воде, свету и МЧС; газ не подключён."
+    "historicalCheckNote": "Последняя проверка после исключения администрации Шахт: четыре профильных канала прочитаны, местных администраций в запросах нет. Газ пока не подключён."
   },
   "productionCollector": "not-deployed",
   "catalog": "awaiting-verified-address-catalog",
