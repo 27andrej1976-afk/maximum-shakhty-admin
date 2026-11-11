@@ -70,9 +70,14 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--config', required=True)
     p.add_argument('--once', action='store_true')
+    p.add_argument('--check-config', action='store_true', help='Validate deployment configuration without accessing MAX')
     a = p.parse_args()
     try:
-        asyncio.run(work(a.config, once=a.once))
+        if a.check_config:
+            configuration(a.config)
+            print('Regional configuration validated; account access was not attempted')
+        else:
+            asyncio.run(work(a.config, once=a.once))
     except (ValueError, KeyError, FileNotFoundError, BlockingIOError):
         # Configuration and lock failure are explicit; no raw provider data.
         raise SystemExit('Regional collector not started: verify configuration, territories and single-worker lock')
