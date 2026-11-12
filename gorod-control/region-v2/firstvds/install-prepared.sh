@@ -2,6 +2,9 @@
 # Prepare this one isolated service after the operator verifies the server.
 # Deliberately does not start services, alter Nginx or import a MAX credential.
 set -euo pipefail
+# Root may use umask 0077. Public code/venv must remain traversable by the
+# two service users; private state/session modes are set explicitly below.
+umask 0022
 don_bundle_dir=$(realpath "${1:?Usage: install-prepared.sh BUNDLE_DIRECTORY}")
 if [ "$(id -u)" -ne 0 ]; then echo 'Run as the authorized server administrator'; exit 1; fi
 test -f "$don_bundle_dir/DEPLOYMENT_STATUS.txt"
@@ -26,6 +29,9 @@ install -d -m 0755 -o don-control -g don-control /var/lib/don-control/public
 cp -a "$don_bundle_dir/app/." /opt/don-control/app/
 python3 -m venv /opt/don-control/venv
 /opt/don-control/venv/bin/python -m pip install --disable-pip-version-check --quiet -r "$don_bundle_dir/requirements.txt"
+# Also repair a partial preparation made with a restrictive root umask.
+# These trees contain only code and packages, never sessions or private state.
+chmod -R u=rwX,go=rX /opt/don-control/app /opt/don-control/venv
 for don_config in sources.json catalog.json; do
   if [ ! -e "/etc/don-control/$don_config" ]; then
     install -m 0644 "$don_bundle_dir/config/$don_config" "/etc/don-control/$don_config"

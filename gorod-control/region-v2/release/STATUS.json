@@ -10,9 +10,9 @@
     "compilation": "passed",
     "lint": "passed",
     "packageAndDebugSignature": "passed",
-    "compileRunId": 43031541368,
-    "runtimeTests": "four functional tests passed in 43038991507; stronger visual check running",
-    "runtimeRunId": 43038069793,
+    "compileRunId": 43213984645,
+    "runtimeTests": "4 offline/scaffold tests passed; real GPS and live incident feed not tested",
+    "runtimeRunId": 43213984645,
     "deviceGps": "not-tested",
     "upgradeWithPermanentKey": "not-tested",
     "userAcceptance": "not-confirmed",
@@ -20,14 +20,15 @@
     "runtimeTestsFailed": 0,
     "runtimeTestsSkipped": 0,
     "runtimeAndroidApi": 35,
-    "runtimeCompletedAt": "2026-11-11T13:50:01+00:00",
+    "runtimeCompletedAt": "2026-11-12T12:04:27+00:00",
     "brandAssetsInApk": "byte-identical-to-originals",
     "latestVerification": {
       "runId": 43213984645,
-      "state": "in-progress",
+      "state": "success",
+      "artifactId": 13943600247,
       "purpose": "assert app focus/visible package before accepting screenshot"
     },
-    "visualProof": "previous screenshot is invalid: system Pixel Launcher ANR dialog, not the app"
+    "visualProof": "manually inspected: Don screen with original brand assets; previous Pixel Launcher ANR image rejected"
   },
   "max": {
     "publicChannelsRead": 4,
@@ -43,10 +44,10 @@
     "sourcePolicy": "regional-resource-and-emergency-only",
     "historicalCheckNote": "12.11.2026, 15:00 МСК: четыре профильных публичных канала прочитаны повторно, по 20 сообщений; газ и местные администрации исключены."
   },
-  "productionCollector": "server-bundle-prepared-not-deployed",
+  "productionCollector": "installed-isolated-on-existing-server; disabled-registry; not-running",
   "catalog": "awaiting-verified-address-catalog",
   "automaticIncidentParsing": "not-ready",
-  "reportRoute": "official-gosuslugi-external-link-implemented-android-test-running",
+  "reportRoute": "official-gosuslugi-external-link-implemented-and-Android-intent-tested; actual-submission-not-tested",
   "push": "not-implemented",
   "permanentSigningKey": "not-created",
   "publisherDetails": "partially-confirmed",
@@ -69,6 +70,31 @@
     "power",
     "mchs"
   ],
-  "deploymentAccess": "blocked-by-browser-auto-review; owner console authorization required",
-  "workState": "resumed-awaiting-explicit-console-authorization"
+  "deploymentAccess": "explicitly-authorized-by-owner-and-used-2026-11-12",
+  "workState": "resumed-server-preparation-verified-live-pipeline-pending",
+  "deployment": {
+    "checkedDate": "2026-11-12",
+    "checkedLocalTime": "15:20 MSK",
+    "sourceCommit": "c7885c432c42de4fd29ac5ee3c20db13fe1351de",
+    "sourcePermissionsFix": "applied-and-runtime-rechecked",
+    "hostType": "existing-FirstVDS",
+    "reverseProxy": "Caddy; unchanged",
+    "publicRoute": "not-configured",
+    "privateSessionStorage": "directory-0700-don-control; credential-not-transferred",
+    "sdkImport": "passed",
+    "localHttpPage": 200,
+    "privateSessionHttpPath": 404,
+    "webUserCanTraverseSessionDirectory": false,
+    "lastLocalHealth": {
+      "server": "running",
+      "feedAvailable": false,
+      "incidentPipelineVerified": false
+    },
+    "finalServices": {
+      "don-public": "inactive",
+      "don-collector": "inactive"
+    },
+    "otherExistingServicesCheckedActive": 6,
+    "limits": "local smoke check only; no MAX/server feed/GPS/push/release confirmation"
+  }
 }
