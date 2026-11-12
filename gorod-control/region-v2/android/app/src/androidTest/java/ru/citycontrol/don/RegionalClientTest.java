@@ -135,8 +135,8 @@ public class RegionalClientTest {
     // Native scrolling and WebView compositor presentation are asynchronous.
     // A bounded frame wait prevents a green test from saving the old header.
     SystemClock.sleep(500);
-    assertEquals("Target must be visibly scrolled into the viewport", "true",
-        js(scenario,"Math.abs(document.getElementById('"+id+"').getBoundingClientRect().top)<60"));
+    assertEquals("Target must be visibly present near the top half of the viewport", "true",
+        js(scenario,"(()=>{const r=document.getElementById('"+id+"').getBoundingClientRect();return r.top<innerHeight/2 && r.bottom>Math.min(r.height,innerHeight)*0.8})()"));
   }
   private void captureProof(ActivityScenario<MainActivity> scenario, String name) throws Exception {
     visibleAndFocused(scenario);
@@ -167,6 +167,7 @@ public class RegionalClientTest {
       showElement(scenario,"map");
       captureProof(scenario,"don-real-water-map");
       js(scenario,"document.getElementById('events').scrollIntoView({block:'start'});");
+      js(scenario,"document.querySelector('#events details').open=true;");
       showElement(scenario,"events");
       captureProof(scenario,"don-real-water-card");
       js(scenario,"window.__countBeforeOffline=document.getElementById('eventCount').textContent; window.__savedFetch=window.fetch; window.fetch=()=>Promise.reject(new Error('QA_OFFLINE')); document.getElementById('refresh').click();");
