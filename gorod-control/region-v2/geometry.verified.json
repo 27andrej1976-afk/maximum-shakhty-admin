@@ -1,0 +1,62 @@
+{
+  "f947ff22-cd20-482c-922c-3d35c6f2fa3b": {
+    "lat": 48.1750463,
+    "lon": 40.7913224,
+    "geometryVerified": true,
+    "locationPrecision": "street",
+    "geometryEvidenceUrl": "https://www.openstreetmap.org/way/126704864",
+    "geometryNotice": "Ориентир на улице, не точные границы отключения",
+    "geometryProvider": "OpenStreetMap via Photon",
+    "geometryCheckedAt": "2026-11-12T13:07:01.253990+00:00"
+  },
+  "92c8ca8d-9ca4-4e10-87ac-53efebc5a7f0": {
+    "lat": 48.1774215,
+    "lon": 40.7883445,
+    "geometryVerified": true,
+    "locationPrecision": "street",
+    "geometryEvidenceUrl": "https://www.openstreetmap.org/way/144723512",
+    "geometryNotice": "Ориентир на улице, не точные границы отключения",
+    "geometryProvider": "OpenStreetMap via Photon",
+    "geometryCheckedAt": "2026-11-12T13:07:07.402162+00:00"
+  },
+  "8363f12a-d606-4f7d-a033-468fba07c3bc": {
+    "lat": 48.1783275,
+    "lon": 40.7985679,
+    "geometryVerified": true,
+    "locationPrecision": "street",
+    "geometryEvidenceUrl": "https://www.openstreetmap.org/way/127222254",
+    "geometryNotice": "Ориентир на улице, не точные границы отключения",
+    "geometryProvider": "OpenStreetMap via Photon",
+    "geometryCheckedAt": "2026-11-12T13:07:16.247216+00:00"
+  },
+  "bca0cf6d-8f92-4752-9e8b-febbfb271ddf": {
+    "lat": 47.2848726,
+    "lon": 39.7490419,
+    "geometryVerified": true,
+    "locationPrecision": "street",
+    "geometryEvidenceUrl": "https://www.openstreetmap.org/way/32941189",
+    "geometryNotice": "Ориентир на улице, не точные границы отключения",
+    "geometryProvider": "OpenStreetMap via Photon",
+    "geometryCheckedAt": "2026-11-12T13:07:22.405690+00:00"
+  },
+  "6b41a901-026c-4f7e-a069-b07902f222cd": {
+    "lat": 47.2778012,
+    "lon": 39.7554933,
+    "geometryVerified": true,
+    "locationPrecision": "street",
+    "geometryEvidenceUrl": "https://www.openstreetmap.org/way/130333413",
+    "geometryNotice": "Ориентир на улице, не точные границы отключения",
+    "geometryProvider": "OpenStreetMap via Photon",
+    "geometryCheckedAt": "2026-11-12T13:07:28.596470+00:00"
+  },
+  "7247ef73-e759-4d73-a362-dc456792d7c5": {
+    "lat": 47.2910367,
+    "lon": 39.7329929,
+    "geometryVerified": true,
+    "locationPrecision": "street",
+    "geometryEvidenceUrl": "https://www.openstreetmap.org/way/75694742",
+    "geometryNotice": "Ориентир на улице, не точные границы отключения",
+    "geometryProvider": "OpenStreetMap via Photon",
+    "geometryCheckedAt": "2026-11-12T13:07:34.415910+00:00"
+  }
+}

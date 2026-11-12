@@ -9,12 +9,17 @@ on:
       - gorod-control/region-v2/prepare_android.py
       - gorod-control/region-v2/android_verify.sh
       - gorod-control/region-v2/web/**
+      - gorod-control/region-v2/verify_live_pipeline.py
+      - gorod-control/region-v2/test_real_pipeline.py
+concurrency:
+  group: don-max-read-scope
+  cancel-in-progress: false
 permissions:
   contents: read
 jobs:
   verify_android:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,12 +34,18 @@ jobs:
           gradle-version: '8.10.2'
       - name: Verify regional data policy and prepare bundled interface
         run: |
-          python -m pip install --quiet qrcode==8.2
+          python -m pip install --quiet -r gorod-control/max-reader/requirements.txt qrcode==8.2
           python -m unittest discover -s gorod-control/region-v2 -q
           python gorod-control/region-v2/make_test_feed.py --output /tmp/don-qa.json
           node gorod-control/region-v2/test_client.cjs /tmp/don-qa.json
           node --check gorod-control/region-v2/web/app.js
           python gorod-control/region-v2/prepare_android.py
+      - name: Read real MAX and export only public event data for Android QA
+        env:
+          MAX_USER_SESSION_B64: ${{ secrets.MAX_USER_SESSION_B64 }}
+        run: |
+          mkdir -p gorod-control/region-v2/android/app/src/debug/assets/web/qa
+          python gorod-control/region-v2/verify_live_pipeline.py --output gorod-control/region-v2/android/app/src/debug/assets/web/qa/real-feed.json --report /tmp/don-real-pipeline-report.json
       - name: Install pinned Android SDK
         run: |
           SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)
@@ -81,4 +92,5 @@ jobs:
             gorod-control/region-v2/android/app/build/reports/androidTests/
             gorod-control/region-v2/android/app/build/outputs/androidTest-results/
             /tmp/don-android-results/
+            /tmp/don-real-pipeline-report.json
           if-no-files-found: warn

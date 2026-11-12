@@ -47,6 +47,7 @@ public final class MainActivity extends Activity {
     getWindow().setStatusBarColor(Color.rgb(16, 46, 70));
     getWindow().setNavigationBarColor(Color.rgb(16, 46, 70));
     FrameLayout container = new FrameLayout(this);
+    container.setBackgroundColor(Color.rgb(16, 46, 70));
     container.setOnApplyWindowInsetsListener((view, insets) -> {
       view.setPadding(insets.getSystemWindowInsetLeft(), insets.getSystemWindowInsetTop(),
           insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());

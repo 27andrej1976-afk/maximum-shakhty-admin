@@ -6,5 +6,8 @@
   "healthOutput": "/var/lib/don-control/public/health.json",
   "feedOutput": "/var/lib/don-control/public/feed.json",
   "intervalSeconds": 120,
-  "maxPages": 20
+  "maxPages": 20,
+  "garIndex": "/opt/don-control/app/gorod-control/region-v2/gar-rostov-20261106.json.gz",
+  "geometryBudget": 4,
+  "geometryEndpoint": "https://photon.komoot.io/api/"
 }

@@ -19,7 +19,7 @@ from diagnose_max import (REGIONAL_BASE, REGIONAL_CANDIDATES, SESSION,
 
 SOURCE_IDS = {-69418948796459: 'ursv', -72527316071728: 'donenergo',
               -69127719422667: 'rostovvodokanal-candidate',
-              -69220795976413: 'mchs-ro-candidate'}
+              -69220795976413: 'mchs-rostov-candidate'}
 
 
 async def sample(environ=None, *, client_factory=make_client):

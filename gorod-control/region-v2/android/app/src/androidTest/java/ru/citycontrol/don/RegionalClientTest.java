@@ -124,4 +124,54 @@ public class RegionalClientTest {
       }
     }
   }
+  private void captureProof(ActivityScenario<MainActivity> scenario, String name) throws Exception {
+    visibleAndFocused(scenario);
+    try (InputStream proof = new ParcelFileDescriptor.AutoCloseInputStream(
+        InstrumentationRegistry.getInstrumentation().getUiAutomation()
+          .executeShellCommand("screencap -p /sdcard/Download/"+name+".png"))) {
+      byte[] buffer = new byte[256];
+      while (proof.read(buffer) != -1) { }
+    }
+  }
+  private void realFeed(ActivityScenario<MainActivity> scenario) throws Exception {
+    loaded(scenario);
+    js(scenario, "window.DonConfig={feedConfigured:true,feedURL:'https://appassets.androidplatform.net/assets/web/qa/real-feed.json'}; document.getElementById('refresh').click();");
+    waitFor(scenario,"JSON.parse(localStorage.getItem('don-feed')||'{}').verificationMode==='real-MAX-to-Android-QA-export-not-a-deployment' && !document.getElementById('refresh').disabled");
+    js(scenario,"document.getElementById('city').value=''; document.getElementById('city').dispatchEvent(new Event('change')); document.getElementById('region').click(); document.querySelector('[data-category=all]').click();");
+  }
+  @Test public void realMAXExportRendersAllCategoriesAndPreservesMarkersOffline() throws Exception {
+    try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+      realFeed(scenario);
+      assertEquals("true", js(scenario,"document.querySelectorAll('#map .leaflet-marker-icon').length>=6"));
+      for (String category : new String[]{"water","power","mchs"}) {
+        js(scenario,"document.querySelector('[data-category="+category+"]').click();");
+        assertEquals("true", js(scenario,"Number(document.getElementById('eventCount').textContent)>0"));
+      }
+      js(scenario,"document.querySelector('[data-category=water]').click(); document.querySelector('#events details').open=true; document.getElementById('map').scrollIntoView({block:'start'});");
+      assertEquals("true",js(scenario,"document.querySelectorAll('#map .leaflet-marker-icon').length>=3 && document.getElementById('events').textContent.includes('Белая Калитва')"));
+      captureProof(scenario,"don-real-water-map");
+      js(scenario,"document.getElementById('events').scrollIntoView({block:'start'});");
+      captureProof(scenario,"don-real-water-card");
+      js(scenario,"window.__countBeforeOffline=document.getElementById('eventCount').textContent; window.__savedFetch=window.fetch; window.fetch=()=>Promise.reject(new Error('QA_OFFLINE')); document.getElementById('refresh').click();");
+      waitFor(scenario,"document.getElementById('connection').textContent.includes('Сервер недоступен')");
+      assertEquals("true",js(scenario,"document.getElementById('eventCount').textContent===window.__countBeforeOffline && document.querySelectorAll('#map .leaflet-marker-icon').length>=3 && document.querySelectorAll('#healthCards .unavailable').length===3"));
+      js(scenario,"window.fetch=window.__savedFetch; document.getElementById('refresh').click();");
+      waitFor(scenario,"document.getElementById('connection').textContent.includes('Контрольная проверка')");
+    }
+  }
+  @Test public void systemGeolocationFiltersRealPublicationMarkersNearEmulatorPoint() throws Exception {
+    InstrumentationRegistry.getInstrumentation().getUiAutomation().grantRuntimePermission("ru.citycontrol.don", "android.permission.ACCESS_FINE_LOCATION");
+    InstrumentationRegistry.getInstrumentation().getUiAutomation().grantRuntimePermission("ru.citycontrol.don", "android.permission.ACCESS_COARSE_LOCATION");
+    try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
+      realFeed(scenario);
+      js(scenario,"document.getElementById('forgetPoint').click(); document.querySelector('[data-category=water]').click(); document.getElementById('locate').click();");
+      waitFor(scenario,"!!JSON.parse(localStorage.getItem('don-point')||'null') && !document.getElementById('locate').disabled");
+      assertEquals("true",js(scenario,"Number(document.getElementById('eventCount').textContent)>0 && document.getElementById('near').getAttribute('aria-pressed')==='true'"));
+      assertEquals("true",js(scenario,"(()=>{const p=JSON.parse(localStorage.getItem('don-point')); const f=JSON.parse(localStorage.getItem('don-feed'));return f.events.filter(e=>e.category==='water').some(e=>e.addresses.some(a=>a.geometryVerified&&DonClient.distance(p,a)<0.2))})()"));
+      js(scenario,"document.getElementById('map').scrollIntoView({block:'start'});");
+      captureProof(scenario,"don-real-near-system-gps");
+      js(scenario,"document.getElementById('forgetPoint').click();");
+    }
+  }
+
 }

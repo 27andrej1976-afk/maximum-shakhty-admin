@@ -67,7 +67,36 @@ async def run(args):
         if getattr(args, 'feed_output', None):
             from events import Ledger
             catalog = json.loads(Path(args.catalog).read_text())
-            atomic_json(args.feed_output, Ledger(store, catalog).feed(now), mode=0o644)
+            ledger=Ledger(store,catalog)
+            if getattr(args,'gar_index',None):
+                from parse_publications import load_index
+                from pipeline import process
+                from geography import GeometryCache
+                accepted=state/'accepted-addresses.json'
+                if accepted.is_file():
+                    catalog['addresses']=json.loads(accepted.read_text())['addresses']
+                geometry=GeometryCache(state/'geometry.sqlite',endpoint=getattr(args,'geometry_endpoint',None) or 'https://photon.komoot.io/api/')
+                try:
+                    index=load_index(args.gar_index)
+                    seed=Path(args.gar_index).with_name('geometry.verified.json')
+                    known=json.loads(seed.read_text()) if seed.is_file() else {}
+                    known.update(geometry.values())
+                    ledger,stats=process(store,catalog,index,now,geometry=known)
+                    budget=getattr(args,'geometry_budget',0)
+                    for event in ledger.events(now):
+                        for address in event['addresses']:
+                            if budget<=0:break
+                            if address.get('geometryVerified'):continue
+                            point=geometry.resolve(address,ledger.cities[address['municipalityId']],now)
+                            budget-=1
+                            if point:ledger.addresses[address['id']].update(point)
+                    atomic_json(accepted,{'addresses':list(ledger.addresses.values())})
+                finally:
+                    geometry.close()
+            # Compute health after processing learns explicitly observed
+            # territorial coverage; the pre-parser snapshot is not authoritative.
+            atomic_json(args.health_output,snapshot(store,args.municipality,now),mode=0o644)
+            atomic_json(args.feed_output, ledger.feed(now), mode=0o644)
         store.db.close()
 
 

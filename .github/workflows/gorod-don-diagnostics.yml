@@ -10,6 +10,9 @@ on:
       - gorod-control/region-v2/sample_publications.py
       - gorod-control/region-v2/test_public_samples.py
       - gorod-control/region-v2/collector.py
+concurrency:
+  group: don-max-read-scope
+  cancel-in-progress: false
 permissions:
   contents: read
 jobs:

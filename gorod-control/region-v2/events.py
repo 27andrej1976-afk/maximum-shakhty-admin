@@ -116,17 +116,26 @@ class Ledger:
             # Warnings with unknown expiry stay in the review queue; no invented 36h expiry.
             if r['category'] == 'mchs' and not r.get('end'):
                 raise ValueError('MCHS expiry must be explicit; keep publication pending')
+            unresolved=r.get('unresolvedAddresses', [])
+            if not isinstance(unresolved,list) or len(unresolved)>200 or any(
+                    not isinstance(x,str) or len(x)>500 for x in unresolved):
+                raise ValueError('Invalid unresolved address list')
         # Only a fixed reviewed schema is stored/published, not arbitrary parser fields.
         keys = {'reviewId', 'sourceId', 'messageId', 'sourceHash', 'publishedAt', 'url',
                 'category', 'type', 'municipalityId', 'addressIds', identifier,
-                'title', 'description', 'start', 'end', 'scope'}
+                'title', 'description', 'start', 'end', 'scope', 'unresolvedAddresses', 'parserVersion', 'addressMatchPrecision'}
         return {k: v for k, v in r.items() if k in keys}
 
     def events(self, now):
         utc(now)
         result = []
-        closures = [json.loads(x[0]) for x in self.store.db.execute('SELECT payload FROM review_log')
-                    if json.loads(x[0])['type'] in {'restoration', 'cancellation'}]
+        closures=[]
+        for row in self.store.db.execute('SELECT payload FROM review_log'):
+            r=json.loads(row[0])
+            if r['type'] not in {'restoration','cancellation'}:continue
+            current=self.store.db.execute('SELECT hash FROM posts WHERE channel=? AND id=?',
+                (r['sourceId'],r['messageId'])).fetchone()
+            if current and current[0]==r['sourceHash']:closures.append(r)
         for row in self.store.db.execute('SELECT payload FROM reviewed_events'):
             e = json.loads(row[0])
             anchor = e.get('end') or e.get('start') or e['publishedAt']
@@ -156,11 +165,15 @@ class Ledger:
     def pending(self):
         reviewed = {(r['sourceId'], r['messageId'], r['sourceHash'])
                     for row in self.store.db.execute('SELECT payload FROM review_log')
-                    for r in [json.loads(row[0])]}
+                    for r in [json.loads(row[0])] if not r.get('unresolvedAddresses')}
+        self.store.db.execute('''CREATE TABLE IF NOT EXISTS post_dispositions(
+            channel TEXT,id TEXT,hash TEXT,kind TEXT,reason TEXT,PRIMARY KEY(channel,id,hash))''')
+        informational={(r[0],r[1],r[2]) for r in self.store.db.execute(
+            "SELECT channel,id,hash FROM post_dispositions WHERE kind='information'")}
         result = []
         for source in self.store.channels.values():
             for row in self.store.db.execute('SELECT id,hash,payload FROM posts WHERE channel=?', (source['id'],)):
-                if (source['id'], row[0], row[1]) in reviewed:
+                if (source['id'], row[0], row[1]) in reviewed|informational:
                     continue
                 post = json.loads(row[2])
                 text = post.get('text', '')
@@ -183,7 +196,7 @@ class Ledger:
                 and covers(s,category,city['id']) and category in s.get('categories', [])
                 for s in self.store.channels.values())) for category in CATEGORIES}
             health = snapshot(self.store, city['id'], now, pending_counts=counts)
-            cities.append({'id': city['id'], 'name': city['name'], 'health': health['categoryHealth']})
+            cities.append({'id': city['id'], 'name': city.get('label',city['name']), 'health': health['categoryHealth']})
         return {'schemaVersion': 1, 'mode': 'max-only', 'regionId': 'RU-ROS',
                 'dataMode': self.catalog.get('dataMode', 'production'),
                 'generatedAt': now, 'coverage': 'partial' if cities else 'unknown',

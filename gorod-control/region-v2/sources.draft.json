@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-11-11",
+  "reviewedAt": "2026-11-12",
   "region": "RU-ROS",
   "mode": "max-only",
   "deployment": "draft-not-connected",
@@ -52,7 +52,7 @@
       "url": "https://max.ru/id6164228703_gos",
       "transport": "max",
       "chat_id": -69220795976413,
-      "identity_verified": false,
+      "identity_verified": true,
       "enabled": false,
       "categories": [
         "mchs"
@@ -64,15 +64,18 @@
       "lastKnownReaderCheck": "2026-11-12T12:00:31.841143+00:00",
       "lastDiagnosticMessagesReceived": 20,
       "apiPublicIdentityMatched": true,
-      "publisherVerification": "pending",
-      "diagnosticNote": "12.11.2026, 15:00 МСК: повторно прочитаны 20 сообщений; полнота охвата, автоматический разбор и метки карты этим не проверены."
+      "publisherVerification": "reviewed-primary-publisher-link",
+      "diagnosticNote": "12.11.2026, 15:00 МСК: повторно прочитаны 20 сообщений; полнота охвата, автоматический разбор и метки карты этим не проверены.",
+      "regionCoverageVerified": true,
+      "publisherEvidenceUrl": "https://t.me/s/mchs_official?before=34694",
+      "publisherEvidenceNote": "Публикация самого МЧС России перечисляет региональный канал; ссылка также опубликована на странице МЧС России в OK https://ok.ru/group/53584201908342/topic/159012046783350"
     },
     {
       "id": "rostovvodokanal-candidate",
       "url": "https://max.ru/id6167081833_biz",
       "transport": "max",
       "chat_id": -69127719422667,
-      "identity_verified": false,
+      "identity_verified": true,
       "enabled": false,
       "categories": [
         "water"
@@ -85,9 +88,11 @@
       "lastKnownReaderCheck": "2026-11-12T12:00:31.841143+00:00",
       "lastDiagnosticMessagesReceived": 20,
       "apiPublicIdentityMatched": true,
-      "publisherVerification": "pending",
+      "publisherVerification": "reviewed-primary-publisher-link",
       "diagnosticNote": "12.11.2026, 15:00 МСК: повторно прочитаны 20 сообщений; полнота охвата, автоматический разбор и метки карты этим не проверены.",
-      "territoryEvidenceUrl": "https://vodokanalrnd.ru/o-vodokanale/"
+      "territoryEvidenceUrl": "https://vodokanalrnd.ru/o-vodokanale/",
+      "publisherEvidenceUrl": "https://t.me/s/rostov_vodokanal?after=1882",
+      "publisherEvidenceNote": "Сам Ростовводоканал сообщает о переходе в MAX с точным идентификатором; это проверка происхождения, не полного адресного охвата."
     },
     {
       "id": "rosseti-yug-candidate",

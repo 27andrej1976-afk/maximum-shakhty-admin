@@ -41,7 +41,9 @@ def configuration(path):
     return raw, SimpleNamespace(registry=raw['registry'], catalog=raw['catalog'],
         state_dir=state, session_dir=raw['sessionDir'], municipality=cities[0]['id'],
         health_output=raw['healthOutput'], feed_output=raw['feedOutput'],
-        max_pages=min(30, max(1, int(raw.get('maxPages', 20)))))
+        max_pages=min(30, max(1, int(raw.get('maxPages', 20)))),
+        gar_index=raw.get('garIndex'),geometry_budget=min(4,max(0,int(raw.get('geometryBudget',0)))),
+        geometry_endpoint=raw.get('geometryEndpoint'))
 
 
 async def work(path, *, once=False):
