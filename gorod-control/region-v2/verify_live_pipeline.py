@@ -18,7 +18,7 @@ ROOT=Path(__file__).parent
 async def verify(output,report_path):
     now=datetime.now(timezone.utc).isoformat()
     report={'checkedAt':now,'readScope':'four-verified-public-resource-and-emergency-channels',
-            'deployed':False,'channels':[],'completeHistory':False,'stage':'session'}
+            'deployed':False,'channels':[],'completeHistory':False,'historyWindowDays':16,'stage':'session'}
     old_logging=logging.root.manager.disable;logging.disable(logging.CRITICAL)
     try:
         raw=decode_session(os.environ.get('MAX_USER_SESSION_B64',''))

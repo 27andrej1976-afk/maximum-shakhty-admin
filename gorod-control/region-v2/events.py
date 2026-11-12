@@ -5,6 +5,7 @@ hash. Unsupported posts remain pending. This is NOT a general Russian NLP parser
 """
 import json
 import re
+from collections import Counter
 from datetime import timedelta
 from core import CATEGORIES, utc, covers
 from health import snapshot
@@ -189,16 +190,19 @@ class Ledger:
 
     def feed(self, now):
         pending = self.pending()
+        pending_by_source=Counter(p['sourceId'] for p in pending)
         cities = []
         for city in self.cities.values():
-            counts = {category: sum(1 for p in pending if any(
-                s['id'] == p['sourceId'] and s.get('enabled') and s.get('identity_verified')
-                and covers(s,category,city['id']) and category in s.get('categories', [])
-                for s in self.store.channels.values())) for category in CATEGORIES}
+            counts = {category: sum(pending_by_source[s['id']]
+                for s in self.store.channels.values() if s.get('enabled') and s.get('identity_verified')
+                and covers(s,category,city['id']) and category in s.get('categories', []))
+                for category in CATEGORIES}
             health = snapshot(self.store, city['id'], now, pending_counts=counts)
             cities.append({'id': city['id'], 'name': city.get('label',city['name']), 'health': health['categoryHealth']})
         return {'schemaVersion': 1, 'mode': 'max-only', 'regionId': 'RU-ROS',
                 'dataMode': self.catalog.get('dataMode', 'production'),
                 'generatedAt': now, 'coverage': 'partial' if cities else 'unknown',
-                'municipalities': cities, 'events': self.events(now), 'pendingPublications': pending,
+                'municipalities': cities, 'events': self.events(now),
+                'pendingPublications': sorted(pending,key=lambda p:(p['publishedAt'],p['id']),reverse=True)[:200],
+                'pendingPublicationCount':len(pending), 'pendingListLimited':len(pending)>200,
                 'notice': 'Отсутствие найденных публикаций не означает отсутствие аварий'}

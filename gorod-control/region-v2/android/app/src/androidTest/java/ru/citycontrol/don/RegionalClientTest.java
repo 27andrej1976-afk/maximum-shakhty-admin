@@ -124,6 +124,20 @@ public class RegionalClientTest {
       }
     }
   }
+  private void showElement(ActivityScenario<MainActivity> scenario, String id) throws Exception {
+    double cssTop=Double.parseDouble(js(scenario,"document.getElementById('"+id+"').getBoundingClientRect().top+window.scrollY"));
+    scenario.onActivity(activity -> {
+      WebView view=findWeb(activity.getWindow().getDecorView());
+      view.scrollTo(0,(int)Math.round(cssTop*view.getScale()));
+      view.invalidate();
+    });
+    InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    // Native scrolling and WebView compositor presentation are asynchronous.
+    // A bounded frame wait prevents a green test from saving the old header.
+    SystemClock.sleep(500);
+    assertEquals("Target must be visibly scrolled into the viewport", "true",
+        js(scenario,"Math.abs(document.getElementById('"+id+"').getBoundingClientRect().top)<60"));
+  }
   private void captureProof(ActivityScenario<MainActivity> scenario, String name) throws Exception {
     visibleAndFocused(scenario);
     try (InputStream proof = new ParcelFileDescriptor.AutoCloseInputStream(
@@ -149,8 +163,11 @@ public class RegionalClientTest {
       }
       js(scenario,"document.querySelector('[data-category=water]').click(); document.querySelector('#events details').open=true; document.getElementById('map').scrollIntoView({block:'start'});");
       assertEquals("true",js(scenario,"document.querySelectorAll('#map .leaflet-marker-icon').length>=3 && document.getElementById('events').textContent.includes('Белая Калитва')"));
+      js(scenario,"(()=>{const f=JSON.parse(localStorage.getItem('don-feed'));document.getElementById('city').value=f.events.find(e=>e.category==='water').municipalityId;document.getElementById('city').dispatchEvent(new Event('change'))})()");
+      showElement(scenario,"map");
       captureProof(scenario,"don-real-water-map");
       js(scenario,"document.getElementById('events').scrollIntoView({block:'start'});");
+      showElement(scenario,"events");
       captureProof(scenario,"don-real-water-card");
       js(scenario,"window.__countBeforeOffline=document.getElementById('eventCount').textContent; window.__savedFetch=window.fetch; window.fetch=()=>Promise.reject(new Error('QA_OFFLINE')); document.getElementById('refresh').click();");
       waitFor(scenario,"document.getElementById('connection').textContent.includes('Сервер недоступен')");
@@ -169,6 +186,7 @@ public class RegionalClientTest {
       assertEquals("true",js(scenario,"Number(document.getElementById('eventCount').textContent)>0 && document.getElementById('near').getAttribute('aria-pressed')==='true'"));
       assertEquals("true",js(scenario,"(()=>{const p=JSON.parse(localStorage.getItem('don-point')); const f=JSON.parse(localStorage.getItem('don-feed'));return f.events.filter(e=>e.category==='water').some(e=>e.addresses.some(a=>a.geometryVerified&&DonClient.distance(p,a)<0.2))})()"));
       js(scenario,"document.getElementById('map').scrollIntoView({block:'start'});");
+      showElement(scenario,"map");
       captureProof(scenario,"don-real-near-system-gps");
       js(scenario,"document.getElementById('forgetPoint').click();");
     }

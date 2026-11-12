@@ -140,6 +140,16 @@ class EventTests(unittest.TestCase):
         self.ledger.apply([self.record('2', type='cancellation', category='mchs', scope='region',
             municipalityId=None, addressIds=[], targetEventId='e-1')], NOW)
         self.assertEqual(self.ledger.events(NOW), [])
+    def test_pending_export_is_bounded_without_deleting_saved_evidence(self):
+        with self.store.db:
+            for n in range(300):
+                self.store._write_post('test',dict(id='many-'+str(n),publishedAt='2026-11-10T08:00:00+03:00',text='Адрес ожидает проверки'))
+        feed=self.ledger.feed(NOW)
+        self.assertEqual(len(feed['pendingPublications']),200)
+        self.assertEqual(feed['pendingPublicationCount'],301)
+        self.assertTrue(feed['pendingListLimited'])
+        self.assertEqual(len(self.store.posts('test')),301)
+
     def test_no_arbitrary_extra_fields_in_reviewed_records(self):
         self.ledger.apply([self.record(token='private-token')], NOW)
         self.assertNotIn('private-token', json.dumps(self.ledger.feed(NOW)))
