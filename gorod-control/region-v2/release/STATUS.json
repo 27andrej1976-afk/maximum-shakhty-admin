@@ -10,51 +10,68 @@
     "compilation": "passed",
     "lint": "passed",
     "packageAndDebugSignature": "passed",
-    "compileRunId": 43213984645,
-    "runtimeTests": "4 offline/scaffold tests passed; real GPS and live incident feed not tested",
-    "runtimeRunId": 43213984645,
-    "deviceGps": "not-tested",
+    "compileRunId": 43240853023,
+    "runtimeTests": "7 tests passed: real HTTPS feed, bundled real MAX snapshot, filters/cards/offline cache, native emulator GPS, deletion, external report route",
+    "runtimeRunId": 43240853023,
+    "deviceGps": "native emulator GPS bridge passed; user phone not tested",
     "upgradeWithPermanentKey": "not-tested",
     "userAcceptance": "not-confirmed",
-    "runtimeTestsPassed": 4,
+    "runtimeTestsPassed": 7,
     "runtimeTestsFailed": 0,
     "runtimeTestsSkipped": 0,
     "runtimeAndroidApi": 35,
-    "runtimeCompletedAt": "2026-11-12T12:04:27+00:00",
+    "runtimeCompletedAt": "2026-11-12T14:52:57+00:00",
     "brandAssetsInApk": "byte-identical-to-originals",
     "latestVerification": {
-      "runId": 43213984645,
+      "runId": 43240853023,
       "state": "success",
-      "artifactId": 13943600247,
-      "purpose": "assert app focus/visible package before accepting screenshot"
+      "artifactId": 13954712189,
+      "sourceCommit": "b9d626f5010a3e1af8b2f84fae1792141aaee956",
+      "purpose": "Current HTTPS feed verified with zero water incidents; dated historical QA separated"
     },
-    "visualProof": "manually inspected: Don screen with original brand assets; previous Pixel Launcher ANR image rejected"
+    "visualProof": "Manually inspected strict-gate screenshots: all three water street pins, fully loaded imagery, real event card and native GPS emulator view; not a physical-phone acceptance",
+    "zeroCurrentIncidentsVerification": {
+      "runId": 43240853023,
+      "sourceCommit": "b9d626f5010a3e1af8b2f84fae1792141aaee956",
+      "state": "success",
+      "scope": "Historical real-data fixture separately labelled; current live network check accepts empty categories.",
+      "artifactId": 13954712189,
+      "completedAt": "2026-11-12T14:52:57+00:00",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
   },
   "max": {
     "publicChannelsRead": 4,
-    "messagesPerChannel": 20,
-    "checkedAt": "2026-11-12T12:00:31.841143+00:00",
+    "checkedAt": "2026-11-12T14:08:48.324000+00:00",
     "gas": "excluded-by-owner",
-    "newCandidatePublishers": "pending-review",
+    "newCandidatePublishers": "identity-verified-by-primary-publisher-links",
     "regionalCoverage": "incomplete",
     "excludedSourceIds": [
       "max_city",
       "shakhty-admin"
     ],
     "sourcePolicy": "regional-resource-and-emergency-only",
-    "historicalCheckNote": "12.11.2026, 15:00 МСК: четыре профильных публичных канала прочитаны повторно, по 20 сообщений; газ и местные администрации исключены."
+    "historicalCheckNote": "All four enabled channel histories caught up for the configured initial 16-day window; 699 public posts retained, no unfinished scans at 17:08 MSK. This does not prove older/deleted history or all edits.",
+    "retainedPublicPostsAtCheck": 699,
+    "uncompletedHistoryScansAtCheck": 0,
+    "forwardedTextPreserved": true
   },
-  "productionCollector": "installed-isolated-on-existing-server; disabled-registry; not-running",
-  "catalog": "awaiting-verified-address-catalog",
-  "automaticIncidentParsing": "not-ready",
+  "productionCollector": "running-on-authorized-existing-FirstVDS",
+  "catalog": "GAR-2026-11-06:2295-localities,34219-streets",
+  "automaticIncidentParsing": "supported-source-templates-live; unsupported-or-ambiguous-publications-pending",
   "reportRoute": "official-gosuslugi-external-link-implemented-and-Android-intent-tested; actual-submission-not-tested",
   "push": "not-implemented",
   "permanentSigningKey": "not-created",
   "publisherDetails": "partially-confirmed",
-  "publishedPrivacyAndTerms": "missing",
+  "publishedPrivacyAndTerms": "drafts-only; legal operator fields not provided",
   "pythonChecks": {
-    "passed": 66,
-    "syntheticData": true
+    "passed": 80,
+    "syntheticData": true,
+    "realPublicPostFixturesAlsoUsed": true,
+    "separateCryptoImportTestsPassed": 2
   },
   "publisher": {
     "displayName": "Андрей",
@@ -71,30 +88,90 @@
     "mchs"
   ],
   "deploymentAccess": "explicitly-authorized-by-owner-and-used-2026-11-12",
-  "workState": "resumed-server-preparation-verified-live-pipeline-pending",
+  "workState": "live-server-and-Android-HTTPS-verified; permanent-signing-and-owner-legal-inputs-pending",
   "deployment": {
     "checkedDate": "2026-11-12",
-    "checkedLocalTime": "15:20 MSK",
-    "sourceCommit": "c7885c432c42de4fd29ac5ee3c20db13fe1351de",
-    "sourcePermissionsFix": "applied-and-runtime-rechecked",
+    "checkedLocalTime": "17:30 MSK",
+    "sourceCommit": "419d1ef3e6061587800636aa39ae31491753a889",
+    "publicWebCorrectionCommit": "2138d9b3b44788431d614b85dbc50b0973a292ec",
     "hostType": "existing-FirstVDS",
-    "reverseProxy": "Caddy; unchanged",
-    "publicRoute": "not-configured",
-    "privateSessionStorage": "directory-0700-don-control; credential-not-transferred",
-    "sdkImport": "passed",
-    "localHttpPage": 200,
+    "reverseProxy": "Caddy; scoped /don-control route backed up and validated; other routes kept",
+    "publicRoute": "https://chat.sportoskop.ru/don-control/",
+    "publicFeed": "https://chat.sportoskop.ru/don-control/feed.json",
+    "privateSessionStorage": "0700 directory;0600 file;don-control owner;authenticated-encrypted-transfer-verified",
+    "finalServices": {
+      "don-public": "active-and-enabled",
+      "don-collector": "active-and-enabled"
+    },
+    "collectorIntervalSeconds": 120,
+    "observedCollectorRestarts": 0,
+    "otherExistingServicesCheckedActive": 6,
+    "originalOtherHttpStatusesBeforeAndAfter": [
+      200,
+      200,
+      503
+    ],
     "privateSessionHttpPath": 404,
     "webUserCanTraverseSessionDirectory": false,
     "lastLocalHealth": {
       "server": "running",
-      "feedAvailable": false,
+      "feedAvailable": true,
       "incidentPipelineVerified": false
     },
-    "finalServices": {
-      "don-public": "inactive",
-      "don-collector": "inactive"
+    "healthEndpointNote": "Web health only. The fixed false readiness field is deliberately not a substitute for feed/runtime evidence.",
+    "limits": "Short observation window only; no uptime SLA, full region coverage, user-device acceptance, push or permanent signing confirmation",
+    "geometryAndWebCommit": "523c46e688b760bfdad3167e52cf521ac99efe17",
+    "geometryQueueFix": "Installed; cached failures no longer spend network budget; live queue advanced to 12 addresses, no additional verified geometry yet",
+    "geometryProvider": "Photon timed out from the deployed server in a bounded 15-second public-place probe; additional coordinates remain unconfirmed; no alternate network bypass attempted"
+  },
+  "liveSnapshot": {
+    "verifiedViaCiAt": "2026-11-12T14:12:27.107926+00:00",
+    "feedGeneratedAt": "2026-11-12T14:11:01.637851+00:00",
+    "eventsByCategory": {
+      "water": 1,
+      "power": 7,
+      "mchs": 1
     },
-    "otherExistingServicesCheckedActive": 6,
-    "limits": "local smoke check only; no MAX/server feed/GPS/push/release confirmation"
+    "markers": 6,
+    "pendingPublicationCount": 632,
+    "publicPendingListLimit": 200,
+    "notice": "Counts are a dated snapshot, not a promise of continuous availability or complete regional incidents."
+  },
+  "liveSnapshotAfterRestoration": {
+    "feedGeneratedAt": "2026-11-12T14:30:23.045212+00:00",
+    "events": 8,
+    "markers": 3,
+    "eventsByCategory": {
+      "water": 0,
+      "power": 7,
+      "mchs": 1
+    },
+    "restorationSourceMessageId": "117609398746571755",
+    "restorationPublishedAt": "2026-11-12T14:28:14.253000+00:00",
+    "scope": "One live URSV outage/restoration lifecycle, not blanket proof for every category",
+    "matchedStreetIds": 10
+  },
+  "remainingEngineeringGates": [
+    "Reliable geometry lookup for more incident streets; current server Photon request timed out",
+    "Physical Android acceptance and permanent-signature upgrade test",
+    "Push remains unimplemented"
+  ],
+  "optionalGeometryProvider": {
+    "provider": "DaData exact GAR street ID",
+    "codeCommit": "1718aa3b2b5a16ae77d27c9c590136098e168252",
+    "state": "prepared-and-synthetic-tests-passed; not-deployed-or-connected",
+    "needs": "owner private API key, protected transfer and real server validation",
+    "paidResourcesCreated": false
+  },
+  "latestPublicEndpointCheck": {
+    "checkedAt": "2026-11-12T14:48:02.053151+00:00",
+    "feedGeneratedAt": "2026-11-12T14:46:37.255457+00:00",
+    "eventsByCategory": {
+      "water": 0,
+      "power": 7,
+      "mchs": 1
+    },
+    "markers": 3,
+    "pending": 637
   }
 }
