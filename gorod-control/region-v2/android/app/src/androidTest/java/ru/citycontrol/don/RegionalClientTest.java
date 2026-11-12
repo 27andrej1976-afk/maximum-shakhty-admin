@@ -171,6 +171,7 @@ public class RegionalClientTest {
       assertEquals("true",js(scenario,"document.querySelectorAll('#map .leaflet-marker-icon').length>=3 && document.getElementById('events').textContent.includes('Белая Калитва')"));
       js(scenario,"(()=>{const f=JSON.parse(localStorage.getItem('don-feed'));document.getElementById('city').value=f.events.find(e=>e.category==='water').municipalityId;document.getElementById('city').dispatchEvent(new Event('change'))})()");
       showElement(scenario,"map");
+      waitFor(scenario,"document.getElementById('map').dataset.tileState==='ready' && document.querySelectorAll('#map .leaflet-tile-loaded').length>0");
       captureProof(scenario,"don-real-water-map");
       js(scenario,"document.getElementById('events').scrollIntoView({block:'start'});");
       js(scenario,"document.querySelector('#events details').open=true;");
@@ -209,6 +210,7 @@ public class RegionalClientTest {
       assertEquals("true",js(scenario,"(()=>{const p=JSON.parse(localStorage.getItem('don-point')); const f=JSON.parse(localStorage.getItem('don-feed'));return f.events.filter(e=>e.category==='water').some(e=>e.addresses.some(a=>a.geometryVerified&&DonClient.distance(p,a)<0.2))})()"));
       js(scenario,"document.getElementById('map').scrollIntoView({block:'start'});");
       showElement(scenario,"map");
+      waitFor(scenario,"document.getElementById('map').dataset.tileState==='ready' && document.querySelectorAll('#map .leaflet-tile-loaded').length>0");
       captureProof(scenario,"don-real-near-system-gps");
       js(scenario,"document.getElementById('forgetPoint').click();");
     }

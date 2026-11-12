@@ -10,8 +10,11 @@ let pointGeneration=0,feedGeneration=0;
 const saved=storage.read('don-point');if(saved&&Number.isFinite(saved.lat)&&Number.isFinite(saved.lon)&&Math.abs(saved.lat)<=90&&Math.abs(saved.lon)<=180)state.home=saved;
 const savedRadius=storage.read('don-radius');if([1,3,5].includes(savedRadius))state.radius=savedRadius;$('radius').value=state.radius;
 const map=L.map('map',{zoomControl:true,attributionControl:true}).setView([47.6,40.4],7),pins=L.layerGroup().addTo(map);let homePin=null;
-const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
-let tileFailed=false;tiles.on('tileerror',()=>{tileFailed=true;renderMapStatus()});tiles.on('tileload',()=>{tileFailed=false;renderMapStatus()});
+const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'});
+let tileFailed=false,tilesLoading=true;const failedTiles=new Set();
+function tileState(){tileFailed=failedTiles.size>0;$('map').dataset.tileState=tilesLoading?'loading':tileFailed?'unavailable':'ready';renderMapStatus()}
+tiles.on('loading',()=>{tilesLoading=true;tileState()});tiles.on('load',()=>{tilesLoading=false;tileState()});
+tiles.on('tileerror',e=>{failedTiles.add(e.tile);tileState()});tiles.on('tileload',e=>{failedTiles.delete(e.tile);tileState()});tiles.on('tileunload',e=>{failedTiles.delete(e.tile);tileState()});tiles.addTo(map);
 function el(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n}
 function fmt(stamp){if(!stamp)return 'не было';const d=new Date(stamp);return Number.isFinite(+d)?d.toLocaleString('ru-RU',{timeZone:'Europe/Moscow',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+' МСК':'время не подтверждено'}
 function sourceLink(url){const safe=P.safeMax(url);if(!safe)return el('span','Источник не подтверждён');const a=el('a','Источник в MAX ↗');a.href=safe;a.target='_self';a.rel='noopener noreferrer';return a}
