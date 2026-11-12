@@ -11,6 +11,7 @@ on:
       - gorod-control/region-v2/web/**
       - gorod-control/region-v2/verify_live_pipeline.py
       - gorod-control/region-v2/test_real_pipeline.py
+      - gorod-control/region-v2/verify_public_endpoint.py
 concurrency:
   group: don-max-read-scope
   cancel-in-progress: false
@@ -39,13 +40,11 @@ jobs:
           python gorod-control/region-v2/make_test_feed.py --output /tmp/don-qa.json
           node gorod-control/region-v2/test_client.cjs /tmp/don-qa.json
           node --check gorod-control/region-v2/web/app.js
-          python gorod-control/region-v2/prepare_android.py
-      - name: Read real MAX and export only public event data for Android QA
-        env:
-          MAX_USER_SESSION_B64: ${{ secrets.MAX_USER_SESSION_B64 }}
+          python gorod-control/region-v2/prepare_android.py --feed-url https://chat.sportoskop.ru/don-control/feed.json
+      - name: Verify deployed HTTPS feed without accessing MAX session
         run: |
           mkdir -p gorod-control/region-v2/android/app/src/debug/assets/web/qa
-          python gorod-control/region-v2/verify_live_pipeline.py --output gorod-control/region-v2/android/app/src/debug/assets/web/qa/real-feed.json --report /tmp/don-real-pipeline-report.json
+          python gorod-control/region-v2/verify_public_endpoint.py --output gorod-control/region-v2/android/app/src/debug/assets/web/qa/real-feed.json --report /tmp/don-real-pipeline-report.json
       - name: Install pinned Android SDK
         run: |
           SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -1)

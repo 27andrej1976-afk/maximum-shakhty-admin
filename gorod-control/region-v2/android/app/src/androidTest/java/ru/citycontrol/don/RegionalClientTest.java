@@ -72,6 +72,8 @@ public class RegionalClientTest {
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
       loaded(scenario);
       waitFor(scenario, "Array.from(document.querySelectorAll('.brands img')).every(image=>image.complete && image.naturalWidth>0)");
+      waitFor(scenario,"!document.getElementById('refresh').disabled");
+      js(scenario,"document.getElementById('clearData').click();window.DonConfig={feedConfigured:false};document.getElementById('refresh').click();");
       waitFor(scenario, "document.getElementById('connection').textContent.includes('сборщик ещё не подключён')");
       assertEquals("true", js(scenario, "document.querySelector('h1').textContent==='Дон под контролем' && document.getElementById('region').textContent==='Вся область' && document.querySelectorAll('#filters button').length===4 && !document.querySelector('[data-category=gas]')"));
       assertEquals("true", js(scenario, "document.getElementById('report').getAttribute('href')==='https://www.gosuslugi.ru/10091/1'"));
@@ -125,18 +127,21 @@ public class RegionalClientTest {
     }
   }
   private void showElement(ActivityScenario<MainActivity> scenario, String id) throws Exception {
-    double cssTop=Double.parseDouble(js(scenario,"document.getElementById('"+id+"').getBoundingClientRect().top+window.scrollY"));
-    scenario.onActivity(activity -> {
-      WebView view=findWeb(activity.getWindow().getDecorView());
-      view.scrollTo(0,(int)Math.round(cssTop*view.getScale()));
-      view.invalidate();
-    });
-    InstrumentationRegistry.getInstrumentation().waitForIdleSync();
-    // Native scrolling and WebView compositor presentation are asynchronous.
-    // A bounded frame wait prevents a green test from saving the old header.
-    SystemClock.sleep(500);
-    assertEquals("Target must be visibly present near the top half of the viewport", "true",
-        js(scenario,"(()=>{const r=document.getElementById('"+id+"').getBoundingClientRect();return r.top<innerHeight/2 && r.bottom>Math.min(r.height,innerHeight)*0.8})()"));
+    // Correct from the current native scroll offset: opening details and Leaflet
+    // updates can move the target after the initial DOM offset was measured.
+    for (int attempt=0; attempt<4; attempt++) {
+      double delta=Double.parseDouble(js(scenario,"document.getElementById('"+id+"').getBoundingClientRect().top"));
+      scenario.onActivity(activity -> {
+        WebView view=findWeb(activity.getWindow().getDecorView());
+        view.scrollBy(0,(int)Math.round(delta*view.getScale()));
+        view.invalidate();
+      });
+      InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+      SystemClock.sleep(350);
+      if ("true".equals(js(scenario,"(()=>{const r=document.getElementById('"+id+"').getBoundingClientRect();return r.top<innerHeight/2 && Math.min(r.bottom,innerHeight)-Math.max(r.top,0)>Math.min(r.height,innerHeight)*0.7})()"))) return;
+    }
+    captureProof(scenario,"don-scroll-failure-"+id);
+    fail("Target is not sufficiently visible: "+js(scenario,"(()=>{const r=document.getElementById('"+id+"').getBoundingClientRect();return JSON.stringify({top:r.top,bottom:r.bottom,height:r.height,viewport:innerHeight,scroll:scrollY})})()"));
   }
   private void captureProof(ActivityScenario<MainActivity> scenario, String name) throws Exception {
     visibleAndFocused(scenario);
@@ -149,6 +154,7 @@ public class RegionalClientTest {
   }
   private void realFeed(ActivityScenario<MainActivity> scenario) throws Exception {
     loaded(scenario);
+    waitFor(scenario,"!document.getElementById('refresh').disabled");
     js(scenario, "window.DonConfig={feedConfigured:true,feedURL:'https://appassets.androidplatform.net/assets/web/qa/real-feed.json'}; document.getElementById('refresh').click();");
     waitFor(scenario,"JSON.parse(localStorage.getItem('don-feed')||'{}').verificationMode==='real-MAX-to-Android-QA-export-not-a-deployment' && !document.getElementById('refresh').disabled");
     js(scenario,"document.getElementById('city').value=''; document.getElementById('city').dispatchEvent(new Event('change')); document.getElementById('region').click(); document.querySelector('[data-category=all]').click();");
@@ -175,6 +181,21 @@ public class RegionalClientTest {
       assertEquals("true",js(scenario,"document.getElementById('eventCount').textContent===window.__countBeforeOffline && document.querySelectorAll('#map .leaflet-marker-icon').length>=3 && document.querySelectorAll('#healthCards .unavailable').length===3"));
       js(scenario,"window.fetch=window.__savedFetch; document.getElementById('refresh').click();");
       waitFor(scenario,"document.getElementById('connection').textContent.includes('Контрольная проверка')");
+    }
+  }
+  @Test public void deployedHttpsFeedReachesAndroidOverNetwork() throws Exception {
+    try (ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)) {
+      loaded(scenario);
+      waitFor(scenario,"!document.getElementById('refresh').disabled");
+      js(scenario,"document.getElementById('clearData').click();window.DonConfig={feedConfigured:true,feedURL:'https://chat.sportoskop.ru/don-control/feed.json'};document.getElementById('refresh').click();");
+      waitFor(scenario,"!document.getElementById('refresh').disabled && document.getElementById('connection').textContent.includes('Сводка получена')");
+      assertEquals("true",js(scenario,"(()=>{const f=JSON.parse(localStorage.getItem('don-feed'));return f.dataMode==='production' && f.mode==='max-only' && !f.verificationMode && Date.now()-Date.parse(f.generatedAt)<600000})()"));
+      js(scenario,"document.getElementById('city').value='';document.getElementById('city').dispatchEvent(new Event('change'));document.querySelector('[data-category=all]').click();");
+      assertEquals("true",js(scenario,"document.querySelectorAll('#map .leaflet-marker-icon').length>=3 && Number(document.getElementById('eventCount').textContent)>0"));
+      for (String category:new String[]{"water","power","mchs"}) {
+        js(scenario,"document.querySelector('[data-category="+category+"]').click();");
+        assertEquals("true",js(scenario,"Number(document.getElementById('eventCount').textContent)>0"));
+      }
     }
   }
   @Test public void systemGeolocationFiltersRealPublicationMarkersNearEmulatorPoint() throws Exception {

@@ -29,4 +29,8 @@ fi
 for don_proof in don-real-water-map don-real-water-card don-real-near-system-gps; do
   if ! adb pull "/sdcard/Download/$don_proof.png" /tmp/don-android-results/; then don_test_result=1; fi
 done
+# Preserve a failed viewport diagnosis as well; it never replaces a required proof.
+for don_failed in map events; do
+  adb pull "/sdcard/Download/don-scroll-failure-$don_failed.png" /tmp/don-android-results/ 2>/dev/null || true
+done
 exit "$don_test_result"
