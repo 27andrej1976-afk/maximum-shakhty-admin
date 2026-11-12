@@ -1,5 +1,5 @@
 {
-  "checkedDate": "2026-11-11",
+  "checkedDate": "2026-11-12",
   "product": "Дон под контролем",
   "region": "RU-ROS",
   "targetCoverage": "entire-Rostov-Oblast",
@@ -11,7 +11,7 @@
     "lint": "passed",
     "packageAndDebugSignature": "passed",
     "compileRunId": 43031541368,
-    "runtimeTests": "four-functional-tests-passed-in-43038069793; screenshot-artifact-failed",
+    "runtimeTests": "four functional tests passed in 43038991507; stronger visual check running",
     "runtimeRunId": 43038069793,
     "deviceGps": "not-tested",
     "upgradeWithPermanentKey": "not-tested",
@@ -23,15 +23,16 @@
     "runtimeCompletedAt": "2026-11-11T13:50:01+00:00",
     "brandAssetsInApk": "byte-identical-to-originals",
     "latestVerification": {
-      "runId": 43038991507,
-      "state": "in-progress-at-pause",
-      "purpose": "verify-corrected-screenshot-capture"
-    }
+      "runId": 43213984645,
+      "state": "in-progress",
+      "purpose": "assert app focus/visible package before accepting screenshot"
+    },
+    "visualProof": "previous screenshot is invalid: system Pixel Launcher ANR dialog, not the app"
   },
   "max": {
     "publicChannelsRead": 4,
     "messagesPerChannel": 20,
-    "checkedAt": "2026-11-11T14:11:59.623155+00:00",
+    "checkedAt": "2026-11-12T12:00:31.841143+00:00",
     "gas": "excluded-by-owner",
     "newCandidatePublishers": "pending-review",
     "regionalCoverage": "incomplete",
@@ -40,7 +41,7 @@
       "shakhty-admin"
     ],
     "sourcePolicy": "regional-resource-and-emergency-only",
-    "historicalCheckNote": "Повторно прочитаны четыре профильных канала: УРСВ, Ростовводоканал, Донэнерго, МЧС области. Газ исключён из первого выпуска по решению владельца."
+    "historicalCheckNote": "12.11.2026, 15:00 МСК: четыре профильных публичных канала прочитаны повторно, по 20 сообщений; газ и местные администрации исключены."
   },
   "productionCollector": "server-bundle-prepared-not-deployed",
   "catalog": "awaiting-verified-address-catalog",
@@ -69,5 +70,5 @@
     "mchs"
   ],
   "deploymentAccess": "blocked-by-browser-auto-review; owner console authorization required",
-  "workState": "paused-by-owner-until-2026-11-12"
+  "workState": "resumed-awaiting-explicit-console-authorization"
 }
