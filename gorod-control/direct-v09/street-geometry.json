@@ -23116,38 +23116,38 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:тимирязева": {
-      "timestamp": 1794346110.771543,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://overpass-api.de/api/interpreter",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:стачки 54-": {
-      "timestamp": 1794346110.771543,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://overpass-api.de/api/interpreter",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:паустовская": {
-      "timestamp": 1794346110.771543,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://overpass-api.de/api/interpreter",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:покровский 2/1-2/2, 1/1-": {
-      "timestamp": 1794346110.771543,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://overpass-api.de/api/interpreter",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:радужный 1/1-1/2, 2/1-": {
-      "timestamp": 1794346110.771543,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://overpass-api.de/api/interpreter",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:драгунская": {
@@ -23236,28 +23236,28 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:крещенский 4-": {
-      "timestamp": 1794346110.771543,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://overpass-api.de/api/interpreter",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:10 лет зи 145-175 а": {
-      "timestamp": 1794360459.073726,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:громова 2-20 а": {
-      "timestamp": 1794360459.073726,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:прокофьева": {
-      "timestamp": 1794360459.073726,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
@@ -23285,14 +23285,14 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:карпинского 1 а-": {
-      "timestamp": 1794360459.073726,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:дачная 264 а": {
-      "timestamp": 1794360459.073726,
+      "timestamp": 1794455162.863812,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
@@ -23744,6 +23744,13 @@
           ]
         }
       ],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:прокофьева 1-21, 2-20 а": {
+      "timestamp": 1794455162.863812,
+      "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
