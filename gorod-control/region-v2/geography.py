@@ -45,7 +45,7 @@ def verify_geometry(data,address,city):
 
 class GeometryCache:
     def __init__(self,path,*,endpoint=ENDPOINT):
-        self.db=sqlite3.connect(path);self.endpoint=endpoint
+        self.db=sqlite3.connect(path);self.endpoint=endpoint;self.network_requests=0
         # Endpoint is server configuration, never a URL supplied by an app user.
         u=urllib.parse.urlsplit(endpoint)
         if u.scheme!='https' or u.username or u.password or u.query or u.fragment:raise ValueError('HTTPS geocoder endpoint required')
@@ -59,6 +59,7 @@ class GeometryCache:
         q=address['label']+', '+city['name']+', Ростовская область, Россия'
         url=self.endpoint+'?'+urllib.parse.urlencode({'q':q,'limit':5,'countrycode':'RU'})
         found=None
+        self.network_requests+=1
         try:
             req=urllib.request.Request(url,headers={'User-Agent':'DonControl/0.1 (public utility street verification; Fefe-andrej@yandex.ru)'})
             with urllib.request.urlopen(req,timeout=10) as response:
@@ -68,5 +69,14 @@ class GeometryCache:
         except Exception:pass
         with self.db:self.db.execute('INSERT OR REPLACE INTO geometry VALUES(?,?,?)',
             (address['id'],now,json.dumps(found,ensure_ascii=False) if found else None))
+        return found
+    def resolve_missing(self,addresses,cities,now,*,request_budget):
+        """Cached failures must not starve later streets in the queue."""
+        start=self.network_requests;found={}
+        for address in addresses:
+            if address.get('geometryVerified') or address['id'] in found:continue
+            if self.network_requests-start>=max(0,request_budget):break
+            point=self.resolve(address,cities[address['municipalityId']],now)
+            if point:found[address['id']]=point
         return found
     def close(self):self.db.close()

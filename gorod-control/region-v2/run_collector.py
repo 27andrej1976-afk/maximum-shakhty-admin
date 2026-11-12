@@ -82,14 +82,10 @@ async def run(args):
                     known=json.loads(seed.read_text()) if seed.is_file() else {}
                     known.update(geometry.values())
                     ledger,stats=process(store,catalog,index,now,geometry=known)
-                    budget=getattr(args,'geometry_budget',0)
-                    for event in ledger.events(now):
-                        for address in event['addresses']:
-                            if budget<=0:break
-                            if address.get('geometryVerified'):continue
-                            point=geometry.resolve(address,ledger.cities[address['municipalityId']],now)
-                            budget-=1
-                            if point:ledger.addresses[address['id']].update(point)
+                    addresses=[address for event in ledger.events(now) for address in event['addresses']]
+                    for aid,point in geometry.resolve_missing(addresses,ledger.cities,now,
+                            request_budget=getattr(args,'geometry_budget',0)).items():
+                        ledger.addresses[aid].update(point)
                     atomic_json(accepted,{'addresses':list(ledger.addresses.values())})
                 finally:
                     geometry.close()
