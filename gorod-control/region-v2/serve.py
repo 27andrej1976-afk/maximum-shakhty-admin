@@ -24,7 +24,7 @@ class PublicHandler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', mime)
         self.send_header('Content-Length', str(len(raw)))
         self.send_header('X-Content-Type-Options', 'nosniff')
-        self.send_header('Referrer-Policy', 'no-referrer')
+        self.send_header('Referrer-Policy', 'strict-origin-when-cross-origin' if mime.startswith('text/html') else 'no-referrer')
         self.send_header('Cache-Control', 'no-store' if mime.startswith('application/json') else 'public, max-age=600')
         if self.headers.get('Origin') == 'https://appassets.androidplatform.net':
             self.send_header('Access-Control-Allow-Origin', 'https://appassets.androidplatform.net')

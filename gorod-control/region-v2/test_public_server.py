@@ -40,9 +40,12 @@ class PublicBoundaryTests(unittest.TestCase):
             self.assertEqual(error.exception.code, 404)
 
     def test_feed_is_readable_by_separate_web_user_with_exact_android_origin(self):
+        with urlopen(self.url+'/') as page:
+            self.assertEqual(page.headers['Referrer-Policy'], 'strict-origin-when-cross-origin')
         request = Request(self.url+'/feed.json', headers={'Origin':'https://appassets.androidplatform.net'})
         with urlopen(request) as response:
             self.assertEqual(response.headers['Access-Control-Allow-Origin'], 'https://appassets.androidplatform.net')
+            self.assertEqual(response.headers['Referrer-Policy'], 'no-referrer')
             self.assertEqual(json.load(response), {'events': []})
         self.assertEqual((self.public/'feed.json').stat().st_mode & 0o777, 0o644)
         with urlopen(Request(self.url+'/feed.json', headers={'Origin':'https://unrelated.invalid'})) as response:
