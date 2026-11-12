@@ -30,7 +30,7 @@ def prepare(output):
     (config/'catalog.json').write_text(json.dumps({'regionId':'RU-ROS','dataMode':'production',
         'municipalities':index['municipalities'],'addresses':[],
         'verification':'GAR '+index['version']},ensure_ascii=False))
-    (output/'requirements.txt').write_text('maxapi-python==2.4.1\n')
+    (output/'requirements.txt').write_text('maxapi-python==2.4.1\nPyNaCl==1.6.2\n')
     build(output/'public')
     (output/'DEPLOYMENT_STATUS.txt').write_text(
         'Prepared, not deployed. Source registry remains disabled.\n'

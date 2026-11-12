@@ -22,6 +22,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install --quiet PyNaCl==1.6.2
+      - run: python -m unittest discover -s gorod-control/region-v2/session-transfer -q
       - name: Encrypt to the server-only private key without account login
         env:
           MAX_USER_SESSION_B64: ${{ secrets.MAX_USER_SESSION_B64 }}
