@@ -33,6 +33,49 @@ def value(obj):
     return getattr(obj, 'value', obj)
 
 
+def linked_content(message):
+    """Retain only content already embedded in an allowlisted public post.
+
+    Never fetch the original chat, sender/profile, media URL or private link.
+    Quoted replies are kept separately and cannot masquerade as a new incident.
+    """
+    result, seen = [], {id(message)}
+    current = message
+    for _ in range(3):
+        link = getattr(current, 'link', None)
+        original = getattr(link, 'message', None)
+        if original is None or id(original) in seen:
+            break
+        seen.add(id(original))
+        kind = value(getattr(link, 'type', None))
+        if kind not in ('FORWARD', 'REPLY'):
+            break
+        text = getattr(original, 'text', '') or ''
+        if not isinstance(text, str) or len(text) > 100000:
+            raise CollectionError('FORMAT_ERROR')
+        stamp = getattr(original, 'time', None)
+        published = iso(stamp) if type(stamp) is int and stamp > 0 else None
+        mid = getattr(original, 'id', None)
+        attaches = getattr(original, 'attaches', None) or []
+        if not isinstance(attaches, (list, tuple)) or len(attaches) > 1000:
+            raise CollectionError('FORMAT_ERROR')
+        item = {'kind': kind, 'text': text, 'publishedAt': published,
+                'messageId': str(mid) if type(mid) is int and mid > 0 else None,
+                'attachmentCount': len(attaches),
+                'attachmentTypes': [type(a).__name__ for a in attaches]}
+        # Only a public origin can be an identity hint; never export a private
+        # chat ID/name/link even when the operator has forwarded its content.
+        if value(getattr(link, 'chat_access_type', None)) == 'PUBLIC':
+            cid = getattr(link, 'chat_id', None)
+            if type(cid) is int:
+                item['publicOriginChatId'] = cid
+        result.append(item)
+        if kind == 'REPLY':
+            break
+        current = original
+    return result
+
+
 def verify_source(source, chat):
     link = urlsplit(source['url'])
     if (not source.get('enabled') or not source.get('identity_verified')
@@ -62,10 +105,12 @@ def envelope(message, source, target_ms):
     attachments = getattr(message, 'attaches', None) or []
     if not isinstance(attachments, (list, tuple)) or len(attachments) > 1000:
         raise CollectionError('FORMAT_ERROR')
-    forwarded = getattr(message, 'link', None) is not None
+    linked = linked_content(message)
+    has_link = getattr(message, 'link', None) is not None
+    forwarded = value(getattr(getattr(message, 'link', None), 'type', None)) == 'FORWARD'
     kind = value(getattr(message, 'type', None))
     # Unknown payloads stay in the evidence store, never become incidents silently.
-    review = bool(attachments or forwarded or not text.strip() or kind not in ('CHANNEL', 'TEXT'))
+    review = bool(attachments or has_link or not text.strip() or kind not in ('CHANNEL', 'TEXT'))
     return {
         'id': str(mid), 'channel_id': source['chat_id'],
         'publishedAt': iso(stamp), 'text': text,
@@ -73,7 +118,8 @@ def envelope(message, source, target_ms):
         'sourceId': source['id'], 'url': source['url'], 'transport': 'max',
         'attachmentCount': len(attachments),
         'attachmentTypes': [type(a).__name__ for a in attachments],
-        'forwarded': forwarded, 'requiresReview': review,
+        'forwarded': forwarded, 'hasLinkedMessage': has_link,
+        'linkedContent': linked, 'requiresReview': review,
     }
 
 

@@ -163,9 +163,13 @@ class Ledger:
                 if (source['id'], row[0], row[1]) in reviewed:
                     continue
                 post = json.loads(row[2])
+                text = post.get('text', '')
+                if not text.strip() and post.get('forwarded'):
+                    text = next((item.get('text', '') for item in post.get('linkedContent', [])
+                                 if item.get('kind') == 'FORWARD' and item.get('text', '').strip()), '')
                 result.append({'id': source['id'] + '/' + row[0], 'sourceId': source['id'],
                                'publishedAt': post['publishedAt'], 'url': source['url'],
-                               'text': post.get('text', '')[:2000],
+                               'text': text[:2000], 'forwarded': post.get('forwarded', False),
                                'attachmentCount': post.get('attachmentCount', 0),
                                'message': 'Публикация ожидает разбора; адрес и влияние не подтверждены'})
         return result
