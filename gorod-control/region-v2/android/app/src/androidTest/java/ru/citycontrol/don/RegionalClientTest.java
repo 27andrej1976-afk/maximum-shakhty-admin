@@ -53,6 +53,21 @@ public class RegionalClientTest {
   private void loaded(ActivityScenario<MainActivity> scenario) throws Exception {
     waitFor(scenario, "!!document.getElementById('map')?.classList.contains('leaflet-container') && !!document.getElementById('clearData')");
   }
+  private void visibleAndFocused(ActivityScenario<MainActivity> scenario) throws Exception {
+    AtomicReference<Boolean> focused = new AtomicReference<>(false);
+    long deadline = SystemClock.elapsedRealtime()+10000;
+    do {
+      scenario.onActivity(activity -> focused.set(activity.hasWindowFocus()
+          && activity.getWindow().getDecorView().isShown()));
+      if (focused.get()) {
+        android.view.accessibility.AccessibilityNodeInfo root =
+            InstrumentationRegistry.getInstrumentation().getUiAutomation().getRootInActiveWindow();
+        if (root != null && "ru.citycontrol.don".contentEquals(root.getPackageName())) return;
+      }
+      SystemClock.sleep(200);
+    } while (SystemClock.elapsedRealtime()<deadline);
+    fail("Regional app is not visibly focused; a system dialog or another app blocks the screenshot");
+  }
   @Test public void offlineShellLoadsAndDoesNotClaimRegionalCoverage() throws Exception {
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
       loaded(scenario);
@@ -61,6 +76,7 @@ public class RegionalClientTest {
       assertEquals("true", js(scenario, "document.querySelector('h1').textContent==='Дон под контролем' && document.getElementById('region').textContent==='Вся область' && document.querySelectorAll('#filters button').length===4 && !document.querySelector('[data-category=gas]')"));
       assertEquals("true", js(scenario, "document.getElementById('report').getAttribute('href')==='https://www.gosuslugi.ru/10091/1'"));
       assertEquals("true", js(scenario, "document.getElementById('adSlot').hidden && document.querySelector('footer').textContent.includes('не означает отсутствие аварий')"));
+      visibleAndFocused(scenario);
       Bitmap image = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
       assertNotNull("Android screenshot must be captured", image);
       // Gradle uninstalls the tested app and removes its external-files folder.
