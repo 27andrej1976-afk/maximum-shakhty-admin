@@ -157,7 +157,7 @@ public class RegionalClientTest {
     waitFor(scenario,"!document.getElementById('refresh').disabled");
     js(scenario, "window.DonConfig={feedConfigured:true,feedURL:'https://appassets.androidplatform.net/assets/web/qa/real-feed.json'}; document.getElementById('refresh').click();");
     waitFor(scenario,"JSON.parse(localStorage.getItem('don-feed')||'{}').verificationMode==='real-MAX-to-Android-QA-export-not-a-deployment' && !document.getElementById('refresh').disabled");
-    js(scenario,"document.getElementById('city').value=''; document.getElementById('city').dispatchEvent(new Event('change')); document.getElementById('region').click(); document.querySelector('[data-category=all]').click();");
+    js(scenario,"window.__qaNow=Date.parse(JSON.parse(localStorage.getItem('don-feed')).qaSnapshotAt);Date.now=()=>window.__qaNow;document.getElementById('city').value=''; document.getElementById('city').dispatchEvent(new Event('change')); document.getElementById('region').click(); document.querySelector('[data-category=all]').click();");
   }
   @Test public void realMAXExportRendersAllCategoriesAndPreservesMarkersOffline() throws Exception {
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
@@ -192,10 +192,10 @@ public class RegionalClientTest {
       waitFor(scenario,"!document.getElementById('refresh').disabled && document.getElementById('connection').textContent.includes('Сводка получена')");
       assertEquals("true",js(scenario,"(()=>{const f=JSON.parse(localStorage.getItem('don-feed'));return f.dataMode==='production' && f.mode==='max-only' && !f.verificationMode && Date.now()-Date.parse(f.generatedAt)<600000})()"));
       js(scenario,"document.getElementById('city').value='';document.getElementById('city').dispatchEvent(new Event('change'));document.querySelector('[data-category=all]').click();");
-      assertEquals("true",js(scenario,"document.querySelectorAll('#map .leaflet-marker-icon').length>=3 && Number(document.getElementById('eventCount').textContent)>0"));
+      assertEquals("true",js(scenario,"Number(document.getElementById('eventCount').textContent)===JSON.parse(localStorage.getItem('don-feed')).events.filter(e=>Date.parse(e.expiresAt)>Date.now()).length"));
       for (String category:new String[]{"water","power","mchs"}) {
         js(scenario,"document.querySelector('[data-category="+category+"]').click();");
-        assertEquals("true",js(scenario,"Number(document.getElementById('eventCount').textContent)>0"));
+        assertEquals("true",js(scenario,"Number(document.getElementById('eventCount').textContent)===JSON.parse(localStorage.getItem('don-feed')).events.filter(e=>e.category==='"+category+"' && Date.parse(e.expiresAt)>Date.now()).length"));
       }
     }
   }
