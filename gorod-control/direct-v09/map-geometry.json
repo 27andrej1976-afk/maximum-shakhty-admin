@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-12T11:56:46.265863+00:00",
-  "status": "updated",
+  "generatedAt": "2026-11-12T19:50:01.545580+00:00",
+  "status": "unavailable",
   "source": "© OpenStreetMap contributors · ODbL",
   "sourceUrl": "https://www.openstreetmap.org/copyright",
   "events": {
@@ -7900,5 +7900,6 @@
       "fullText": "г. Шахты\nпер. Крупской 27-35, 28-48; \nпер. Кропоткина 1-11, 2-14;\nул. Титова 35-41, 26-32;                  ул. Азовская 46;                              ул. Варшавская 13 -15\n13.11.26 09=00 — 13.11.26 15=00\nТехническое обслуживание оборудования ВЛ-0,4кВ  Л-3 от ТП-61\n",
       "note": "Подсвечены улицы, указанные в сообщении. Это не точные границы отключения и не координаты поломки."
     }
-  }
+  },
+  "error": "TimeoutError: The read operation timed out; TimeoutError: The read operation timed out"
 }
