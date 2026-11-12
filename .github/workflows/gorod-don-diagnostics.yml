@@ -7,6 +7,8 @@ on:
       - .github/workflows/gorod-don-diagnostics.yml
       - gorod-control/region-v2/diagnose_max.py
       - gorod-control/region-v2/test_diagnostics.py
+      - gorod-control/region-v2/sample_publications.py
+      - gorod-control/region-v2/test_public_samples.py
 permissions:
   contents: read
 jobs:
@@ -28,11 +30,13 @@ jobs:
       - name: Read existing public channels and report only safe stages and counts
         env:
           MAX_USER_SESSION_B64: ${{ secrets.MAX_USER_SESSION_B64 }}
-        run: python gorod-control/region-v2/diagnose_max.py --regional --output /tmp/don-max-diagnostics.json
+        run: python gorod-control/region-v2/sample_publications.py --output /tmp/don-max-publications.json --report /tmp/don-max-diagnostics.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: don-max-safe-diagnostics
-          path: /tmp/don-max-diagnostics.json
+          path: |
+            /tmp/don-max-diagnostics.json
+            /tmp/don-max-publications.json
           retention-days: 3
           if-no-files-found: error
