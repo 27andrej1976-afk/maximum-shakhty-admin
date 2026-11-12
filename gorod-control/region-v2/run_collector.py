@@ -75,7 +75,11 @@ async def run(args):
                 accepted=state/'accepted-addresses.json'
                 if accepted.is_file():
                     catalog['addresses']=json.loads(accepted.read_text())['addresses']
-                geometry=GeometryCache(state/'geometry.sqlite',endpoint=getattr(args,'geometry_endpoint',None) or 'https://photon.komoot.io/api/')
+                if getattr(args,'geometry_provider','photon')=='dadata':
+                    from geography_dadata import DadataGeometryCache
+                    geometry=DadataGeometryCache(state/'geometry-dadata.sqlite',args.geometry_token_file)
+                else:
+                    geometry=GeometryCache(state/'geometry.sqlite',endpoint=getattr(args,'geometry_endpoint',None) or 'https://photon.komoot.io/api/')
                 try:
                     index=load_index(args.gar_index)
                     seed=Path(args.gar_index).with_name('geometry.verified.json')

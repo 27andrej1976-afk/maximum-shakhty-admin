@@ -56,20 +56,21 @@ class GeometryCache:
         row=self.db.execute('SELECT checked,payload FROM geometry WHERE id=?',(address['id'],)).fetchone()
         if row and (row[1] or datetime.fromisoformat(now)-datetime.fromisoformat(row[0])<timedelta(days=1)):
             return json.loads(row[1]) if row[1] else None
-        q=address['label']+', '+city['name']+', Ростовская область, Россия'
-        url=self.endpoint+'?'+urllib.parse.urlencode({'q':q,'limit':5,'countrycode':'RU'})
         found=None
         self.network_requests+=1
-        try:
-            req=urllib.request.Request(url,headers={'User-Agent':'DonControl/0.1 (public utility street verification; Fefe-andrej@yandex.ru)'})
-            with urllib.request.urlopen(req,timeout=10) as response:
-                raw=response.read(500001)
-                if len(raw)>500000:raise ValueError('Geometry reply too large')
-                found=verify_geometry(json.loads(raw),address,city)
+        try:found=self.lookup(address,city)
         except Exception:pass
         with self.db:self.db.execute('INSERT OR REPLACE INTO geometry VALUES(?,?,?)',
             (address['id'],now,json.dumps(found,ensure_ascii=False) if found else None))
         return found
+    def lookup(self,address,city):
+        q=address['label']+', '+city['name']+', Ростовская область, Россия'
+        url=self.endpoint+'?'+urllib.parse.urlencode({'q':q,'limit':5,'countrycode':'RU'})
+        req=urllib.request.Request(url,headers={'User-Agent':'DonControl/0.1 (public utility street verification; Fefe-andrej@yandex.ru)'})
+        with urllib.request.urlopen(req,timeout=10) as response:
+            raw=response.read(500001)
+            if len(raw)>500000:raise ValueError('Geometry reply too large')
+            return verify_geometry(json.loads(raw),address,city)
     def resolve_missing(self,addresses,cities,now,*,request_budget):
         """Cached failures must not starve later streets in the queue."""
         start=self.network_requests;found={}

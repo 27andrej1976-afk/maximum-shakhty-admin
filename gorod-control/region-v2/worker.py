@@ -36,6 +36,10 @@ def configuration(path):
     cities = [c for c in catalog.get('municipalities', []) if c.get('verified')]
     if not cities:
         raise ValueError('Verified regional territory catalog required before live collection')
+    provider=raw.get('geometryProvider','photon')
+    if provider not in {'photon','dadata'}:raise ValueError('Unsupported geometry provider')
+    if provider=='dadata' and not Path(raw.get('geometryTokenFile','/missing')).is_file():
+        raise ValueError('Private geometry token file required')
     state = Path(raw['stateDir'])
     state.mkdir(parents=True, exist_ok=True, mode=0o700)
     return raw, SimpleNamespace(registry=raw['registry'], catalog=raw['catalog'],
@@ -43,7 +47,8 @@ def configuration(path):
         health_output=raw['healthOutput'], feed_output=raw['feedOutput'],
         max_pages=min(30, max(1, int(raw.get('maxPages', 20)))),
         gar_index=raw.get('garIndex'),geometry_budget=min(4,max(0,int(raw.get('geometryBudget',0)))),
-        geometry_endpoint=raw.get('geometryEndpoint'))
+        geometry_endpoint=raw.get('geometryEndpoint'),geometry_provider=provider,
+        geometry_token_file=raw.get('geometryTokenFile'))
 
 
 async def work(path, *, once=False):
