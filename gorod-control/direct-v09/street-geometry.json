@@ -23243,24 +23243,24 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:10 лет зи 145-175 а": {
-      "timestamp": 1794455162.863812,
+      "timestamp": 1794556155.650392,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:громова 2-20 а": {
-      "timestamp": 1794455162.863812,
+      "timestamp": 1794556155.650392,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:прокофьева": {
-      "timestamp": 1794455162.863812,
+      "timestamp": 1794556155.650392,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:андропова": {
@@ -23285,17 +23285,17 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:карпинского 1 а-": {
-      "timestamp": 1794455162.863812,
+      "timestamp": 1794556155.650392,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:дачная 264 а": {
-      "timestamp": 1794455162.863812,
+      "timestamp": 1794556155.650392,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:обуховой": {
@@ -23749,10 +23749,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:прокофьева 1-21, 2-20 а": {
-      "timestamp": 1794455162.863812,
+      "timestamp": 1794556155.650392,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:кислородный": {
@@ -24229,6 +24229,185 @@
       ],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:крупской": {
+      "timestamp": 1794556155.650392,
+      "segments": [
+        {
+          "osmId": 99056651,
+          "line": [
+            [
+              47.6901564,
+              40.2411223
+            ],
+            [
+              47.6871739,
+              40.2386299
+            ],
+            [
+              47.6864929,
+              40.2380613
+            ],
+            [
+              47.6854381,
+              40.2371795
+            ]
+          ]
+        },
+        {
+          "osmId": 440991756,
+          "line": [
+            [
+              47.6843569,
+              40.2357143
+            ],
+            [
+              47.6836827,
+              40.2350242
+            ],
+            [
+              47.6832865,
+              40.2349127
+            ],
+            [
+              47.6829978,
+              40.2349155
+            ],
+            [
+              47.682758,
+              40.234985
+            ]
+          ]
+        }
+      ],
+      "provider": "OpenStreetMap",
+      "api": "https://overpass-api.de/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:кропоткина": {
+      "timestamp": 1794556155.650392,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://overpass-api.de/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:титова": {
+      "timestamp": 1794556155.650392,
+      "segments": [
+        {
+          "osmId": 99056571,
+          "line": [
+            [
+              47.6868438,
+              40.2464675
+            ],
+            [
+              47.6863374,
+              40.2431214
+            ],
+            [
+              47.6862181,
+              40.2423333
+            ],
+            [
+              47.6861563,
+              40.2419035
+            ],
+            [
+              47.686078,
+              40.2414077
+            ],
+            [
+              47.6860199,
+              40.2410235
+            ],
+            [
+              47.6858841,
+              40.2401264
+            ],
+            [
+              47.6858265,
+              40.2397459
+            ],
+            [
+              47.6857408,
+              40.2392236
+            ],
+            [
+              47.6854381,
+              40.2371795
+            ],
+            [
+              47.685346,
+              40.2368056
+            ],
+            [
+              47.6851521,
+              40.2365091
+            ],
+            [
+              47.6851077,
+              40.2363317
+            ],
+            [
+              47.6850448,
+              40.2361876
+            ]
+          ]
+        }
+      ],
+      "provider": "OpenStreetMap",
+      "api": "https://overpass-api.de/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:азовская": {
+      "timestamp": 1794556155.650392,
+      "segments": [
+        {
+          "osmId": 99056665,
+          "line": [
+            [
+              47.6859829,
+              40.2467697
+            ],
+            [
+              47.6857432,
+              40.2451432
+            ],
+            [
+              47.6854876,
+              40.2434087
+            ],
+            [
+              47.6853067,
+              40.2421743
+            ],
+            [
+              47.6851764,
+              40.2412962
+            ],
+            [
+              47.6850435,
+              40.2403945
+            ],
+            [
+              47.6849148,
+              40.2394881
+            ],
+            [
+              47.6847843,
+              40.238635
+            ],
+            [
+              47.6843569,
+              40.2357143
+            ]
+          ]
+        }
+      ],
+      "provider": "OpenStreetMap",
+      "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     }
   }
