@@ -13,8 +13,8 @@ from pathlib import Path
 from core import utc
 
 LABELS={'water':'Вода','power':'Свет','mchs':'МЧС'}
-PREFIX=r'(?:\bг\.?|\bгород|\bп\.?|\bпос\.?|\bпоселок|\bх\.?|\bхутор|\bст-ца|\bстаница|\bс\.?|\bсело|\bрп\.?)\s*'
-STREET=re.compile(r'(?<!\w)(ул(?:ица)?|просп(?:ект)?|пр-т|пр\.т|пер(?:еулок)?|бул(?:ьвар)?|пл(?:ощадь)?|шоссе|проезд|пр-д)\.?\s+',re.I)
+PREFIX=r'(?:\bг\.?|\bгород|\bп\.?|\bпос\.?|\bпоселок|\bх\.?|\bхутор|\bст-ца|\bст\.?|\bстаница|\bс\.?|\bсело|\bрп\.?)\s*'
+STREET=re.compile(r'(?<!\w)(ул(?:ица)?|просп(?:ект)?|пр-т|пр\.т|пер(?:еулок)?|бул(?:ьвар)?|пл(?:ощадь)?|шоссе|проезд|пр-д)(?:\.\s*|\s+)',re.I)
 TYPES={'ул':'ул.','улица':'ул.','просп':'пр-кт','проспект':'пр-кт','пр-т':'пр-кт','пр.т':'пр-кт',
        'пер':'пер.','переулок':'пер.','бул':'б-р','бульвар':'б-р','пл':'пл.','площадь':'пл.',
        'шоссе':'ш.','проезд':'проезд','пр-д':'проезд'}
@@ -64,14 +64,28 @@ class Templates:
             if matching:
                 longest=max(len(norm(s['name'])) for s in matching)
                 matching=[s for s in matching if len(norm(s['name']))==longest]
-            if len(matching)!=1:
+            matched_name = None
+            if len(matching)==1: matched_name=norm(matching[0]['name'])
+            elif not matching:
+                # Only a unique first-name initial or omitted first name,
+                # within the already exact GAR locality and street type.
+                aliases=[]
+                for street in self.streets[city['id']]:
+                    parts=norm(street['name']).split()
+                    if street['type']!=typ or len(parts)!=2 or not all(x.isalpha() for x in parts):continue
+                    for alias in (parts[1], parts[0][0]+' '+parts[1]):
+                        if candidate==alias or candidate.startswith(alias+' '):aliases.append((street,alias))
+                if len({street['id'] for street,alias in aliases})==1 and aliases:
+                    matching=[aliases[0][0]];matched_name=max((a for st,a in aliases),key=len)
+            if len(matching)!=1 or matched_name is None:
                 unknown.append(hit.group(0)+raw);continue
             s=matching[0]
+            house_tail=candidate[len(matched_name):].strip()
             # Geometry is independent of existence in GAR. Source house/range
             # remains text; a street point must never claim a verified house.
             found[s['id']]={'id':s['id'],'municipalityId':city['id'],'streetId':s['id'],
                 'label':s['type']+' '+s['name'],'name':s['name'],'type':s['type'],
-                'sourceAddress':hit.group(0)+raw,'verified':True,'geometryVerified':False,
+                'sourceAddress':hit.group(0)+raw,'houseRangeSpecified':bool(re.search(r'\d',house_tail)),'verified':True,'geometryVerified':False,
                 'locationPrecision':'street','verification':'GAR '+self.index['version']}
         return list(found.values()),unknown
 

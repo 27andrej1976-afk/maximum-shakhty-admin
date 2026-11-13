@@ -4,7 +4,7 @@ from parse_publications import Templates,load_index
 from events import Ledger
 from core import utc
 
-VERSION='source-templates-gar-v1'
+VERSION='source-templates-gar-v2'
 
 
 def process(store,catalog,index,now,*,geometry=None):
@@ -28,7 +28,8 @@ def process(store,catalog,index,now,*,geometry=None):
         # Existing reviews are immutable; edits retain the old incident as
         # unconfirmed and place the changed evidence back in the review queue.
         review_id=VERSION+':'+cid+':'+mid+':'+digest[:16]
-        if store.db.execute('SELECT 1 FROM review_log WHERE id=?',(review_id,)).fetchone():
+        previous_review=store.db.execute("SELECT payload FROM review_log WHERE json_extract(payload,'$.sourceId')=? AND json_extract(payload,'$.messageId')=? AND json_extract(payload,'$.sourceHash')=? ORDER BY rowid DESC LIMIT 1",(cid,mid,digest)).fetchone()
+        if previous_review and not json.loads(previous_review[0]).get('unresolvedAddresses'):
             stats['unchanged']+=1;continue
         plan=templates.propose(post,source)
         kind=plan['state'];reason=plan['reason']
@@ -48,18 +49,22 @@ def process(store,catalog,index,now,*,geometry=None):
                     'category':plan['category'],'type':kind,'municipalityId':city_id,
                     'scope':plan.get('scope','municipality'),'addressIds':aids,'parserVersion':VERSION}
             if kind=='incident':
+                record.update(eventId=event_id,title=plan['title'],description=plan['text'][:4000],
+                    start=plan['start'],end=plan['end'],unresolvedAddresses=plan['unresolvedAddresses'],
+                    addressMatchPrecision='house-range-unverified' if any(a.get('houseRangeSpecified',True) for a in plan['addresses']) else 'street')
                 if store.db.execute('SELECT 1 FROM reviewed_events WHERE id=?',(event_id,)).fetchone():
-                    kind='pending';reason='CHANGED_INCIDENT_REQUIRES_REVIEW'
-                else:
-                    record.update(eventId=event_id,title=plan['title'],description=plan['text'][:4000],
-                        start=plan['start'],end=plan['end'],unresolvedAddresses=plan['unresolvedAddresses'],
-                        addressMatchPrecision='house-range-unverified' if any(any(ch.isdigit() for ch in a['sourceAddress']) for a in plan['addresses']) else 'street')
+                    try:
+                        changed=ledger.enrich_addresses(record,now)
+                        stats['unchanged']+=1
+                        continue
+                    except ValueError:
+                        kind='pending';reason='CHANGED_INCIDENT_REQUIRES_REVIEW'
             else:
                 # Exact source/category/city/address set, newer explicit text,
                 # only one unresolved incident. No broad street-only guessing.
                 candidates=[]
                 for event_row in store.db.execute('SELECT payload FROM reviewed_events'):
-                    event=json.loads(event_row[0])
+                    event=ledger.projected(json.loads(event_row[0]))
                     if (event['sourceId']==cid and event['category']==plan['category']
                             and event['municipalityId']==city_id and set(event['addressIds'])==set(aids)
                             and event.get('addressMatchPrecision','street')=='street'
@@ -67,7 +72,7 @@ def process(store,catalog,index,now,*,geometry=None):
                             and utc(event['publishedAt'])<=utc(post['publishedAt'])):
                         # Never treat a house/range-specific restoration as a
                         # confirmation for a whole street. That needs a house ledger.
-                        if any(any(ch.isdigit() for ch in a['sourceAddress']) for a in plan['addresses']):continue
+                        if any(a.get('houseRangeSpecified',True) for a in plan['addresses']):continue
                         if store.db.execute("SELECT 1 FROM review_log WHERE json_extract(payload,'$.targetEventId')=?",(event['eventId'],)).fetchone():continue
                         candidates.append(event['eventId'])
                 if len(candidates)==1:record['targetEventId']=candidates[0]

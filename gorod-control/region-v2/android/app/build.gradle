@@ -7,9 +7,13 @@ android {
     applicationId 'ru.citycontrol.don'
     minSdk 26
     targetSdk 35
-    versionCode 1
-    versionName '0.1.0-preview'
+    versionCode (findProperty("donVersionCode") ?: "2").toInteger()
+    versionName '0.2.0-pilot'
+    buildConfigField 'String', 'RUSTORE_PROJECT_ID', '"' + (findProperty('rustoreProjectId') ?: '').replaceAll('[^A-Za-z0-9_-]', '') + '"'
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+  }
+  buildTypes {
+    pilot { initWith release; signingConfig null; matchingFallbacks = ['release']; debuggable false }
   }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_17
@@ -17,6 +21,7 @@ android {
   }
 }
 dependencies {
+  implementation 'ru.rustore.sdk:pushclient:7.5.0'
   implementation 'androidx.webkit:webkit:1.12.1'
   androidTestImplementation 'androidx.test:core:1.6.1'
   androidTestImplementation 'androidx.test:runner:1.6.2'

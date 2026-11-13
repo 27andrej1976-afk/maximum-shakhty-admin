@@ -14,6 +14,7 @@ function point(a){return a?.geometryVerified===true&&Number.isFinite(a.lat)&&Num
 function visible(e,now=Date.now()){return !!(e&&!e.requiresReview&&categories.includes(e.category)&&safeMax(e.url)&&Number.isFinite(Date.parse(e.expiresAt))&&Date.parse(e.expiresAt)>now&&Date.parse(e.publishedAt)<=now+5*60e3&&!['resolved','cancelled'].includes(e.status))}
 function nearby(e,home,radius){return e.scope==='region'||!!(home&&(e.addresses||[]).some(a=>point(a)&&distance(home,a)<=radius))}
 function select(f,{city='',category='all',scope='region',home=null,radius=1},now=Date.now()){return (f?.events||[]).filter(e=>visible(e,now)&&(category==='all'||category===e.category)&&(e.scope==='region'||!city||city===e.municipalityId)&&(scope!=='near'||nearby(e,home,radius)))}
+function attention(f,category='all',now=Date.now()){return (f?.pendingPublications||[]).filter(p=>!p.partiallyAccepted&&(category==='all'||p.category===category)&&Date.parse(p.publishedAt)<=now&&now-Date.parse(p.publishedAt)<=36*3600e3).slice(0,5)}
 function health(f,city,offline,now=Date.now()){
 const states={};const stale=!f||now-Date.parse(f.generatedAt)>15*60e3||Date.parse(f.generatedAt)>now+5*60e3;
 for(const category of categories){const relevant=(f?.municipalities||[]).filter(m=>!city||m.id===city).map(m=>m.health?.[category]).filter(Boolean);let state='unconfigured',message='Охват этой категории для выбранной территории пока не подтверждён';
@@ -22,5 +23,5 @@ if(!city&&state==='read'&&f?.coverage!=='full')state='partial';
 if(offline||stale){state='unavailable';message=offline?'Нет связи с сервером. Показаны сохранённые сведения':'Сводка давно не обновлялась. Текущее состояние источников не подтверждено'}
 const stamps=relevant.map(s=>s.lastSuccessAt).filter(Boolean).sort((a,b)=>Date.parse(a)-Date.parse(b));states[category]={state,message,lastSuccessAt:stamps[0]||null};}
 return states}
-const api={categories,safeMax,validFeed,distance,point,visible,nearby,select,health};root.DonClient=api;if(typeof module!=='undefined')module.exports=api;
+const api={categories,safeMax,validFeed,distance,point,visible,nearby,select,attention,health};root.DonClient=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -22,6 +22,7 @@ class Ledger:
         self.store.db.executescript('''
             CREATE TABLE IF NOT EXISTS reviewed_events(id TEXT PRIMARY KEY,payload TEXT);
             CREATE TABLE IF NOT EXISTS review_log(id TEXT PRIMARY KEY,payload TEXT);
+            CREATE TABLE IF NOT EXISTS address_amendments(id TEXT PRIMARY KEY,event_id TEXT,payload TEXT);
         ''')
 
     def apply(self, records, now):
@@ -59,6 +60,30 @@ class Ledger:
                     elif not scope or not scope <= set(incident['addressIds']):
                         raise ValueError('Restoration must explicitly identify affected addresses')
                 self.store.db.execute('INSERT INTO review_log VALUES(?,?)', (record['reviewId'], raw))
+
+    def projected(self, event):
+        row=self.store.db.execute('SELECT payload FROM address_amendments WHERE event_id=? ORDER BY rowid DESC LIMIT 1',
+                                  (event['eventId'],)).fetchone()
+        return json.loads(row[0]) if row else event
+
+    def enrich_addresses(self, record, now):
+        """Append audited, address-only enrichment. Original evidence stays immutable."""
+        updated=self._validate(record,now)
+        row=self.store.db.execute('SELECT payload FROM reviewed_events WHERE id=?',(updated['eventId'],)).fetchone()
+        if not row:raise ValueError('Unknown incident')
+        previous=self.projected(json.loads(row[0]))
+        mutable={'reviewId','parserVersion','addressIds','unresolvedAddresses','addressMatchPrecision'}
+        if {k:v for k,v in previous.items() if k not in mutable}!={k:v for k,v in updated.items() if k not in mutable}:
+            raise ValueError('Address amendment cannot alter evidence, locality or timing')
+        if not set(previous['addressIds'])<=set(updated['addressIds']):raise ValueError('Cannot remove accepted addresses')
+        if len(updated.get('unresolvedAddresses',[]))>=len(previous.get('unresolvedAddresses',[])):return False
+        # Some previously unresolved source text must now map to an exact GAR street.
+        if not set(updated.get('unresolvedAddresses',[]))<=set(previous.get('unresolvedAddresses',[])):
+            raise ValueError('Cannot introduce different unresolved evidence')
+        with self.store.db:
+            self.store.db.execute('INSERT OR IGNORE INTO address_amendments VALUES(?,?,?)',
+                (updated['reviewId'],updated['eventId'],json.dumps(updated,ensure_ascii=False,sort_keys=True)))
+        return True
 
     def _validate(self, record, now):
         r = dict(record)
@@ -138,7 +163,7 @@ class Ledger:
                 (r['sourceId'],r['messageId'])).fetchone()
             if current and current[0]==r['sourceHash']:closures.append(r)
         for row in self.store.db.execute('SELECT payload FROM reviewed_events'):
-            e = json.loads(row[0])
+            e = self.projected(json.loads(row[0]))
             anchor = e.get('end') or e.get('start') or e['publishedAt']
             expires = utc(e['end']) if e['category'] == 'mchs' else utc(anchor) + timedelta(hours=36)
             if utc(now) >= expires:
@@ -166,7 +191,7 @@ class Ledger:
     def pending(self):
         reviewed = {(r['sourceId'], r['messageId'], r['sourceHash'])
                     for row in self.store.db.execute('SELECT payload FROM review_log')
-                    for r in [json.loads(row[0])] if not r.get('unresolvedAddresses')}
+                    for r in [self.projected(json.loads(row[0])) if json.loads(row[0]).get('type')=='incident' else json.loads(row[0])] if not r.get('unresolvedAddresses')}
         self.store.db.execute('''CREATE TABLE IF NOT EXISTS post_dispositions(
             channel TEXT,id TEXT,hash TEXT,kind TEXT,reason TEXT,PRIMARY KEY(channel,id,hash))''')
         informational={(r[0],r[1],r[2]) for r in self.store.db.execute(
@@ -182,6 +207,8 @@ class Ledger:
                     text = next((item.get('text', '') for item in post.get('linkedContent', [])
                                  if item.get('kind') == 'FORWARD' and item.get('text', '').strip()), '')
                 result.append({'id': source['id'] + '/' + row[0], 'sourceId': source['id'],
+                               'category':next(iter(source['categories'])),
+                               'partiallyAccepted':bool(self.store.db.execute("SELECT 1 FROM reviewed_events WHERE json_extract(payload,'$.sourceId')=? AND json_extract(payload,'$.messageId')=? AND json_extract(payload,'$.sourceHash')=?",(source['id'],row[0],row[1])).fetchone()),
                                'publishedAt': post['publishedAt'], 'url': source['url'],
                                'text': text[:2000], 'forwarded': post.get('forwarded', False),
                                'attachmentCount': post.get('attachmentCount', 0),

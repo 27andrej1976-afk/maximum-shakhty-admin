@@ -51,7 +51,7 @@ jobs:
           "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0"
       - name: Compile preview and run Android lint
         working-directory: gorod-control/region-v2/android
-        run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+        run: gradle --no-daemon :app:assembleDebug :app:lintDebug :app:assemblePilot
       - name: Verify package and preview signature; never publish it
         run: |
           APK=gorod-control/region-v2/android/app/build/outputs/apk/debug/app-debug.apk
@@ -62,7 +62,7 @@ jobs:
           data=Path('/tmp/don-package.txt').read_text()
           assert "package: name='ru.citycontrol.don'" in data
           assert "application-label:'Дон под контролем'" in data
-          assert 'android.permission.POST_NOTIFICATIONS' not in data
+          assert 'android.permission.POST_NOTIFICATIONS' in data
           print('Independent regional package verified. Debug preview only; no RuStore upload.')
           PY
       - name: Enable emulator acceleration
@@ -87,6 +87,7 @@ jobs:
           retention-days: 5
           path: |
             gorod-control/region-v2/android/app/build/outputs/apk/debug/*.apk
+            gorod-control/region-v2/android/app/build/outputs/apk/pilot/*.apk
             gorod-control/region-v2/android/app/build/reports/lint-results-debug.*
             gorod-control/region-v2/android/app/build/reports/androidTests/
             gorod-control/region-v2/android/app/build/outputs/androidTest-results/

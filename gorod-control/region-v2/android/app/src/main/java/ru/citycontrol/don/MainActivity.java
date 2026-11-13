@@ -19,6 +19,10 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import androidx.webkit.WebViewAssetLoader;
+import androidx.webkit.WebViewCompat;
+import androidx.webkit.WebViewFeature;
+import org.json.JSONObject;
+import java.util.Collections;
 import java.io.ByteArrayInputStream;
 
 /** Regional client. No MAX session, credentials, accounts or background GPS. */
@@ -26,6 +30,7 @@ public final class MainActivity extends Activity {
   private static final String HOST = "appassets.androidplatform.net";
   private static final String HOME = "https://" + HOST + "/assets/web/index.html";
   private static final int GEO_REQUEST = 701;
+  private static final int PUSH_REQUEST = 702;
   private WebView web;
   private GeolocationPermissions.Callback pendingGeo;
   private String pendingOrigin;
@@ -117,6 +122,28 @@ public final class MainActivity extends Activity {
             Manifest.permission.ACCESS_COARSE_LOCATION}, GEO_REQUEST);
       }
     });
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)) {
+      WebViewCompat.addWebMessageListener(web, "DonNative", Collections.singleton("https://"+HOST),
+          (view, message, origin, mainFrame, reply) -> {
+        if (!mainFrame || !trusted(Uri.parse(view.getUrl()==null?"":view.getUrl()))
+            || !"https".equals(origin.getScheme()) || !HOST.equals(origin.getHost())) return;
+        try {
+          String raw=message.getData();if(raw==null||raw.length()>512)return;
+          JSONObject data=new JSONObject(raw);String action=data.getString("action");
+          if (!java.util.Arrays.asList("sync","enable","disable","status").contains(action))return;
+          PushSettings.sync(this,data);
+          if ("disable".equals(action)) PushController.disable(this);
+          if ("enable".equals(action)) {
+            if (BuildConfig.RUSTORE_PROJECT_ID.isEmpty()) PushController.note(this,"Push-проект RuStore ещё не подключён. Уведомления пока не доставляются.");
+            else if (!PushSettings.hasPoint(this)) PushController.note(this,"Сначала задайте контрольную точку.");
+            else if (android.os.Build.VERSION.SDK_INT>=33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED)
+              requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},PUSH_REQUEST);
+            else PushController.enable(this);
+          }
+          reply.postMessage(PushController.status(this).toString());
+        } catch (Exception invalid) { /* Reject malformed bridge messages. */ }
+      });
+    }
     web.loadUrl(HOME);
   }
 
@@ -127,6 +154,10 @@ public final class MainActivity extends Activity {
 
   @Override public void onRequestPermissionsResult(int code, String[] permissions, int[] grants) {
     super.onRequestPermissionsResult(code, permissions, grants);
+    if(code==PUSH_REQUEST) {
+      if(android.os.Build.VERSION.SDK_INT<33 || checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)==PackageManager.PERMISSION_GRANTED) PushController.enable(this);
+      else PushController.note(this,"Разрешение на уведомления не выдано.");
+    }
     if (code == GEO_REQUEST && pendingGeo != null) {
       boolean allowed = hasLocationPermission() && web != null
           && trusted(Uri.parse(web.getUrl() == null ? "" : web.getUrl()));

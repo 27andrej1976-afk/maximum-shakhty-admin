@@ -65,6 +65,16 @@ async def work(path, *, once=False):
             if config.get('reviews'):
                 export(args.registry, args.state_dir, args.catalog, args.feed_output,
                        reviews_path=config['reviews'])
+            # Optional, fail-isolated push delivery cannot stop MAX ingestion.
+            try:
+                from push_dispatch import dispatch
+                from run_collector import atomic_json
+                from datetime import datetime,timezone
+                now=datetime.now(timezone.utc).isoformat()
+                push_status=dispatch(config,args.feed_output,args.state_dir,now)
+                atomic_json(args.state_dir/'push-status.json',dict(push_status,checkedAt=now))
+            except Exception:
+                atomic_json(args.state_dir/'push-status.json',{'state':'error','deliveryVerified':False})
             if once:
                 return
             try:
