@@ -11,6 +11,7 @@ return !!(f&&f.schemaVersion===1&&f.mode==='max-only'&&f.regionId==='RU-ROS'&&['
 }
 function distance(a,b){const rad=x=>x*Math.PI/180;const dlat=rad(b.lat-a.lat),dlon=rad(b.lon-a.lon);return 6371*2*Math.asin(Math.min(1,Math.sqrt(Math.sin(dlat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dlon/2)**2)))}
 function point(a){return a?.geometryVerified===true&&Number.isFinite(a.lat)&&Number.isFinite(a.lon)&&Math.abs(a.lat)<=90&&Math.abs(a.lon)<=180}
+function streetLines(a){const g=a?.streetGeometry,lines=g?.coordinates;if(a?.streetGeometryVerified!==true||g?.type!=='MultiLineString'||!Array.isArray(lines)||!lines.length||lines.length>256)return [];let count=0;for(const line of lines){if(!Array.isArray(line)||line.length<2)return [];for(const c of line){if(++count>4096||!Array.isArray(c)||c.length!==2||!c.every(Number.isFinite)||c[0]<38.1||c[0]>44.4||c[1]<45.8||c[1]>50.4)return []}}return lines}
 function visible(e,now=Date.now()){return !!(e&&!e.requiresReview&&categories.includes(e.category)&&safeMax(e.url)&&Number.isFinite(Date.parse(e.expiresAt))&&Date.parse(e.expiresAt)>now&&Date.parse(e.publishedAt)<=now+5*60e3&&!['resolved','cancelled'].includes(e.status))}
 function nearby(e,home,radius){return e.scope==='region'||!!(home&&(e.addresses||[]).some(a=>point(a)&&distance(home,a)<=radius))}
 function select(f,{city='',category='all',scope='region',home=null,radius=1},now=Date.now()){return (f?.events||[]).filter(e=>visible(e,now)&&(category==='all'||category===e.category)&&(e.scope==='region'||!city||city===e.municipalityId)&&(scope!=='near'||nearby(e,home,radius)))}
@@ -23,5 +24,5 @@ if(!city&&state==='read'&&f?.coverage!=='full')state='partial';
 if(offline||stale){state='unavailable';message=offline?'Нет связи с сервером. Показаны сохранённые сведения':'Сводка давно не обновлялась. Текущее состояние источников не подтверждено'}
 const stamps=relevant.map(s=>s.lastSuccessAt).filter(Boolean).sort((a,b)=>Date.parse(a)-Date.parse(b));states[category]={state,message,lastSuccessAt:stamps[0]||null};}
 return states}
-const api={categories,safeMax,validFeed,distance,point,visible,nearby,select,attention,health};root.DonClient=api;if(typeof module!=='undefined')module.exports=api;
+const api={categories,safeMax,validFeed,distance,point,streetLines,visible,nearby,select,attention,health};root.DonClient=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

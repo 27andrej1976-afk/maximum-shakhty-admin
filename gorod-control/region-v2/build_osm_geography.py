@@ -76,7 +76,7 @@ def build(pbf,gar,output,report):
         if len(choices)!=1:ambiguous+=1;continue
         places.append(dict(place,city=choices[0]))
     if not places:raise ValueError('No unambiguous GAR-bound place polygons')
-    tree=STRtree([p['shape'] for p in places]);candidates=defaultdict(list);ambiguous_roads=0
+    tree=STRtree([p['shape'] for p in places]);candidates=defaultdict(list);street_lines=defaultdict(list);ambiguous_roads=0
     for wid,name,line in h.roads:
         kind,clean=street_parts(name)
         for pi in tree.query(line):
@@ -95,7 +95,22 @@ def build(pbf,gar,output,report):
             # Nested places with different GAR IDs cannot silently borrow roads.
             owners={places[int(i)]['city']['id'] for i in tree.query(point) if places[int(i)]['shape'].covers(point)}
             if owners!={city['id']}:ambiguous_roads+=1;continue
-            candidates[matches[0]['id']].append((piece.length,wid,point,place,matches[0]))
+            aid=matches[0]['id']
+            candidates[aid].append((piece.length,wid,point,place,matches[0]))
+            # Preserve disconnected pieces. Never invent a line between them,
+            # or lend a street segment inside a nested different GAR locality.
+            for road_piece in pieces:
+                safe=road_piece.intersection(h.region)
+                for other in tree.query(road_piece):
+                    foreign=places[int(other)]
+                    if foreign['city']['id']!=city['id']:safe=safe.difference(foreign['shape'])
+                fragments=list(safe.geoms) if hasattr(safe,'geoms') else [safe]
+                for fragment in fragments:
+                    if fragment.geom_type!='LineString' or fragment.length<=0.00001:continue
+                    simplified=fragment.simplify(0.000015,preserve_topology=True)
+                    coords=[[round(x,6),round(y,6)] for x,y in simplified.coords]
+                    if len(coords)>=2 and len({tuple(c) for c in coords})>=2:
+                        street_lines[aid].append((wid,coords))
     with osmium.io.Reader(str(pbf)) as reader:stamp=reader.header().get('osmosis_replication_timestamp')
     sha=hashlib.sha256(Path(pbf).read_bytes()).hexdigest();checked=datetime.now(timezone.utc).isoformat();points={}
     for aid,rows in candidates.items():
@@ -105,12 +120,21 @@ def build(pbf,gar,output,report):
             'geometryBoundaryEvidenceUrl':'https://www.openstreetmap.org/'+place['osmKind']+'/'+str(place['osmId']),
             'geometryProvider':'OpenStreetMap regional offline extract + GAR','geometryCheckedAt':checked,
             'geometryDataAt':stamp,'geometryNotice':'Ориентир на улице, не точные границы отключения'}
+    for aid,rows in street_lines.items():
+        unique={tuple(tuple(c) for c in coords):wid for wid,coords in rows}
+        # Pathological geometry stays point-only rather than truncating a road
+        # and claiming a complete street. Keep a strict client/server size bound.
+        if len(unique)>256 or sum(map(len,unique))>4096:continue
+        points[aid].update(streetGeometryVerified=True,
+            streetGeometry={'type':'MultiLineString','coordinates':[[list(c) for c in coords] for coords in sorted(unique)]},
+            streetGeometryScope='mapped-street-not-outage-boundary',
+            streetGeometryEvidenceUrls=['https://www.openstreetmap.org/way/'+str(wid) for wid in sorted(set(unique.values()))])
     payload={'schemaVersion':1,'regionId':'RU-ROS','dataAt':stamp,'source':'https://download.geofabrik.de/russia/south-fed-district.html',
         'sourceSha256':sha,'license':'ODbL-1.0','attribution':'© OpenStreetMap contributors','points':points}
     Path(output).write_bytes(gzip.compress(json.dumps(payload,ensure_ascii=False,separators=(',',':')).encode(),mtime=0))
     summary={'checkedAt':checked,'osmDataAt':stamp,'sourceSha256':sha,'garVersion':index['version'],
         'verifiedPlacePolygons':len(places),'ambiguousPlacesSkipped':ambiguous,'ambiguousRoadMembershipSkipped':ambiguous_roads,
-        'streetReferencePoints':len(points),'coveredGarLocalities':len({r[0][3]['city']['id'] for r in candidates.values()}),
+        'streetReferencePoints':len(points),'streetLineGeometries':sum(p.get('streetGeometryVerified',False) for p in points.values()),'coveredGarLocalities':len({r[0][3]['city']['id'] for r in candidates.values()}),
         'guessedNearestPlaceAssignments':0,'houseCoordinates':False,'fullRegionalCoverage':False}
     Path(report).write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n');print(json.dumps(summary,ensure_ascii=False))
 

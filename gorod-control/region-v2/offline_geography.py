@@ -20,4 +20,23 @@ def load_offline_points(path,index):
                 or not p.get('geometryEvidenceUrl','').startswith('https://www.openstreetmap.org/way/')
                 or not p.get('geometryBoundaryEvidenceUrl','').startswith('https://www.openstreetmap.org/')):
             raise ValueError('Invalid offline street geometry evidence')
+    for p in points.values():
+        if p.get("streetGeometryVerified") and not valid_street_geometry(p):raise ValueError("Invalid offline street line geometry")
     return points
+
+
+def valid_street_geometry(point):
+    if point.get('streetGeometryVerified') is not True:return False
+    shape=point.get('streetGeometry',{})
+    if shape.get('type')!='MultiLineString':return False
+    lines=shape.get('coordinates')
+    if not isinstance(lines,list) or not 1<=len(lines)<=256:return False
+    count=0
+    for line in lines:
+        if not isinstance(line,list) or len(line)<2:return False
+        for c in line:
+            count+=1
+            if (count>4096 or not isinstance(c,list) or len(c)!=2
+                or any(type(n) not in (int,float) or not math.isfinite(n) for n in c)
+                or not(38.1<=c[0]<=44.4 and 45.8<=c[1]<=50.4)):return False
+    return True

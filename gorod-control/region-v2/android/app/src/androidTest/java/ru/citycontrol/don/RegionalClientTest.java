@@ -172,6 +172,10 @@ public class RegionalClientTest {
       js(scenario,"(()=>{const f=JSON.parse(localStorage.getItem('don-feed'));document.getElementById('city').value=f.events.find(e=>e.category==='water').municipalityId;document.getElementById('city').dispatchEvent(new Event('change'))})()");
       showElement(scenario,"map");
       waitFor(scenario,"document.getElementById('map').dataset.tileState==='ready' && document.querySelectorAll('#map .leaflet-tile-loaded').length>0");
+      assertEquals("true",js(scenario,"document.querySelectorAll('#map path.street-highlight.water').length>0"));
+      assertEquals("true",js(scenario,"!!document.querySelector('#events .address-buttons button:not(:disabled)')"));
+      assertEquals("false",js(scenario,"!!document.querySelector('.leaflet-attribution-flag')"));
+      assertEquals("true",js(scenario,"document.querySelector('.leaflet-control-attribution').textContent.includes('Leaflet') && document.querySelector('.leaflet-control-attribution').textContent.includes('OpenStreetMap')"));
       captureProof(scenario,"don-real-water-map");
       js(scenario,"document.getElementById('events').scrollIntoView({block:'start'});");
       js(scenario,"document.querySelector('#events details').open=true;");

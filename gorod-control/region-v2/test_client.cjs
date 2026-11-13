@@ -26,3 +26,9 @@ console.log('Regional client: filtering, geography, offline/stale states, expiry
 const attentionFeed={pendingPublications:[{id:'pending-water',category:'water',publishedAt:f.generatedAt},{id:'partial-water',category:'water',publishedAt:f.generatedAt,partiallyAccepted:true},{id:'power',category:'power',publishedAt:f.generatedAt},{id:'old',category:'water',publishedAt:new Date(now-37*3600e3).toISOString()}]};
 assert.deepEqual(P.attention(attentionFeed,'water',now).map(p=>p.id),['pending-water']);
 assert.equal(P.select({...f,events:[],pendingPublications:attentionFeed.pendingPublications},initial,now).length,0,'unlocated publications do not become outages or markers');
+
+const outlined={streetGeometryVerified:true,streetGeometry:{type:'MultiLineString',coordinates:[[[40.21,47.70],[40.22,47.71]],[[40.24,47.72],[40.25,47.73]]]}};
+assert.equal(P.streetLines(outlined).length,2,'disconnected street fragments must stay disconnected');
+assert.equal(P.streetLines({...outlined,streetGeometryVerified:false}).length,0);
+assert.equal(P.streetLines({...outlined,streetGeometry:{type:'MultiLineString',coordinates:[[[47.70,40.21],[47.71,40.22]]]}}).length,0,'swapped coordinates must not draw');
+assert.equal(P.streetLines({...outlined,streetGeometry:{type:'MultiLineString',coordinates:[Array(4097).fill([40.21,47.70])]}}).length,0,'oversized geometry is point-only');

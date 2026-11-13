@@ -24,6 +24,17 @@ def verify(output,report):
     # build health depend on an accident happening during a CI run.
     snapshot=json.loads((Path(__file__).parent/'testdata/qa-real-feed-20261112.json').read_text())
     if not snapshot.get('qaSnapshotAt'):raise ValueError('Historical QA provenance is required')
+    # A dated public incident fixture with separately dated OSM street geometry.
+    # Keep the original three verified fixture points; enrich only their paths.
+    from offline_geography import load_offline_points,NAME
+    from parse_publications import load_index
+    root=Path(__file__).parent
+    geometry=load_offline_points(root/NAME,load_index(root/'gar-rostov-20261106.json.gz'))
+    for event in snapshot['events']:
+        for address in event['addresses']:
+            if address.get('geometryVerified'):
+                address.update({k:v for k,v in geometry.get(address['id'],{}).items() if k.startswith('streetGeometry')})
+
     Path(output).parent.mkdir(parents=True,exist_ok=True)
     Path(output).write_text(json.dumps(snapshot,ensure_ascii=False))
     result={'checkedAt':now.isoformat(),'feedGeneratedAt':feed['generatedAt'],'publicEndpoint':URL,

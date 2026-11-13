@@ -22,7 +22,7 @@ backup=/var/lib/don-control/backups/code-update-$(date -u +%Y%m%dT%H%M%SZ)
 install -d -m0700 "$backup"
 tar -C "$app" -czf "$backup/app-before.tar.gz" .
 install -d -m0700 "$backup/public"
-for file in app.js client.js index.html about.html; do cp -a "$public/$file" "$backup/public/$file"; done
+for file in app.js client.js app.css index.html about.html; do cp -a "$public/$file" "$backup/public/$file"; done
 systemctl stop don-collector.service
 cp -a "$state" "$backup/state"
 rollback() {
@@ -31,13 +31,13 @@ rollback() {
   tar -C "$app" -xzf "$backup/app-before.tar.gz"
   mv "$state" "$backup/failed-state"
   cp -a "$backup/state" "$state"
-  for file in app.js client.js index.html about.html; do cp -a "$backup/public/$file" "$public/$file"; done
+  for file in app.js client.js app.css index.html about.html; do cp -a "$backup/public/$file" "$public/$file"; done
   systemctl start don-collector.service
   echo 'Update failed; previous collector code/state restored' >&2
 }
 trap rollback ERR
 for file in parse_publications.py pipeline.py events.py run_collector.py worker.py push_dispatch.py offline_geography.py osm-streets-20261112.json.gz; do install -m0644 "$src/$file" "$app/$file"; done
-for file in app.js client.js index.html about.html; do install -m0644 "$src/web/$file" "$public/$file"; done
+for file in app.js client.js app.css index.html about.html; do install -m0644 "$src/web/$file" "$public/$file"; done
 cd "$app"
 runuser -u don-control -- /opt/don-control/venv/bin/python worker.py --config /etc/don-control/collector.json --check-config
 systemctl start don-collector.service
