@@ -1,5 +1,5 @@
 {
-  "checkedDate": "2026-11-12",
+  "checkedDate": "2026-11-13",
   "product": "Дон под контролем",
   "region": "RU-ROS",
   "targetCoverage": "entire-Rostov-Oblast",
@@ -41,6 +41,16 @@
       "failures": 0,
       "errors": 0,
       "skipped": 0
+    },
+    "latestPilotBuild": {
+      "runId": 43388470797,
+      "sourceCommit": "69d911eab9433fb81b66cc439bcb678c66e2e41c",
+      "compileAndLint": "passed",
+      "runtimeTests": "12 passed,0 failed/errors/skipped,API35",
+      "signedPilot": "signed-and-v2-v3-verified,not-debuggable,versionCode2",
+      "artifactId": 14020276461,
+      "apkSha256": "f7029972b316b5f88ea7b45ea913e9ebbceeb599e28a78a61751a85137b84ebd",
+      "permanentCertificateSha256": "9d738855ce617cd0f9ea9bac63a4f2cf4a46a195ae19d7fe782055feeca5c3c6"
     }
   },
   "max": {
@@ -63,12 +73,18 @@
   "catalog": "GAR-2026-11-06:2295-localities,34219-streets",
   "automaticIncidentParsing": "supported-source-templates-live; unsupported-or-ambiguous-publications-pending",
   "reportRoute": "official-gosuslugi-external-link-implemented-and-Android-intent-tested; actual-submission-not-tested",
-  "push": "not-implemented",
-  "permanentSigningKey": "not-created",
+  "push": {
+    "code": "native-RuStore-SDK7.5.0-and-data-only-topic-dispatch-implemented",
+    "projectConfigured": false,
+    "phoneDeliveryVerified": false,
+    "gpsUploaded": false,
+    "activation": "requires-owner-RuStore-console-project-and-server-service-token; deferred-until-pilot-APK"
+  },
+  "permanentSigningKey": "created-and-private-recovery-archive-restore-verified; owner-offline-copies-pending",
   "publisherDetails": "partially-confirmed",
   "publishedPrivacyAndTerms": "drafts-only; legal operator fields not provided",
   "pythonChecks": {
-    "passed": 80,
+    "passed": 92,
     "syntheticData": true,
     "realPublicPostFixturesAlsoUsed": true,
     "separateCryptoImportTestsPassed": 2
@@ -79,8 +95,8 @@
     "publicSupportEmail": "Fefe-andrej@yandex.ru",
     "confirmedDate": "2026-11-11",
     "legalFullName": "not-provided",
-    "legalStatus": "not-explicitly-confirmed",
-    "requiredRequisites": "pending"
+    "legalStatus": "self-employed-owner-confirmed-2026-11-13",
+    "requiredRequisites": "ask-after-APK-per-owner"
   },
   "launchCategories": [
     "water",
@@ -88,7 +104,7 @@
     "mchs"
   ],
   "deploymentAccess": "explicitly-authorized-by-owner-and-used-2026-11-12",
-  "workState": "live-server-and-Android-HTTPS-verified; permanent-signing-and-owner-legal-inputs-pending",
+  "workState": "signed-pilot-ready-for-owner-phone-test; offline-catalogue-server-update-awaiting-login; real-push-activation-awaiting-RuStore-project",
   "deployment": {
     "checkedDate": "2026-11-12",
     "checkedLocalTime": "17:30 MSK",
@@ -173,5 +189,15 @@
     },
     "markers": 3,
     "pending": 637
-  }
+  },
+  "offlineGeometry": {
+    "state": "code-ready-not-deployed",
+    "streetReferencePoints": 19230,
+    "localities": 1245,
+    "sourceDate": "2026-11-12T21:23:05Z",
+    "precision": "street-reference-not-house-or-outage-boundary",
+    "completeOblastCoverage": false,
+    "snapshotCheck": "all94 previous active recognized streets plus all64 unique reparsed streets from last200 pending public publications at2026-11-13T07:16:49Z covered; not entire pending archive"
+  },
+  "currentServerUpdate": "pending-new-FirstVDS-login; previous panel and VNC sessions expired"
 }

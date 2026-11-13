@@ -1,0 +1,19 @@
+{
+  "package": "ru.citycontrol.don",
+  "versionCode": 2,
+  "versionName": "0.2.0-pilot",
+  "apkSha256": "f7029972b316b5f88ea7b45ea913e9ebbceeb599e28a78a61751a85137b84ebd",
+  "certificateSha256": "9d738855ce617cd0f9ea9bac63a4f2cf4a46a195ae19d7fe782055feeca5c3c6",
+  "bytes": 7120843,
+  "sourceCommit": "69d911eab9433fb81b66cc439bcb678c66e2e41c",
+  "ciRunId": 43388470797,
+  "androidApi35Tests": 12,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "phoneTested": false,
+  "upgradeOverPreviousPermanentSignatureTested": false,
+  "pushConfigured": false,
+  "serverOfflineCatalogueDeployed": false,
+  "ruStoreSubmitted": false
+}

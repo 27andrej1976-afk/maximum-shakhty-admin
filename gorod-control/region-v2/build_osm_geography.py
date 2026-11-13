@@ -16,6 +16,22 @@ from parse_publications import load_index,norm
 KINDS={'улица':'ул.','ул':'ул.','переулок':'пер.','пер':'пер.','проспект':'пр-кт','просп':'пр-кт','пр-т':'пр-кт',
        'бульвар':'б-р','площадь':'пл.','шоссе':'ш.','проезд':'проезд','тупик':'туп.'}
 
+def street_aliases(name):
+    clean=norm(name);words=clean.split()
+    if words and words[0] in {'им','имени'}:words=words[1:]
+    keys={clean,' '.join(words)}
+    if len(words)==2 and all(w.isalpha() for w in words):keys|={words[-1],words[0][0]+' '+words[-1]}
+    return keys
+
+def compatible_names(a,b):
+    def words(name):
+        parts=norm(name).split()
+        return parts[1:] if parts and parts[0] in {'им','имени'} else parts
+    left,right=words(a),words(b)
+    if len(left)==2 and len(right)==2 and all(p.isalpha() for p in left+right):
+        return left[1]==right[1] and (left[0]==right[0] or len(left[0])==1 and right[0].startswith(left[0]) or len(right[0])==1 and left[0].startswith(right[0]))
+    return len(left)==1 or len(right)==1 or left==right
+
 def street_parts(name):
     words=norm(name).split();kind=None
     if not words:return None,''
@@ -44,9 +60,11 @@ class Extract(osmium.SimpleHandler):
         self.roads.append((w.id,name,LineString(coords)))
 
 def build(pbf,gar,output,report):
-    index=load_index(gar);names=defaultdict(list);streets=defaultdict(list)
+    index=load_index(gar);names=defaultdict(list);streets=defaultdict(list);aliases=defaultdict(list)
     for city in index['municipalities']:names[norm(city['name'])].append(city)
     for street in index['streets']:streets[(street['municipalityId'],norm(street['name']))].append(street)
+    for street in index['streets']:
+        for alias in street_aliases(street['name']):aliases[(street['municipalityId'],alias)].append(street)
     h=Extract(names);h.apply_file(str(pbf),locations=True,idx='flex_mem')
     if h.region is None:raise ValueError('Verified RU-ROS boundary missing from extract')
     places=[];ambiguous=0
@@ -64,6 +82,9 @@ def build(pbf,gar,output,report):
         for pi in tree.query(line):
             place=places[int(pi)];city=place['city'];matches=streets.get((city['id'],clean),[])
             if kind:matches=[s for s in matches if s['type']==kind]
+            if not matches:
+                options={s['id']:s for alias in street_aliases(clean) for s in aliases.get((city['id'],alias),[]) if (not kind or s['type']==kind) and compatible_names(clean,s['name'])}
+                matches=list(options.values())
             if len(matches)!=1:continue
             clipped=line.intersection(place['shape'])
             if clipped.is_empty:continue

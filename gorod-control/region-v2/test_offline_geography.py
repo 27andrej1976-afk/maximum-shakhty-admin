@@ -7,9 +7,9 @@ ROOT=Path(__file__).parent
 class OfflineGeographyTests(unittest.TestCase):
     def test_all_reference_points_have_gar_ids_and_public_osm_boundary_evidence(self):
         index=load_index(ROOT/'gar-rostov-20261106.json.gz');points=load_offline_points(ROOT/NAME,index)
-        self.assertEqual(len(points),19008)
+        self.assertEqual(len(points),19230)
         cities={s['municipalityId'] for s in index['streets'] if s['id'] in points}
-        self.assertEqual(len(cities),1244)
+        self.assertEqual(len(cities),1245)
         self.assertTrue(all(p['locationPrecision']=='street' for p in points.values()))
     def test_unknown_gar_id_is_rejected_and_absent_optional_catalogue_is_explicitly_empty(self):
         index=load_index(ROOT/'gar-rostov-20261106.json.gz')
