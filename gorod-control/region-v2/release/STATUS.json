@@ -84,7 +84,7 @@
   "publisherDetails": "partially-confirmed",
   "publishedPrivacyAndTerms": "drafts-only; legal operator fields not provided",
   "pythonChecks": {
-    "passed": 92,
+    "passed": 93,
     "syntheticData": true,
     "realPublicPostFixturesAlsoUsed": true,
     "separateCryptoImportTestsPassed": 2
@@ -104,10 +104,10 @@
     "mchs"
   ],
   "deploymentAccess": "explicitly-authorized-by-owner-and-used-2026-11-12",
-  "workState": "signed-pilot-ready-for-owner-phone-test; offline-catalogue-server-update-awaiting-login; real-push-activation-awaiting-RuStore-project",
+  "workState": "signed-pilot-and-live-water-markers-ready-for-owner-phone-test; actual-push-delivery-awaits-RuStore-project",
   "deployment": {
-    "checkedDate": "2026-11-12",
-    "checkedLocalTime": "17:30 MSK",
+    "checkedDate": "2026-11-13",
+    "checkedLocalTime": "11:12 MSK",
     "sourceCommit": "419d1ef3e6061587800636aa39ae31491753a889",
     "publicWebCorrectionCommit": "2138d9b3b44788431d614b85dbc50b0973a292ec",
     "hostType": "existing-FirstVDS",
@@ -137,8 +137,10 @@
     "healthEndpointNote": "Web health only. The fixed false readiness field is deliberately not a substitute for feed/runtime evidence.",
     "limits": "Short observation window only; no uptime SLA, full region coverage, user-device acceptance, push or permanent signing confirmation",
     "geometryAndWebCommit": "523c46e688b760bfdad3167e52cf521ac99efe17",
-    "geometryQueueFix": "Installed; cached failures no longer spend network budget; live queue advanced to 12 addresses, no additional verified geometry yet",
-    "geometryProvider": "Photon timed out from the deployed server in a bounded 15-second public-place probe; additional coordinates remain unconfirmed; no alternate network bypass attempted"
+    "geometryQueueFix": "Offline GAR-bound OSM geometry installed; 120/120 current event street references mapped, approximate streets only",
+    "geometryProvider": "Versioned local OSM/GAR catalogue first, original verified seed and bounded cached Photon fallback retained; Nov12 timeout is historical",
+    "regionalGeometryCodeCommit": "1074547e714363f09289346f400f284b1ce94baa",
+    "waterPressureParserCommit": "8bebce9a9450becb5cf1c8cbabd7378f49e21443"
   },
   "liveSnapshot": {
     "verifiedViaCiAt": "2026-11-12T14:12:27.107926+00:00",
@@ -191,7 +193,7 @@
     "pending": 637
   },
   "offlineGeometry": {
-    "state": "code-ready-not-deployed",
+    "state": "deployed-2026-11-13T08:07:21Z-and-live-feed-verified",
     "streetReferencePoints": 19230,
     "localities": 1245,
     "sourceDate": "2026-11-12T21:23:05Z",
@@ -199,5 +201,20 @@
     "completeOblastCoverage": false,
     "snapshotCheck": "all94 previous active recognized streets plus all64 unique reparsed streets from last200 pending public publications at2026-11-13T07:16:49Z covered; not entire pending archive"
   },
-  "currentServerUpdate": "pending-new-FirstVDS-login; previous panel and VNC sessions expired"
+  "currentServerUpdate": "installed-and-live-verified-2026-11-13T08:12:46Z",
+  "liveSnapshot20261113": {
+    "generatedAt": "2026-11-13T08:12:46.754118+00:00",
+    "eventsByCategory": {
+      "water": 1,
+      "power": 23,
+      "mchs": 1
+    },
+    "streetReferenceMarkers": 120,
+    "eventAddressOccurrences": 120,
+    "oldStillApplicableEventsLost": 0,
+    "waterPressureEvent": "ursv:117608083720917091:dee2e80e-f2e1-4a68-93b0-b7b89b6f3e74",
+    "waterStreetMarkers": 9,
+    "pendingPublications": 630,
+    "scope": "current feed only; full region and source history not proven"
+  }
 }
