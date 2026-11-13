@@ -84,7 +84,7 @@
   "publisherDetails": "partially-confirmed",
   "publishedPrivacyAndTerms": "drafts-only; legal operator fields not provided",
   "pythonChecks": {
-    "passed": 93,
+    "passed": 97,
     "syntheticData": true,
     "realPublicPostFixturesAlsoUsed": true,
     "separateCryptoImportTestsPassed": 2
@@ -96,7 +96,8 @@
     "confirmedDate": "2026-11-11",
     "legalFullName": "not-provided",
     "legalStatus": "self-employed-owner-confirmed-2026-11-13",
-    "requiredRequisites": "ask-after-APK-per-owner"
+    "requiredRequisites": "ask-after-APK-per-owner",
+    "developerAccount": "owner-confirmed-created-2026-11-13; console-not-yet-inspected"
   },
   "launchCategories": [
     "water",
@@ -104,7 +105,7 @@
     "mchs"
   ],
   "deploymentAccess": "explicitly-authorized-by-owner-and-used-2026-11-12",
-  "workState": "signed-pilot-and-live-water-markers-ready-for-owner-phone-test; actual-push-delivery-awaits-RuStore-project",
+  "workState": "street-highlight-pilot0.3.0-signed-and-Android-verified; server-install-awaits-owner-CAPTCHA; RuStore-account-created-per-owner",
   "deployment": {
     "checkedDate": "2026-11-13",
     "checkedLocalTime": "11:12 MSK",
@@ -216,5 +217,30 @@
     "waterStreetMarkers": 9,
     "pendingPublications": 630,
     "scope": "current feed only; full region and source history not proven"
+  },
+  "streetHighlights": {
+    "code": "prepared-for-pilot0.3.0",
+    "streetGeometries": 19227,
+    "garStreetReferencePoints": 19230,
+    "sourceDataAt": "2026-11-12T21:23:05Z",
+    "scope": "mapped-street-not-confirmed-outage-boundary",
+    "serverDeployment": "pending-owner-FirstVDS-CAPTCHA",
+    "textOnlyLeafletAttribution": "implemented-in-new-build",
+    "streetNameNavigation": "passed-on-Android15-API35",
+    "versionCode": 3,
+    "permanentSigningKey": "same-as-pilot0.2.0",
+    "physicalUpgrade": "not-yet-tested",
+    "androidRunId": 43420306473,
+    "publicRuStoreListing": "not-published",
+    "sourceCommit": "5bad73ff53273ec828c5c89581e3bc21f610221b",
+    "networkRefresh": "actual-live-HTTPS-check-passed,cancellable,30s upper bound",
+    "serverCompression": "gzip code tested,not deployed",
+    "androidTestsPassed": 13,
+    "androidTestsFailed": 0,
+    "androidTestsErrors": 0,
+    "androidTestsSkipped": 0,
+    "artifactId": 14033672186,
+    "signedApk": "0.3.0-pilot,same-permanent-certificate-as0.2.0",
+    "apkSha256": "a696f4bca6cbd4eb28f4ac99b5fe40171cfd33ea8bce04c1abd2f0ed165d5f02"
   }
 }
