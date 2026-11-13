@@ -54,6 +54,15 @@ class Templates:
         return next(iter(found.values())) if len(found)==1 else None
 
     def addresses(self,body,city):
+        # Source lists use both "пер. Ямской" and "Ямской пер".
+        # Reorder only a whole bounded address fragment with an explicit type;
+        # GAR matching below still decides existence and rejects ambiguity.
+        parts=re.split(r'([,;\n])',body)
+        suffix=re.compile(r'(.{1,120}?)\s+(ул(?:ица)?|пер(?:еулок)?|просп(?:ект)?|пр-т|пр\.т|бул(?:ьвар)?|пл(?:ощадь)?|шоссе|проезд|пр-д)\.?(\s+(?:д\.?\s*)?\d.*)?',re.I)
+        for i in range(0,len(parts),2):
+            fragment=parts[i].strip();hit=suffix.fullmatch(fragment)
+            if hit and not STREET.search(fragment):parts[i]=hit[2]+' '+hit[1]+(hit[3] or '')
+        body=''.join(parts)
         hits=list(STREET.finditer(body));found={};unknown=[]
         for n,hit in enumerate(hits):
             tail=body[hit.end():hits[n+1].start() if n+1<len(hits) else len(body)]
@@ -114,7 +123,7 @@ class Templates:
         # Strict affirmative wording, not "будет возобновлено без предупреждения".
         restore=bool(re.search(r'(?:электроснабжение|водоснабжение|подача\s+воды)\s+(?:полностью\s+)?восстановлен[аоы]?\b|уведомляем\s+о\s+восстановлении\s+(?:холодного\s+)?водоснабжения',lower))
         outage=(cat=='power' and 'произошло технологическое нарушение' in lower and 'отключени' in lower
-                or cat=='water' and 'отключение воды' in lower)
+                or cat=='water' and ('отключение воды' in lower or 'снижение давления' in lower))
         if not restore and not outage:
             relevant=forwarded or re.search(r'отключ|водоснабж|электроснабж|подвоз[а-я]*\s+вод|порыв|ограничен|подач[аиу]\s+вод',lower)
             return dict(result,state='pending' if relevant else 'information',reason='NO_CURRENT_OUTAGE_TEMPLATE')
@@ -152,7 +161,7 @@ class Templates:
         if forwarded:return dict(result,reason='FORWARDED_PROVENANCE_REVIEW',city=city,addresses=addresses)
         return dict(result,state='restoration' if restore else 'incident',reason='SOURCE_TEMPLATE_GAR_MATCH',category=cat,city=city,
                     addresses=addresses,unresolvedAddresses=unresolved,start=start.isoformat(),
-                    end=end.isoformat() if end else None,title=LABELS[cat]+' · '+city['name'])
+                    end=end.isoformat() if end else None,title=('Снижение давления' if cat=='water' and 'снижение давления' in lower and not restore else LABELS[cat])+' · '+city['name'])
 
 
 def load_index(path):

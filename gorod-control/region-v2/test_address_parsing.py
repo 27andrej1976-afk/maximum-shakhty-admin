@@ -40,6 +40,17 @@ class AddressParsingTests(unittest.TestCase):
             plan=self.t.propose(p,{'categories':['power']});self.assertEqual(plan['state'],'incident',p['id'])
             self.assertTrue(plan['addresses']);self.assertTrue(all(a['municipalityId']==plan['city']['id'] for a in plan['addresses']))
 
+    def test_real_water_pressure_explicit_streets_and_postfix_types(self):
+        post=json.loads((ROOT/'testdata/water-pressure-20261113.json').read_text())
+        plan=self.t.propose(post,{'categories':['water']})
+        self.assertEqual(plan['state'],'incident');self.assertEqual(plan['title'],'Снижение давления · Шахты')
+        self.assertEqual(len(plan['addresses']),9);self.assertEqual(plan['unresolvedAddresses'],[])
+        self.assertNotIn('Тимирязева',{a['name'] for a in plan['addresses']},'repair cause is not an affected address')
+        self.assertEqual(plan['end'],'2026-11-13T17:00:00+03:00')
+        from offline_geography import load_offline_points,NAME
+        points=load_offline_points(ROOT/NAME,self.index)
+        self.assertTrue(all(a['id'] in points for a in plan['addresses']))
+
     def test_address_only_amendment_preserves_original_hash_and_expiry(self):
         real.RealPipelineTests.setUpClass();case=real.RealPipelineTests();case.setUp()
         try:
