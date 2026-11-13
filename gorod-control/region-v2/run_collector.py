@@ -83,9 +83,15 @@ async def run(args):
                 try:
                     index=load_index(args.gar_index)
                     seed=Path(args.gar_index).with_name('geometry.verified.json')
-                    known=json.loads(seed.read_text()) if seed.is_file() else {}
+                    from offline_geography import load_offline_points,NAME
+                    known=load_offline_points(Path(args.gar_index).with_name(NAME),index)
+                    known.update(json.loads(seed.read_text()) if seed.is_file() else {})
                     known.update(geometry.values())
                     ledger,stats=process(store,catalog,index,now,geometry=known)
+                    # Existing reviews are immutable, but street geometry is a
+                    # separate versioned catalogue and must refresh after restart.
+                    for aid,address in ledger.addresses.items():
+                        if aid in known:address.update(known[aid])
                     addresses=[address for event in ledger.events(now) for address in event['addresses']]
                     for aid,point in geometry.resolve_missing(addresses,ledger.cities,now,
                             request_budget=getattr(args,'geometry_budget',0)).items():

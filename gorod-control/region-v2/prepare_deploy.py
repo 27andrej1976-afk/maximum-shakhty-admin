@@ -13,9 +13,10 @@ def prepare(output):
     source.mkdir(parents=True, exist_ok=True)
     for name in ['core.py', 'events.py', 'health.py', 'collector.py', 'run_collector.py',
                  'export_feed.py', 'worker.py', 'serve.py', 'diagnose_max.py',
-                 'parse_publications.py', 'pipeline.py', 'geography.py', 'geography_dadata.py']:
+                 'parse_publications.py', 'pipeline.py', 'geography.py', 'geography_dadata.py', 'offline_geography.py']:
         shutil.copyfile(ROOT / name, source / name)
     shutil.copyfile(ROOT/'gar-rostov-20261106.json.gz', source/'gar-rostov-20261106.json.gz')
+    shutil.copyfile(ROOT/'osm-streets-20261112.json.gz', source/'osm-streets-20261112.json.gz')
     shutil.copyfile(ROOT/'geometry.verified.json', source/'geometry.verified.json')
     scripts = output / 'app/gorod-control/scripts'
     scripts.mkdir(parents=True, exist_ok=True)

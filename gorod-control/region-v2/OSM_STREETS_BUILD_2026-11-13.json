@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-13T07:24:40.130511+00:00",
+  "osmDataAt": "2026-11-12T21:23:05Z",
+  "sourceSha256": "16e764a12520f6110571adcc20321cd8a4f9808e7a39dcddfb0125890c728d4e",
+  "garVersion": "20261106",
+  "verifiedPlacePolygons": 1716,
+  "ambiguousPlacesSkipped": 547,
+  "ambiguousRoadMembershipSkipped": 11,
+  "streetReferencePoints": 19008,
+  "coveredGarLocalities": 1244,
+  "guessedNearestPlaceAssignments": 0,
+  "houseCoordinates": false,
+  "fullRegionalCoverage": false
+}
