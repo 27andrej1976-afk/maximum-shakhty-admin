@@ -29,7 +29,8 @@ rollback() {
   trap - ERR
   systemctl stop don-collector.service || true
   tar -C "$app" -xzf "$backup/app-before.tar.gz"
-  cp -a "$backup/state/." "$state/"
+  mv "$state" "$backup/failed-state"
+  cp -a "$backup/state" "$state"
   for file in app.js client.js index.html about.html; do cp -a "$backup/public/$file" "$public/$file"; done
   systemctl start don-collector.service
   echo 'Update failed; previous collector code/state restored' >&2
