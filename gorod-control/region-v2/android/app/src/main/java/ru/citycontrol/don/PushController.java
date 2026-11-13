@@ -15,10 +15,12 @@ final class PushController {
   static boolean allowed(Context c){return (Build.VERSION.SDK_INT<33||c.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)==PackageManager.PERMISSION_GRANTED)&&c.getSystemService(NotificationManager.class).areNotificationsEnabled();}
   static void note(Context c,String text){PushSettings.prefs(c).edit().putString("status",text).apply();}
   static void disable(Context c){
+    synchronized(PushSettings.class){
     if(!PushSettings.enabled(c))return;
     generation.incrementAndGet();PushSettings.prefs(c).edit().putBoolean("enabled",false).apply();
     c.getSystemService(NotificationManager.class).cancelAll();note(c,"Уведомления выключены.");
     if(RuStorePushClient.INSTANCE.isInitialized())for(String topic:TOPICS)RuStorePushClient.INSTANCE.unsubscribeFromTopic(topic);
+    }
   }
   static void enable(Context context){
     Context c=context.getApplicationContext();

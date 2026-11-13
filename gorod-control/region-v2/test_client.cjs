@@ -22,3 +22,7 @@ assert.equal(P.safeMax('javascript:alert(1)'),null);assert.equal(P.safeMax('http
 assert.equal(P.point({lat:47,lon:40}),false,'unverified geometry cannot create a marker');
 assert.equal(P.point({lat:147,lon:40,geometryVerified:true}),false,'invalid coordinates cannot create a marker');
 console.log('Regional client: filtering, geography, offline/stale states, expiry and link policy passed');
+
+const attentionFeed={pendingPublications:[{id:'pending-water',category:'water',publishedAt:f.generatedAt},{id:'partial-water',category:'water',publishedAt:f.generatedAt,partiallyAccepted:true},{id:'power',category:'power',publishedAt:f.generatedAt},{id:'old',category:'water',publishedAt:new Date(now-37*3600e3).toISOString()}]};
+assert.deepEqual(P.attention(attentionFeed,'water',now).map(p=>p.id),['pending-water']);
+assert.equal(P.select({...f,events:[],pendingPublications:attentionFeed.pendingPublications},initial,now).length,0,'unlocated publications do not become outages or markers');

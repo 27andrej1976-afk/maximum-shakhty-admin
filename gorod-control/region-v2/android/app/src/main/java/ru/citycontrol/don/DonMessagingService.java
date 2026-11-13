@@ -21,6 +21,7 @@ public final class DonMessagingService extends RuStoreMessagingService {
   @Override public void onNewToken(String token){if(PushSettings.enabled(this))PushController.enable(this);}
   @Override public void onDeletedMessages(){PushController.note(this,"Часть уведомлений не доставлена. Откройте приложение и нажмите «Проверить сообщения».");}
   @Override public void onError(List<RuStorePushClientException> errors){PushController.note(this,"Сервис RuStore сообщил об ошибке доставки. Проверьте доступность уведомлений.");}
+  @android.annotation.SuppressLint("MissingPermission") // PushController.allowed is rechecked under the same lock before notify.
   @Override public void onMessageReceived(RemoteMessage message){
     // Backend is required to send DATA ONLY. Never trust pushed coordinates/text/URLs.
     if(!PushSettings.enabled(this)||!PushSettings.hasPoint(this)||!PushController.allowed(this)||BuildConfig.RUSTORE_PROJECT_ID.isEmpty())return;
@@ -31,20 +32,19 @@ public final class DonMessagingService extends RuStoreMessagingService {
       if(now-sent>300000||sent>now+60000)return;
       String dedupe="seen:"+id+":"+hash;
       if(PushSettings.prefs(this).contains(dedupe))return;
-      JSONObject event=PushPolicy.find(fetch(),id,hash,PushSettings.lat(this),PushSettings.lon(this),PushSettings.prefs(this).getInt("radius",1),now);
+      JSONObject feed=fetch();now=System.currentTimeMillis();
+      JSONObject event=PushPolicy.find(feed,id,hash,PushSettings.lat(this),PushSettings.lon(this),PushSettings.prefs(this).getInt("radius",1),now);
       // Re-check consent after network fetch: deletion/disable can happen meanwhile.
       if(event==null||!PushSettings.enabled(this)||!PushSettings.hasPoint(this)||!PushController.allowed(this))return;
-      // Coordinates may have changed during fetch: recompute against the latest settings.
-      JSONObject checkFeed=new JSONObject().put("schemaVersion",1).put("regionId","RU-ROS").put("mode","max-only").put("dataMode","production").put("generatedAt",java.time.Instant.ofEpochMilli(now).toString()).put("events",new org.json.JSONArray().put(event));
-      if(PushPolicy.find(checkFeed,id,hash,PushSettings.lat(this),PushSettings.lon(this),PushSettings.prefs(this).getInt("radius",1),now)==null)return;
       NotificationManager manager=getSystemService(NotificationManager.class);
       manager.createNotificationChannel(new NotificationChannel(CHANNEL,"События рядом и предупреждения МЧС",NotificationManager.IMPORTANCE_DEFAULT));
       Intent open=new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
       PendingIntent click=PendingIntent.getActivity(this,0,open,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
       String body="region".equals(event.optString("scope"))?"Предупреждение для Ростовской области. Откройте публикацию источника.":"Уличный ориентир в выбранном радиусе. Точные границы — в публикации источника.";
       Notification notice=new Notification.Builder(this,CHANNEL).setSmallIcon(R.drawable.ic_notification).setContentTitle(event.getString("title")).setContentText(body).setStyle(new Notification.BigTextStyle().bigText(body)).setContentIntent(click).setAutoCancel(true).build();
-      synchronized(DonMessagingService.class){
-        if(!PushSettings.enabled(this)||PushSettings.prefs(this).contains(dedupe))return;
+      synchronized(PushSettings.class){
+        if(!PushSettings.enabled(this)||!PushSettings.hasPoint(this)||!PushController.allowed(this)||PushSettings.prefs(this).contains(dedupe))return;
+        if(PushPolicy.find(feed,id,hash,PushSettings.lat(this),PushSettings.lon(this),PushSettings.prefs(this).getInt("radius",1),System.currentTimeMillis())==null)return;
         manager.notify(id,1,notice);PushSettings.prefs(this).edit().putLong(dedupe,now).apply();
       }
       // Bounded local delivery history, no device IDs or GPS leave the phone.
