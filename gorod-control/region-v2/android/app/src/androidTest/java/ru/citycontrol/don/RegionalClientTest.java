@@ -181,6 +181,10 @@ public class RegionalClientTest {
       js(scenario,"document.querySelector('#events details').open=true;");
       showElement(scenario,"events");
       captureProof(scenario,"don-real-water-card");
+      js(scenario,"document.querySelector('#events .address-buttons button:not(:disabled)').click()");
+      waitFor(scenario,"!!document.querySelector('.leaflet-popup-content') && document.querySelector('.leaflet-popup-content').textContent.includes(document.querySelector('#events .address-buttons button:not(:disabled)').textContent)");
+      assertEquals("true",js(scenario,"document.querySelectorAll('#map path.street-highlight.water').length>0"));
+
       js(scenario,"window.__countBeforeOffline=document.getElementById('eventCount').textContent; window.__savedFetch=window.fetch; window.fetch=()=>Promise.reject(new Error('QA_OFFLINE')); document.getElementById('refresh').click();");
       waitFor(scenario,"document.getElementById('connection').textContent.includes('Сервер недоступен')");
       assertEquals("true",js(scenario,"document.getElementById('eventCount').textContent===window.__countBeforeOffline && document.querySelectorAll('#map .leaflet-marker-icon').length>=3 && document.querySelectorAll('#healthCards .unavailable').length===3"));
