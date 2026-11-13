@@ -20,7 +20,7 @@ public final class DonMessagingService extends RuStoreMessagingService {
   private static final String CHANNEL="don-nearby-v1";
   @Override public void onNewToken(String token){if(PushSettings.enabled(this))PushController.enable(this);}
   @Override public void onDeletedMessages(){PushController.note(this,"Часть уведомлений не доставлена. Откройте приложение и нажмите «Проверить сообщения».");}
-  @Override public void onError(List<RuStorePushClientException> errors){PushController.note(this,"Сервис RuStore сообщил об ошибке доставки. Проверьте доступность уведомлений.");}
+  @Override public void onError(List<? extends RuStorePushClientException> errors){PushController.note(this,"Сервис RuStore сообщил об ошибке доставки. Проверьте доступность уведомлений.");}
   @android.annotation.SuppressLint("MissingPermission") // PushController.allowed is rechecked under the same lock before notify.
   @Override public void onMessageReceived(RemoteMessage message){
     // Backend is required to send DATA ONLY. Never trust pushed coordinates/text/URLs.
