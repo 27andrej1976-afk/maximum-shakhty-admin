@@ -43,7 +43,10 @@ public class RegionalClientTest {
     return value.get();
   }
   private void waitFor(ActivityScenario<MainActivity> scenario, String condition) throws Exception {
-    long deadline = SystemClock.elapsedRealtime() + 20000;
+    waitFor(scenario,condition,20000);
+  }
+  private void waitFor(ActivityScenario<MainActivity> scenario,String condition,long timeout) throws Exception {
+    long deadline = SystemClock.elapsedRealtime() + timeout;
     do {
       if ("true".equals(js(scenario, condition))) return;
       SystemClock.sleep(150);
@@ -72,7 +75,6 @@ public class RegionalClientTest {
     try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
       loaded(scenario);
       waitFor(scenario, "Array.from(document.querySelectorAll('.brands img')).every(image=>image.complete && image.naturalWidth>0)");
-      waitFor(scenario,"!document.getElementById('refresh').disabled");
       js(scenario,"document.getElementById('clearData').click();window.DonConfig={feedConfigured:false};document.getElementById('refresh').click();");
       waitFor(scenario, "document.getElementById('connection').textContent.includes('сборщик ещё не подключён')");
       assertEquals("true", js(scenario, "document.querySelector('h1').textContent==='Дон под контролем' && document.getElementById('region').textContent==='Вся область' && document.querySelectorAll('#filters button').length===4 && !document.querySelector('[data-category=gas]')"));
@@ -104,6 +106,15 @@ public class RegionalClientTest {
       loaded(scenario);
       js(scenario, "for(const k of ['don-point','don-radius','don-preferences','don-feed'])localStorage.setItem(k,'synthetic-fixture'); document.getElementById('clearData').click();");
       assertEquals("true", js(scenario, "['don-point','don-radius','don-preferences','don-feed'].every(k=>localStorage.getItem(k)===null) && document.getElementById('eventCount').textContent==='0' && document.getElementById('radius').value==='1'"));
+    }
+  }
+  @Test public void clearDataCancelsPendingFeedAndLeavesRefreshUsable() throws Exception {
+    try (ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)) {
+      loaded(scenario);
+      js(scenario,"document.getElementById('clearData').click();window.__realFetch=window.fetch;window.__feedAborted=false;window.fetch=(u,o)=>new Promise((resolve,reject)=>o.signal.addEventListener('abort',()=>{window.__feedAborted=true;reject(new Error('QA_ABORT'))}));window.DonConfig={feedConfigured:true,feedURL:'https://appassets.androidplatform.net/assets/web/qa/real-feed.json'};document.getElementById('refresh').click();document.getElementById('clearData').click();");
+      waitFor(scenario,"window.__feedAborted===true && !document.getElementById('refresh').disabled");
+      assertEquals("true",js(scenario,"localStorage.getItem('don-feed')===null && document.getElementById('eventCount').textContent==='0'"));
+      js(scenario,"window.fetch=window.__realFetch");
     }
   }
   @Test public void reportOpensExternalOfficialServiceWithoutSubmittingAnything() throws Exception {
@@ -154,8 +165,7 @@ public class RegionalClientTest {
   }
   private void realFeed(ActivityScenario<MainActivity> scenario) throws Exception {
     loaded(scenario);
-    waitFor(scenario,"!document.getElementById('refresh').disabled");
-    js(scenario, "window.DonConfig={feedConfigured:true,feedURL:'https://appassets.androidplatform.net/assets/web/qa/real-feed.json'}; document.getElementById('refresh').click();");
+    js(scenario, "document.getElementById('clearData').click();window.DonConfig={feedConfigured:true,feedURL:'https://appassets.androidplatform.net/assets/web/qa/real-feed.json'}; document.getElementById('refresh').click();");
     waitFor(scenario,"JSON.parse(localStorage.getItem('don-feed')||'{}').verificationMode==='real-MAX-to-Android-QA-export-not-a-deployment' && !document.getElementById('refresh').disabled");
     js(scenario,"window.__qaNow=Date.parse(JSON.parse(localStorage.getItem('don-feed')).qaSnapshotAt);Date.now=()=>window.__qaNow;document.getElementById('city').value=''; document.getElementById('city').dispatchEvent(new Event('change')); document.getElementById('region').click(); document.querySelector('[data-category=all]').click();");
   }
@@ -195,9 +205,8 @@ public class RegionalClientTest {
   @Test public void deployedHttpsFeedReachesAndroidOverNetwork() throws Exception {
     try (ActivityScenario<MainActivity> scenario=ActivityScenario.launch(MainActivity.class)) {
       loaded(scenario);
-      waitFor(scenario,"!document.getElementById('refresh').disabled");
       js(scenario,"document.getElementById('clearData').click();window.DonConfig={feedConfigured:true,feedURL:'https://chat.sportoskop.ru/don-control/feed.json'};document.getElementById('refresh').click();");
-      waitFor(scenario,"!document.getElementById('refresh').disabled && document.getElementById('connection').textContent.includes('Сводка получена')");
+      waitFor(scenario,"!document.getElementById('refresh').disabled && document.getElementById('connection').textContent.includes('Сводка получена')",45000);
       assertEquals("true",js(scenario,"(()=>{const f=JSON.parse(localStorage.getItem('don-feed'));return f.dataMode==='production' && f.mode==='max-only' && !f.verificationMode && Date.now()-Date.parse(f.generatedAt)<600000})()"));
       js(scenario,"document.getElementById('city').value='';document.getElementById('city').dispatchEvent(new Event('change'));document.querySelector('[data-category=all]').click();");
       assertEquals("true",js(scenario,"Number(document.getElementById('eventCount').textContent)===JSON.parse(localStorage.getItem('don-feed')).events.filter(e=>Date.parse(e.expiresAt)>Date.now()).length"));

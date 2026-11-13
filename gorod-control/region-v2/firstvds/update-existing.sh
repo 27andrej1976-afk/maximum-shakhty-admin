@@ -32,14 +32,16 @@ rollback() {
   mv "$state" "$backup/failed-state"
   cp -a "$backup/state" "$state"
   for file in app.js client.js app.css index.html about.html; do cp -a "$backup/public/$file" "$public/$file"; done
+  systemctl restart don-public.service
   systemctl start don-collector.service
   echo 'Update failed; previous collector code/state restored' >&2
 }
 trap rollback ERR
-for file in parse_publications.py pipeline.py events.py run_collector.py worker.py push_dispatch.py offline_geography.py osm-streets-20261112.json.gz; do install -m0644 "$src/$file" "$app/$file"; done
+for file in parse_publications.py pipeline.py events.py run_collector.py serve.py worker.py push_dispatch.py offline_geography.py osm-streets-20261112.json.gz; do install -m0644 "$src/$file" "$app/$file"; done
 for file in app.js client.js app.css index.html about.html; do install -m0644 "$src/web/$file" "$public/$file"; done
 cd "$app"
 runuser -u don-control -- /opt/don-control/venv/bin/python worker.py --config /etc/don-control/collector.json --check-config
+systemctl restart don-public.service
 systemctl start don-collector.service
 trap - ERR
 echo "Collector update started; private rollback snapshot: $backup"

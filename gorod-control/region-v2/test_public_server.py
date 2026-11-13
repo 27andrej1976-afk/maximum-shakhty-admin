@@ -51,6 +51,26 @@ class PublicBoundaryTests(unittest.TestCase):
         with urlopen(Request(self.url+'/feed.json', headers={'Origin':'https://unrelated.invalid'})) as response:
             self.assertIsNone(response.headers.get('Access-Control-Allow-Origin'))
 
+    def test_gzip_preserves_json_android_cors_and_head_length(self):
+        import gzip
+        payload={'events':['Публикация об улице']*2000}
+        atomic_json(self.public/'feed.json',payload,mode=0o644)
+        headers={'Accept-Encoding':'gzip','Origin':'https://appassets.androidplatform.net'}
+        with urlopen(Request(self.url+'/feed.json',headers=headers)) as response:
+            body=response.read();length=response.headers['Content-Length']
+            self.assertEqual(response.headers['Content-Encoding'],'gzip')
+            self.assertIn('Accept-Encoding',response.headers['Vary'])
+            self.assertEqual(response.headers['Access-Control-Allow-Origin'],headers['Origin'])
+            self.assertEqual(json.loads(gzip.decompress(body)),payload)
+            self.assertLess(len(body),len((self.public/'feed.json').read_bytes())/10)
+        with urlopen(Request(self.url+'/feed.json',headers=headers,method='HEAD')) as response:
+            self.assertEqual(response.headers['Content-Length'],length);self.assertEqual(response.read(),b'')
+
+    def test_gzip_disabled_client_still_receives_normal_json(self):
+        payload={'events':['public']*2000};atomic_json(self.public/'feed.json',payload,mode=0o644)
+        with urlopen(Request(self.url+'/feed.json',headers={'Accept-Encoding':'gzip;q=0'})) as response:
+            self.assertIsNone(response.headers.get('Content-Encoding'));self.assertEqual(json.load(response),payload)
+
     def test_post_cannot_overwrite_feed_and_health_is_not_incident_readiness(self):
         with self.assertRaises(HTTPError) as error:
             urlopen(Request(self.url+'/feed.json', data=b'overwritten', method='POST'))

@@ -1,5 +1,6 @@
 """Serve only the regional public bundle; never sessions, SQLite or private state."""
 import argparse
+import gzip
 from datetime import datetime, timezone
 from functools import partial
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -20,7 +21,21 @@ class PublicHandler(BaseHTTPRequestHandler):
         pass  # No client addresses, URL queries or credentials in application logs.
 
     def _reply(self, status, raw=b'', mime='application/json; charset=utf-8', *, head=False):
+        compressible=(mime.startswith('text/') or mime.startswith('application/json')
+                      or mime.startswith('application/javascript') or mime.startswith('image/svg'))
+        accepts_gzip=False
+        for item in self.headers.get('Accept-Encoding','').split(','):
+            fields=[s.strip().lower() for s in item.split(';')]
+            if fields[0]!='gzip':continue
+            try:quality=float(next((s[2:] for s in fields[1:] if s.startswith('q=')),'1'))
+            except ValueError:quality=0
+            accepts_gzip=quality>0
+            break
+        encoded=status==200 and len(raw)>=1024 and compressible and accepts_gzip
+        if encoded:raw=gzip.compress(raw,compresslevel=4,mtime=0)
         self.send_response(status)
+        if encoded:self.send_header('Content-Encoding','gzip')
+        self.send_header('Vary','Origin, Accept-Encoding')
         self.send_header('Content-Type', mime)
         self.send_header('Content-Length', str(len(raw)))
         self.send_header('X-Content-Type-Options', 'nosniff')
@@ -28,7 +43,6 @@ class PublicHandler(BaseHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-store' if mime.startswith('application/json') else 'public, max-age=600')
         if self.headers.get('Origin') == 'https://appassets.androidplatform.net':
             self.send_header('Access-Control-Allow-Origin', 'https://appassets.androidplatform.net')
-            self.send_header('Vary', 'Origin')
         self.end_headers()
         if not head:
             self.wfile.write(raw)
