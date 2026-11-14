@@ -1,8 +1,14 @@
 name: Don Control | Android preview verification (no publication)
 on:
   workflow_dispatch:
+    inputs:
+      rustore_project_id:
+        description: 'Public RuStore push project ID; leave empty for unconfigured QA'
+        required: false
+        default: ''
+        type: string
   push:
-    branches: [feature/rostov-max-only]
+    branches: [feature/rostov-max-only, prep/don-code-20261115]
     paths:
       - .github/workflows/gorod-don-android.yml
       - gorod-control/region-v2/android/**
@@ -51,7 +57,13 @@ jobs:
           "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0"
       - name: Compile preview and run Android lint
         working-directory: gorod-control/region-v2/android
-        run: gradle --no-daemon :app:assembleDebug :app:lintDebug :app:assemblePilot
+        env:
+          DON_PUSH_PROJECT_ID: ${{ inputs.rustore_project_id }}
+        run: |
+          if [[ ! "$DON_PUSH_PROJECT_ID" =~ ^[A-Za-z0-9_-]{0,100}$ ]]; then
+            echo 'Invalid public push project ID'; exit 1
+          fi
+          gradle --no-daemon -PrustoreProjectId="$DON_PUSH_PROJECT_ID" :app:assembleDebug :app:lintDebug :app:assemblePilot
       - name: Verify package and preview signature; never publish it
         run: |
           APK=gorod-control/region-v2/android/app/build/outputs/apk/debug/app-debug.apk
