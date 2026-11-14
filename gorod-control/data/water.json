@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-13T22:14:24.568114+00:00",
+  "checkedAt": "2026-11-14T02:31:12.976800+00:00",
   "events": [
     {
       "id": "water-city-repost-b3321cc1421317a9c7c1",
@@ -82,15 +82,15 @@
     },
     {
       "id": "water-oursv-1834",
-      "publishedAt": "2026-11-13T18:00:38+03:00",
+      "publishedAt": "2026-11-13T18:02:00+03:00",
       "kind": "emergency",
-      "start": "2026-11-13T18:00:38+03:00",
+      "start": "2026-11-13T18:02:00+03:00",
       "end": "2026-11-13T20:00:00+03:00",
       "startBasis": "publication",
       "endBasis": "estimated",
       "resolvedAt": null,
       "workSite": "ул тимирязева д. 2 планируемое время|",
-      "url": "https://news-don.ru/society/2026/11/13/153716.html",
+      "url": "https://newsrostov.ru/society/2026/11/13/606304.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1834",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -138,8 +138,8 @@
       "unmappedAreaText": [
         "ул Мехлесхоз"
       ],
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru",
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru",
       "reviewRequired": true,
       "requiresReview": true,
       "noticeId": "oursv/1834",
@@ -147,7 +147,7 @@
       "status": "unconfirmed",
       "revision": 1,
       "evidence": [
-        "https://news-don.ru/society/2026/11/13/153716.html"
+        "https://newsrostov.ru/society/2026/11/13/606304.html"
       ],
       "updates": [
         "oursv/1834"
@@ -1247,15 +1247,15 @@
     },
     {
       "id": "water-oursv-1834",
-      "publishedAt": "2026-11-13T18:00:38+03:00",
+      "publishedAt": "2026-11-13T18:02:00+03:00",
       "kind": "emergency",
-      "start": "2026-11-13T18:00:38+03:00",
+      "start": "2026-11-13T18:02:00+03:00",
       "end": "2026-11-13T20:00:00+03:00",
       "startBasis": "publication",
       "endBasis": "estimated",
       "resolvedAt": null,
       "workSite": "ул тимирязева д. 2 планируемое время|",
-      "url": "https://news-don.ru/society/2026/11/13/153716.html",
+      "url": "https://newsrostov.ru/society/2026/11/13/606304.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1834",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -1303,8 +1303,8 @@
       "unmappedAreaText": [
         "ул Мехлесхоз"
       ],
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru",
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru",
       "reviewRequired": true,
       "requiresReview": true,
       "noticeId": "oursv/1834",
@@ -1312,7 +1312,7 @@
       "status": "unconfirmed",
       "revision": 1,
       "evidence": [
-        "https://news-don.ru/society/2026/11/13/153716.html"
+        "https://newsrostov.ru/society/2026/11/13/606304.html"
       ],
       "updates": [
         "oursv/1834"
@@ -2400,15 +2400,15 @@
     },
     {
       "id": "oursv/1834",
-      "publishedAt": "2026-11-13T18:00:38+03:00",
+      "publishedAt": "2026-11-13T18:02:00+03:00",
       "kind": "emergency",
-      "start": "2026-11-13T18:00:38+03:00",
+      "start": "2026-11-13T18:02:00+03:00",
       "end": "2026-11-13T20:00:00+03:00",
       "startBasis": "publication",
       "endBasis": "estimated",
       "resolvedAt": null,
       "workSite": "ул тимирязева д. 2 планируемое время|",
-      "url": "https://news-don.ru/society/2026/11/13/153716.html",
+      "url": "https://newsrostov.ru/society/2026/11/13/606304.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1834",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -2456,14 +2456,14 @@
       "unmappedAreaText": [
         "ул Мехлесхоз"
       ],
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru",
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru",
       "reviewRequired": true,
       "requiresReview": true
     },
     {
       "id": "oursv/1835",
-      "publishedAt": "2026-11-13T18:57:39+03:00",
+      "publishedAt": "2026-11-13T19:00:35+03:00",
       "kind": "resolved",
       "start": null,
       "end": null,
@@ -2471,7 +2471,7 @@
       "endBasis": "unknown",
       "resolvedAt": null,
       "workSite": "ул тимирязева|2",
-      "url": "https://news-don.ru/society/2026/11/13/153733.html",
+      "url": "https://newsrostov.ru/society/2026/11/13/606325.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1835",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -2519,8 +2519,8 @@
       "unmappedAreaText": [
         "ул Мехлесхоз"
       ],
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru",
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru",
       "reviewRequired": true,
       "requiresReview": true
     }
@@ -2546,29 +2546,26 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-13T22:14:16.348849+00:00"
+      "checkedAt": "2026-11-14T02:30:23.899464+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-13T22:14:16.348849+00:00",
+      "checkedAt": "2026-11-14T02:30:23.899464+00:00",
       "coverage": "partial",
-      "status": "ok",
-      "readStatus": "ok",
-      "posts": 10,
-      "matchingPosts": 1,
-      "lastPostAt": "2026-11-11T10:19:28+03:00",
-      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
+      "status": "error",
+      "posts": 0,
+      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
     },
     {
       "id": "repost_rostov",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 96,
-      "matchingPosts": 0,
-      "checkedAt": "2026-11-13T22:14:16.348849+00:00",
-      "lastPostAt": null,
+      "posts": 200,
+      "matchingPosts": 2,
+      "checkedAt": "2026-11-14T02:30:23.899464+00:00",
+      "lastPostAt": "2026-11-13T19:00:35+03:00",
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
@@ -2579,7 +2576,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 2,
-      "checkedAt": "2026-11-13T22:14:16.348849+00:00",
+      "checkedAt": "2026-11-14T02:30:23.899464+00:00",
       "lastPostAt": "2026-11-13T18:57:39+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -2590,7 +2587,7 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 96,
+      "posts": 200,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
@@ -2655,25 +2652,25 @@
   "archive": [
     {
       "id": "oursv/1835",
-      "publishedAt": "2026-11-13T18:57:39+03:00",
+      "publishedAt": "2026-11-13T19:00:35+03:00",
       "text": "Филиал \"Шахтинский\" сообщает:\nРаботы завершены\nПричина\nВ 18-30 час. аварийно-ремонтные работы по адресу: ул. Тимирязева, д.2 завершены. Водоснабжение восстановлено.\nАдреса:\nг Шахты, ул Тимирязева\nг Шахты, ул Песчаная\nг Шахты, ул Севанская\nг Шахты, Ямской пер\nг Шахты, пер Крутой Спуск\nг Шахты, Фестивальный пер\nг Шахты, ул Минусинская\nг Шахты, ул Стрельникова\nг Шахты, ул Мехлесхоз\nг Шахты, Кутовой пер\nПодробнее: https://rovodokanal.ru/emergency-alerts/1835",
-      "url": "https://news-don.ru/society/2026/11/13/153733.html",
+      "url": "https://newsrostov.ru/society/2026/11/13/606325.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1835",
       "origin": "verified_repost",
       "source": "ГУП РО УРСВ — перепечатка",
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru"
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru"
     },
     {
       "id": "oursv/1834",
-      "publishedAt": "2026-11-13T18:00:38+03:00",
+      "publishedAt": "2026-11-13T18:02:00+03:00",
       "text": "Филиал \"Шахтинский\" сообщает:\nВажная информация\nПричина\nВ связи с увеличением объёма аварийно-ремонтных работ по адресу: ул. Тимирязева, д. 2 планируемое время завершения увеличено до 20-00 час. 13.11.2026 г.\nАдреса:\nг Шахты, ул Тимирязева\nг Шахты, ул Песчаная\nг Шахты, ул Севанская\nг Шахты, Ямской пер\nг Шахты, пер Крутой Спуск\nг Шахты, Фестивальный пер\nг Шахты, ул Минусинская\nг Шахты, ул Стрельникова\nг Шахты, ул Мехлесхоз\nг Шахты, Кутовой пер\nПодробнее: https://rovodokanal.ru/emergency-alerts/1834",
-      "url": "https://news-don.ru/society/2026/11/13/153716.html",
+      "url": "https://newsrostov.ru/society/2026/11/13/606304.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1834",
       "origin": "verified_repost",
       "source": "ГУП РО УРСВ — перепечатка",
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru"
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru"
     },
     {
       "id": "city-repost/72f5b72c0fe5d7a13678",
