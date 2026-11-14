@@ -132,216 +132,6 @@
       "retained": true
     },
     {
-      "id": "power-direct-7a2b2bb6c2d434ae00",
-      "category": "power",
-      "kind": "planned",
-      "status": "unconfirmed",
-      "sourceId": "power_direct",
-      "source": "Донэнерго · официальный график ШМЭС",
-      "origin": "official_site",
-      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "publishedAt": null,
-      "observedAt": "2026-11-13T07:49:11.182020+00:00",
-      "start": "2026-11-12T13:00:00+03:00",
-      "end": "2026-11-12T16:00:00+03:00",
-      "startBasis": "explicit",
-      "endBasis": "scheduled",
-      "title": "Плановое отключение электричества",
-      "description": "Техническое обслуживание ТП-11",
-      "fullText": "г. Шахты\nул. Ленина 221-256, 258-282;\nул. Советская 281-291, 226-270;\nпер. 2 Милиционный 25-35, 34-62;\nул. Селянская 2;\nпер. 1 Милиционный 61-69, 36-42;\nул. Пролетарская 231-251, 258-284\n12.11.26 13=00 — 12.11.26 16=00\nТехническое обслуживание ТП-11\n",
-      "affected": [
-        {
-          "street": "ул. Ленина",
-          "houses": [
-            "221-256",
-            "258-282"
-          ]
-        },
-        {
-          "street": "ул. Советская",
-          "houses": [
-            "281-291",
-            "226-270"
-          ]
-        },
-        {
-          "street": "пер. 2 Милиционный",
-          "houses": [
-            "25-35",
-            "34-62"
-          ]
-        },
-        {
-          "street": "ул. Селянская",
-          "houses": [
-            "2"
-          ]
-        },
-        {
-          "street": "пер. 1 Милиционный",
-          "houses": [
-            "61-69",
-            "36-42"
-          ]
-        },
-        {
-          "street": "ул. Пролетарская",
-          "houses": [
-            "231-251",
-            "258-284"
-          ]
-        }
-      ],
-      "unmappedAreaText": [],
-      "requiresReview": false,
-      "point": null,
-      "precision": "street",
-      "lastConfirmedAt": "2026-11-13T07:49:11.182020+00:00",
-      "retainUntil": "2026-11-14T04:00:00+03:00",
-      "retained": true
-    },
-    {
-      "id": "power-direct-df17cd60425f22f9e0",
-      "category": "power",
-      "kind": "planned",
-      "status": "unconfirmed",
-      "sourceId": "power_direct",
-      "source": "Донэнерго · официальный график ШМЭС",
-      "origin": "official_site",
-      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "publishedAt": null,
-      "observedAt": "2026-11-13T07:49:11.182020+00:00",
-      "start": "2026-11-12T08:00:00+03:00",
-      "end": "2026-11-12T16:00:00+03:00",
-      "startBasis": "explicit",
-      "endBasis": "scheduled",
-      "title": "Плановое отключение электричества",
-      "description": "Техническое обслуживание оборудования ВЛ-0,4кВ Л-1, Л-4 от ТП-357",
-      "fullText": "г. Шахты\nпер. Куйбышева 8-18;\nул. Евлахова 53-67, 72-74;\nул. Планировочная 61-87, 60-80\n12.11.26 08=00 — 12.11.26 16=00\nТехническое обслуживание оборудования ВЛ-0,4кВ Л-1, Л-4 от ТП-357\n",
-      "affected": [
-        {
-          "street": "пер. Куйбышева",
-          "houses": [
-            "8-18"
-          ]
-        },
-        {
-          "street": "ул. Евлахова",
-          "houses": [
-            "53-67",
-            "72-74"
-          ]
-        },
-        {
-          "street": "ул. Планировочная",
-          "houses": [
-            "61-87",
-            "60-80"
-          ]
-        }
-      ],
-      "unmappedAreaText": [],
-      "requiresReview": false,
-      "point": null,
-      "precision": "street",
-      "lastConfirmedAt": "2026-11-13T07:49:11.182020+00:00",
-      "retainUntil": "2026-11-14T04:00:00+03:00",
-      "retained": true
-    },
-    {
-      "id": "power-direct-0ef6ec5ecb05b831d5",
-      "category": "power",
-      "kind": "planned",
-      "status": "unconfirmed",
-      "sourceId": "power_direct",
-      "source": "Донэнерго · официальный график ШМЭС",
-      "origin": "official_site",
-      "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "publishedAt": null,
-      "observedAt": "2026-11-13T07:49:11.182020+00:00",
-      "start": "2026-11-12T09:00:00+03:00",
-      "end": "2026-11-12T16:00:00+03:00",
-      "startBasis": "explicit",
-      "endBasis": "scheduled",
-      "title": "Плановое отключение электричества",
-      "description": "Техническое обслуживание оборудования ВЛ-10 кВ",
-      "fullText": "г. Шахты\nпер. Куйбышева 11-47, 16-32;\nПер. Курчатова 17-47, 18-58;\nул. Одесская 61-69, 72-80;\nПер. Чапаева 39-57, 60-62;\nул. Тверская 79-97, 68-86;\nпер. Камчатский 13-33, 16-36;\nул. Онежская 1-13, 2-12;\nПер. Цуканова 24-50;\nПер. Декабрьский 17-47, 18-36\n12.11.26 09=00 — 12.11.26 16=00\nТехническое обслуживание оборудования ВЛ-10 кВ\n",
-      "affected": [
-        {
-          "street": "пер. Куйбышева",
-          "houses": [
-            "11-47",
-            "16-32"
-          ]
-        },
-        {
-          "street": "пер. Курчатова",
-          "houses": [
-            "17-47",
-            "18-58"
-          ]
-        },
-        {
-          "street": "ул. Одесская",
-          "houses": [
-            "61-69",
-            "72-80"
-          ]
-        },
-        {
-          "street": "пер. Чапаева",
-          "houses": [
-            "39-57",
-            "60-62"
-          ]
-        },
-        {
-          "street": "ул. Тверская",
-          "houses": [
-            "79-97",
-            "68-86"
-          ]
-        },
-        {
-          "street": "пер. Камчатский",
-          "houses": [
-            "13-33",
-            "16-36"
-          ]
-        },
-        {
-          "street": "ул. Онежская",
-          "houses": [
-            "1-13",
-            "2-12"
-          ]
-        },
-        {
-          "street": "пер. Цуканова",
-          "houses": [
-            "24-50"
-          ]
-        },
-        {
-          "street": "пер. Декабрьский",
-          "houses": [
-            "17-47",
-            "18-36"
-          ]
-        }
-      ],
-      "unmappedAreaText": [],
-      "requiresReview": false,
-      "point": null,
-      "precision": "street",
-      "lastConfirmedAt": "2026-11-13T07:49:11.182020+00:00",
-      "retainUntil": "2026-11-14T04:00:00+03:00",
-      "retained": true
-    },
-    {
       "id": "power-direct-5803fcad618f39ade1",
       "category": "power",
       "kind": "planned",
@@ -414,7 +204,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-13T21:41:36.323006+00:00",
+      "observedAt": "2026-11-14T01:53:15.008344+00:00",
       "start": "2026-11-13T13:00:00+03:00",
       "end": "2026-11-13T16:00:00+03:00",
       "startBasis": "explicit",
@@ -458,7 +248,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-15T04:00:00+03:00",
       "retained": false
     },
@@ -473,7 +263,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-13T21:41:36.323006+00:00",
+      "observedAt": "2026-11-14T01:53:15.008344+00:00",
       "start": "2026-11-16T09:00:00+03:00",
       "end": "2026-11-16T12:00:00+03:00",
       "startBasis": "explicit",
@@ -530,7 +320,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-18T00:00:00+03:00",
       "retained": false
     },
@@ -545,7 +335,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-13T21:41:36.323006+00:00",
+      "observedAt": "2026-11-14T01:53:15.008344+00:00",
       "start": "2026-11-16T09:00:00+03:00",
       "end": "2026-11-16T17:00:00+03:00",
       "startBasis": "explicit",
@@ -572,7 +362,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-18T05:00:00+03:00",
       "retained": false
     },
@@ -587,7 +377,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-13T21:41:36.323006+00:00",
+      "observedAt": "2026-11-14T01:53:15.008344+00:00",
       "start": "2026-11-16T11:00:00+03:00",
       "end": "2026-11-16T17:00:00+03:00",
       "startBasis": "explicit",
@@ -708,7 +498,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-18T05:00:00+03:00",
       "retained": false
     },
@@ -723,7 +513,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-13T21:41:36.323006+00:00",
+      "observedAt": "2026-11-14T01:53:15.008344+00:00",
       "start": "2026-11-17T09:00:00+03:00",
       "end": "2026-11-17T15:00:00+03:00",
       "startBasis": "explicit",
@@ -790,7 +580,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-19T03:00:00+03:00",
       "retained": false
     },
@@ -805,7 +595,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-13T21:41:36.323006+00:00",
+      "observedAt": "2026-11-14T01:53:15.008344+00:00",
       "start": "2026-11-17T11:00:00+03:00",
       "end": "2026-11-17T17:00:00+03:00",
       "startBasis": "explicit",
@@ -926,7 +716,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-19T05:00:00+03:00",
       "retained": false
     },
@@ -941,7 +731,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-13T21:41:36.323006+00:00",
+      "observedAt": "2026-11-14T01:53:15.008344+00:00",
       "start": "2026-11-18T11:00:00+03:00",
       "end": "2026-11-18T17:00:00+03:00",
       "startBasis": "explicit",
@@ -1062,7 +852,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-20T05:00:00+03:00",
       "retained": false
     },
@@ -1105,73 +895,8 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-15T12:15:00+03:00",
-      "retained": false
-    },
-    {
-      "id": "restore-water-max_water/117603726402142345",
-      "publishedAt": "2026-11-12T13:34:14.134000+00:00",
-      "kind": "resolved",
-      "start": null,
-      "end": null,
-      "startBasis": "unknown",
-      "endBasis": "unknown",
-      "resolvedAt": null,
-      "workSite": "ул горбунова|5",
-      "url": "https://max.ru/id6167110467_gos",
-      "officialUrl": "https://max.ru/id6167110467_gos",
-      "source": "ГУП РО «УРСВ»",
-      "origin": "official_max",
-      "text": "Филиал \"Шахтинский\" сообщает:\n\n⚠️ Работы завершены\n\n🔧 Причина\nВ 16-30 час. аварийно-ремонтные работы по адресу: ул. Горбунова, д.5 завершены. Водоснабжение восстановлено.\n\n🗺️ Адреса:\nг Шахты, пер Фучика\nг Шахты, ул Горбунова\nг Шахты, ул Заводская\nг Шахты, ул Космическая\nг Шахты, Кислородный пер\nг Шахты, ул Тракторная\nг Шахты, Туркменский пер\nг Шахты, ул Камышина\nг Шахты, ул Объединенная\n\n🔗 Подробнее: https://rovodokanal.ru/emergency-alerts/1823",
-      "textSha256": "0d9f857ee9fc1e760477c6151bad633ab13c750b12d08e07f57fa5a38ba22c97",
-      "affected": [
-        {
-          "street": "пер Фучика",
-          "houses": []
-        },
-        {
-          "street": "ул Горбунова",
-          "houses": []
-        },
-        {
-          "street": "ул Заводская",
-          "houses": []
-        },
-        {
-          "street": "ул Космическая",
-          "houses": []
-        },
-        {
-          "street": "пер Кислородный",
-          "houses": []
-        },
-        {
-          "street": "ул Тракторная",
-          "houses": []
-        },
-        {
-          "street": "пер Туркменский",
-          "houses": []
-        },
-        {
-          "street": "ул Камышина",
-          "houses": []
-        },
-        {
-          "street": "ул Объединенная",
-          "houses": []
-        }
-      ],
-      "zones": [],
-      "unmappedAreaText": [],
-      "sourceId": "max_water",
-      "reviewRequired": false,
-      "requiresReview": false,
-      "category": "water",
-      "status": "resolved",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
-      "retainUntil": "2026-11-14T01:34:14.134000+00:00",
       "retained": false
     },
     {
@@ -1211,7 +936,7 @@
       "description": "В городе Шахты временно снизят давление в водопроводе из-за ремонта на улице Тимирязева Уважаемые жители города Шахты! Сегодня, 13 ноября, с 11:00 до 17:00 филиал «Шахтинский» будет проводить аварийно-ремонтные работы на трубопроводе по адресу ул. Тимирязева, д. 2. В связи с этим снижено давление в системе водоснабжения на следующих улицах: * Песчаная, Севанская; * Ямской пер., Крутой Спуск, Фестивальный пер., Минусинская; * Стрельников",
       "title": "Ограничение водоснабжения",
       "fullText": "В городе Шахты временно снизят давление в водопроводе из-за ремонта на улице Тимирязева\n\nУважаемые жители города Шахты! \nСегодня, 13 ноября, с 11:00 до 17:00 филиал «Шахтинский» будет проводить аварийно-ремонтные работы на трубопроводе по адресу ул. Тимирязева, д. 2.\n\nВ связи с этим снижено давление в системе водоснабжения на следующих улицах:\n\n* Песчаная, Севанская;\n* Ямской пер., Крутой Спуск, Фестивальный пер., Минусинская;\n* Стрельникова, Мехлесхоз, Кутовой пер. \n\nПо заявкам абонентов будет организован подвоз воды. За подробной информацией обращайтесь в диспетчерскую службу ГУП РО «УРСВ» по телефону: 8 (863) 285-57-77.\n\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-15T05:00:00+03:00",
       "retained": false
     },
@@ -1253,7 +978,7 @@
       "description": "В городе Шахты временно снизят давление в водопроводе из-за ремонта на улице Тимирязева Уважаемые жители города Шахты! Сегодня, 13 ноября, с 11:00 до 17:00 филиал «Шахтинский» будет проводить аварийно-ремонтные работы на трубопроводе по адресу ул. Тимирязева, д. 2. В связи с этим снижено давление в системе водоснабжения на следующих улицах: * Песчаная, Севанская; * Ямской пер., Крутой Спуск, Фестивальный пер., Минусинская; * Стрельников",
       "title": "Ограничение водоснабжения",
       "fullText": "В городе Шахты временно снизят давление в водопроводе из-за ремонта на улице Тимирязева\nУважаемые жители города Шахты!\nСегодня, 13 ноября, с 11:00 до 17:00 филиал «Шахтинский» будет проводить аварийно-ремонтные работы на трубопроводе по адресу ул. Тимирязева, д. 2.\nВ связи с этим снижено давление в системе водоснабжения на следующих улицах:\n* Песчаная, Севанская;\n* Ямской пер., Крутой Спуск, Фестивальный пер., Минусинская;\n* Стрельникова, Мехлесхоз, Кутовой пер.\nПо заявкам абонентов будет организован подвоз воды. За подробной информацией обращайтесь в диспетчерскую службу ГУП РО «УРСВ» по телефону: 8 (863) 285-57-77.\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "lastConfirmedAt": "2026-11-13T21:40:07.460424+00:00",
+      "lastConfirmedAt": "2026-11-14T01:51:48.436299+00:00",
       "retainUntil": "2026-11-15T05:00:00+03:00",
       "retained": false
     },
@@ -1295,21 +1020,21 @@
       "description": "В городе Шахты временно снизят давление в водопроводе из-за ремонта на улице Тимирязева Уважаемые жители города Шахты! Сегодня, 13 ноября, с 11:00 до 17:00 филиал «Шахтинский» будет проводить аварийно-ремонтные работы на трубопроводе по адресу ул. Тимирязева, д. 2. В связи с этим снижено давление в системе водоснабжения на следующих улицах: * Песчаная, Севанская; * Ямской пер., Крутой Спуск, Фестивальный пер., Минусинская; * Стрельников",
       "title": "Ограничение водоснабжения",
       "fullText": "В городе Шахты временно снизят давление в водопроводе из-за ремонта на улице Тимирязева\nУважаемые жители города Шахты!\nСегодня, 13 ноября, с 11:00 до 17:00 филиал «Шахтинский» будет проводить аварийно-ремонтные работы на трубопроводе по адресу ул. Тимирязева, д. 2.\nВ связи с этим снижено давление в системе водоснабжения на следующих улицах:\n* Песчаная, Севанская;\n* Ямской пер., Крутой Спуск, Фестивальный пер., Минусинская;\n* Стрельникова, Мехлесхоз, Кутовой пер.\nПо заявкам абонентов будет организован подвоз воды. За подробной информацией обращайтесь в диспетчерскую службу ГУП РО «УРСВ» по телефону: 8 (863) 285-57-77.\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "lastConfirmedAt": "2026-11-13T21:40:07.460424+00:00",
+      "lastConfirmedAt": "2026-11-14T01:51:48.436299+00:00",
       "retainUntil": "2026-11-15T05:00:00+03:00",
       "retained": false
     },
     {
       "id": "water-oursv-1834",
-      "publishedAt": "2026-11-13T18:02:00+03:00",
+      "publishedAt": "2026-11-13T18:00:38+03:00",
       "kind": "emergency",
-      "start": "2026-11-13T18:02:00+03:00",
+      "start": "2026-11-13T18:00:38+03:00",
       "end": "2026-11-13T20:00:00+03:00",
       "startBasis": "publication",
       "endBasis": "estimated",
       "resolvedAt": null,
       "workSite": "ул тимирязева д. 2 планируемое время|",
-      "url": "https://newsrostov.ru/society/2026/11/13/606304.html",
+      "url": "https://news-don.ru/society/2026/11/13/153716.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1834",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -1357,8 +1082,8 @@
       "unmappedAreaText": [
         "ул Мехлесхоз"
       ],
-      "sourceId": "repost_rostov",
-      "mirror": "newsrostov.ru",
+      "sourceId": "repost_don",
+      "mirror": "news-don.ru",
       "reviewRequired": true,
       "requiresReview": true,
       "noticeId": "oursv/1834",
@@ -1366,7 +1091,7 @@
       "status": "unconfirmed",
       "revision": 1,
       "evidence": [
-        "https://newsrostov.ru/society/2026/11/13/606304.html"
+        "https://news-don.ru/society/2026/11/13/153716.html"
       ],
       "updates": [
         "oursv/1834"
@@ -1376,7 +1101,7 @@
       "description": "Филиал \"Шахтинский\" сообщает: Важная информация Причина В связи с увеличением объёма аварийно-ремонтных работ по адресу: ул. Тимирязева, д. 2 планируемое время завершения увеличено до 20-00 час. 13.11.2026 г. Адреса: г Шахты, ул Тимирязева г Шахты, ул Песчаная г Шахты, ул Севанская г Шахты, Ямской пер г Шахты, пер Крутой Спуск г Шахты, Фестивальный пер г Шахты, ул Минусинская г Шахты, ул Стрельникова г Шахты, ул Мехлесхоз г Шахты, Кутов",
       "title": "Ограничение водоснабжения",
       "fullText": "Филиал \"Шахтинский\" сообщает:\nВажная информация\nПричина\nВ связи с увеличением объёма аварийно-ремонтных работ по адресу: ул. Тимирязева, д. 2 планируемое время завершения увеличено до 20-00 час. 13.11.2026 г.\nАдреса:\nг Шахты, ул Тимирязева\nг Шахты, ул Песчаная\nг Шахты, ул Севанская\nг Шахты, Ямской пер\nг Шахты, пер Крутой Спуск\nг Шахты, Фестивальный пер\nг Шахты, ул Минусинская\nг Шахты, ул Стрельникова\nг Шахты, ул Мехлесхоз\nг Шахты, Кутовой пер\nПодробнее: https://rovodokanal.ru/emergency-alerts/1834",
-      "lastConfirmedAt": "2026-11-13T21:40:07.460424+00:00",
+      "lastConfirmedAt": "2026-11-14T01:51:48.436299+00:00",
       "retainUntil": "2026-11-15T08:00:00+03:00",
       "retained": false
     },
@@ -1443,13 +1168,13 @@
       "requiresReview": true,
       "category": "water",
       "status": "resolved",
-      "lastConfirmedAt": "2026-11-13T21:41:36.323006+00:00",
+      "lastConfirmedAt": "2026-11-14T01:53:15.008344+00:00",
       "retainUntil": "2026-11-15T03:32:17.866000+00:00",
       "retained": false
     },
     {
       "id": "restore-water-oursv/1835",
-      "publishedAt": "2026-11-13T19:00:35+03:00",
+      "publishedAt": "2026-11-13T18:57:39+03:00",
       "kind": "resolved",
       "start": null,
       "end": null,
@@ -1457,7 +1182,7 @@
       "endBasis": "unknown",
       "resolvedAt": null,
       "workSite": "ул тимирязева|2",
-      "url": "https://newsrostov.ru/society/2026/11/13/606325.html",
+      "url": "https://news-don.ru/society/2026/11/13/153733.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1835",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -1505,14 +1230,14 @@
       "unmappedAreaText": [
         "ул Мехлесхоз"
       ],
-      "sourceId": "repost_rostov",
-      "mirror": "newsrostov.ru",
+      "sourceId": "repost_don",
+      "mirror": "news-don.ru",
       "reviewRequired": true,
       "requiresReview": true,
       "category": "water",
       "status": "resolved",
-      "lastConfirmedAt": "2026-11-13T21:40:07.460424+00:00",
-      "retainUntil": "2026-11-15T07:00:35+03:00",
+      "lastConfirmedAt": "2026-11-14T01:51:48.436299+00:00",
+      "retainUntil": "2026-11-15T06:57:39+03:00",
       "retained": false
     }
   ]
