@@ -79,7 +79,12 @@ public class RegionalClientTest {
       waitFor(scenario, "document.getElementById('connection').textContent.includes('сборщик ещё не подключён')");
       assertEquals("true", js(scenario, "document.querySelector('h1').textContent==='Дон под контролем' && document.getElementById('region').textContent==='Вся область' && document.querySelectorAll('#filters button').length===4 && !document.querySelector('[data-category=gas]')"));
       assertEquals("true", js(scenario, "document.getElementById('report').getAttribute('href')==='https://www.gosuslugi.ru/10091/1'"));
-      assertEquals("true", js(scenario, "document.getElementById('adSlot').hidden && document.querySelector('footer').textContent.includes('не означает отсутствие аварий')"));
+      assertEquals("true", js(scenario, "!document.getElementById('adSlot') && document.querySelector('footer').textContent.includes('не означает отсутствие аварий')"));
+      assertEquals("true",js(scenario,"!document.querySelector('.projects').open"));
+      js(scenario,"document.querySelector('.projects summary').click()");
+      assertEquals("true",js(scenario,"(()=>{const n=document.querySelector('.projects nav');const r=n.getBoundingClientRect();return document.querySelector('.projects').open && r.left>=0 && r.right<=innerWidth && n.querySelectorAll('a').length===2})()"));
+      captureProof(scenario,"don-projects-menu");
+      js(scenario,"document.querySelector('.projects summary').click()");
       visibleAndFocused(scenario);
       Bitmap image = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
       assertNotNull("Android screenshot must be captured", image);
