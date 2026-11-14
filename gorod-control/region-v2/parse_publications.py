@@ -67,6 +67,9 @@ class Templates:
         for n,hit in enumerate(hits):
             tail=body[hit.end():hits[n+1].start() if n+1<len(hits) else len(body)]
             raw=re.split('[,;\\n]',tail)[0].strip(' .:—–-')
+            # A comma separates the street name from house numbers too, not
+            # only from the next street. Keep this precision restriction.
+            comma_house=bool(re.match(r'[^,;\n]+,[ \t]*(?:д(?:ом(?:а|ов)?)?\.?[ \t]*)?\d',tail,re.I))
             candidate=norm(raw);typ=TYPES[hit.group(1).lower()]
             matching=[s for s in self.streets[city['id']] if s['type']==typ
                       and (candidate==norm(s['name']) or candidate.startswith(norm(s['name'])+' '))]
@@ -94,7 +97,7 @@ class Templates:
             # remains text; a street point must never claim a verified house.
             found[s['id']]={'id':s['id'],'municipalityId':city['id'],'streetId':s['id'],
                 'label':s['type']+' '+s['name'],'name':s['name'],'type':s['type'],
-                'sourceAddress':hit.group(0)+raw,'houseRangeSpecified':bool(re.search(r'\d',house_tail)),'verified':True,'geometryVerified':False,
+                'sourceAddress':hit.group(0)+raw,'houseRangeSpecified':comma_house or bool(re.search(r'\d',house_tail)) or found.get(s['id'],{}).get('houseRangeSpecified',False),'verified':True,'geometryVerified':False,
                 'locationPrecision':'street','verification':'GAR '+self.index['version']}
         return list(found.values()),unknown
 

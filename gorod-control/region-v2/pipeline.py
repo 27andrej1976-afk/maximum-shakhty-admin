@@ -60,13 +60,14 @@ def process(store,catalog,index,now,*,geometry=None):
                     except ValueError:
                         kind='pending';reason='CHANGED_INCIDENT_REQUIRES_REVIEW'
             else:
-                # Exact source/category/city/address set, newer explicit text,
-                # only one unresolved incident. No broad street-only guessing.
+                # Explicit whole-street restoration may also list the repair
+                # location. Require coverage of every original address and a
+                # single overlapping incident from the same source/city/category.
                 candidates=[]
                 for event_row in store.db.execute('SELECT payload FROM reviewed_events'):
                     event=ledger.projected(json.loads(event_row[0]))
                     if (event['sourceId']==cid and event['category']==plan['category']
-                            and event['municipalityId']==city_id and set(event['addressIds'])==set(aids)
+                            and event['municipalityId']==city_id and set(event['addressIds']) & set(aids)
                             and event.get('addressMatchPrecision','street')=='street'
                             and not event.get('unresolvedAddresses') and not plan['unresolvedAddresses']
                             and utc(event['publishedAt'])<=utc(post['publishedAt'])):
@@ -74,8 +75,12 @@ def process(store,catalog,index,now,*,geometry=None):
                         # confirmation for a whole street. That needs a house ledger.
                         if any(a.get('houseRangeSpecified',True) for a in plan['addresses']):continue
                         if store.db.execute("SELECT 1 FROM review_log WHERE json_extract(payload,'$.targetEventId')=?",(event['eventId'],)).fetchone():continue
-                        candidates.append(event['eventId'])
-                if len(candidates)==1:record['targetEventId']=candidates[0]
+                        candidates.append(event)
+                if len(candidates)==1 and set(candidates[0]['addressIds']) <= set(aids):
+                    record['targetEventId']=candidates[0]['eventId']
+                    # The ledger closes only addresses belonging to the incident;
+                    # the full restoration publication remains immutable evidence.
+                    record['addressIds']=list(candidates[0]['addressIds'])
                 else:kind='pending';reason='AMBIGUOUS_OR_UNMATCHED_RESTORATION'
             if kind in {'incident','restoration'}:
                 ledger.apply([record],now);stats['incidents' if kind=='incident' else 'restorations']+=1
