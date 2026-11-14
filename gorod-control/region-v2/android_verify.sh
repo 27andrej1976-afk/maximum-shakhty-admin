@@ -26,7 +26,7 @@ if ! adb pull /sdcard/Download/don-preview.png /tmp/don-android-results/; then
   echo 'Android screenshot could not be retrieved'
   don_test_result=1
 fi
-for don_proof in don-real-water-map don-real-water-card don-real-near-system-gps; do
+for don_proof in don-projects-menu don-real-water-map don-real-water-card don-real-near-system-gps; do
   if ! adb pull "/sdcard/Download/$don_proof.png" /tmp/don-android-results/; then don_test_result=1; fi
 done
 # Preserve a failed viewport diagnosis as well; it never replaces a required proof.
