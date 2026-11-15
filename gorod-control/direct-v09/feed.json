@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "version": "0.9.0-test",
-  "checkedAt": "2026-11-15T19:44:48.003155+00:00",
+  "checkedAt": "2026-11-15T23:34:03.150047+00:00",
   "coverage": "partial",
   "sources": [
     {
@@ -12,16 +12,19 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-15T19:42:45.601911+00:00"
+      "checkedAt": "2026-11-15T23:32:38.516898+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-15T19:42:45.601911+00:00",
+      "checkedAt": "2026-11-15T23:32:38.516898+00:00",
       "coverage": "partial",
-      "status": "error",
-      "posts": 0,
-      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
+      "status": "ok",
+      "readStatus": "ok",
+      "posts": 10,
+      "matchingPosts": 1,
+      "lastPostAt": "2026-11-11T10:19:28+03:00",
+      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
     },
     {
       "id": "repost_rostov",
@@ -30,7 +33,7 @@
       "coverage": "partial",
       "posts": 96,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-15T19:42:45.601911+00:00",
+      "checkedAt": "2026-11-15T23:32:38.516898+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -42,7 +45,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 1,
-      "checkedAt": "2026-11-15T19:42:45.601911+00:00",
+      "checkedAt": "2026-11-15T23:32:38.516898+00:00",
       "lastPostAt": "2026-11-15T11:12:25+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -57,7 +60,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-15T19:43:31.423860+00:00"
+      "checkedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "power_repost_don",
@@ -69,7 +72,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений",
-      "checkedAt": "2026-11-15T19:43:31.423860+00:00"
+      "checkedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "power_city",
@@ -81,7 +84,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете",
-      "checkedAt": "2026-11-15T19:43:31.423860+00:00"
+      "checkedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "gas_city",
@@ -93,7 +96,7 @@
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе",
-      "checkedAt": "2026-11-15T19:43:31.423860+00:00"
+      "checkedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "gas",
@@ -101,7 +104,7 @@
       "url": "https://www.rostovoblgaz.ru/press-center/news/",
       "posts": 0,
       "note": "Нет проверяемой ленты газа: HTTP Error 500: Internal Server Error",
-      "checkedAt": "2026-11-15T19:43:31.423860+00:00"
+      "checkedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "mchs",
@@ -109,27 +112,27 @@
       "url": "https://61.mchs.gov.ru/deyatelnost/press-centr/operativnaya-informaciya/rss",
       "posts": 0,
       "note": "Не удалось получить официальный RSS МЧС: <urlopen error timed out>",
-      "checkedAt": "2026-11-15T19:43:31.423860+00:00"
+      "checkedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "power_direct",
       "status": "ok",
       "transport": "direct_https",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
-      "checkedAt": "2026-11-15T19:44:48.003155+00:00",
+      "checkedAt": "2026-11-15T23:34:03.150047+00:00",
       "lastPostAt": null,
       "posts": 8,
       "matchingPosts": 6,
       "note": "Прямой официальный график ШМЭС. Отсутствие плановых работ не исключает аварии.",
       "noPlannedWorkNotices": [],
       "tlsVerified": true,
-      "contentSha256": "fd878a578aa1eacea76ba58dbb99ec407c0a3b8ca1877e89df339d060167be1d",
-      "durationSeconds": 1.05
+      "contentSha256": "7f7ad14e4cd66f5e4df1d2610778f70548b1df97b80cde7b8fc9f9cd93c1fa13",
+      "durationSeconds": 1.39
     },
     {
       "id": "max_city",
       "url": "https://max.ru/shakhtygorod",
-      "checkedAt": "2026-11-15T19:44:48.003155+00:00",
+      "checkedAt": "2026-11-15T23:34:03.150047+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -142,7 +145,7 @@
     {
       "id": "max_water",
       "url": "https://max.ru/id6167110467_gos",
-      "checkedAt": "2026-11-15T19:44:48.003155+00:00",
+      "checkedAt": "2026-11-15T23:34:03.150047+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -155,7 +158,7 @@
     {
       "id": "max_power",
       "url": "https://max.ru/id6163089292_biz",
-      "checkedAt": "2026-11-15T19:44:48.003155+00:00",
+      "checkedAt": "2026-11-15T23:34:03.150047+00:00",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
@@ -204,10 +207,10 @@
       "description": "В Шахтах из-за ремонта трубопровода на Советской улице снижено давление воды 15 ноября с 10:50 в городе Шахты филиал «Шахтинский» проводит аварийно-ремонтные работы на трубопроводе по адресу ул. Советская, д. 158–160. В связи с этим временно снижено давление воды в сетях. Подвоз питьевой воды будет осуществляться по предварительным заявкам абонентов, по телефону 8 (863) 285-57-77 (диспетчерская ГУП РО «УРСВ»). Ориентировочное окончание ",
       "title": "Ограничение водоснабжения",
       "fullText": "В Шахтах из-за ремонта трубопровода на Советской улице снижено давление воды\n\n15 ноября с 10:50 в городе Шахты филиал «Шахтинский» проводит аварийно-ремонтные работы на трубопроводе по адресу ул. Советская, д. 158–160. В связи с этим временно снижено давление воды в сетях.\n\nПодвоз питьевой воды будет осуществляться по предварительным заявкам абонентов, по телефону 8 (863) 285-57-77 (диспетчерская ГУП РО «УРСВ»).\n\nОриентировочное окончание работ — 20:00.\n\nС нестабильным водоснабжением улицы и переулки:\nСоветская, Шевченко, Халтурина, Ленина, пр-т Победа Революции, пр-т Красной Армии, Кирова, а также Комиссаровский, Межевой, Нижний, Крестьянский, Новый, Короткий, Рожкова, Черенкова, Луговой, Донской, 1-й и 2-й Милиционный переулки и Красный Шахтер.\n\n#Шахты #ЖКХ #водоснабжение #Администрация",
-      "lastConfirmedAt": "2026-11-15T19:44:48.003155+00:00",
+      "lastConfirmedAt": "2026-11-15T23:34:03.150047+00:00",
       "retainUntil": "2026-11-16T22:50:00+03:00",
       "retained": false,
-      "observedAt": "2026-11-15T19:43:31.423860+00:00"
+      "observedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "water-city-repost-d9e8d00f2def93d755ba",
@@ -247,10 +250,10 @@
       "description": "В Шахтах из-за ремонта трубопровода на Советской улице снижено давление воды 15 ноября с 10:50 в городе Шахты филиал «Шахтинский» проводит аварийно-ремонтные работы на трубопроводе по адресу ул. Советская, д. 158–160. В связи с этим временно снижено давление воды в сетях. Подвоз питьевой воды будет осуществляться по предварительным заявкам абонентов, по телефону 8 (863) 285-57-77 (диспетчерская ГУП РО «УРСВ»). Ориентировочное окончание ",
       "title": "Ограничение водоснабжения",
       "fullText": "В Шахтах из-за ремонта трубопровода на Советской улице снижено давление воды\n15 ноября с 10:50 в городе Шахты филиал «Шахтинский» проводит аварийно-ремонтные работы на трубопроводе по адресу ул. Советская, д. 158–160. В связи с этим временно снижено давление воды в сетях.\nПодвоз питьевой воды будет осуществляться по предварительным заявкам абонентов, по телефону 8 (863) 285-57-77 (диспетчерская ГУП РО «УРСВ»).\nОриентировочное окончание работ — 20:00.\nС нестабильным водоснабжением улицы и переулки:\nСоветская, Шевченко, Халтурина, Ленина, пр-т Победа Революции, пр-т Красной Армии, Кирова, а также Комиссаровский, Межевой, Нижний, Крестьянский, Новый, Короткий, Рожкова, Черенкова, Луговой, Донской, 1-й и 2-й Милиционный переулки и Красный Шахтер.\n#Шахты #ЖКХ #водоснабжение #Администрация",
-      "lastConfirmedAt": "2026-11-15T19:42:45.601911+00:00",
+      "lastConfirmedAt": "2026-11-15T23:32:38.516898+00:00",
       "retainUntil": "2026-11-16T22:50:00+03:00",
       "retained": false,
-      "observedAt": "2026-11-15T19:43:31.423860+00:00"
+      "observedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "water-city-repost-0fbd57f82f774b8419b0",
@@ -293,7 +296,7 @@
       "lastConfirmedAt": "2026-11-15T14:01:27.949098+00:00",
       "retainUntil": "2026-11-16T22:50:00+03:00",
       "retained": true,
-      "observedAt": "2026-11-15T19:43:31.423860+00:00"
+      "observedAt": "2026-11-15T23:32:45.261048+00:00"
     },
     {
       "id": "power-direct-737ac2bba8e778d1c1",
@@ -306,7 +309,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-15T19:44:48.003155+00:00",
+      "observedAt": "2026-11-15T23:34:03.150047+00:00",
       "start": "2026-11-16T09:00:00+03:00",
       "end": "2026-11-16T12:00:00+03:00",
       "startBasis": "explicit",
@@ -363,7 +366,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-15T19:44:48.003155+00:00",
+      "lastConfirmedAt": "2026-11-15T23:34:03.150047+00:00",
       "retainUntil": "2026-11-18T00:00:00+03:00",
       "retained": false
     },
@@ -378,7 +381,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-15T19:44:48.003155+00:00",
+      "observedAt": "2026-11-15T23:34:03.150047+00:00",
       "start": "2026-11-16T09:00:00+03:00",
       "end": "2026-11-16T17:00:00+03:00",
       "startBasis": "explicit",
@@ -405,7 +408,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-15T19:44:48.003155+00:00",
+      "lastConfirmedAt": "2026-11-15T23:34:03.150047+00:00",
       "retainUntil": "2026-11-18T05:00:00+03:00",
       "retained": false
     },
@@ -420,7 +423,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-15T19:44:48.003155+00:00",
+      "observedAt": "2026-11-15T23:34:03.150047+00:00",
       "start": "2026-11-16T11:00:00+03:00",
       "end": "2026-11-16T17:00:00+03:00",
       "startBasis": "explicit",
@@ -541,7 +544,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-15T19:44:48.003155+00:00",
+      "lastConfirmedAt": "2026-11-15T23:34:03.150047+00:00",
       "retainUntil": "2026-11-18T05:00:00+03:00",
       "retained": false
     },
@@ -556,7 +559,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-15T19:44:48.003155+00:00",
+      "observedAt": "2026-11-15T23:34:03.150047+00:00",
       "start": "2026-11-17T09:00:00+03:00",
       "end": "2026-11-17T15:00:00+03:00",
       "startBasis": "explicit",
@@ -623,7 +626,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-15T19:44:48.003155+00:00",
+      "lastConfirmedAt": "2026-11-15T23:34:03.150047+00:00",
       "retainUntil": "2026-11-19T03:00:00+03:00",
       "retained": false
     },
@@ -638,7 +641,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-15T19:44:48.003155+00:00",
+      "observedAt": "2026-11-15T23:34:03.150047+00:00",
       "start": "2026-11-17T11:00:00+03:00",
       "end": "2026-11-17T17:00:00+03:00",
       "startBasis": "explicit",
@@ -759,7 +762,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-15T19:44:48.003155+00:00",
+      "lastConfirmedAt": "2026-11-15T23:34:03.150047+00:00",
       "retainUntil": "2026-11-19T05:00:00+03:00",
       "retained": false
     },
@@ -774,7 +777,7 @@
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "officialUrl": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "publishedAt": null,
-      "observedAt": "2026-11-15T19:44:48.003155+00:00",
+      "observedAt": "2026-11-15T23:34:03.150047+00:00",
       "start": "2026-11-18T11:00:00+03:00",
       "end": "2026-11-18T17:00:00+03:00",
       "startBasis": "explicit",
@@ -895,7 +898,7 @@
       "requiresReview": false,
       "point": null,
       "precision": "street",
-      "lastConfirmedAt": "2026-11-15T19:44:48.003155+00:00",
+      "lastConfirmedAt": "2026-11-15T23:34:03.150047+00:00",
       "retainUntil": "2026-11-20T05:00:00+03:00",
       "retained": false
     }
