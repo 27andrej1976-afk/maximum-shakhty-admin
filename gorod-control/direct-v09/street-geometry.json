@@ -3555,10 +3555,10 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:строителей": {
-      "timestamp": 1792457014.281249,
+      "timestamp": 1794723024.28596,
       "segments": [],
       "provider": "OpenStreetMap",
-      "api": "https://overpass-api.de/api/interpreter",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:лазурная": {
@@ -13657,7 +13657,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:о. кошевого": {
-      "timestamp": 1793424024.13826,
+      "timestamp": 1794723024.28596,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
@@ -26272,6 +26272,241 @@
           ]
         }
       ],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:кронштадский": {
+      "timestamp": 1794723024.28596,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "пер:курский 2-2 д": {
+      "timestamp": 1794723024.28596,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:полярная": {
+      "timestamp": 1794723024.28596,
+      "segments": [
+        {
+          "osmId": 66053221,
+          "line": [
+            [
+              47.7385496,
+              40.1895014
+            ],
+            [
+              47.7377305,
+              40.1921917
+            ]
+          ]
+        }
+      ],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:соборная": {
+      "timestamp": 1794723024.28596,
+      "segments": [
+        {
+          "osmId": 105725186,
+          "line": [
+            [
+              47.7636329,
+              40.1435709
+            ],
+            [
+              47.7639641,
+              40.1422949
+            ],
+            [
+              47.7645384,
+              40.1394952
+            ],
+            [
+              47.7650409,
+              40.1374715
+            ]
+          ]
+        }
+      ],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:кооперативная 2-44 а": {
+      "timestamp": 1794723024.28596,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:раздольная": {
+      "timestamp": 1794723024.28596,
+      "segments": [
+        {
+          "osmId": 105727877,
+          "line": [
+            [
+              47.7646072,
+              40.1462638
+            ],
+            [
+              47.7654985,
+              40.1467544
+            ],
+            [
+              47.7657086,
+              40.1468812
+            ],
+            [
+              47.7662602,
+              40.1472301
+            ],
+            [
+              47.7665597,
+              40.1474966
+            ],
+            [
+              47.766632,
+              40.1475636
+            ],
+            [
+              47.7667197,
+              40.1476448
+            ],
+            [
+              47.7668868,
+              40.147777
+            ],
+            [
+              47.767022,
+              40.1478775
+            ],
+            [
+              47.7671144,
+              40.147941
+            ],
+            [
+              47.7674878,
+              40.1481262
+            ],
+            [
+              47.7676026,
+              40.1481836
+            ]
+          ]
+        },
+        {
+          "osmId": 105727970,
+          "line": [
+            [
+              47.7676026,
+              40.1481836
+            ],
+            [
+              47.7677462,
+              40.1481005
+            ],
+            [
+              47.7678659,
+              40.1480435
+            ],
+            [
+              47.768008,
+              40.1481159
+            ],
+            [
+              47.7680692,
+              40.1482513
+            ],
+            [
+              47.7682771,
+              40.1486456
+            ],
+            [
+              47.7691111,
+              40.1489637
+            ]
+          ]
+        },
+        {
+          "osmId": 1161686274,
+          "line": [
+            [
+              47.766632,
+              40.1475636
+            ],
+            [
+              47.7666628,
+              40.1474543
+            ],
+            [
+              47.7667184,
+              40.1472978
+            ],
+            [
+              47.7667683,
+              40.1471399
+            ],
+            [
+              47.7668082,
+              40.1470676
+            ],
+            [
+              47.7668556,
+              40.1470195
+            ],
+            [
+              47.7669204,
+              40.147016
+            ],
+            [
+              47.7674958,
+              40.1472382
+            ],
+            [
+              47.7678445,
+              40.1473259
+            ],
+            [
+              47.7679693,
+              40.1473373
+            ],
+            [
+              47.7680763,
+              40.1473222
+            ]
+          ]
+        }
+      ],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:чапаева 26-68, 33 д-": {
+      "timestamp": 1794723024.28596,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:фруктовая 8 а-": {
+      "timestamp": 1794723024.28596,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:ягодная 7-19 а": {
+      "timestamp": 1794723024.28596,
+      "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
