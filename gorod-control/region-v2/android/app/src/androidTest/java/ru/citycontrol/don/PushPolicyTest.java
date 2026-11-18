@@ -42,6 +42,12 @@ public class PushPolicyTest {
     PushSettings.sync(c,new JSONObject().put("home",new JSONObject().put("lat",47.2).put("lon",39.7)).put("radius",1));assertTrue(PushSettings.hasPoint(c));
     PushSettings.prefs(c).edit().putBoolean("enabled",true).apply();
     PushSettings.sync(c,new JSONObject().put("home",JSONObject.NULL).put("radius",1));assertFalse(PushSettings.hasPoint(c));assertFalse(PushSettings.enabled(c));
-    assertFalse(PushController.status(c).getBoolean("enabled"));assertTrue(PushController.status(c).getString("message").contains("не подключён"));
+    JSONObject status=PushController.status(c);
+    assertFalse(status.getBoolean("enabled"));
+    if(BuildConfig.RUSTORE_PROJECT_ID.isEmpty()) {
+      assertTrue(status.getString("message").contains("не подключён"));
+    } else {
+      assertTrue(status.getString("message").contains("выключены"));
+    }
   }
 }
