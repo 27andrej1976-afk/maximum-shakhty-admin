@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-17T21:17:23.099294+00:00",
+  "checkedAt": "2026-11-18T02:56:49.287204+00:00",
   "events": [
     {
       "id": "water-city-repost-a4043e2cb94f566d1017",
@@ -2617,25 +2617,28 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-17T21:16:35.332355+00:00"
+      "checkedAt": "2026-11-18T02:56:41.396805+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-17T21:16:35.332355+00:00",
+      "checkedAt": "2026-11-18T02:56:41.396805+00:00",
       "coverage": "partial",
-      "status": "error",
-      "posts": 0,
-      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
+      "status": "ok",
+      "readStatus": "ok",
+      "posts": 10,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
     },
     {
       "id": "repost_rostov",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 200,
+      "posts": 96,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-17T21:16:35.332355+00:00",
+      "checkedAt": "2026-11-18T02:56:41.396805+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -2647,7 +2650,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-17T21:16:35.332355+00:00",
+      "checkedAt": "2026-11-18T02:56:41.396805+00:00",
       "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -2658,7 +2661,7 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 200,
+      "posts": 96,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
