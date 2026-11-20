@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-20T00:53:44.229363+00:00",
+  "checkedAt": "2026-11-20T08:23:05.350732+00:00",
   "events": [
     {
       "id": "water-city-repost-ffa0e19da233f89f9dd9",
@@ -196,7 +196,7 @@
       "requiresReview": false,
       "noticeId": "city-repost/ffa0e19da233f89f9dd9",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/19/155315.html"
@@ -316,44 +316,6 @@
     }
   ],
   "incidents": [
-    {
-      "id": "water-city-repost-f28dfcb7c2aeb2d65f6d",
-      "publishedAt": "2026-11-04T10:11:47+03:00",
-      "kind": "emergency",
-      "start": "2026-11-04T09:45:00+03:00",
-      "end": "2026-11-04T18:00:00+03:00",
-      "startBasis": "explicit",
-      "endBasis": "estimated",
-      "resolvedAt": null,
-      "workSite": null,
-      "url": "https://newsrostov.ru/society/2026/11/04/602923.html",
-      "officialUrl": null,
-      "source": "Администрация города Шахты — перепечатка",
-      "origin": "municipal_repost",
-      "text": "В Шахтах проводят ремонт трубопровода на улице Кадровой\nВ связи с проведением аварийно-ремонтных работ по ул. Кадровая / ул.Демехина с 09.45, 04 ноября снижено давление холодного водоснабжения:\nТемерницкая\nКуйбышева\nКамчатский\nМинский\nКадровая\nДемехина\nЮный Спартак\nГражданский.\nОриентировочное время завершения работ – 18.00, 04 ноября.\nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863)28-55-777 (многоканальный).\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "textSha256": "1bf0795361cc9b6b05bf54917cb3e40269db181a2974315be525c23db22478b2",
-      "affected": [],
-      "zones": [],
-      "unmappedAreaText": [],
-      "sourceId": "repost_rostov",
-      "mirror": "newsrostov.ru",
-      "reviewRequired": true,
-      "requiresReview": true,
-      "noticeId": "city-repost/f28dfcb7c2aeb2d65f6d",
-      "category": "water",
-      "status": "active",
-      "revision": 1,
-      "evidence": [
-        "https://newsrostov.ru/society/2026/11/04/602923.html"
-      ],
-      "updates": [
-        "city-repost/f28dfcb7c2aeb2d65f6d"
-      ],
-      "point": null,
-      "precision": "unresolved",
-      "description": "В Шахтах проводят ремонт трубопровода на улице Кадровой В связи с проведением аварийно-ремонтных работ по ул. Кадровая / ул.Демехина с 09.45, 04 ноября снижено давление холодного водоснабжения: Темерницкая Куйбышева Камчатский Минский Кадровая Демехина Юный Спартак Гражданский. Ориентировочное время завершения работ – 18.00, 04 ноября. Организован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефон",
-      "title": "Ограничение водоснабжения"
-    },
     {
       "id": "water-city-repost-c147a196c1dcbaf9ed5d",
       "publishedAt": "2026-11-07T11:12:21+03:00",
@@ -1729,7 +1691,7 @@
       "requiresReview": false,
       "noticeId": "city-repost/ffa0e19da233f89f9dd9",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/19/155315.html"
@@ -1849,30 +1811,6 @@
     }
   ],
   "notices": [
-    {
-      "id": "city-repost/f28dfcb7c2aeb2d65f6d",
-      "publishedAt": "2026-11-04T10:11:47+03:00",
-      "kind": "emergency",
-      "start": "2026-11-04T09:45:00+03:00",
-      "end": "2026-11-04T18:00:00+03:00",
-      "startBasis": "explicit",
-      "endBasis": "estimated",
-      "resolvedAt": null,
-      "workSite": null,
-      "url": "https://newsrostov.ru/society/2026/11/04/602923.html",
-      "officialUrl": null,
-      "source": "Администрация города Шахты — перепечатка",
-      "origin": "municipal_repost",
-      "text": "В Шахтах проводят ремонт трубопровода на улице Кадровой\nВ связи с проведением аварийно-ремонтных работ по ул. Кадровая / ул.Демехина с 09.45, 04 ноября снижено давление холодного водоснабжения:\nТемерницкая\nКуйбышева\nКамчатский\nМинский\nКадровая\nДемехина\nЮный Спартак\nГражданский.\nОриентировочное время завершения работ – 18.00, 04 ноября.\nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863)28-55-777 (многоканальный).\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "textSha256": "1bf0795361cc9b6b05bf54917cb3e40269db181a2974315be525c23db22478b2",
-      "affected": [],
-      "zones": [],
-      "unmappedAreaText": [],
-      "sourceId": "repost_rostov",
-      "mirror": "newsrostov.ru",
-      "reviewRequired": true,
-      "requiresReview": true
-    },
     {
       "id": "city-repost/c147a196c1dcbaf9ed5d",
       "publishedAt": "2026-11-07T11:12:21+03:00",
@@ -3342,12 +3280,12 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-20T00:53:38.115846+00:00"
+      "checkedAt": "2026-11-20T08:22:58.980710+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-20T00:53:38.115846+00:00",
+      "checkedAt": "2026-11-20T08:22:58.980710+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -3361,9 +3299,9 @@
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 96,
+      "posts": 94,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-20T00:53:38.115846+00:00",
+      "checkedAt": "2026-11-20T08:22:58.980710+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3374,8 +3312,8 @@
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 200,
-      "matchingPosts": 2,
-      "checkedAt": "2026-11-20T00:53:38.115846+00:00",
+      "matchingPosts": 1,
+      "checkedAt": "2026-11-20T08:22:58.980710+00:00",
       "lastPostAt": "2026-11-19T17:01:58+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3386,7 +3324,7 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 96,
+      "posts": 94,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
@@ -3429,7 +3367,7 @@
       "status": "error",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "posts": 0,
-      "note": "Автоматическое чтение графика не подтверждено: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get l"
+      "note": "Автоматическое чтение графика не подтверждено: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: EE certificate "
     },
     {
       "id": "gas",
@@ -3677,17 +3615,6 @@
       "source": "Администрация города Шахты — перепечатка",
       "sourceId": "repost_don",
       "mirror": "news-don.ru"
-    },
-    {
-      "id": "city-repost/f28dfcb7c2aeb2d65f6d",
-      "publishedAt": "2026-11-04T10:11:47+03:00",
-      "text": "В Шахтах проводят ремонт трубопровода на улице Кадровой\nВ связи с проведением аварийно-ремонтных работ по ул. Кадровая / ул.Демехина с 09.45, 04 ноября снижено давление холодного водоснабжения:\nТемерницкая\nКуйбышева\nКамчатский\nМинский\nКадровая\nДемехина\nЮный Спартак\nГражданский.\nОриентировочное время завершения работ – 18.00, 04 ноября.\nОрганизован подвоз воды. Оставить заявку и уточнить информацию можно в диспетчерской службе по телефону: 8(863)28-55-777 (многоканальный).\n#Шахты #ЖКХ #водоснабжение #АдминистрацияШахты",
-      "url": "https://newsrostov.ru/society/2026/11/04/602923.html",
-      "officialUrl": null,
-      "origin": "municipal_repost",
-      "source": "Администрация города Шахты — перепечатка",
-      "sourceId": "repost_rostov",
-      "mirror": "newsrostov.ru"
     }
   ],
   "serviceArchive": []
