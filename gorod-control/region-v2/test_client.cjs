@@ -4,6 +4,8 @@ const f=JSON.parse(fs.readFileSync(process.argv[2],'utf8')),now=Date.parse(f.gen
 assert.equal(P.validFeed({...f,events:[{...f.events[0],addresses:null}]}),false,'invalid feed must not replace cached data');
 assert.equal(P.visible({...f.events[0],requiresReview:true},now),false,'unreviewed evidence cannot become a marker');
 assert.equal(f.dataMode,'test');assert.ok(P.validFeed(f));
+assert.match(P.health(null, '', true, now).water.message, /нет сохранённых сведений/);
+assert.match(P.health(f, '', true, now).water.message, /Показаны сохранённые сведения/);
 const initial={city:'fixture-a',category:'all',scope:'region',home:null,radius:1};
 assert.equal(P.select(f,initial,now).length,3);
 assert.equal(P.select(f,{...initial,scope:'near'},now).length,1,'region MCHS visible without a point');

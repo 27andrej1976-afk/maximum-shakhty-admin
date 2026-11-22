@@ -7,8 +7,8 @@ android {
     applicationId 'ru.citycontrol.don'
     minSdk 26
     targetSdk 35
-    versionCode((project.findProperty("donVersionCode") ?: "4").toInteger())
-    versionName '0.4.0-pilot'
+    versionCode((project.findProperty("donVersionCode") ?: "5").toInteger())
+    versionName '0.4.1'
     buildConfigField 'String', 'RUSTORE_PROJECT_ID', '"' + (project.findProperty('rustoreProjectId') ?: 'StuIfDeFA3pgd-bunEdE5e0E4-Fg6SP-').replaceAll('[^A-Za-z0-9_-]', '') + '"'
     testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }

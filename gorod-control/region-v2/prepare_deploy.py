@@ -33,6 +33,7 @@ def prepare(output):
         'verification':'GAR '+index['version']},ensure_ascii=False))
     (output/'requirements.txt').write_text('maxapi-python==2.4.1\nPyNaCl==1.6.2\n')
     build(output/'public')
+    shutil.copyfile(ROOT/'release/privacy.html', output/'public/privacy.html')
     (output/'DEPLOYMENT_STATUS.txt').write_text(
         'Prepared, not deployed. Source registry remains disabled.\n'
         'Requires verified catalog, incident parsing/reviews, private MAX session, server access and HTTPS routing.\n'

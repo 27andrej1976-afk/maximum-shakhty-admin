@@ -4,8 +4,6 @@
   "ownerBrand": "Группа компаний «Финансовая аналитика»",
   "independentProject": true,
   "groupLogo": "assets/group-logo.png",
-  "regionalCoat": "assets/rostov-coat.png",
-  "regionalCoatUsageReview": "pending-before-release",
   "androidIntegration": "technical-preview-built-and-basic-android15-runtime-verified",
   "advertising": {
     "enabled": false,
@@ -20,5 +18,6 @@
   "signingKeyStatus": "permanent-release-key-required-not-created",
   "legacyUpgradeRequired": false,
   "androidApplicationId": "ru.citycontrol.don",
-  "releaseStatus": "not-ready-for-rustore"
+  "releaseStatus": "not-ready-for-rustore",
+  "launcherArtwork": "assets/publisher-compass.png"
 }

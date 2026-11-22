@@ -21,7 +21,14 @@ const states={};const stale=!f||now-Date.parse(f.generatedAt)>15*60e3||Date.pars
 for(const category of categories){const relevant=(f?.municipalities||[]).filter(m=>!city||m.id===city).map(m=>m.health?.[category]).filter(Boolean);let state='unconfigured',message='Охват этой категории для выбранной территории пока не подтверждён';
 if(relevant.length){state=relevant.every(s=>s.state==='read')?'read':relevant.every(s=>s.state==='unconfigured')?'unconfigured':relevant.every(s=>s.state==='unavailable')?'unavailable':'partial';message=city?relevant[0].message:'Областной охват неполный; состояние отдельных территорий различается'}
 if(!city&&state==='read'&&f?.coverage!=='full')state='partial';
-if(offline||stale){state='unavailable';message=offline?'Нет связи с сервером. Показаны сохранённые сведения':'Сводка давно не обновлялась. Текущее состояние источников не подтверждено'}
+if (offline || stale) {
+  state = 'unavailable';
+  if (!f) {
+    message = offline ? 'Сводка недоступна. На устройстве пока нет сохранённых сведений' : 'Ожидаем первую сводку';
+  } else {
+    message = offline ? 'Нет связи с сервером. Показаны сохранённые сведения' : 'Сводка давно не обновлялась. Текущее состояние источников не подтверждено';
+  }
+}
 const stamps=relevant.map(s=>s.lastSuccessAt).filter(Boolean).sort((a,b)=>Date.parse(a)-Date.parse(b));states[category]={state,message,lastSuccessAt:stamps[0]||null};}
 return states}
 const api={categories,safeMax,validFeed,distance,point,streetLines,visible,nearby,select,attention,health};root.DonClient=api;if(typeof module!=='undefined')module.exports=api;

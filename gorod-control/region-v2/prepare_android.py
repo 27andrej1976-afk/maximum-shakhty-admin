@@ -22,8 +22,7 @@ def prepare(*, feed_url=None):
     (target / 'config.js').write_text('window.DonConfig = ' + json.dumps(config) + ';\n')
     drawable = ROOT / 'android/app/src/main/res/drawable-nodpi'
     drawable.mkdir(parents=True, exist_ok=True)
-    # Preserve the original supplied coat; no reconstruction or image editing.
-    shutil.copyfile(ROOT / 'assets/rostov-coat.png', drawable / 'rostov_coat.png')
+    shutil.copyfile(ROOT / 'assets/publisher-compass.png', drawable / 'publisher_compass.png')
     return target
 
 
