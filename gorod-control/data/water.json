@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-22T14:50:45.440569+00:00",
+  "checkedAt": "2026-11-22T20:51:20.868713+00:00",
   "events": [
     {
       "id": "water-city-repost-2ce09dd813b974d86c46",
@@ -82,7 +82,7 @@
     },
     {
       "id": "water-oursv-1918",
-      "publishedAt": "2026-11-22T13:09:28+03:00",
+      "publishedAt": "2026-11-22T13:09:30+03:00",
       "kind": "emergency",
       "start": "2026-11-22T13:00:00+03:00",
       "end": "2026-11-22T20:00:00+03:00",
@@ -90,7 +90,7 @@
       "endBasis": "estimated",
       "resolvedAt": null,
       "workSite": "пер терешковой д. 2-в|",
-      "url": "https://news-don.ru/society/2026/11/22/156008.html",
+      "url": "https://newsrostov.ru/society/2026/11/22/609283.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1918",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -148,16 +148,16 @@
       ],
       "zones": [],
       "unmappedAreaText": [],
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru",
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru",
       "reviewRequired": false,
       "requiresReview": false,
       "noticeId": "oursv/1918",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
-        "https://news-don.ru/society/2026/11/22/156008.html"
+        "https://newsrostov.ru/society/2026/11/22/609283.html"
       ],
       "updates": [
         "oursv/1918"
@@ -1741,7 +1741,7 @@
     },
     {
       "id": "water-oursv-1918",
-      "publishedAt": "2026-11-22T13:09:28+03:00",
+      "publishedAt": "2026-11-22T13:09:30+03:00",
       "kind": "emergency",
       "start": "2026-11-22T13:00:00+03:00",
       "end": "2026-11-22T20:00:00+03:00",
@@ -1749,7 +1749,7 @@
       "endBasis": "estimated",
       "resolvedAt": null,
       "workSite": "пер терешковой д. 2-в|",
-      "url": "https://news-don.ru/society/2026/11/22/156008.html",
+      "url": "https://newsrostov.ru/society/2026/11/22/609283.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1918",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -1807,16 +1807,16 @@
       ],
       "zones": [],
       "unmappedAreaText": [],
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru",
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru",
       "reviewRequired": false,
       "requiresReview": false,
       "noticeId": "oursv/1918",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
-        "https://news-don.ru/society/2026/11/22/156008.html"
+        "https://newsrostov.ru/society/2026/11/22/609283.html"
       ],
       "updates": [
         "oursv/1918"
@@ -3326,7 +3326,7 @@
     },
     {
       "id": "oursv/1918",
-      "publishedAt": "2026-11-22T13:09:28+03:00",
+      "publishedAt": "2026-11-22T13:09:30+03:00",
       "kind": "emergency",
       "start": "2026-11-22T13:00:00+03:00",
       "end": "2026-11-22T20:00:00+03:00",
@@ -3334,7 +3334,7 @@
       "endBasis": "estimated",
       "resolvedAt": null,
       "workSite": "пер терешковой д. 2-в|",
-      "url": "https://news-don.ru/society/2026/11/22/156008.html",
+      "url": "https://newsrostov.ru/society/2026/11/22/609283.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1918",
       "source": "ГУП РО УРСВ — перепечатка",
       "origin": "verified_repost",
@@ -3392,8 +3392,8 @@
       ],
       "zones": [],
       "unmappedAreaText": [],
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru",
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru",
       "reviewRequired": false,
       "requiresReview": false
     }
@@ -3419,12 +3419,12 @@
       "lastPostAt": "2026-11-04T08:11:12+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-22T14:50:39.006500+00:00"
+      "checkedAt": "2026-11-22T20:51:12.452688+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-22T14:50:39.006500+00:00",
+      "checkedAt": "2026-11-22T20:51:12.452688+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -3438,10 +3438,10 @@
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 97,
-      "matchingPosts": 0,
-      "checkedAt": "2026-11-22T14:50:39.006500+00:00",
-      "lastPostAt": null,
+      "posts": 200,
+      "matchingPosts": 1,
+      "checkedAt": "2026-11-22T20:51:12.452688+00:00",
+      "lastPostAt": "2026-11-22T13:09:30+03:00",
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
@@ -3452,7 +3452,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 1,
-      "checkedAt": "2026-11-22T14:50:39.006500+00:00",
+      "checkedAt": "2026-11-22T20:51:12.452688+00:00",
       "lastPostAt": "2026-11-22T13:09:28+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3463,7 +3463,7 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 97,
+      "posts": 200,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
@@ -3528,14 +3528,14 @@
   "archive": [
     {
       "id": "oursv/1918",
-      "publishedAt": "2026-11-22T13:09:28+03:00",
+      "publishedAt": "2026-11-22T13:09:30+03:00",
       "text": "Филиал \"Шахтинский\" сообщает:\nСнижение давления\nПричина\nВ связи с проведением аварийно-ремонтных работ на трубопроводе по адресу пер. Терешковой, д. 2-В с 13-00 час. 22.11.2026 г.\nАдреса:\nг Шахты, пр-кт Ленинского Комсомола\nг Шахты, Терешковой пер\nг Шахты, ул Островского\nг Шахты, Сокольнический пер\nг Шахты, ул Искра\nг Шахты, ул Калинина\nг Шахты, ул Ильюшина\nг Шахты, ул Капровая\nг Шахты, ул Землячки\nг Шахты, ул Благодатная\nг Шахты, ул Обуховой\nг Шахты, ул Мешкова\nПодробности\nОриентировочное время завершения работ в 20-00 час. 22.11.2026. Подвоз воды будет осуществляться по заявкам абонентов. Телефон диспетчерской службы ГУП РО УРСВ 88632855777(многоканальный) .\nПодробнее: https://rovodokanal.ru/emergency-alerts/1918",
-      "url": "https://news-don.ru/society/2026/11/22/156008.html",
+      "url": "https://newsrostov.ru/society/2026/11/22/609283.html",
       "officialUrl": "https://rovodokanal.ru/emergency-alerts/1918",
       "origin": "verified_repost",
       "source": "ГУП РО УРСВ — перепечатка",
-      "sourceId": "repost_don",
-      "mirror": "news-don.ru"
+      "sourceId": "repost_rostov",
+      "mirror": "newsrostov.ru"
     },
     {
       "id": "city-repost/c305e714f19e73d4ef6a",
