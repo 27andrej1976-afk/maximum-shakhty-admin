@@ -1,0 +1,36 @@
+name: Capture signed Don 0.4.1 screenshots
+on:
+  push:
+    branches: [qa/don-041-screenshots]
+    paths: ['qa/don-041/**', '.github/workflows/don-041-screenshots.yml']
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify supplied APK
+        run: echo "911aba307a5b81f0399ea6966d532da1095302fe9690d6af27e1dd4c42481dd0  qa/don-041/Don-Control-0.4.1.apk" | sha256sum -c
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            adb install -r qa/don-041/Don-Control-0.4.1.apk
+            python3 qa/don-041/capture.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: don-041-current-screenshots
+          path: screenshots/
+          retention-days: 7
