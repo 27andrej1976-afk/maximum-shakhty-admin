@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-23T09:12:23.973636+00:00",
+  "checkedAt": "2026-11-23T21:31:33.501841+00:00",
   "events": [
     {
       "id": "water-oursv-1918",
@@ -2834,18 +2834,18 @@
   "sources": [
     {
       "id": "city",
-      "status": "stale",
-      "posts": 17,
-      "matchingPosts": 2,
-      "lastPostAt": "2026-11-04T08:11:12+00:00",
+      "status": "ok",
+      "posts": 14,
+      "matchingPosts": 1,
+      "lastPostAt": "2026-11-23T14:01:34+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-23T09:12:15.924036+00:00"
+      "checkedAt": "2026-11-23T21:31:27.317279+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-23T09:12:15.924036+00:00",
+      "checkedAt": "2026-11-23T21:31:27.317279+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -2861,7 +2861,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-23T09:12:15.924036+00:00",
+      "checkedAt": "2026-11-23T21:31:27.317279+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -2872,9 +2872,9 @@
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 200,
-      "matchingPosts": 1,
-      "checkedAt": "2026-11-23T09:12:15.924036+00:00",
-      "lastPostAt": "2026-11-22T13:09:28+03:00",
+      "matchingPosts": 0,
+      "checkedAt": "2026-11-23T21:31:27.317279+00:00",
+      "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
@@ -2927,7 +2927,7 @@
       "status": "error",
       "url": "https://donenergo.ru/grafik-otklyucheniy/61/1/",
       "posts": 0,
-      "note": "Автоматическое чтение графика не подтверждено: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: EE certificate "
+      "note": "Автоматическое чтение графика не подтверждено: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get l"
     },
     {
       "id": "gas",
