@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-25T09:18:28.772444+00:00",
+  "checkedAt": "2026-11-25T19:25:23.905172+00:00",
   "events": [
     {
       "id": "water-city-repost-09fa54f4e8cf763a3a57",
@@ -142,7 +142,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/e5fd14a3430a4ab0b40d",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/25/156707.html"
@@ -181,7 +181,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/bbfa6901a1676ca0c36f",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/25/156718.html"
@@ -1814,7 +1814,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/e5fd14a3430a4ab0b40d",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/25/156707.html"
@@ -1853,7 +1853,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/bbfa6901a1676ca0c36f",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/25/156718.html"
@@ -3250,30 +3250,33 @@
     {
       "id": "city",
       "status": "ok",
-      "posts": 17,
+      "posts": 21,
       "matchingPosts": 1,
-      "lastPostAt": "2026-11-25T08:24:50+00:00",
+      "lastPostAt": "2026-11-25T14:06:34+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-25T09:17:41.224756+00:00"
+      "checkedAt": "2026-11-25T19:25:15.651855+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-25T09:17:41.224756+00:00",
+      "checkedAt": "2026-11-25T19:25:15.651855+00:00",
       "coverage": "partial",
-      "status": "error",
-      "posts": 0,
-      "note": "Не удалось прочитать RSS КВУ: The read operation timed out"
+      "status": "ok",
+      "readStatus": "ok",
+      "posts": 10,
+      "matchingPosts": 0,
+      "lastPostAt": null,
+      "note": "Публикации СМИ об отключениях воды; не прямая лента водоканала"
     },
     {
       "id": "repost_rostov",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 95,
+      "posts": 200,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-25T09:17:41.224756+00:00",
+      "checkedAt": "2026-11-25T19:25:15.651855+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3284,9 +3287,9 @@
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 200,
-      "matchingPosts": 2,
-      "checkedAt": "2026-11-25T09:17:41.224756+00:00",
-      "lastPostAt": "2026-11-25T10:43:11+03:00",
+      "matchingPosts": 0,
+      "checkedAt": "2026-11-25T19:25:15.651855+00:00",
+      "lastPostAt": null,
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
@@ -3296,7 +3299,7 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 95,
+      "posts": 200,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
@@ -3318,7 +3321,7 @@
       "url": "https://t.me/s/admshakhty",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 17,
+      "posts": 21,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете"
@@ -3329,7 +3332,7 @@
       "url": "https://t.me/s/admshakhty",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 17,
+      "posts": 21,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе"
