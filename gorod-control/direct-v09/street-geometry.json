@@ -9834,14 +9834,14 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:горковенко": {
-      "timestamp": 1795470275.433422,
+      "timestamp": 1795568570.238329,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:шишкина": {
-      "timestamp": 1795470275.433422,
+      "timestamp": 1795568570.238329,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -26026,7 +26026,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:пограничная 6 б-28, 23-47 в": {
-      "timestamp": 1795470275.433422,
+      "timestamp": 1795568570.238329,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -26199,7 +26199,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:коминтерна": {
-      "timestamp": 1795470275.433422,
+      "timestamp": 1795568570.238329,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -26277,14 +26277,14 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:кронштадский": {
-      "timestamp": 1795470275.433422,
+      "timestamp": 1795568570.238329,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
     },
     "пер:курский 2-2 д": {
-      "timestamp": 1795470275.433422,
+      "timestamp": 1795568570.238329,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -31847,7 +31847,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:ярошенко": {
-      "timestamp": 1795470275.433422,
+      "timestamp": 1795568570.238329,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -31904,7 +31904,7 @@
       "note": "Улица из объявления. Не координаты аварии."
     },
     "ул:муравьева": {
-      "timestamp": 1795470275.433422,
+      "timestamp": 1795568570.238329,
       "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
@@ -31956,6 +31956,34 @@
           ]
         }
       ],
+      "provider": "OpenStreetMap",
+      "api": "https://overpass-api.de/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:карьерная": {
+      "timestamp": 1795568570.238329,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://overpass-api.de/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:карамзина": {
+      "timestamp": 1795568570.238329,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://overpass-api.de/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:наседкина": {
+      "timestamp": 1795568570.238329,
+      "segments": [],
+      "provider": "OpenStreetMap",
+      "api": "https://overpass-api.de/api/interpreter",
+      "note": "Улица из объявления. Не координаты аварии."
+    },
+    "ул:чернова": {
+      "timestamp": 1795568570.238329,
+      "segments": [],
       "provider": "OpenStreetMap",
       "api": "https://overpass-api.de/api/interpreter",
       "note": "Улица из объявления. Не координаты аварии."
