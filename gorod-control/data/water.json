@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-24T16:16:58.958632+00:00",
+  "checkedAt": "2026-11-25T00:52:31.206461+00:00",
   "events": [
     {
       "id": "water-city-repost-09fa54f4e8cf763a3a57",
@@ -3051,25 +3051,25 @@
       "lastPostAt": "2026-11-24T14:45:06+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-24T16:16:09.782984+00:00"
+      "checkedAt": "2026-11-25T00:51:37.753600+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-24T16:16:09.782984+00:00",
+      "checkedAt": "2026-11-25T00:51:37.753600+00:00",
       "coverage": "partial",
       "status": "error",
       "posts": 0,
-      "note": "Не удалось прочитать RSS КВУ: The read operation timed out"
+      "note": "Не удалось прочитать RSS КВУ: <urlopen error timed out>"
     },
     {
       "id": "repost_rostov",
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 90,
+      "posts": 91,
       "matchingPosts": 0,
-      "checkedAt": "2026-11-24T16:16:09.782984+00:00",
+      "checkedAt": "2026-11-25T00:51:37.753600+00:00",
       "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3081,7 +3081,7 @@
       "coverage": "partial",
       "posts": 200,
       "matchingPosts": 2,
-      "checkedAt": "2026-11-24T16:16:09.782984+00:00",
+      "checkedAt": "2026-11-25T00:51:37.753600+00:00",
       "lastPostAt": "2026-11-24T12:55:06+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3092,7 +3092,7 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 90,
+      "posts": 91,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
