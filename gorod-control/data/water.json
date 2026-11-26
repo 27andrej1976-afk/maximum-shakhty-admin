@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-26T11:26:12.460117+00:00",
+  "checkedAt": "2026-11-26T20:28:58.306794+00:00",
   "events": [
     {
       "id": "water-city-repost-e5fd14a3430a4ab0b40d",
@@ -105,7 +105,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/b1cbcfcea759fa9480fb",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/26/157039.html"
@@ -144,7 +144,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/71a6241c00b126d328fb",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/26/610773.html"
@@ -183,7 +183,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/8dcd66fe835dbfe829da",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/other/2026/11/26/157051.html"
@@ -222,7 +222,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/4f6e534e29b7978e3d12",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/26/610791.html"
@@ -259,7 +259,7 @@
       "requiresReview": true,
       "noticeId": "admshakhty/31170",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://t.me/admshakhty/31170"
@@ -298,7 +298,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/cd9fd00610ee40bcc2ba",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/26/157104.html"
@@ -337,7 +337,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/51affbe7b03181547e10",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/26/610851.html"
@@ -2045,7 +2045,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/b1cbcfcea759fa9480fb",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/26/157039.html"
@@ -2084,7 +2084,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/71a6241c00b126d328fb",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/26/610773.html"
@@ -2123,7 +2123,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/8dcd66fe835dbfe829da",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/other/2026/11/26/157051.html"
@@ -2162,7 +2162,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/4f6e534e29b7978e3d12",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/26/610791.html"
@@ -2199,7 +2199,7 @@
       "requiresReview": true,
       "noticeId": "admshakhty/31170",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://t.me/admshakhty/31170"
@@ -2238,7 +2238,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/cd9fd00610ee40bcc2ba",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/26/157104.html"
@@ -2277,7 +2277,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/51affbe7b03181547e10",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/26/610851.html"
@@ -3840,17 +3840,17 @@
     {
       "id": "city",
       "status": "ok",
-      "posts": 17,
+      "posts": 20,
       "matchingPosts": 1,
-      "lastPostAt": "2026-11-26T10:31:49+00:00",
+      "lastPostAt": "2026-11-26T14:03:06+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-26T11:26:03.710940+00:00"
+      "checkedAt": "2026-11-26T20:28:49.347982+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-26T11:26:03.710940+00:00",
+      "checkedAt": "2026-11-26T20:28:49.347982+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -3864,10 +3864,10 @@
       "status": "ok",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 200,
-      "matchingPosts": 3,
-      "checkedAt": "2026-11-26T11:26:03.710940+00:00",
-      "lastPostAt": "2026-11-26T12:24:17+03:00",
+      "posts": 63,
+      "matchingPosts": 0,
+      "checkedAt": "2026-11-26T20:28:49.347982+00:00",
+      "lastPostAt": null,
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
     },
@@ -3877,8 +3877,8 @@
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 200,
-      "matchingPosts": 3,
-      "checkedAt": "2026-11-26T11:26:03.710940+00:00",
+      "matchingPosts": 1,
+      "checkedAt": "2026-11-26T20:28:49.347982+00:00",
       "lastPostAt": "2026-11-26T12:23:08+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -3889,7 +3889,7 @@
       "url": "https://newsrostov.ru/rss.xml",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 200,
+      "posts": 63,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Перепечатки сообщений Донэнерго через MAX / администрацию; не полная лента отключений"
@@ -3911,7 +3911,7 @@
       "url": "https://t.me/s/admshakhty",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 17,
+      "posts": 20,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о свете"
@@ -3922,7 +3922,7 @@
       "url": "https://t.me/s/admshakhty",
       "readStatus": "ok",
       "coverage": "partial",
-      "posts": 17,
+      "posts": 20,
       "matchingPosts": 0,
       "lastPostAt": null,
       "note": "Официальный канал администрации Шахт; отбираются только адресные сообщения о газе"
