@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "checkedAt": "2026-11-27T12:42:39.034480+00:00",
+  "checkedAt": "2026-11-27T21:40:34.168453+00:00",
   "events": [
     {
       "id": "water-city-repost-b1cbcfcea759fa9480fb",
@@ -315,7 +315,7 @@
       "requiresReview": false,
       "noticeId": "kvu/9c3ea3edc24d4d4d699c/0",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://kvu.su/utilities/19647-v-shahtah-otkljuchili-vodosnabzhenie-27-nojabrja-spisok-ulic.html"
@@ -432,7 +432,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/d21c2548ebd1eefe02c8",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/27/157346.html"
@@ -471,7 +471,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/ac2bae0062a9a245d4bc",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/27/611149.html"
@@ -510,7 +510,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/ad8116ada54214707006",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/27/157361.html"
@@ -549,7 +549,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/6f217595f0a6e0489c03",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/27/611166.html"
@@ -586,7 +586,7 @@
       "requiresReview": true,
       "noticeId": "admshakhty/31205",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://t.me/admshakhty/31205"
@@ -625,7 +625,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/e0b296ba2ae410a85db5",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/other/2026/11/27/157423.html"
@@ -664,7 +664,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/98b8a4e4c80d35d8c3f5",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/27/611239.html"
@@ -2572,7 +2572,7 @@
       "requiresReview": false,
       "noticeId": "kvu/9c3ea3edc24d4d4d699c/0",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://kvu.su/utilities/19647-v-shahtah-otkljuchili-vodosnabzhenie-27-nojabrja-spisok-ulic.html"
@@ -2689,7 +2689,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/d21c2548ebd1eefe02c8",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/27/157346.html"
@@ -2728,7 +2728,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/ac2bae0062a9a245d4bc",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/27/611149.html"
@@ -2767,7 +2767,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/ad8116ada54214707006",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/society/2026/11/27/157361.html"
@@ -2806,7 +2806,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/6f217595f0a6e0489c03",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/27/611166.html"
@@ -2843,7 +2843,7 @@
       "requiresReview": true,
       "noticeId": "admshakhty/31205",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://t.me/admshakhty/31205"
@@ -2882,7 +2882,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/e0b296ba2ae410a85db5",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://news-don.ru/other/2026/11/27/157423.html"
@@ -2921,7 +2921,7 @@
       "requiresReview": true,
       "noticeId": "city-repost/98b8a4e4c80d35d8c3f5",
       "category": "water",
-      "status": "active",
+      "status": "unconfirmed",
       "revision": 1,
       "evidence": [
         "https://newsrostov.ru/society/2026/11/27/611239.html"
@@ -4672,12 +4672,12 @@
       "lastPostAt": "2026-11-27T12:38:06+00:00",
       "url": "https://t.me/s/admshakhty",
       "note": "Публичные публикации администрации Шахт",
-      "checkedAt": "2026-11-27T12:42:32.107679+00:00"
+      "checkedAt": "2026-11-27T21:40:20.344650+00:00"
     },
     {
       "id": "water_kvu",
       "url": "https://kvu.su/utilities/rss.xml",
-      "checkedAt": "2026-11-27T12:42:32.107679+00:00",
+      "checkedAt": "2026-11-27T21:40:20.344650+00:00",
       "coverage": "partial",
       "status": "ok",
       "readStatus": "ok",
@@ -4692,8 +4692,8 @@
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 200,
-      "matchingPosts": 4,
-      "checkedAt": "2026-11-27T12:42:32.107679+00:00",
+      "matchingPosts": 1,
+      "checkedAt": "2026-11-27T21:40:20.344650+00:00",
       "lastPostAt": "2026-11-27T15:23:40+03:00",
       "url": "https://newsrostov.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
@@ -4704,8 +4704,8 @@
       "readStatus": "ok",
       "coverage": "partial",
       "posts": 200,
-      "matchingPosts": 4,
-      "checkedAt": "2026-11-27T12:42:32.107679+00:00",
+      "matchingPosts": 3,
+      "checkedAt": "2026-11-27T21:40:20.344650+00:00",
       "lastPostAt": "2026-11-27T15:23:07+03:00",
       "url": "https://news-don.ru/rss.xml",
       "note": "Перепечатки УРСВ с документом и сообщения с авторством администрации Шахт"
